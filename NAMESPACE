@@ -1,0 +1,85 @@
+import(bio3d)
+import(parallel)
+import(plot3D)
+import(MASS)
+importFrom(jsonlite, fromJSON)
+importFrom(dplyr, bind_rows)
+importFrom(RColorBrewer, brewer.pal)
+importFrom(RANN, nn2)
+importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circos.axis, circos.trackPoints, circos.trackHist, circos.clear)
+
+export( 
+	addDSSPdata, 
+	addDSSRdata, 
+	angles_dist, 
+
+	binding.RNAprot,
+	bp_hist, 
+
+	check.nt, 
+	check_etatheta, 
+	cif_to_RAM, 
+	cluster.select, 
+
+	distances_entities,
+	distances_eleno,
+
+	eRMSD, 
+
+	get_alternative_representants, 
+	get_leontis_nr_list,
+
+	has_x_hetAtms, 
+
+	is.cif, 
+	is_valid_eRMSD, 
+
+	make_aantinfo, 
+	make_all_plots, 
+	make_ntinfo, 
+	make_sure_is_cif,
+	measure, 
+	measure_pucker, 
+	model.select, 
+
+	parse.cif, 
+	PDBapply, 
+	plot_circular_distribution, 
+	plot.eta.theta2, 
+	plot_et, 
+	plot_hist, 
+
+	queryAPI,
+	query_authors,
+	query_chains, 
+	query_compound,
+	query_compType,
+	query_depdate,
+	query_entities,
+	query_formats,
+	query_header,
+	query_hetAtms,
+	query_modres,
+	query_NDBId,
+	query_orgligands,
+	query_pdblist,
+	query_reldate,
+	query_resol,
+	query_revdate,
+	query_technique,
+
+	readcif_RAM, 
+	read.dssp,
+	read.cif.RAM, 
+	RNA_classifier, 
+	rvec_plot, 
+	rVECTOR, 
+
+	select_ntID_neighbours,
+	shift360, 
+	subset_bypucker, 
+	subset_ntinfo, 
+
+	trim_by_ntID,
+	trim_sphere
+	)

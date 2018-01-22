@@ -1,0 +1,18 @@
+Package: bio3dRNA
+Type: Package
+Title: Biological Structure Analysis 
+Version: 0.99.0
+Date: 2017-03-14
+Author: Diego Gallego
+Maintainer: Diego Gallego <diego.gallego@irbbarcelona.org>
+Description: Structural bioinformatics is a hard field we work to make easier.
+    We provide tools to extract information from PDB structures, manage these 
+    data and save the results in different kinds of plots. The package was 
+    developed (and so the examples and vignettes) to do data mining  with RNA 
+    data, but most of its functionalities are extensible to the analysis of
+    any PDB structure.
+License: GPL (>= 2)
+Depends: R (>= 3.1.0)
+Imports: bio3d, circlize, parallel, dplyr, jsonlite, plot3D, MASS, RColorBrewer
+Packaged: 2017-03-14 18:02:52 UTC; dgallego
+RoxygenNote: 6.0.1

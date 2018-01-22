@@ -1,0 +1,95 @@
+#Date: 2017-Feb-14
+#' Download Representative List of RNA structures
+#'
+#' According with Leontis & Zirbel, 2012 (Nonredundant 3D Structure Datasets 
+#' for RNA Knowledge Extraction and Benchmarking), the PDB contains structures
+#' that are redundant. Their work resulted in the BGSU RNA Site 
+#' (http://rna.bgsu.edu/rna3dhub/nrlist/) where one can find weekly releases 
+#' of Representative Sets of RNA structures (formerly called non-redundant 
+#' lists). This function access their website and returns the desired list.
+#'
+#' @param release A number indicating the list of interest.
+#' @param threshold A string that matches one of the lists in the BGSU RNA 
+#'   site ("1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A" or "all").
+#'   Note that "all" returns structures solved by all the possible techniques.
+#'
+#' @return A data frame with the list of Equivalence Classes and the Representant
+#'   and Members of each Equivalence Class. Note that the output is formated 
+#'   according with Leontis&Zirbel nomenclature ( AAAA|M|C ), where "AAAA" is
+#'   the PDB accession code, "M" is the model and "C" is the Chain to be used.
+#'
+#' @author Diego Gallego
+#'
+
+get_leontis_nr_list <- 
+function( release, 
+	  threshold="all" ) {
+
+    if( !threshold %in% thresholds ){ 
+	stop( paste('threshold can only be into one of the following ',
+			'categories: "1.5A", "2.0A", "2.5A", "3.0A", "3.5A",',
+			' "4.0A", "20.0A" or "all"', sep=""))
+    }
+
+    URL <- "http://rna.bgsu.edu/rna3dhub/nrlist"
+    if(!.check_internet( url = URL )){
+	stop('Server not responding, try again later.')
+    }
+
+    URL <- paste( URL, "/release/", release, "/", threshold, sep="")
+    suppressWarnings(text <- .launchquery(URL=URL, FUN=readLines, N.TRIES=2))
+
+    if( strsplit( threshold, split="" )[[1]][
+	length(	strsplit( threshold, split="" )[[1]]) ] == "A"){
+
+	threshold<-substr(threshold,1,nchar(threshold)-1)
+    }
+
+    indices<-grep(pattern=paste("NR_",threshold,"_",sep=""),text)
+
+    data<-unlist(lapply(1:length(indices),FUN=.see_equivalence_class,text=text,
+    indices=indices,release=release,threshold=threshold))
+
+###########Updated: 2017-Jul-21 CORNER CASE
+    ind <- grep(pattern="4R3I|0", data, fixed=T) 
+    if( length(ind) > 0 ){
+	data[ind] <- gsub(pattern="0", replacement="1", x=data[ind])
+    }
+###########
+    output<-as.data.frame(matrix(data,ncol=3,byrow=T),stringsAsFactors=F)
+    names(output)<-c("Equivalence_class","Representative","Class_members")
+    return(output)
+}
+
+.see_equivalence_class <- function(x,text,indices,release,threshold){
+    splited_terms<-strsplit(text[indices[x]],split="/")[[1]]
+
+#Obtain the name of the equivalence class
+    ind1<-grep(pattern=paste("NR_",threshold,"_",sep=""),splited_terms)
+    if(length(ind1)!=1){
+	stop("!")
+    }
+    eq_class<-strsplit(splited_terms[ind1],split="\"")[[1]][1]
+
+#Obtain the representant of the equivalence class
+    ind2<-grep(pattern="strong class=\"pdb\"",splited_terms)
+    if(length(ind2)!=1){
+        stop("!")
+    }
+    repstr<-substring(strsplit(splited_terms[ind2],split="\ ")[[1]][1],first=8)
+
+#Obtain the list of members of the equivalence class
+    ind3<-grep(pattern="class='pdb'",splited_terms)
+    all_members<-unlist(lapply(ind3,FUN=.aa,splited_terms))
+
+    return(c(eq_class,repstr,paste(all_members,collapse=";")))
+}
+
+.aa<-function(.ind3,splited_terms){
+    temp<-strsplit(splited_terms[.ind3],split=">")[[1]]
+    return(substr(temp[length(temp)],1,nchar(temp[length(temp)])-1))
+}
+
+thresholds <- 
+	c( "1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all")
+
