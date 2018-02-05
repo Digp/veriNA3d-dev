@@ -42,6 +42,8 @@ export(
 	measure_pucker, 
 	model.select, 
 
+	last_release,
+
 	parse.cif, 
 	PDBapply, 
 	plot_circular_distribution, 

@@ -22,7 +22,7 @@
 #'
 
 get_leontis_nr_list <- 
-function( release, 
+function( release="current", 
 	  threshold="all" ) {
 
     if( !threshold %in% thresholds ){ 
@@ -34,6 +34,10 @@ function( release,
     URL <- "http://rna.bgsu.edu/rna3dhub/nrlist"
     if(!.check_internet( url = URL )){
 	stop('Server not responding, try again later.')
+    }
+
+    if( release == "current" ){
+	release <- last_release()[[1]]
     }
 
     URL <- paste( URL, "/release/", release, "/", threshold, sep="")
@@ -93,3 +97,22 @@ function( release,
 thresholds <- 
 	c( "1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all")
 
+last_release <-
+function() {
+    #Find last release
+    URL <- "http://rna.bgsu.edu/rna3dhub/nrlist/release/current"
+    text <- readLines(URL, n=200)
+    info <- text[grep("<small>Release", text)]
+    
+    info <- strsplit(info, "</small>")[[1]]
+    info <- strsplit(info, "<small>")[[1]][2]
+    
+    info <- strsplit(info, ", ")[[1]]
+    
+    #Save release info
+    release <- info[1]
+    releasenum <- gsub("Release ", "", release)
+    date <- info[2]
+
+    return( list(releasenum, date) )
+}
