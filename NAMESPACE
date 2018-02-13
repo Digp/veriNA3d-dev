@@ -1,4 +1,7 @@
+useDynLib(veriNA3d, .registration=TRUE)
 import(bio3d)
+import(Rcpp)
+#importFrom(Rcpp, evalCpp)
 import(parallel)
 import(plot3D)
 import(MASS)
@@ -8,6 +11,7 @@ importFrom(RColorBrewer, brewer.pal)
 importFrom(RANN, nn2)
 importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circos.axis, circos.trackPoints, circos.trackHist, circos.clear)
 
+#exportPattern("^[[:alpha:]]+")
 export( 
 	addDSSPdata, 
 	addDSSRdata, 
@@ -70,6 +74,7 @@ export(
 	query_revdate,
 	query_technique,
 
+	rcpp_hello_world,
 	readcif_RAM, 
 	read.dssp,
 	read.cif.RAM, 

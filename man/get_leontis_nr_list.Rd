@@ -4,7 +4,7 @@
 \alias{get_leontis_nr_list}
 \title{Download Representative List of RNA structures}
 \usage{
-get_leontis_nr_list(release, threshold = "all")
+get_leontis_nr_list(release = "current", threshold = "all")
 }
 \arguments{
 \item{release}{A number indicating the list of interest.}
