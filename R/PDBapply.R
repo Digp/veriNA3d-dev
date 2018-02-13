@@ -23,7 +23,7 @@
 #'
 
 PDBapply <-
-function( FUNCTION, listpdb=NULL, verbose=T, as.df=T, ... ) {
+function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
 #Match function
     FUNCTION <- match.fun(FUNCTION)
 #Download full PDB list if necessary
