@@ -239,7 +239,7 @@
     out <- list(helix = helix, sheet = sheet, hbonds = hbonds,
                 turn = turn, phi = phi, psi = psi, acc = acc,
                 sse = sse, call = cl, chain = cha, 
-		res.num = original_res.num, insert = res.insert)
+        res.num = original_res.num, insert = res.insert)
 
     class(out) <- "sse"
     return(out)

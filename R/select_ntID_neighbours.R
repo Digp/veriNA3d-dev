@@ -23,47 +23,47 @@
 
 select_ntID_neighbours <-
 function( ntID, ntinfo,
-	  prev = 2, post = 2, 
-	  info = "ntID", verbose = T ){
+      prev = 2, post = 2, 
+      info = "ntID", verbose = T ){
 
     pdbID <- ntinfo[ ntinfo$ntID == ntID, "pdbID" ]
     chain <- ntinfo[ ntinfo$ntID == ntID, "chain" ]
     model <- ntinfo[ ntinfo$ntID == ntID, "model" ]
 
     resno_chain <- ntinfo[ ntinfo$pdbID == pdbID &
-			   ntinfo$chain == chain &
-			   ntinfo$model == model, "resno" ]
+               ntinfo$chain == chain &
+               ntinfo$model == model, "resno" ]
     length_chain <- length( resno_chain )
     insert_chain <- ntinfo[ ntinfo$pdbID == pdbID &
-			    ntinfo$chain == chain &
-			    ntinfo$model == model, "insert" ]
+                ntinfo$chain == chain &
+                ntinfo$model == model, "insert" ]
     chain_pos <- which(resno_chain == ntinfo[ ntinfo$ntID == ntID, "resno" ] &
-		      insert_chain == ntinfo[ ntinfo$ntID == ntID, "insert" ])
+              insert_chain == ntinfo[ ntinfo$ntID == ntID, "insert" ])
 
     
     out.1 <- c()
     if( chain_pos-prev <= 0 ) {
         if( verbose ) print( paste( "The nucleotide ", ntID, 
-		" (ntID) doesn't have as many neighbours at 3' as specified"))
+        " (ntID) doesn't have as many neighbours at 3' as specified"))
         while( chain_pos-prev <= 0 ){
-	    out.1 <- append( out.1, NA )
+        out.1 <- append( out.1, NA )
             prev <- prev-1
-	}
+    }
     }
 
     out.2 <- c()
     if( chain_pos+post > length_chain ){
         if( verbose ) print( paste( "The nucleotide ", ntID,
-		" (ntID) doesn't have as many neighbours at 5' as specified"))
+        " (ntID) doesn't have as many neighbours at 5' as specified"))
         while( chain_pos+post > length_chain ){
-	    out.2 <- append( NA, out.2 )
+        out.2 <- append( NA, out.2 )
             post <- post-1
-	}
+    }
     }
 
     out <- c( out.1,
-	      ntinfo[ ntinfo$ntID %in% (ntID-prev):(ntID+post), info ],
-	      out.2 )
+          ntinfo[ ntinfo$ntID %in% (ntID-prev):(ntID+post), info ],
+          out.2 )
 
     return(out)
 }

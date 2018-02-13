@@ -8,7 +8,7 @@ readcif_RAM<-function(ID,MODEL=1,path="./"){
     if(file.exists(file)){
         assign(ID,read.cif.RAM(file, model=MODEL),envir = .GlobalEnv)
     }else if(.check_internet()){
-	assign(ID,read.cif.RAM(ID, model=MODEL),envir = .GlobalEnv)
+    assign(ID,read.cif.RAM(ID, model=MODEL),envir = .GlobalEnv)
     }else{
         stop(paste("File ", file, " does not exist",sep=""))
     }

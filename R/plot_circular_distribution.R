@@ -22,7 +22,7 @@ plot_circular_distribution<-function(data, clockwise=F, start.degree=0, main=NUL
     circos.trackHist(fac, data, bg.col = "white", bg.border="white", col = rgb(0.1,0.5,0.8,0.3),breaks=360)
     if(!is.null(main)){
         title(main=main)
-#	title(sub=paste("n = ",length(data),sep=""))
+#   title(sub=paste("n = ",length(data),sep=""))
     }
     circos.clear()
 }

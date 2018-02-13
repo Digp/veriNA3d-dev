@@ -76,10 +76,10 @@ function( pdb, model=1, chain="all", id=NULL ) {
     }
 
     if( model == "all" ) {
-	model <- 1:nrow( pdb$xyz )
+    model <- 1:nrow( pdb$xyz )
     }
     if( chain == "all" ) {
-	chain <- as.character( unique( pdb$atom$chain ))
+    chain <- as.character( unique( pdb$atom$chain ))
     }
 
     if( is.null( id )) {
@@ -108,7 +108,7 @@ function( pdb, model=1, chain="all", id=NULL ) {
     colnames <- names(ntinfo[[1]])
     ntinfo <- as.data.frame( matrix( 
         unlist( lapply( ntinfo, function(x){ 
-	    return(c(t(x))) 
+        return(c(t(x))) 
         })), 
         ncol=length(colnames), byrow=T),stringsAsFactors=F)
     names(ntinfo) <- colnames
@@ -117,10 +117,10 @@ function( pdb, model=1, chain="all", id=NULL ) {
       "HO2p", "lastP", "big_b", "Break", "puc_valid", "chi_valid",
       "kappa_valid", "base_exists", 
       "eta_valid", "theta_valid", "eRMSD_valid" )) {
-	class( ntinfo[, i ] ) <- "logical"
+    class( ntinfo[, i ] ) <- "logical"
     }
     for(i in grep("dist", names(ntinfo)) ){
-    	suppressWarnings( class( ntinfo[, i ] ) <- "numeric" )
+        suppressWarnings( class( ntinfo[, i ] ) <- "numeric" )
     }
     ntinfo<-cbind(1:nrow(ntinfo),ntinfo)
     names(ntinfo)[1]<-"ntID"
@@ -310,11 +310,11 @@ new_check_nt<-function(.index, .PDB, .ridlist, .reslist, .inslist){
 ##For nucleotides in the first position of the chain:
     if(.index==1){
         .first<-T
-	if( .index==length(.reslist) ) {
+    if( .index==length(.reslist) ) {
             .last<-T
-	} else {
+    } else {
             .last<-F
-	}
+    }
         .distances<-append(NA,.distances) #NA since no prior nt exists
 #Is backbone broken?
 #        .Break<-T #TRUE since no prior nucleotide exists
@@ -445,7 +445,7 @@ check_etatheta<-function(.ntID,.ntinfo,angle){
             #sum(as.logical(.ntinfo[(.ntID-1):.ntID,"Break"]))==0){
             sum(as.logical(unlist(.ntinfo[(.ntID-1):.ntID,"big_b"])))==0&
             sum(as.logical(unlist(.ntinfo[(.ntID-1):.ntID,"puc_valid"])))==2&
-	    sum(as.logical(unlist(.ntinfo[(.ntID-1):.ntID,"Break"])))==0){
+        sum(as.logical(unlist(.ntinfo[(.ntID-1):.ntID,"Break"])))==0){
                 return(TRUE)
             }else{
                 return(FALSE)
@@ -456,7 +456,7 @@ check_etatheta<-function(.ntID,.ntinfo,angle){
             #sum(as.logical(.ntinfo[(.ntID-1):(.ntID+1),"Break"]))==0){
             sum(as.logical(unlist(.ntinfo[(.ntID-1):(.ntID+1),"big_b"])))==0&
             sum(as.logical(unlist(.ntinfo[
-		(.ntID-1):(.ntID+1),"puc_valid"])))==3&
+        (.ntID-1):(.ntID+1),"puc_valid"])))==3&
             sum(as.logical(unlist(.ntinfo[(.ntID-1):(.ntID+1),"Break"])))==0){
                 return(TRUE)
             }else{

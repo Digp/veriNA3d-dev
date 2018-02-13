@@ -20,26 +20,26 @@
 addDSSPdata <-
 function(aantinfo, ntinfo, PATH="./") {
     if(!is.character(PATH)){
-	stop("PATH should be a character")
+    stop("PATH should be a character")
     }
     if(!dir.exists(PATH)){
-	stop("The PATH you provided does not exist")
+    stop("The PATH you provided does not exist")
     }
     if(substring(PATH, first=nchar(PATH))!="/"){
-	PATH<-paste(PATH, "/", sep="")
+    PATH<-paste(PATH, "/", sep="")
     }
 
     pdblist <- ntinfo[ntinfo$ntID %in% aantinfo$ntID, "pdbID"]
     dsspfiles <- unique(paste(PATH, pdblist, ".dssp", sep=""))
 
     if(sum(file.exists(dsspfiles))!=length(dsspfiles)){
-	failed<-paste(unique(pdblist)[which(!file.exists(dsspfiles))],
-	  collapse="; ")
-	warning(paste("No dssp file available for structures: ", failed, sep=""))
-	dsspfiles <- dsspfiles[-which(!file.exists(dsspfiles))]
+    failed<-paste(unique(pdblist)[which(!file.exists(dsspfiles))],
+      collapse="; ")
+    warning(paste("No dssp file available for structures: ", failed, sep=""))
+    dsspfiles <- dsspfiles[-which(!file.exists(dsspfiles))]
     }
     invisible(mapply(FUN=function(dsspfile, pdbID){
-	#print(pdbID)
+    #print(pdbID)
         assign(pdbID,
         read.dssp(file=dsspfile,resno=F,full=F),envir=parent.frame(n=2))
       },
@@ -63,22 +63,22 @@ function(aantinforow, colnames) {
     #print(aantinforow[1])
     #for(i in 1:5){if(length(ls(pattern="dssp",envir=parent.frame(n=i)))>0){print(i)}}
     if(exists(paste(aantinforow[1],".dssp",sep=""),envir=parent.frame(n=3))){
-	dssp<-get(paste(aantinforow[1],".dssp",sep=""),envir=parent.frame(n=3))
-	dssp$insert[is.na(dssp$insert)]<-"?"
+    dssp<-get(paste(aantinforow[1],".dssp",sep=""),envir=parent.frame(n=3))
+    dssp$insert[is.na(dssp$insert)]<-"?"
     }else{
-	#print("I")
-	return(NA)
+    #print("I")
+    return(NA)
     }
     resno<-as.character(aantinforow[which(colnames=="resnoPROT")])
     asym_id<-as.character(aantinforow[which(colnames=="asym_idPROT")])
-	#Due to the bug in DSSP when working with CIF files, I have to use the
-	# asym_id info instead of the chain
+    #Due to the bug in DSSP when working with CIF files, I have to use the
+    # asym_id info instead of the chain
     insert<-as.character(aantinforow[which(colnames=="insertPROT")])
     sse<-dssp$sse[which(insert==dssp$insert&
-	asym_id==dssp$chain&
-	resno==dssp$res.num)]
+    asym_id==dssp$chain&
+    resno==dssp$res.num)]
     if(length(sse)!=1){
-	return(NA)
+    return(NA)
     }else{
         return(sse)
     }

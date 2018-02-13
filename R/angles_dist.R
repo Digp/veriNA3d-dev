@@ -26,10 +26,10 @@
 #'
 angles_dist <-
 function(ntID=NULL, ntinfo, 
-	angles=c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
-	 "chi", "pu_phase"),
-	o="dihedrals", width=15, height=15, bg="white", 
-	units="cm", res=200, cex=0.6, cols=3){
+    angles=c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+     "chi", "pu_phase"),
+    o="dihedrals", width=15, height=15, bg="white", 
+    units="cm", res=200, cex=0.6, cols=3){
 
     if(is.null(ntID)){
         ntID<-ntinfo$ntID

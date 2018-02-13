@@ -23,26 +23,26 @@
 model.select <-
 function( pdb, model, verbose=T ) {
     if( length( grep("trim", pdb$call ) ) > 0 ) {
-	stop( paste( 
-		"Please, select the model you desire before applying other ",
-		"functions", sep="") )
+    stop( paste( 
+        "Please, select the model you desire before applying other ",
+        "functions", sep="") )
     }
     model <- as.numeric(model)
     if( "model" %in% attributes( pdb )$names && 
-	length( pdb$model ) == 1 && pdb$model == model ) {
+    length( pdb$model ) == 1 && pdb$model == model ) {
 
-	if( verbose ) print( "The input is already the desired model, thus output=input" )
-	return( pdb )
+    if( verbose ) print( "The input is already the desired model, thus output=input" )
+    return( pdb )
     }
 # "flag" is an attirbute given by read.cif.RAM. If TRUE, the pdb has models
 # different number of atoms, thus they are treated in a special way.
     if( "flag" %in% attributes( pdb )$names &&
-	pdb$flag == T ) {
+    pdb$flag == T ) {
 
-	pdb$atom <- pdb$model[[ model ]]
-	pdb$flag <- FALSE
-	pdb$xyz <- as.xyz( matrix( 
-			c( t( pdb$atom[, c("x", "y", "z") ] ) ),
+    pdb$atom <- pdb$model[[ model ]]
+    pdb$flag <- FALSE
+    pdb$xyz <- as.xyz( matrix( 
+            c( t( pdb$atom[, c("x", "y", "z") ] ) ),
                         nrow=1 ) )
     } else {
 

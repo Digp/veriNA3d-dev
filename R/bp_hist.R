@@ -13,7 +13,7 @@
 bp_hist<-function(ntID,ntinfo,categories="LW",o="bp",main=o,rm.na=F,width=15,height=15,bg="white",units="cm",res=200,cex=0.5){
     png(paste(o,".png",sep=""),width=width,height=height,bg=bg,units=units,res=res)
     plot_hist(ntID=ntID, ntinfo=ntinfo, categories=categories,
-	main=main, cex=cex)
+    main=main, cex=cex)
     dev.off()
 }
 

@@ -17,9 +17,9 @@ function( pdbID, hetAtms ) {
     lig <- query_hetAtms(pdbID, NAtoNa=T)
 
     if((hetAtms == "NA" || is.na(hetAtms) || hetAtms == "Na") && 
-	any(lig == "Na")){
+    any(lig == "Na")){
 
-	out<-which(is.na(lig))
+    out<-which(is.na(lig))
     }else{
         out<-grep(lig, pattern=paste("^",hetAtms,"$",sep=""))
     }
@@ -27,6 +27,6 @@ function( pdbID, hetAtms ) {
     if(length(out)>0){
         return(TRUE) 
     }else{
-	return(FALSE)
+    return(FALSE)
     }
 }

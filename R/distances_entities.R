@@ -41,8 +41,8 @@
 
 distances_entities <- 
 function( cif, model = NULL, refent, 
-	  entities = c("all"), n = 1, cutoff = c(0, 5), verbose = T,
-	  detailedoutput = T, data_of_interest = NULL ) {
+      entities = c("all"), n = 1, cutoff = c(0, 5), verbose = T,
+      detailedoutput = T, data_of_interest = NULL ) {
 
 # Check if input cif argument is a PDB ID or a "cif" object
     cif <- make_sure_is_cif(cif, verbose=verbose, check="is.cif")
@@ -55,8 +55,8 @@ function( cif, model = NULL, refent,
 # If the reference entity is to be compared with all the rest, they must be
 # specified:
     if( length(entities) == 1 && entities=="all" ){
-	entities <- cif$entity$id[ -which( cif$entity$id == 
-					as.character(refent) )]
+    entities <- cif$entity$id[ -which( cif$entity$id == 
+                    as.character(refent) )]
     }
 
 # Find element numbers (eleno)
@@ -69,14 +69,14 @@ function( cif, model = NULL, refent,
 
 # Use the eleno numbers to call the distances_eleno function
     return( distances_eleno( 
-		cif=cif,
-		model=NULL,
-		refeleno=A_eleno,
-		eleno=B_eleno,
-		n=n,
-		cutoff=cutoff,
-		verbose=verbose,
-		detailedoutput = T, 
-		data_of_interest = NULL
-	 ) )
+        cif=cif,
+        model=NULL,
+        refeleno=A_eleno,
+        eleno=B_eleno,
+        n=n,
+        cutoff=cutoff,
+        verbose=verbose,
+        detailedoutput = T, 
+        data_of_interest = NULL
+     ) )
 }

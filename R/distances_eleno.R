@@ -37,7 +37,7 @@
 
 distances_eleno <- 
 function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5), 
-	  verbose = T,
+      verbose = T,
           detailedoutput = T, data_of_interest = NULL ) {
 
 # Select model of interest
@@ -67,15 +67,15 @@ function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5),
     }
     if( length( cutoff ) == 1 ) cutoff <- c( 0, cutoff )
     if( is.null( n ) ){
-	n=cutoff[2]*cutoff[2]*3
-	n=min(nrow(B), n)
+    n=cutoff[2]*cutoff[2]*3
+    n=min(nrow(B), n)
     }
 
     dis_map <- nn2( query=A, 
-		    data=B, 
-		    searchtype="standard", 
-		    radius=cutoff[2], 
-		    k=n )
+            data=B, 
+            searchtype="standard", 
+            radius=cutoff[2], 
+            k=n )
     df_map <- lapply(
             1:nrow(A),
             FUN = function( i, A_eleno, dis_map, B ){
@@ -85,7 +85,7 @@ function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5),
                 distances <- dis_map$nn.dists[i,]
                 out <- cbind( elenoA=rep( elenoA, length(elenoB) ),
                                 elenoB=elenoB, distances=distances )
-		out <- out[ which( out[,3]>=cutoff[1] & out[,3]<=cutoff[2] ),]
+        out <- out[ which( out[,3]>=cutoff[1] & out[,3]<=cutoff[2] ),]
                 return(c(t(out)))
             }, A_eleno=A_eleno, dis_map=dis_map, B=B)
     out <- as.data.frame( matrix( unlist( df_map ), ncol=3, byrow=T ),
@@ -107,11 +107,11 @@ function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5),
 
         if( verbose ) print("Finding the atom details ...")
 
-	row.names(cif$atom) <- cif$atom$eleno
-	df_A <- cif$atom[as.character(out$eleno_A),data_of_interest]
-	df_B <- cif$atom[as.character(out$eleno_B),data_of_interest]
-	names(df_A) <- paste( data_of_interest, "_A", sep="" )
-	names(df_B) <- paste( data_of_interest, "_B", sep="" )
+    row.names(cif$atom) <- cif$atom$eleno
+    df_A <- cif$atom[as.character(out$eleno_A),data_of_interest]
+    df_B <- cif$atom[as.character(out$eleno_B),data_of_interest]
+    names(df_A) <- paste( data_of_interest, "_A", sep="" )
+    names(df_B) <- paste( data_of_interest, "_B", sep="" )
 
         if( verbose ) print(" ... done, the output is coming")
 

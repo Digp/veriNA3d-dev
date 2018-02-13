@@ -32,8 +32,8 @@ function( pdbID, model=NULL,
     if(verbose) print(pdbID)
 ####### Code to read CIF files
     if( file.exists( pdbID ) && 
-		length( grep(".cif$", pdbID, perl=T) ) == 1 ) {
-	pdb <- readLines( pdbID )
+        length( grep(".cif$", pdbID, perl=T) ) == 1 ) {
+    pdb <- readLines( pdbID )
 
     } else if( nchar( pdbID ) == 4 ) {
         tryCatch({
@@ -63,16 +63,16 @@ function( pdbID, model=NULL,
     inds <- grep("#", pdb, fixed=T)
 # Parse the CIF
     cif <- sapply( seq(1, length(inds)-1, by=1), 
-	    FUN=.parse.cif.sections,
-	    pdb=pdb, inds=inds,
-	    USE.NAMES=T)
+        FUN=.parse.cif.sections,
+        pdb=pdb, inds=inds,
+        USE.NAMES=T)
 # This "cif" object could already be the output, but for retrocompatibility
 # with bio3d, a pdb class object is defined
 
 # Coordinates are saved apart:
     table <- cif$atom_site
     mmcif_pdbx.dic <- cif$audit_conform[ 
-			names(cif$audit_conform) == "dict_version" ]
+            names(cif$audit_conform) == "dict_version" ]
     ##### In case there are Sodium ions ("NA"), replace them by "Na" string
     na.ind <- which( is.na( table ),
                      arr.ind = T )
@@ -112,7 +112,7 @@ function( pdbID, model=NULL,
                            which( atom$alt %in% alt ) ) )
         atom<-atom[ altind, ]
         if(verbose) print( paste("PDB has alt records, taking ", 
-				alt ," only", sep="") )
+                alt ," only", sep="") )
     }
 
 ##### Return a particular chain if specified in arguments
@@ -183,7 +183,7 @@ function( pdbID, model=NULL,
     cif[[ length(cif)+1 ]] <- flag
     cif[[ length(cif)+1 ]] <- pdbID
     names( cif )[(length(cif)-5):length(cif)] <- c("atom", "xyz", "calpha",
-						"model", "flag", "call")
+                        "model", "flag", "call")
     class( cif ) <- c( "pdb", "cif" )
 
     cif$atom[ cif$atom == "" ]  <- NA
@@ -205,26 +205,26 @@ function( pdbID, model=NULL,
 # If the first line of the section is "loop_", the section is organized in two
 # 1, a list of fields; 2, a table
 # Find the name of the fields
-	Names.ind <- grep("^_", pdb[first:last], perl=T)
-	Names <-  do.call( rbind, 
-			strsplit( pdb[first:last][Names.ind], ".", fixed=T ) )
+    Names.ind <- grep("^_", pdb[first:last], perl=T)
+    Names <-  do.call( rbind, 
+            strsplit( pdb[first:last][Names.ind], ".", fixed=T ) )
 # Redefine where the table starts
-	first <- seq(first, last, 1 )[Names.ind[length(Names.ind)]+1]
+    first <- seq(first, last, 1 )[Names.ind[length(Names.ind)]+1]
 
-	totalfields <- nrow(Names)
-	out <- .clean_section( pdb[first:last], loop=T, 
-				 totalfields=totalfields )
+    totalfields <- nrow(Names)
+    out <- .clean_section( pdb[first:last], loop=T, 
+                 totalfields=totalfields )
 
     } else {
 # If the first line is not "_loop", the section is a table with two columns
 # data contains only the section of interest
-	table <- .clean_section( pdb[first:last], loop=F )
+    table <- .clean_section( pdb[first:last], loop=F )
 
 # Instead of returning it as a two column table it is returned as a vector
-	Names <- do.call( rbind, strsplit( table$V1, ".", fixed=T) )
+    Names <- do.call( rbind, strsplit( table$V1, ".", fixed=T) )
 
 # out is a vector containing the data
-	out <- table$V2
+    out <- table$V2
     }
 
 # Find the title of the section (e.g. for "_entity.id": "entity")
@@ -234,12 +234,12 @@ function( pdbID, model=NULL,
         }
 # Give to the output object the names of the fields (either vector or data.fr)
 # Names contains the fields of the section
-	Names <- Names[,2]
-	names( out ) <- .trim(Names)
+    Names <- Names[,2]
+    names( out ) <- .trim(Names)
 # out is transformed to a list and it's given the title of the section
-	out <- list( out)
-	names(out) <- title
-	return( out )
+    out <- list( out)
+    names(out) <- title
+    return( out )
 }
 
 # data is the raw section from # to # in the CIF file
@@ -249,26 +249,26 @@ function( pdbID, model=NULL,
 # In some cases the text lacks the preceding&succeding apostrophe and 
 # starts&ends with a ";". However, the text might contain apostrophes, which 
 # confuse R and should be temporarily replaced
-	semicoloninds_start <- grep("^;", data)
+    semicoloninds_start <- grep("^;", data)
 
-	semicoloninds_end <- semicoloninds_start[ c(F,T) ]
-	semicoloninds_start <- semicoloninds_start[ c(T,F) ]
-	if( ( !is.na( semicoloninds_start ) && 
-		length( semicoloninds_start ) > 0 ) &&
-		( !is.na( semicoloninds_end ) && 
-		length( semicoloninds_end ) > 0 ) ) {
+    semicoloninds_end <- semicoloninds_start[ c(F,T) ]
+    semicoloninds_start <- semicoloninds_start[ c(T,F) ]
+    if( ( !is.na( semicoloninds_start ) && 
+        length( semicoloninds_start ) > 0 ) &&
+        ( !is.na( semicoloninds_end ) && 
+        length( semicoloninds_end ) > 0 ) ) {
             lines <- c(unlist( mapply(
                         FUN=function(x,y) {
                             return( x:y ) 
                         }, semicoloninds_start, semicoloninds_end )))
-	    data[ lines ] <- gsub("'", "pRimE", data[ lines ])
-	    data[ lines ] <- gsub("^;", "'", data[ lines ])
-	}
+        data[ lines ] <- gsub("'", "pRimE", data[ lines ])
+        data[ lines ] <- gsub("^;", "'", data[ lines ])
+    }
 
-	if(loop){
+    if(loop){
 # in some cases, different lines contain the info of a row (different number
 # of characters in the lines)
-	    if( length(unique(nchar(data))) > 1 ) {
+        if( length(unique(nchar(data))) > 1 ) {
 
 # This piece of code treats the data by brute force
 # All the data is splited by blank spaces and empty strings are removed
@@ -278,79 +278,79 @@ function( pdbID, model=NULL,
 # Isolated apostrophe "'" are the closing apostrophe of a sentence, 
 # so they are pasted  to the previous line and removed
                 quoteinds <- grep( "^'$", data3)
-	        if( length( quoteinds ) > 0 ){
+            if( length( quoteinds ) > 0 ){
                     data3[quoteinds-1] <- paste( data3[quoteinds-1], 
-						 "'", 
-						 sep="" )
+                         "'", 
+                         sep="" )
                     data3 <- data3[-quoteinds]
                 }
 # Since some long strings are splited, they are pasted together again
                 quoteinds_start <- grep( "^'", data3)
                 quoteinds_end <- grep( "'$", data3)
-	        if( length( quoteinds_start ) > 0 &&
-		    length( quoteinds_end ) > 0 ){
+            if( length( quoteinds_start ) > 0 &&
+            length( quoteinds_end ) > 0 ){
 
                     toreplace <- mapply( 
-			FUN=function(x,y) {
-			    return( paste( data3[x:y], collapse=" ") )
-			}, quoteinds_start, quoteinds_end )
+            FUN=function(x,y) {
+                return( paste( data3[x:y], collapse=" ") )
+            }, quoteinds_start, quoteinds_end )
 
                     data3[quoteinds_start] <- toreplace
 # The splited lines are removed
                     toremove <- c(unlist(mapply(
-			FUN=function(x,y) { 
-			    if(x<y){
-				return(x:y)
-			    } else if (x==y) {
-				return(x)
-			    } else {
-				return(NULL)
-			    }
-			}, quoteinds_start+1, quoteinds_end)))
-		    exceptions <- which( quoteinds_start %in% toremove ) 
-		    if( length(exceptions) > 0 ){
-		        toremove <- toremove[-quoteinds_start[ exceptions ]]
-		    }
-		    if(length(toremove) > 0){
+            FUN=function(x,y) { 
+                if(x<y){
+                return(x:y)
+                } else if (x==y) {
+                return(x)
+                } else {
+                return(NULL)
+                }
+            }, quoteinds_start+1, quoteinds_end)))
+            exceptions <- which( quoteinds_start %in% toremove ) 
+            if( length(exceptions) > 0 ){
+                toremove <- toremove[-quoteinds_start[ exceptions ]]
+            }
+            if(length(toremove) > 0){
                         data3 <- data3[ -toremove ]
-		    }
-	        }
+            }
+            }
 
 # If any Apostrophe was replaced before, now it's left as it was
             data3 <- gsub( "pRimE", "'", data3, fixed=T )
             table <- as.data.frame( matrix( data3, byrow=T, ncol=totalfields), 
-			stringsAsFactors=F)
-	    } else {
+            stringsAsFactors=F)
+        } else {
 # Even if all the lines in the section have the same length, the data can
 # contain a complete row in multiple lines, so it cannot be directly coerced 
 # to a table yet:
-		con <- textConnection( data )
-		table1 <- read.table( con, stringsAsFactors = F, nrows=1 )
-		close(con)
-		con <- textConnection( data )
-		table2 <- read.table( con, stringsAsFactors = F, nrows=1,
-					skip=1)
-		close(con)
-		if( ncol(table1) == ncol(table2) && 
-			ncol(table1) == totalfields ){
+        con <- textConnection( data )
+        table1 <- read.table( con, stringsAsFactors = F, nrows=1 )
+        close(con)
+        con <- textConnection( data )
+        table2 <- read.table( con, stringsAsFactors = F, nrows=1,
+                    skip=1)
+        close(con)
+        if( ncol(table1) == ncol(table2) && 
+            ncol(table1) == totalfields ){
                     con <- textConnection( data )
-		    table <- read.table( con, stringsAsFactors = F)
-		    close(con)
-		} else {
-		    con <- textConnection( data[c(T,F)] )
-		    table1 <- read.table( con, stringsAsFactors = F)
-		    close(con)
-		    con <- textConnection( data[c(F,T)] )
-		    table2 <- read.table( con, stringsAsFactors = F)
-		    close(con)
-		    table <- cbind( table1, table2, stringsAsFactors = F )
-		}
-		for( k in 1:length( totalfields) ) {
-		    table[,k] <- gsub( "pRimE", "'", table[,k], fixed=T )
-		}
-	    }
+            table <- read.table( con, stringsAsFactors = F)
+            close(con)
+        } else {
+            con <- textConnection( data[c(T,F)] )
+            table1 <- read.table( con, stringsAsFactors = F)
+            close(con)
+            con <- textConnection( data[c(F,T)] )
+            table2 <- read.table( con, stringsAsFactors = F)
+            close(con)
+            table <- cbind( table1, table2, stringsAsFactors = F )
+        }
+        for( k in 1:length( totalfields) ) {
+            table[,k] <- gsub( "pRimE", "'", table[,k], fixed=T )
+        }
+        }
 
-	} else {	
+    } else {    
 # in some cases, different lines contain the info of a row,
 # "cornercase" contains their indices, if any
             cornercase <- grep( "^_", data, invert=T)
@@ -362,12 +362,12 @@ function( pdbID, model=NULL,
             }
 # The section is read to a table
             con <- textConnection( data )
-	    table <- read.table( con, stringsAsFactors = FALSE)
-	    close(con)
+        table <- read.table( con, stringsAsFactors = FALSE)
+        close(con)
 # If any apostrophe was replaced before, now it's left as it was
             table[,2] <- gsub( "pRimE", "'", table[,2], fixed=T )
 
-	}
+    }
 # Returns a data.frame with the info about the given section
-	return(table)
+    return(table)
 }

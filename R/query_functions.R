@@ -198,13 +198,13 @@ function( pdbID, ... ) {
 #If all hetAtms are in the list of ions and modified residues, there's no
 #organic ligand at all
     if( sum( hetAtms %in% ions ) + 
-		sum( hetAtms %in% mod_res ) == length( hetAtms ) ){
+        sum( hetAtms %in% mod_res ) == length( hetAtms ) ){
         return(NULL)
     }
 
 #If reached this point, return the organic ligands.
     indices <- union( which( hetAtms %in% mod_res ),
-		      which( hetAtms %in% ions ))
+              which( hetAtms %in% ions ))
 
     if( length( indices ) == 0 ) {
         orgligands <- hetAtms

@@ -5,9 +5,9 @@
 #Description: Function to generate a data.frame with the data about the closests ribonucleotides to the protein. 
 #It finds the eleno of each nucleotide, then use these eleno to find the minimum distance to the protein.
 
-#INPUT:	effectivelist: vector of strings with Leontis format ("pdbID|model|chain"). It should only contain pdbID of the protRNA type.
-#	ntinfo
-#	cores
+#INPUT: effectivelist: vector of strings with Leontis format ("pdbID|model|chain"). It should only contain pdbID of the protRNA type.
+#   ntinfo
+#   cores
 
 #OUTPUT: a data.frame with the following columns:
 # 1, ntID to identify the ribonucleotide
@@ -29,7 +29,7 @@
 
 make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
     if(cores>1){
-	if(cores>detectCores()){
+    if(cores>detectCores()){
             stop("Introduce valid number of cores")
         }
     }
@@ -38,7 +38,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
     if(cores==1){
         system.time(interactionsdata<-mapply(FUN=binding.RNAprot, 
             pdb=df[,1],
-	    model=df[,2],
+        model=df[,2],
             nchain=df[,3],
             SIMPLIFY=F,
             verbose=verbose,
@@ -54,7 +54,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
     }else{
         system.time(interactionsdata<-mcmapply(FUN=binding.RNAprot,
             pdb=df[,1],
-	    model=df[,2],
+        model=df[,2],
             nchain=df[,3],
             SIMPLIFY=F,
             mc.cores=cores,
@@ -72,7 +72,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
     cols<-12
     colsnames<-names(info[[1]])[1:cols]
     output<-as.data.frame(matrix(unlist(info),ncol=cols,byrow=T),
-	stringsAsFactors=F)
+    stringsAsFactors=F)
     colnames(output)<-colsnames
     output$ntID<-as.numeric(output$ntID)
     output$elenoRNA<-as.numeric(output$elenoRNA)

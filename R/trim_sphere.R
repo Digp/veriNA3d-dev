@@ -33,8 +33,8 @@
 
 trim_sphere <-
 function( cif, model=NULL, ntindex, 
-	  chain, sel=NULL, cutoff=8, 
-	  cutres=F, file=NULL, verbose=T ) {
+      chain, sel=NULL, cutoff=8, 
+      cutres=F, file=NULL, verbose=T ) {
 
 # Check if input cif argument is a PDB ID or a "cif" object
     if( length( class( cif ) == 1 ) &&
@@ -48,8 +48,8 @@ function( cif, model=NULL, ntindex,
             stop( "Your input string is not a pdb ID" )
         }
     } else if( !is.cif(cif) & !is.pdb(cif) ){
-	stop( paste( "Your input data is not a cif or pdb object, ",
-	      "please refer to the parse.cif or read.pdb functions", sep="" ))
+    stop( paste( "Your input data is not a cif or pdb object, ",
+          "please refer to the parse.cif or read.pdb functions", sep="" ))
     }
 
 # Select model of interest
@@ -65,50 +65,50 @@ function( cif, model=NULL, ntindex,
 
     data <- paste(cif$atom$resno,cif$atom$insert,cif$atom$chain,sep="|")
     if( is.null(sel) ){
-	inds <- which(cif$atom$elety=="C4'" & cif$atom$chain==chain) 
-	resno <- cif$atom$resno[inds][ntindex]
-	insert <- cif$atom$insert[inds][ntindex]
-	query <- paste(resno,insert,chain,sep="|")
-	refeleno <- cif$atom$eleno[ data %in% query ]
+    inds <- which(cif$atom$elety=="C4'" & cif$atom$chain==chain) 
+    resno <- cif$atom$resno[inds][ntindex]
+    insert <- cif$atom$insert[inds][ntindex]
+    query <- paste(resno,insert,chain,sep="|")
+    refeleno <- cif$atom$eleno[ data %in% query ]
     } else {
-	refeleno <- cif$atom$eleno[sel$atom]
+    refeleno <- cif$atom$eleno[sel$atom]
     }
     eleno <- cif$atom$eleno
 
     if( cutoff > 0 ){
 # Find closest neighbors in radius = cutoff
         dis_map <- distances_eleno( cif = cif, 
-				    refeleno = refeleno, 
-				    eleno = eleno, 
-				    n = NULL, 
-				    cutoff = cutoff,
-				    detailedoutput = T,
-				    data_of_interest = c("resno",
-							 "insert",
-							 "chain"),
-				    verbose = verbose )
-	if( cutres ){
-	    outeleno <- unique( dis_map$eleno_B )
-	} else {
-	    query2 <- unique( paste( dis_map$resno_B, 
-				     dis_map$insert_B, 
-				     dis_map$chain_B, sep="|") )
-	    outeleno <- cif$atom$eleno[ data %in% query2 ]
-	}
+                    refeleno = refeleno, 
+                    eleno = eleno, 
+                    n = NULL, 
+                    cutoff = cutoff,
+                    detailedoutput = T,
+                    data_of_interest = c("resno",
+                             "insert",
+                             "chain"),
+                    verbose = verbose )
+    if( cutres ){
+        outeleno <- unique( dis_map$eleno_B )
+    } else {
+        query2 <- unique( paste( dis_map$resno_B, 
+                     dis_map$insert_B, 
+                     dis_map$chain_B, sep="|") )
+        outeleno <- cif$atom$eleno[ data %in% query2 ]
+    }
 
     } else {
 # If cutoff is 0 only the selection is returned
-	outeleno <- refeleno
+    outeleno <- refeleno
     }
 
 # Trim the cif file and prepare the small pdb file
     pdb <- trim.pdb(cif,eleno=outeleno)
     if( any(nchar( pdb$atom$chain ) > 1) | any(pdb$atom$chain == "?") ){
-	query3 <- pdb$atom[ as.character( outeleno ), "chain" ]
-	Unique <- unique(query3)
-	for( i in 1:length(Unique) ) {
+    query3 <- pdb$atom[ as.character( outeleno ), "chain" ]
+    Unique <- unique(query3)
+    for( i in 1:length(Unique) ) {
             pdb$atom$chain[ query3 == Unique[i] ] <- toupper(letters)[i]
-	    if( chain == Unique[i] ) chain <- toupper(letters)[i]
+        if( chain == Unique[i] ) chain <- toupper(letters)[i]
         }
     }
     if(any( is.na( pdb$atom$alt ) )) pdb$atom$alt<-""
@@ -116,12 +116,12 @@ function( cif, model=NULL, ntindex,
     pdb$atom$entid<-""
     if( any( outeleno > 99999 ) ) pdb$atom$eleno <- 1:nrow( pdb$atom )
     if( any( pdb$atom$resno > 9999 ) ) {
-	query3 <- paste(cif$atom[ as.character( outeleno ), "resno" ], 
-			cif$atom[ as.character( outeleno ), "insert" ],
-			cif$atom[ as.character( outeleno ), "chain" ],
-			sep="|")
-	Unique <- unique(query3)
-	resno2 <- c()
+    query3 <- paste(cif$atom[ as.character( outeleno ), "resno" ], 
+            cif$atom[ as.character( outeleno ), "insert" ],
+            cif$atom[ as.character( outeleno ), "chain" ],
+            sep="|")
+    Unique <- unique(query3)
+    resno2 <- c()
         for( i in 1:length(Unique) ) {
             pdb$atom$resno[ query3 == Unique[i] ] <- i
             if( any( query == Unique[i] ) ) resno2[query == Unique[i]] <- i
@@ -132,15 +132,15 @@ function( cif, model=NULL, ntindex,
     if( is.null(file) ){
         return( out )
     } else {
-	if( length(grep("chain", file))>0 ) {
-	    file <- sub("chain.+_", paste("chain",chain,"_",sep=""), file)
-	}
-	if( length(grep("resno", file))>0 & exists("resno2") ) {
-	    for( i in 1:length(resno2) ) {
-	        file <- sub(paste("resno", resno[i], "\\.", sep=""), 
-			paste("resno",resno2[i],".",sep=""), file)
-	    }
-	}
-	write.pdb(pdb=pdb,file=file,segid=pdb$atom$entid)
+    if( length(grep("chain", file))>0 ) {
+        file <- sub("chain.+_", paste("chain",chain,"_",sep=""), file)
+    }
+    if( length(grep("resno", file))>0 & exists("resno2") ) {
+        for( i in 1:length(resno2) ) {
+            file <- sub(paste("resno", resno[i], "\\.", sep=""), 
+            paste("resno",resno2[i],".",sep=""), file)
+        }
+    }
+    write.pdb(pdb=pdb,file=file,segid=pdb$atom$entid)
     }
 }

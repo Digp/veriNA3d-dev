@@ -35,19 +35,19 @@ function( cif=NULL, ntID, ntinfo,
     if( is.null(cif) ) cif <- ntinfo[ as.character(ntID), "pdbID" ]
 
     desired <- select_ntID_neighbours( ntID=ntID, ntinfo=ntinfo,
-					prev=prev, post=post, 
-					verbose=verbose )
+                    prev=prev, post=post, 
+                    verbose=verbose )
 
     ntindex <- ntinfo[ as.character(desired), "ntindex" ]
     chain <- ntinfo[ as.character(ntID), "chain" ]
 
     if( is.null(file) ){
         return( trim_sphere( cif=cif, ntindex=ntindex, 
-				chain=chain, 
-				verbose=verbose, ...=... ))
+                chain=chain, 
+                verbose=verbose, ...=... ))
     } else {
-	trim_sphere( cif=cif, ntindex=ntindex, 
+    trim_sphere( cif=cif, ntindex=ntindex, 
                                 chain=chain, file=file, 
-				verbose=verbose, ...=... )
+                verbose=verbose, ...=... )
     }
 }

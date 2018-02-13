@@ -57,9 +57,9 @@ function( pdbID, model=NULL, chain=NULL, minlength=3, maxlength=100000,
     }
 
     if( is.null( model )) {
-	model <- rep( 1, length( pdbID ))
+    model <- rep( 1, length( pdbID ))
     } else if( length( pdbID ) != length( model ) ){
-	stop( "pdbID and model should have the same length" )
+    stop( "pdbID and model should have the same length" )
     }
 
     if( is.null( chain )) {
@@ -74,51 +74,51 @@ function( pdbID, model=NULL, chain=NULL, minlength=3, maxlength=100000,
     read <- vector("character", length( pdbID ))
 ### If the pdbID contains pdb objects
     if( all( unlist( lapply( pdbID, function( x ) { 
-					return( class( x )[1] == "pdb" ) 
-				     })))) {
-	read <- rep( "read.list", length(pdbID))
+                    return( class( x )[1] == "pdb" ) 
+                     })))) {
+    read <- rep( "read.list", length(pdbID))
     } else if ( !is.null( path ) & 
-		!is.null( extension ) & 
-		Sys.info()[1] == "Linux"  ) {
+        !is.null( extension ) & 
+        Sys.info()[1] == "Linux"  ) {
 
-	inds <- which( file.exists( paste( path, pdbID, extension, sep="" )))
-	if( length( inds ) == 0 ) {
-	    inds <- which( file.exists( paste( path, pdbID, sep="" )))
-	}
-	if( length( inds ) == 0 ) {
+    inds <- which( file.exists( paste( path, pdbID, extension, sep="" )))
+    if( length( inds ) == 0 ) {
+        inds <- which( file.exists( paste( path, pdbID, sep="" )))
+    }
+    if( length( inds ) == 0 ) {
 
-	    stop( 
-		paste( "Nothing found in ", 
-			path, 
-			". Check the strings provided in the input pdbID.",
-			sep="") )
+        stop( 
+        paste( "Nothing found in ", 
+            path, 
+            ". Check the strings provided in the input pdbID.",
+            sep="") )
 
-	} else {
+    } else {
 
-	    read[ inds ] <- paste( "read", extension, sep="" )
+        read[ inds ] <- paste( "read", extension, sep="" )
 
-	}
-	
+    }
+    
     } else if( any( unlist( lapply( pdbID, function( x ) {
                                         return( nchar( x )[1] != 4 )
                                      })))) {
-	stop( "Check if pdbID is as specified in ?make_ntinfo or if the provided path and extension are correct" )
+    stop( "Check if pdbID is as specified in ?make_ntinfo or if the provided path and extension are correct" )
     }
     if( any( read == "" ) ) { 
 
-	inds <- which( read == "" )
-	if( any(nchar( pdbID[ inds ] ) != 4 )) {
-	    stop( paste(
-			pdbID[ inds ], 
-			"; not found in path and not recognized as PDB IDs\n",
-			sep="") )
-	}
-	read[ inds ] <- "download.RAM"
-	print( paste(
-		"The PDB IDs: ", 
-		paste( pdbID[ inds ], collapse="; " ), 
-		" are going to be downloaded (no temp files generated)", 
-		sep="") )
+    inds <- which( read == "" )
+    if( any(nchar( pdbID[ inds ] ) != 4 )) {
+        stop( paste(
+            pdbID[ inds ], 
+            "; not found in path and not recognized as PDB IDs\n",
+            sep="") )
+    }
+    read[ inds ] <- "download.RAM"
+    print( paste(
+        "The PDB IDs: ", 
+        paste( pdbID[ inds ], collapse="; " ), 
+        " are going to be downloaded (no temp files generated)", 
+        sep="") )
     }
 
     if( cores==1 ){
@@ -126,7 +126,7 @@ function( pdbID, model=NULL, chain=NULL, minlength=3, maxlength=100000,
             .pdbID = pdbID,
             .model = model,
             .chain = chain,
-	    .read = read,
+        .read = read,
             MoreArgs = list( .minlength = minlength, 
                 .maxlength = maxlength,
                 .distances = distances,  
@@ -134,26 +134,26 @@ function( pdbID, model=NULL, chain=NULL, minlength=3, maxlength=100000,
                 .torsionals = torsionals, 
                 .path = path, 
                 .extension = extension ), 
-	    SIMPLIFY=F)
+        SIMPLIFY=F)
     }else{
         ntinfo <- mcmapply( FUN=manage_PDB,
             .pdbID = pdbID,
             .model = model,
             .chain = chain,
-	    .read = read,
+        .read = read,
             mc.cores = cores,
             MoreArgs = list( .minlength = minlength, 
-		.maxlength = maxlength, 
-		.distances = distances, 
-		.angles = angles,
-		.torsionals = torsionals,
-		.path = path,
-		.extension = extension ), 
-	    SIMPLIFY=F)
+        .maxlength = maxlength, 
+        .distances = distances, 
+        .angles = angles,
+        .torsionals = torsionals,
+        .path = path,
+        .extension = extension ), 
+        SIMPLIFY=F)
     }
     ntinfo <- ntinfo[ which( lapply( ntinfo, length )>0 )]
     if( length(ntinfo) == 0 ){
-	print("Are you sure your input data is correct?")
+    print("Are you sure your input data is correct?")
         return()
     } else {
         #Coerce list to data.frame. Requires package "dplyr"
@@ -172,15 +172,15 @@ function(.pdbID, .model, .chain, .read,
   .distances, .angles, .torsionals, .path=NULL, .extension=NULL
   ) {
     if( length(.model) == 1 && .model == 1){
-	multi <- F
+    multi <- F
     } else {
-	multi <- T
+    multi <- T
     }
 
     if( .read == "read.list" ) {
-	.name <- .temp_PDB$call
+    .name <- .temp_PDB$call
     } else {
-	.name <- .pdbID[[1]]
+    .name <- .pdbID[[1]]
     }
     print(.name)
 
@@ -193,24 +193,24 @@ function(.pdbID, .model, .chain, .read,
     }
 
     if( .read == "read.list" ) {
-	.temp_PDB <- .pdbID
+    .temp_PDB <- .pdbID
     } else if( .read == "read.pdb" ) {
-	.temp_PDB <- suppressWarnings( read.pdb( 
-					paste( .path, .name, .extension, sep="" ), 
-					multi=multi, 
-					rm.alt=rm.alt, 
-					verbose=F ) )
+    .temp_PDB <- suppressWarnings( read.pdb( 
+                    paste( .path, .name, .extension, sep="" ), 
+                    multi=multi, 
+                    rm.alt=rm.alt, 
+                    verbose=F ) )
     } else if( .read == "read.cif" ) {
-	.temp_PDB <- read.cif.RAM( paste( .path, .name, .extension, sep="" ), alt=ALT)
+    .temp_PDB <- read.cif.RAM( paste( .path, .name, .extension, sep="" ), alt=ALT)
     } else if( .read == "download.RAM" ) {
-	.temp_PDB <- read.cif.RAM(.name, alt=ALT)
+    .temp_PDB <- read.cif.RAM(.name, alt=ALT)
     }
 
     if( .model == "all" | .model == 0 ) {
-	.model <- 1:nrow(.temp_PDB$xyz)
+    .model <- 1:nrow(.temp_PDB$xyz)
     }
     if( .chain == "all" ) {
-	.chain <- unique(.temp_PDB$atom$chain)
+    .chain <- unique(.temp_PDB$atom$chain)
     }
 
     .combinations <- expand.grid( .model, .chain, stringsAsFactors=F  )
@@ -221,8 +221,8 @@ function(.pdbID, .model, .chain, .read,
             ..model = .combinations[,"model"],
             ..chain = .combinations[,"chain"],
             MoreArgs = list( ..pdb = .temp_PDB,
-		..name = .name,
-		..minlength = .minlength,
+        ..name = .name,
+        ..minlength = .minlength,
                 ..maxlength = .maxlength,
                 ..distances = .distances,
                 ..angles = .angles,
@@ -231,8 +231,8 @@ function(.pdbID, .model, .chain, .read,
             SIMPLIFY=F)
     .ntinfo <- .ntinfo[ which( lapply( .ntinfo, length )>0 )]
     if( length(.ntinfo) == 0 ){
-	print(paste("Nothing to analyse in ", .name,"|",.model,"|",.chain, " according with input parameters", sep=""))
-	return()
+    print(paste("Nothing to analyse in ", .name,"|",.model,"|",.chain, " according with input parameters", sep=""))
+    return()
     } else {
         .ntinfo <- suppressWarnings( bind_rows(.ntinfo) )
         return( .ntinfo )
@@ -266,7 +266,7 @@ function(..pdb, ..model, ..chain, ..minlength=3, ..maxlength=1000,
         pucker=T, Dp=T)
 
     ..ntinfo <- cbind(..ntinfo1, ..ntinfo2[, 
-		which( !names( ..ntinfo2 ) %in% names( ..ntinfo1 ) ) ])
+        which( !names( ..ntinfo2 ) %in% names( ..ntinfo1 ) ) ])
 
     return(..ntinfo)
 }

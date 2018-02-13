@@ -23,30 +23,30 @@
 
 get_leontis_nr_list <- 
 function( release="current", 
-	  threshold="all" ) {
+      threshold="all" ) {
 
     if( !threshold %in% thresholds ){ 
-	stop( paste('threshold can only be into one of the following ',
-			'categories: "1.5A", "2.0A", "2.5A", "3.0A", "3.5A",',
-			' "4.0A", "20.0A" or "all"', sep=""))
+    stop( paste('threshold can only be into one of the following ',
+            'categories: "1.5A", "2.0A", "2.5A", "3.0A", "3.5A",',
+            ' "4.0A", "20.0A" or "all"', sep=""))
     }
 
     URL <- "http://rna.bgsu.edu/rna3dhub/nrlist"
     if(!.check_internet( url = URL )){
-	stop('Server not responding, try again later.')
+    stop('Server not responding, try again later.')
     }
 
     if( release == "current" ){
-	release <- last_release()[[1]]
+    release <- last_release()[[1]]
     }
 
     URL <- paste( URL, "/release/", release, "/", threshold, sep="")
     suppressWarnings(text <- .launchquery(URL=URL, FUN=readLines, N.TRIES=2))
 
     if( strsplit( threshold, split="" )[[1]][
-	length(	strsplit( threshold, split="" )[[1]]) ] == "A"){
+    length( strsplit( threshold, split="" )[[1]]) ] == "A"){
 
-	threshold<-substr(threshold,1,nchar(threshold)-1)
+    threshold<-substr(threshold,1,nchar(threshold)-1)
     }
 
     indices<-grep(pattern=paste("NR_",threshold,"_",sep=""),text)
@@ -57,7 +57,7 @@ function( release="current",
 ###########Updated: 2017-Jul-21 CORNER CASE
     ind <- grep(pattern="4R3I|0", data, fixed=T) 
     if( length(ind) > 0 ){
-	data[ind] <- gsub(pattern="0", replacement="1", x=data[ind])
+    data[ind] <- gsub(pattern="0", replacement="1", x=data[ind])
     }
 ###########
     output<-as.data.frame(matrix(data,ncol=3,byrow=T),stringsAsFactors=F)
@@ -71,7 +71,7 @@ function( release="current",
 #Obtain the name of the equivalence class
     ind1<-grep(pattern=paste("NR_",threshold,"_",sep=""),splited_terms)
     if(length(ind1)!=1){
-	stop("!")
+    stop("!")
     }
     eq_class<-strsplit(splited_terms[ind1],split="\"")[[1]][1]
 
@@ -95,7 +95,7 @@ function( release="current",
 }
 
 thresholds <- 
-	c( "1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all")
+    c( "1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all")
 
 last_release <-
 function() {

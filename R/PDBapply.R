@@ -28,22 +28,22 @@ function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
     FUNCTION <- match.fun(FUNCTION)
 #Download full PDB list if necessary
     if( is.null(listpdb) ) {
-	listpdb <- query_pdblist()
+    listpdb <- query_pdblist()
     }
 
 #Apply function over the list
     output_list <- lapply( listpdb, 
-		 FUN=function( i, FUNCTION, verbose, ... ){
+         FUN=function( i, FUNCTION, verbose, ... ){
 
-	Sys.sleep(0.1)
-	if( verbose ) print(i)
+    Sys.sleep(0.1)
+    if( verbose ) print(i)
 
         tryCatch( {
             return( FUNCTION( i, ... ) )
         }, error = function(e) {
             return( NA )
         })
-	}, FUNCTION=FUNCTION, verbose=verbose, ...=... )
+    }, FUNCTION=FUNCTION, verbose=verbose, ...=... )
     
 #Since it receives NA from the API with a certain frequency when it shouldn't
 #the NA in the list are double-checked
@@ -66,8 +66,8 @@ function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
                         ncol=2 ),
                 stringsAsFactors=F )
     } else {
-	names(output_list) <- listpdb
-	output <- output_list
+    names(output_list) <- listpdb
+    output <- output_list
     }
     return( output )
 }

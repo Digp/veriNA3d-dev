@@ -30,14 +30,14 @@
 
 cluster.select <-
 function( 
-	ntID = NULL, 
-	ntinfo,	
-	x = "eta", 
-	y = "theta", 
-	SD_DENS = 1, 
-	bandwidths = c( 40, 40 ),
+    ntID = NULL, 
+    ntinfo, 
+    x = "eta", 
+    y = "theta", 
+    SD_DENS = 1, 
+    bandwidths = c( 40, 40 ),
         dens = NULL, 
-	lims = c( 0, 360, 0, 360) ) {
+    lims = c( 0, 360, 0, 360) ) {
 
     if(is.null(ntID)){
         ntID<-ntinfo$ntID
@@ -45,7 +45,7 @@ function(
     if(is.null(dens)){
     #Calculate density using a kernel density estimation function
         dens=kde2d(ntinfo[ntID,x],ntinfo[ntID,y],
-	  n=c(length(lims[1]:lims[2]),length(lims[3]:lims[4])),
+      n=c(length(lims[1]:lims[2]),length(lims[3]:lims[4])),
           h=bandwidths,lims=lims)
     }
     mean_dens=mean(dens$z)
@@ -67,27 +67,27 @@ function(
     #image(aver, col=c("white", "black"),xaxt="n",yaxt="n")
     grid_list<-vector(mode="list",length=length(lims[3]:lims[4]))
     for(i in 1:ncol(aver)){
-	ycoord<-which(aver[i,]==1)
-	if(length(ycoord)==0){
-	    grid_list[[i]]<-list(NA)
-	}else if(length(ycoord)==1){
-	    grid_list[[i]]<-list(ycoord)
-	}else{
-	    if(all(diff(ycoord)==1)){
-		grid_list[[i]]<-list(ycoord)
-	    }else{
-		end<-which(diff(ycoord)!=1)
-		start<-1
-		for(h in 1:length(end)){
-	            start[h+1]<-end[h]+1
-        	}
-		end[length(end)+1]<-length(ycoord)
-		for(j in 1:length(end)){
-		    grid_list[[i]][[j]]<-ycoord[start[j]:end[j]]
-		}
-		
-	    }
-	}
+    ycoord<-which(aver[i,]==1)
+    if(length(ycoord)==0){
+        grid_list[[i]]<-list(NA)
+    }else if(length(ycoord)==1){
+        grid_list[[i]]<-list(ycoord)
+    }else{
+        if(all(diff(ycoord)==1)){
+        grid_list[[i]]<-list(ycoord)
+        }else{
+        end<-which(diff(ycoord)!=1)
+        start<-1
+        for(h in 1:length(end)){
+                start[h+1]<-end[h]+1
+            }
+        end[length(end)+1]<-length(ycoord)
+        for(j in 1:length(end)){
+            grid_list[[i]][[j]]<-ycoord[start[j]:end[j]]
+        }
+        
+        }
+    }
     }
 
     clusters<-.find_clusters(grid_list)
@@ -101,8 +101,8 @@ function(
     #Each of the points is assigned to one of the cells of the matrix
     grid<-unlist(lapply(ntID,FUN=function(.ntID){
         gridx<-which(ntinfo[ntinfo$ntID==.ntID,x]<angle_x_intervals)[1]-1
-	gridy<-which(ntinfo[ntinfo$ntID==.ntID,y]<angle_y_intervals)[1]-1
-	return(paste(gridx, gridy, sep="_"))
+    gridy<-which(ntinfo[ntinfo$ntID==.ntID,y]<angle_y_intervals)[1]-1
+    return(paste(gridx, gridy, sep="_"))
     }))
     grid_coords<-as.data.frame(cbind(ntID,grid),stringsAsFactors=F)
     grid_coords$ntID<-as.numeric(grid_coords$ntID)
@@ -110,8 +110,8 @@ function(
     #The cells found for each cluster are compared with the cells of each
     #point and the population for each cluster is found
     output<-lapply(clusters,FUN=function(.cluster){
-#	print(class(.cluster))
-	return(grid_coords[which(grid_coords$grid %in% .cluster),"ntID"])
+#   print(class(.cluster))
+    return(grid_coords[which(grid_coords$grid %in% .cluster),"ntID"])
     })
     return(output)
 }
@@ -121,30 +121,30 @@ function(
     kk<-..find_clusters(grid_list)
     for(i in 1:length(kk)){
 #print(i)
-	ind<-max(names(kk[[i]]))
-	#print(ind)
-	for(j in as.vector(1:length(kk))[-i]){
-	    if(any(names(kk[[j]])==as.numeric(ind)+1)){
+    ind<-max(names(kk[[i]]))
+    #print(ind)
+    for(j in as.vector(1:length(kk))[-i]){
+        if(any(names(kk[[j]])==as.numeric(ind)+1)){
 #print(c(i,j))
-		if(any(kk[[j]][[as.character(as.numeric(ind)+1)]] %in% kk[[i]][[ind]])){
-		    #same cluster
-#		    print("HI")
-		    inds<-names(kk[[i]])
-		    for(name in inds){
-			kk[[j]][[ name ]] <- sort(append(kk[[j]][[ name ]], kk[[i]][[ name ]]))
-		    }
-		    kk[[i]][[ind]]<-NA
-		}
-	    }
-	}
+        if(any(kk[[j]][[as.character(as.numeric(ind)+1)]] %in% kk[[i]][[ind]])){
+            #same cluster
+#           print("HI")
+            inds<-names(kk[[i]])
+            for(name in inds){
+            kk[[j]][[ name ]] <- sort(append(kk[[j]][[ name ]], kk[[i]][[ name ]]))
+            }
+            kk[[i]][[ind]]<-NA
+        }
+        }
+    }
     }
     kk<-kk[!unlist(lapply(kk,anyNA))]
     for(i in 1:length(kk)){
-	x<-names(kk[[i]])
-	cluster<-unlist(lapply(x, FUN=function(name) { 
-	    return(paste(name, kk[[i]][[name]], sep="_"))
-	}))
-	kk[[i]]<-cluster
+    x<-names(kk[[i]])
+    cluster<-unlist(lapply(x, FUN=function(name) { 
+        return(paste(name, kk[[i]][[name]], sep="_"))
+    }))
+    kk[[i]]<-cluster
     }
     return(kk)
 }
@@ -179,17 +179,17 @@ function(
         for(k in 1:length(grid_list[[inds[j]]])){
 #print(c(j,k))
             if(any(grid_list[[inds[j]]][[k]] %in% clusters[[as.character(inds[j-1])]])){
-		if(is.null(clusters[[j]])){
+        if(is.null(clusters[[j]])){
                     clusters[[j]]<-grid_list[[inds[j]]][[k]]
                     names(clusters)[j]<-inds[j]
-		}else{
-		    clusters[[j]]<-sort(append(clusters[[j]],grid_list[[inds[j]]][[k]]))
-		}
+        }else{
+            clusters[[j]]<-sort(append(clusters[[j]],grid_list[[inds[j]]][[k]]))
+        }
                 grid_list[[inds[j]]][[k]]<-NA
                 #break()
             }
         }
-	if(length(grid_list[[inds[j]]][!unlist(lapply(grid_list[inds[j]],is.na))])==0){
+    if(length(grid_list[[inds[j]]][!unlist(lapply(grid_list[inds[j]],is.na))])==0){
             grid_list[[inds[j]]]<-list(NA)
         }else{
             grid_list[[inds[j]]]<-grid_list[[inds[j]]][!unlist(lapply(grid_list[inds[j]],is.na))]

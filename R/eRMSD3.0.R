@@ -261,17 +261,17 @@ rVECTOR<-function(pdb1,outformat="rvector",simple_out=T){
 }
 eRMSD<-function(pdb1=NULL,pdb2=NULL,rvectors1=NULL,rvectors2=NULL){
     if(!is.null(rvectors1)&&!is.null(rvectors2)){
-	if(!nrow(rvectors1)==nrow(rvectors2)){
-	    stop("Different number of rvectors. The original PDB had a different length!")
-	}
+    if(!nrow(rvectors1)==nrow(rvectors2)){
+        stop("Different number of rvectors. The original PDB had a different length!")
+    }
     }else if(!is.null(pdb1)&&!is.null(pdb2)){
-	if(!sum(pdb1$atom$elety=="C4'")==sum(pdb2$atom$elety=="C4'")){
-	    stop("Different lengths in input PDB objects")
-	}
-	rvectors1<-rVECTOR(pdb1,outformat="rvector",simple_out=T)
-	rvectors2<-rVECTOR(pdb2,outformat="rvector",simple_out=T)
+    if(!sum(pdb1$atom$elety=="C4'")==sum(pdb2$atom$elety=="C4'")){
+        stop("Different lengths in input PDB objects")
+    }
+    rvectors1<-rVECTOR(pdb1,outformat="rvector",simple_out=T)
+    rvectors2<-rVECTOR(pdb2,outformat="rvector",simple_out=T)
     }else{
-	stop("Introduce two PDB objects or two set of rvectors")
+    stop("Introduce two PDB objects or two set of rvectors")
     }
     len<-sqrt(nrow(rvectors1))
     deltaG<-t(apply(cbind(rvectors1[,1:3],rvectors2[,1:3]),

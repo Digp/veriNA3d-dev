@@ -6,7 +6,7 @@
 
 #INPUT: -ntinfo: data.frame
 #       -ALL: logical, it will change the output format
-#	-PATH: path with the info about dssr
+#   -PATH: path with the info about dssr
 #       -cores: number of cores
 
 #OUTPUT: If ALL==T returns a data.frame including the info about ntinfo object
@@ -19,9 +19,9 @@ addDSSRdata<-function(ntinfo,ALL=T,PATH,cores=1){
  #   require(jsonlite)
     if(cores>1){
   #      require(parallel)
-	if(cores>detectCores()){
-	    stop("Introduce valid number of cores")
-	}
+    if(cores>detectCores()){
+        stop("Introduce valid number of cores")
+    }
     }
 #Read dssr data into RAM
     system.time(invisible(lapply(dir(PATH,pattern=".dssr$"),
@@ -31,15 +31,15 @@ addDSSRdata<-function(ntinfo,ALL=T,PATH,cores=1){
 
 #Obtain info for every nt and save into a list
     if(cores==1){
-	data<-lapply(ntinfo$ntID,.checkDSSRnt,ntinfo)
+    data<-lapply(ntinfo$ntID,.checkDSSRnt,ntinfo)
     }else{
-	data<-mclapply(ntinfo$ntID,.checkDSSRnt,ntinfo,mc.cores=cores)
+    data<-mclapply(ntinfo$ntID,.checkDSSRnt,ntinfo,mc.cores=cores)
     }
 #for(i in 1:length(data)){if(length(data[[i]])!=27){print(i)}}
 
 #Check that the result is correct
     if(length(data)!=nrow(ntinfo)){
-	stop("Sth weird happened, try again with different number of cores")
+    stop("Sth weird happened, try again with different number of cores")
     }
 
 #Prepare the output data.frame
@@ -69,7 +69,7 @@ addDSSRdata<-function(ntinfo,ALL=T,PATH,cores=1){
 
 #If the user wants a combined data.frame ...
     if(ALL){
-	data<-cbind(ntinfo,data)
+    data<-cbind(ntinfo,data)
     }
 
 #Removed files generated during execution and saved in the Global environment
@@ -88,24 +88,24 @@ addDSSRdata<-function(ntinfo,ALL=T,PATH,cores=1){
     model<-ntinfo[index,"model"]
     resID<-ntinfo[index,"resID"]
     if(sum(substring(resID,first=nchar(resID))==0:9)==1){
-	resID<-paste(resID,"/",sep="")
+    resID<-paste(resID,"/",sep="")
     }
     dssr<-get(paste(pdbID,".dssr",sep=""))
     if(insert!="?"){
-	dssrID<-paste(model,":",ntinfo[index,"chain"],".",
+    dssrID<-paste(model,":",ntinfo[index,"chain"],".",
           resID,ntinfo[index,"resno"],"^",insert,sep="")
     }else{
         dssrID<-paste(model,":",ntinfo[index,"chain"],".",
           resID,ntinfo[index,"resno"],sep="")
     }
     if(model==0){
-	model=1
+    model=1
         dssrID<-paste(ntinfo[index,"chain"],".",
           ntinfo[index,"resID"],ntinfo[index,"resno"],sep="")
     }
     df.index<-which(dssr$models$parameters$nts[[model]][,"nt_id"]==dssrID)
     if(length(df.index)==0){
-	print(ntID)
+    print(ntID)
     }
 #    df<-dssr$models$parameters$nts[[model]][df.index,c(26:29,14:15,18:19,21:23,36:37,39:41)]
     df<-dssr$models$parameters$nts[[model]][df.index,
@@ -121,40 +121,40 @@ addDSSRdata<-function(ntinfo,ALL=T,PATH,cores=1){
     num_helices<-length(dssr$models$parameters$helices[[model]]$pairs)
     for(i in 1:num_helices){
         if(sum(dssr$models$parameters$helices[[model]]$pairs[[i]]$nt1==dssrID)==1){
-	    helix<-T
-	    ind<-which(dssr$models$parameters$helices[[model]]$pairs[[i]]$nt1==dssrID)
-	    bpairs<-dssr$models$parameters$helices[[model]]$pairs[[i]][ind,c("bp","name","Saenger","LW","DSSR")]
-	}else if(sum(dssr$models$parameters$helices[[model]]$pairs[[i]]$nt2==dssrID)==1){
-	    helix<-T
-	    ind<-which(dssr$models$parameters$helices[[model]]$pairs[[i]]$nt2==dssrID)
-	    bpairs<-dssr$models$parameters$helices[[model]]$pairs[[i]][ind,c("bp","name","Saenger","LW","DSSR")]
-	}
+        helix<-T
+        ind<-which(dssr$models$parameters$helices[[model]]$pairs[[i]]$nt1==dssrID)
+        bpairs<-dssr$models$parameters$helices[[model]]$pairs[[i]][ind,c("bp","name","Saenger","LW","DSSR")]
+    }else if(sum(dssr$models$parameters$helices[[model]]$pairs[[i]]$nt2==dssrID)==1){
+        helix<-T
+        ind<-which(dssr$models$parameters$helices[[model]]$pairs[[i]]$nt2==dssrID)
+        bpairs<-dssr$models$parameters$helices[[model]]$pairs[[i]][ind,c("bp","name","Saenger","LW","DSSR")]
+    }
     }
     if(!exists("helix")){
-	helix<-F
-	bpairs<-c(NA,NA,NA,NA,NA)
+    helix<-F
+    bpairs<-c(NA,NA,NA,NA,NA)
     }
 #    names(bpairs)<-c("bp","name","Saenger","LW","DSSR")
     num_stems<-length(dssr$models$parameters$stem[[model]]$pairs)
     for(i in 1:num_stems){
         if(sum(dssr$models$parameters$stem[[model]]$pairs[[i]]$nt1==dssrID)==1){
-	    stems<-T
-	    #ind<-which(dssr$models$parameters$stem[[model]]$pairs[[i]]$nt1==dssrID)
-	    #bpairs<-dssr$models$parameters$stem[[model]]$pairs[[i]][ind,c("Saenger","LW","DSSR")]
+        stems<-T
+        #ind<-which(dssr$models$parameters$stem[[model]]$pairs[[i]]$nt1==dssrID)
+        #bpairs<-dssr$models$parameters$stem[[model]]$pairs[[i]][ind,c("Saenger","LW","DSSR")]
         }else if(sum(dssr$models$parameters$stem[[model]]$pairs[[i]]$nt2==dssrID)==1){
-	    stems<-T
-	    #ind<-which(dssr$models$parameters$stem[[model]]$pairs[[i]]$nt2==dssrID)
-	    #bpairs<-dssr$models$parameters$stem[[model]]$pairs[[i]][ind,c("Saenger","LW","DSSR")]
+        stems<-T
+        #ind<-which(dssr$models$parameters$stem[[model]]$pairs[[i]]$nt2==dssrID)
+        #bpairs<-dssr$models$parameters$stem[[model]]$pairs[[i]][ind,c("Saenger","LW","DSSR")]
 
-	}
+    }
     }
     if(!exists("stems")){
-	stems<-F
-	#bpairs<-c(NA,NA,NA)
+    stems<-F
+    #bpairs<-c(NA,NA,NA)
     }
     output<-unlist(list(df,helix=helix,stem=stems,hairpin=hairpin,bulge=bulge,iloop=iloop,bpairs))
     if(length(output)==26){
-	return(c(output,ok=T))
+    return(c(output,ok=T))
     }else{
         return(c(rep(NA,16),output,ok=F))
     }

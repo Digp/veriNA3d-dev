@@ -20,14 +20,14 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
         invisible(dir.create(dir))
     }
     if(eta=="eta"){
-	xlab<-expression(paste(eta," (degrees)",sep=""))
+    xlab<-expression(paste(eta," (degrees)",sep=""))
     }else{
-	xlab<-eta
+    xlab<-eta
     }
     if(theta=="theta"){
-	ylab<-expression(paste(theta," (degrees)",sep=""))
+    ylab<-expression(paste(theta," (degrees)",sep=""))
     }else{
-	ylab<-theta
+    ylab<-theta
     }
     if(is.null(bandwidths)){
         bandwidths<-c(bandwidth.nrd(data[,eta]),bandwidth.nrd(data[,theta]))

@@ -37,7 +37,7 @@ function( pdbID, length = 3, ... ){
     if(any(MM$molecule_type == 
        "polydeoxyribonucleotide/polyribonucleotide hybrid")){
 
-	 return("DNARNA")
+     return("DNARNA")
     }
 
     #If the PDB entry does not contain RNA it is classified as "NoRNA"
@@ -87,14 +87,14 @@ function( pdbID, length = 3, ... ){
 corner_cases <-
 function( pdbID ){
     if(pdbID %in% c("2P7E",
-		    "3CR1")){
-	return(list(TRUE, "nakedRNA"))
+            "3CR1")){
+    return(list(TRUE, "nakedRNA"))
     } else if(pdbID %in% c("3OK2",
-			   "3OK4")){
-	return(list(TRUE, "ANARNA"))
+               "3OK4")){
+    return(list(TRUE, "ANARNA"))
     } else if(pdbID %in% c("1HHW",
-			   "1HHX")){
-	return(list(TRUE, "LNARNA"))
+               "1HHX")){
+    return(list(TRUE, "LNARNA"))
     }
     return(list(FALSE, ""))
 }

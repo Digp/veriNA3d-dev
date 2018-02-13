@@ -44,11 +44,11 @@ function( pdbID, info, API="default",
 
 #Warn the user that some data is only taken from mmb/ebi api
     if( info %in% onlymmbqueries && API == "ebi" ){
-	.APIwarning( "MMB" )
+    .APIwarning( "MMB" )
         API <- "mmb"
 
     } else if ( info %in% onlyebiqueries && API == "mmb" ) {
-	.APIwarning( "EBI" )
+    .APIwarning( "EBI" )
         API <- "ebi"
     }
 

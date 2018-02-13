@@ -14,7 +14,7 @@
 rvec_plot<-function(ntID=NULL, df_rvectors, o="", width=15, height=15, bg="white",
         units="cm", res=200, cex=0.6, cols=3) {
     if(is.null(ntID)){
-	ntID<-unique(df_rvectors$ntID)
+    ntID<-unique(df_rvectors$ntID)
     }
 
     ind<-which(df_rvectors$ntID %in% ntID)
