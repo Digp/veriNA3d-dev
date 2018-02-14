@@ -4,7 +4,8 @@
 \alias{parse.cif}
 \title{Parse coordinates from CIF files}
 \usage{
-parse.cif(pdbID, model = NULL, chain = NULL, alt = c("A"), verbose = F)
+parse.cif(pdbID, model = NULL, chain = NULL, alt = c("A"), alldata = F,
+  verbose = F)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure in the Protein 
@@ -22,6 +23,11 @@ will only be applied to the "atom" attribute of the output pdb object.}
 records. This option will only be applied to the "atom" attribute of the 
 output pdb object.}
 
+\item{alldata}{A logical default to FALSE to read only coordinates. If TRUE
+all the data in the mmCIF is parsed, but it is time consuming. If other 
+data is needed, check the ?query_functions just in case you can obtain
+the desired information from there.}
+
 \item{verbose}{A logical indicating whether to print details of the process.}
 }
 \value{
@@ -31,8 +37,8 @@ in the CIF file in the form of object attributes. The atom coordinates data
 is duplicated for retrocompatibility reasons with the bio3d package.
 }
 \description{
-Given a PDB ID, the function access the MMB API and downloads directly to
-RAM the coordinates of the desired structure. It can also read CIF files.
+Given a file or PDB ID, the function parses the coordinates of the 
+structure. It can also read all the fields of the mmCIF format.
 }
 \author{
 Diego Gallego

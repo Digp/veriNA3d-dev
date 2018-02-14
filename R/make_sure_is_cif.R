@@ -15,7 +15,7 @@
 #' @author Diego Gallego
 #'
 
-make_sure_is_cif <- 
+.make_sure_is_cif <- 
 function( cif, verbose=F, check="is.cif" ) {
 # Check if input cif argument is a PDB ID or a "cif" object
     if( length( class( cif ) == 1 ) &&

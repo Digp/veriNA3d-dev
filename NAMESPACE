@@ -22,7 +22,6 @@ export(
 
 	check.nt, 
 	check_etatheta, 
-	cif_to_RAM, 
 	cluster.select, 
 
 	distances_entities,
@@ -41,7 +40,6 @@ export(
 	make_aantinfo, 
 	make_all_plots, 
 	make_ntinfo, 
-	make_sure_is_cif,
 	measure, 
 	measure_pucker, 
 	model.select, 
@@ -75,9 +73,7 @@ export(
 	query_technique,
 
 	rcpp_hello_world,
-	readcif_RAM, 
 	read.dssp,
-	read.cif.RAM, 
 	RNA_classifier, 
 	rvec_plot, 
 	rVECTOR, 

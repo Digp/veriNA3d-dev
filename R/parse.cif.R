@@ -1,8 +1,7 @@
-#Date: 2017-Jan-10, last updated on: 2017-Aug-03
 #' Parse coordinates from CIF files
 #'
-#' Given a PDB ID, the function access the MMB API and downloads directly to
-#' RAM the coordinates of the desired structure. It can also read CIF files.
+#' Given a file or PDB ID, the function parses the coordinates of the 
+#' structure. It can also read all the fields of the mmCIF format.
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein 
 #' Data Bank (or an existing file in disk).
@@ -15,6 +14,10 @@
 #' @param alt A string or a vector of strings with the desired alternative
 #' records. This option will only be applied to the "atom" attribute of the 
 #' output pdb object.
+#' @param alldata A logical default to FALSE to read only coordinates. If TRUE
+#' all the data in the mmCIF is parsed, but it is time consuming. If other 
+#' data is needed, check the ?query_functions just in case you can obtain
+#' the desired information from there.
 #' @param verbose A logical indicating whether to print details of the process.
 #'
 #' @return A "pdb" object as defined in the bio3d package (Grant et al. 2006).
@@ -25,175 +28,173 @@
 #' @author Diego Gallego
 #'
 
-parse.cif <- 
-function( pdbID, model=NULL,
-          chain=NULL, alt=c("A"), verbose=F
-        ){
-    if(verbose) print(pdbID)
-####### Code to read CIF files
-    if( file.exists( pdbID ) && 
-        length( grep(".cif$", pdbID, perl=T) ) == 1 ) {
-    pdb <- readLines( pdbID )
+parse.cif <-
+function(pdbID, model=NULL, chain=NULL, alt=c("A"), alldata=F, verbose=F)
+{
+    if (verbose) print(pdbID)
 
-    } else if( nchar( pdbID ) == 4 ) {
-        tryCatch({
-            pdb <- readLines( paste(
-                            "http://mmb.pcb.ub.es/api/pdb/",
-                            pdbID,
-                            ".cif",
-                            sep="" ) )
-        }, error = function(e) {
-            if(!.check_internet()){
-                stop("No internet connection")
-            }
-            Sys.sleep(1)
-            pdb <- readLines( paste(
-                            "http://mmb.pcb.ub.es/api/pdb/",
-                            pdbID,
-                            ".cif",
-                            sep="" ) )
-        })
-    }else{
-        stop( paste( "Please, provide a valid pdbID or file ",
-                     "(files will only be read in Linux systems)",
-                     sep="") )
+    ## Read CIF block --------------------------------------------------------
+    ## Save extension, in case its a file
+    ext <- substr(pdbID, nchar(pdbID) - 3, nchar(pdbID))
+
+    if (file.exists(pdbID) && ext == ".cif") # Read file
+    {
+        pdb <- readLines(pdbID)
+    } else if (nchar(pdbID) == 4) # Otherwise download by pdb ID
+    {
+        cat("Downloading file from Internet")
+        URL <- paste("http://mmb.pcb.ub.es/api/pdb/", pdbID, ".cif", sep ="")
+        pdb <- veriNA3d:::.launchquery(URL, FUN=readLines, N.TRIES=1)
+    } else # Error
+    {
+        stop("Please, provide a valid pdbID or file")
     }
 
-# Find commented lines, they indicate the beggining/end of each section
+    ## Parse lines block -----------------------------------------------------
+    ## Find #, they indicate the beggining/end of each section
     inds <- grep("#", pdb, fixed=T)
-# Parse the CIF
-    cif <- sapply( seq(1, length(inds)-1, by=1), 
-        FUN=.parse.cif.sections,
-        pdb=pdb, inds=inds,
-        USE.NAMES=T)
-# This "cif" object could already be the output, but for retrocompatibility
-# with bio3d, a pdb class object is defined
+    ## Want all data?
+    if (alldata)
+    {
+        ## Define a list of indices for all sections
+        sections <- seq(1, length(inds)-1, by=1)
+    } else
+    {
+        ## Find start of coordinates section
+        st <- grep("_atom_site.group_PDB", pdb, fixed=T) - 2
+        ## Define index of interest for coordinates
+        sections <- which(inds == st)
+    }
+    ## Parse the CIF
+    cif <- sapply(sections, 
+                  FUN=veriNA3d:::.parse.cif.sections,
+                  pdb=pdb, inds=inds,
+                  USE.NAMES=T)
 
-# Coordinates are saved apart:
+    ## Make it compatible with bio3d functions -------------------------------
+    ## Coordinates are saved apart:
     table <- cif$atom_site
-    mmcif_pdbx.dic <- cif$audit_conform[ 
-            names(cif$audit_conform) == "dict_version" ]
-    ##### In case there are Sodium ions ("NA"), replace them by "Na" string
-    na.ind <- which( is.na( table ),
-                     arr.ind = T )
-    if( nrow(na.ind) > 0 ) {
-        for( i in 1:nrow( na.ind ) ) {
+
+    ## In case there are Sodium ions ("NA"), replace them by "Na" string
+    na.ind <- which(is.na( table ), arr.ind = T)
+    if(nrow(na.ind) > 0)
+    {
+        for(i in 1:nrow(na.ind))
+        {
             table[ na.ind[ i, 1 ],
                    na.ind[ i, 2 ] ] <- "Na"
         }
     }
 
-    ##### Check mmcif_pdbx.dic version to know number of columns
-    if( mmcif_pdbx.dic >= 4.073 ) {
-        atom <- cbind( table[ ,
-                c( 1, 2, 4, 5, 6, 19, 17, 10, 11, 12, 13, 14, 15, 8, 3, 16, 7,
-                   9, 18, 20, 21 )
-                        ] )
-        names(atom)<-c( "type", "eleno", "elety", "alt", "resid", "chain",
-                        "resno", "insert", "x", "y", "z", "o", "b", "entid",
-                        "elesy", "charge", "asym_id","seq_id", "comp_id",
-                        "atom_id","model")
-    } else {
-#4.072 was the last formated CIF files with 26 columns (included *_esd columns)
-        atom <- cbind( table[ ,
-                c( 1, 2, 4, 5, 6, 24, 22, 10, 11, 12, 13, 14, 15, 8, 3, 21, 7,
-                   9, 16, 17, 18, 19, 20, 23, 25, 26 )
-                        ] )
-        names(atom)<-c( "type", "eleno", "elety", "alt", "resid", "chain",
-                        "resno", "insert", "x", "y", "z", "o", "b", "entid",
-                        "elesy", "charge", "asym_id", "seq_id", "x_esd",
-                        "y_esd", "z_esd", "o_esd", "b_esd", "comp_id",
-                        "atom_id", "model" )
-  }
-
-##### Check for alternative (alt) records
-    if( sum( atom$alt != "." ) > 0 ){
-        altind <- sort( c( which( atom$alt == "." ),
-                           which( atom$alt %in% alt ) ) )
-        atom<-atom[ altind, ]
-        if(verbose) print( paste("PDB has alt records, taking ", 
-                alt ," only", sep="") )
+    ## According with number of columns, prepare output
+    if(ncol(table) == 21)
+    {
+        atom <- cbind(table[, c(1, 2, 4, 5, 6, 19, 17, 10, 11, 12, 13, 14,
+                                15, 8, 3, 16, 7, 9, 18, 20, 21)])
+        names(atom)<-c("type", "eleno", "elety", "alt", "resid", "chain",
+                       "resno", "insert", "x", "y", "z", "o", "b", "entid",
+                       "elesy", "charge", "asym_id","seq_id", "comp_id",
+                       "atom_id","model")
+    } else if (ncol(table) == 26)
+    {
+        atom <- cbind( table[, c(1, 2, 4, 5, 6, 24, 22, 10, 11, 12, 13, 14, 
+                                 15, 8, 3, 21, 7, 9, 16, 17, 18, 19, 20, 23, 
+                                 25, 26)])
+        names(atom)<-c("type", "eleno", "elety", "alt", "resid", "chain",
+                       "resno", "insert", "x", "y", "z", "o", "b", "entid",
+                       "elesy", "charge", "asym_id", "seq_id", "x_esd",
+                       "y_esd", "z_esd", "o_esd", "b_esd", "comp_id",
+                       "atom_id", "model")
     }
 
-##### Return a particular chain if specified in arguments
-    if( !is.null( chain ) ) {
-        atom <- atom[ atom$chain == chain, ]
+    ## Check for alternative (alt) records
+    if(sum(atom$alt != ".") > 0)
+    {
+        altind <- sort(c(which(atom$alt == "."),
+                         which(atom$alt %in% alt)))
+        atom<-atom[altind,]
+        if(verbose) print(paste("PDB has alt records, taking ", 
+                                alt ," only", sep=""))
     }
-##### Return a particular model if specified in arguments
-    if( !is.null( model ) ) {
-        atom <- atom[ atom$model == model, ]
-        xyz.models <- as.xyz( matrix(
-                                c( t( atom[, c("x", "y", "z") ] ) ),
-                                nrow = 1 ) )
+
+    ## Return a particular chain if specified in arguments
+    if(!is.null(chain))
+    {
+        atom <- atom[atom$chain == chain,]
+    }
+    ## Return a particular model if specified in arguments
+    if(!is.null(model))
+    {
+        atom <- atom[atom$model == model,]
+        xyz.models <- as.xyz(matrix(c(t(atom[, c("x", "y", "z")])),
+                                    nrow = 1))
         flag <- FALSE
-    } else {
-
-##### else returns all models for the desired structure
+    } else
+    {
+    ## else returns all models for the desired structure
         model <- unique(atom$model)
-        lengths <- unlist( lapply( model,
-                                   FUN=function(x) sum( atom$model == x )
-                          ) )
+        lengths <- unlist(lapply(model,
+                                 FUN=function(x) sum(atom$model == x)))
 
-##### Check if the different models have the same number of atoms
-        if( length( unique( lengths ) ) == 1 ) {
-            xyz.models <- as.xyz( matrix(
-                                        as.numeric( c( t(
-                                                        atom[ ,
-                                                        c( "x", "y", "z") ]
-                                                   ) ) ),
-                                        byrow = T,
-                                        nrow = length(model)) )
+    ## Check if the different models have the same number of atoms
+        if(length(unique(lengths)) == 1)
+        {
+            xyz.models <- as.xyz(matrix(
+                                        as.numeric(c(t(
+                                                        atom[,
+                                                        c("x", "y", "z")]))),
+                                        byrow=T,
+                                        nrow=length(model)))
             flag <- FALSE
 
-##### else is a corner case for structures containing models with different
-##### number of atoms. The pdb objects receives a "flag" (logical) TRUE and
-##### the different models are stored in a list (pdb$model) instead of the
-##### coordinate matrix pdb$xyz
+    ## else is a corner case for structures containing models with different
+    ## number of atoms. The pdb objects receives a "flag" (logical) TRUE and
+    ## the different models are stored in a list (pdb$model) instead of the
+    ## coordinate matrix pdb$xyz
         } else {
-            warning( paste(
-                        pdbID,
-                        " has models with different number of atoms!",
-                        " Use the select.model() function to make sure you",
-                        " use the desired one.",
-                        sep = "" ) )
-            model <- lapply( model,
-                             FUN=function(x) return( atom[ atom$model==x, ] )
-                           )
-            atom <- model[[ 1 ]]
-            xyz.models <- as.xyz( matrix(
+            warning(paste(
+                          pdbID,
+                          " has models with different number of atoms!",
+                          " Use the select.model() function to make sure you",
+                          " use the desired one.",
+                          sep = ""))
+            model <- lapply(model,
+                            FUN=function(x) return(atom[atom$model == x,]))
+            atom <- model[[1]]
+            xyz.models <- as.xyz(matrix(
                                         rep(
-                                            as.numeric( c( t(
+                                            as.numeric(c(t(
                                                         atom[ ,
-                                                        c( "x", "y", "z") ]
-                                                       ) ) ),
+                                                        c("x", "y", "z")]
+                                                       ))),
                                             length(model)),
-                                        byrow = T,
-                                        nrow = length(model)) )
+                                        byrow=T,
+                                        nrow=length(model)))
             flag <- TRUE
         }
-        atom <- atom[ atom$model == atom$model[1], ]
+        atom <- atom[atom$model == atom$model[1],]
 
     }
 
-# Generate ouput pdb-cif object
+    ## Generate ouput pdb-cif object
     cif[[ length(cif)+1 ]] <- atom
     cif[[ length(cif)+1 ]] <- xyz.models
     cif[[ length(cif)+1 ]] <- ""
     cif[[ length(cif)+1 ]] <- model
     cif[[ length(cif)+1 ]] <- flag
     cif[[ length(cif)+1 ]] <- pdbID
-    names( cif )[(length(cif)-5):length(cif)] <- c("atom", "xyz", "calpha",
-                        "model", "flag", "call")
-    class( cif ) <- c( "pdb", "cif" )
-
+    names(cif)[(length(cif) - 5):length(cif)] <- c("atom", "xyz", "calpha",
+                                                   "model", "flag", "call")
     cif$atom[ cif$atom == "" ]  <- NA
     cif$atom[ cif$atom == "?" ] <- NA
     cif$atom[ cif$atom == "." ] <- NA
 
-    ca.inds <- atom.select.pdb( cif, string="calpha", verbose=FALSE )
-    cif$calpha <- seq( 1, nrow( atom ) ) %in% ca.inds$atom
-    return( cif )
+    ## Define class and end up -----------------------------------------------
+    class( cif ) <- c( "pdb", "cif" )
+    ca.inds <- atom.select.pdb(cif, string="calpha", verbose=FALSE)
+    cif$calpha <- seq(1, nrow(atom)) %in% ca.inds$atom
 
+    return(cif)
 }
 
 .parse.cif.sections <- function( i, pdb, inds ) {

@@ -1,10 +1,9 @@
 #Subfunctions
 
 ##############################################################################
-#Found and modified from:
+# Ping function modified from:
 # "http://stackoverflow.com/questions/5076593/how-to-determine-if-you-
 #have-an-internet-connection-in-r"
-# Ping function
 .check_internet <- 
 function(url = "http://mmb.irbbarcelona.org/www/") {
     # test the http capabilities of the current R build
@@ -41,28 +40,6 @@ function( URL, FUN, ..., N.TRIES=5L, SLEEP=0.05 ) {
 
     return(result)
 }
-#.launchquery <-
-#function( URL, JSON=F ) {
-#    text <- tryCatch({
-#   return(..launchquery( URL = URL, JSON = JSON ))
-#
-#    }, error = function(e) {
-#If the above code returns an error, check if there's internet connection
-#        if( !.check_internet() ){
-#            stop( "No internet connection" )
-#        }
-
-#Sleep the system 0.1 seconds to avoid overcharging the servers
-#        Sys.sleep( 0.1 )
-
-#Try again
-#   return(..launchquery( URL = URL, JSON = JSON ))
-#    })
-
-#Just in case an error blocks closing a connection
-#    closeAllConnections()
-#    return(text)
-#}
 ##############################################################################
 #Basic query
 #' @importFrom jsonlite fromJSON
