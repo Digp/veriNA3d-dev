@@ -1,3 +1,95 @@
+#Created: 2017-Apr-10
+#' Plot distribution of desired angles in circular plots
+#'
+#' Given a data.frame with nucleotides data, it generates a series of circular
+#' plots with the desired angles. NA in the data are ignored.
+#'
+#' @param ntID An obejct of class vector with the desired nucleotides of 
+#'    analysis. If NULL all the nucleotides in the data.frame will be used
+#' @param ntinfo A data.frame with the input data. It should contain the 
+#'    columns with the desired angles and a column labeled ntID
+#' @param angles The column names with the desired data
+#' @param o the name of the output file (the function will automatically 
+#'    include the .png extension)
+#' @param width The width of the plot (passed to the png() function)
+#' @param height The height of the plot (passed to the png() function)
+#' @param bg The background color of the plot (passed to the png() function)
+#' @param units The unit to measure height and width (passed to the png() 
+#'    function)
+#' @param res Resolution (passed to the png() function)
+#' @param cex To be passed to the par() function
+#' @param cols Number of columns in the ouput picture.
+#'
+#' @return A ".png" file with the desired plots
+#'
+#' @author Diego Gallego
+#'
+angles_dist <-
+function(ntID=NULL, ntinfo,
+    angles=c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+     "chi", "pu_phase"),
+    o="dihedrals", width=15, height=15, bg="white",
+    units="cm", res=200, cex=0.6, cols=3){
+
+    if(is.null(ntID)){
+        ntID<-ntinfo$ntID
+    }
+
+    rows<-ceiling(length(angles)/cols)
+
+    png(paste(o,".png",sep=""), width=width, height=height, bg=bg,
+     units=units, res=res)
+    par(mfrow=c(rows,cols),mar=c(2,2,2,2),cex=cex)
+    lapply(angles, FUN=function(x){
+      plot_circular_distribution(data=ntinfo[ntinfo$ntID %in% ntID,x],
+        clockwise=F, start.degree=0, main=x)
+    })
+    dev.off()
+}
+
+##############################################################################
+
+#Diego Gallego
+#Created: 2017-Jan-16
+
+#Description: Function that takes a list of nucleotides (ntID) and makes an histogram with the categorical data of interest
+
+#INPUT: .ntID: vector of numbers corresponding to nucleotide ID
+#       .ntinfo: data.frame with the dataset info
+#       .categories: Name of the column of interest. Default of "LW" because it is the data that inspired this function
+#       .o: prefix to give to the output name
+
+#Output: A plot saved in disk
+
+bp_hist<-function(ntID,ntinfo,categories="LW",o="bp",main=o,rm.na=F,width=15,height=15,bg="white",units="cm",res=200,cex=0.5){
+    png(paste(o,".png",sep=""),width=width,height=height,bg=bg,units=units,res=res)
+    plot_hist(ntID=ntID, ntinfo=ntinfo, categories=categories,
+    main=main, cex=cex)
+    dev.off()
+}
+
+#bp_hist<-function(.ntID,.ntinfo,.categories="LW",.o="bp",.main=.o,.rm.na=F,.width=15,.height=15,.bg="white",.units="cm",.res=200,.cex=0.5){
+#    .data<-.ntinfo[which(.ntinfo$ntID %in% .ntID),.categories]
+#    if(sum(is.na(.data))>0){
+#        if(.rm.na){
+#            .data<-complete.cases(.data)
+#        }else{
+#            #print("NA substituted by -")
+#            .data[is.na(.data)]<-"-"
+#        }
+#    }
+#    .dataFactor<-as.factor(.data)
+#    .labels<-as.numeric(round(100*table(.dataFactor)/sum(table(.dataFactor)),1))
+#    png(paste(.o,".png",sep=""),width=.width,height=.height,bg=.bg,units=.units,res=.res)
+#    ylim=c(0,1.1*max(table(.dataFactor)))
+#    xx<-barplot(table(.dataFactor),main=.main,density=T,ylim=ylim,xaxt="n")
+#    text(xx,y=table(.dataFactor),labels=paste(.labels,"%",sep=""),pos=3,cex=.cex)
+#    axis(1,at=xx,labels=names(table(.dataFactor)),tick=F,las=2,cex.axis=.cex)
+#    dev.off()
+#}
+
+##############################################################################
+
 #!/usr/bin/Rscript
 #Author: Diego Gallego
 #Created: ?
@@ -9,7 +101,7 @@
 #-"pucker": a string specifying 3endo or 2endo
 #-"dir": a string with the folder where the plots will be saved
 #-"z": density matrix for eta-theta (output of kde2d function). If not provided it will be calculated on fly. THESE OPTION IS NOT AVAILABLE NOW
- 
+
 #data=data.frame(scan(file="./pipe_info/3endo_nohelical.dat",what=list(e=0,t=0,nt="")))
 #plot.eta.theta<-function(data,pucker,dir,z=NULL,ntinfo,bandwidths=NULL){
 plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta="theta"){
@@ -59,7 +151,7 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
     par(mfrow=c(1,1),mar=c(3,3,1.0,3),cex=0.7,lty=1,las=1)
     persp3D(x=etaseq,y=thetaseq,z=newdensZ,border=NA,theta=-30,phi=30,xlab=xlab,ylab=ylab,zlab="")
     dev.off()
-    
+
     png(paste("./",dir,"/",pucker,"3D_rightview.png",sep=""),width=15,height=15,bg="white",units="cm",res=600)
     par(mfrow=c(1,1),mar=c(3,3,1.0,3),cex=0.7,lty=1,las=1)
     persp3D(x=etaseq,y=thetaseq,z=newdensZ,border=NA,theta=100,phi=40,xlab=xlab,ylab=ylab,zlab="",lighting=T)
@@ -76,14 +168,14 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
     axis(1,labels=seq(0,360,by=36),at=seq(0,360,by=36),las=2)
     axis(2,labels=seq(0,360,by=36),at=seq(0,360,by=36),las=2)
     dev.off()
-    
+
     base_type<-ntinfo[(ntinfo$ntID %in% data$ntID),"base_type"]
     for(i in c("pu","py")){
         if(nrow(data[base_type==i,])!=0){
             z=kde2d(data[base_type==i,eta],data[base_type==i,theta],n=c(361,361),h=c(36,36),lims=c(0,360,0,360))
             mean_z=mean(z$z)
             sd_z=sd(z$z)
-            
+
             png(paste("./",dir,"/",pucker,"_", i, ".png", sep=""),width=15,height=15,bg="white",units="cm",res=600)
             plot(data[base_type==i,eta],data[base_type==i,theta],xlim=c(0,360),ylim=c(0,360),xlab=xlab,ylab=ylab,pch=19,cex=0.3,col="gray70",xaxt="n",yaxt="n")
             contour(z,levels=c(mean_z+1*sd_z,mean_z+2*sd_z,mean_z+4*sd_z),col=c("cadetblue1","deepskyblue","blue4"),add=TRUE,lwd=2,drawlabels=FALSE)
@@ -98,7 +190,6 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
             dev.off()
         }
     }
-
     base_type<-ntinfo[(ntinfo$ntID %in% data$ntID),"resID"]
     for(i in c("A","U","C","G")){
         if(nrow(data[base_type==i,])!=0){
@@ -120,12 +211,11 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
             dev.off()
         }
     }
-    
+
 }
 #print("plot.eta.theta2 function successfully loaded")
 
 #####################################################
-
 plot.eta.theta<-function(data,pucker,classes,ntinfo,bandwidths=c(36,36)){
     require(plot3D)
     #if(is.null(z)){
@@ -214,5 +304,177 @@ plot.eta.theta<-function(data,pucker,classes,ntinfo,bandwidths=c(36,36)){
         }
     }
 
+}
+
+##############################################################################
+#Diego Gallego
+#Created: 2017-Mar-28
+
+plot_circular_distribution<-function(data, clockwise=F, start.degree=0, main=NULL){
+    if(!clockwise){
+        data<-abs(data-360)
+        labels<-append("", seq(from=330,to=0,by=-30))
+    }else{
+        labels<-append(seq(from=0,to=330,by=30),"")
+    }
+    fac<-factor(rep(1,times=length(data)))
+#    circos.par("clock.wise" = FALSE, start.degree = 0)
+    circos.par(start.degree = start.degree)
+    circos.initialize( factors=fac, x=data, xlim = c(0, 360))
+    circos.par("track.height" = 0.05)
+    circos.trackPlotRegion(factors = fac, ylim=c(0,0.1), bg.border="white",
+      panel.fun = function(x, y) {
+        circos.axis(major.at=seq(from=0,to=360,by=30), labels=labels)
+      })
+    circos.trackPoints(fac, data, y=rep(0.05,times=length(data)), col = "blue", pch = 16, cex = 0.5)
+    circos.par("track.height" = 0.2)
+    circos.trackHist(fac, data, bg.col = "white", bg.border="white", col = rgb(0.1,0.5,0.8,0.3),breaks=360)
+    if(!is.null(main)){
+        title(main=main)
+#   title(sub=paste("n = ",length(data),sep=""))
+    }
+    circos.clear()
+}
+
+
+
+##############################################################################
+
+#Author: Diego Gallego
+#Created: 2017-Mar-15
+#Description: Generates a eta-theta plot on screen
+#Input: ntinfo: data.frame with the columns "eta", "theta" and "ntID"
+#   ntID: vector of IDs of the desired nucleotides (selected from the column "ntID")
+#   dens: output of kde2d function over the data of interest
+#   bandwidths: in case "dens" is not provided and "contour" is TRUE, then "dens" will be computed with the desired bandwidths. The parameter will be directly placed as an argument to the kde2d function.
+#   eta: parameter in the x axis, it should be a string.
+#   theta: parameter in the y axis, it should be a string.
+#   contour: logical to indicate if the plot should show contour lines
+#   levels: only applicable if contour is TRUE. Vector specifying the standard deviations over the mean where the contour lines will be drawn.
+#   highlight_helical: logical indicating if the helical regions should be highlighted or not
+plot_et<-function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, eta="eta", theta="theta", drawcontour=T, sd_over_mean_contours=c(1,2,4), highlight_helical=T, points=NULL,colpoints="red"){
+    if(is.null(ntID)){
+    ntID<-ntinfo[,"ntID"]
+    }else{
+    if(sum(ntID %in% ntinfo$ntID)!=length(ntID)){
+        stop("Some of the specified IDs does not match an existing ID in your data.frame")
+    }
+    }
+    if(!eta %in% colnames(ntinfo)|!theta %in% colnames(ntinfo)){
+    stop("Provide strings in the eta&theta arguments that match two columns of the data.frame ntinfo")
+    }
+    if(drawcontour){
+    if(is.null(dens)){
+        if(is.null(bandwidths)){
+        bandwidths<-c(40,40)
+        }
+        dens<-kde2d(ntinfo[ntinfo$ntID %in% ntID, eta],
+            ntinfo[ntinfo$ntID %in% ntID, theta],
+            n=c(361,361),h=bandwidths,lims=c(0,360,0,360))
+    }
+    mean_z<-mean(dens$z)
+    sd_z=sd(dens$z)
+    }
+    plot(ntinfo[ntinfo$ntID %in% ntID, eta],
+     ntinfo[ntinfo$ntID %in% ntID, theta],
+     xlim=c(0,360),ylim=c(0,360),
+     xlab=expression(paste(eta," (degrees)",sep="")),
+     ylab=expression(paste(theta," (degrees)",sep="")),
+     pch=19,cex=0.3,col="gray70",xaxt="n",yaxt="n")
+    if(highlight_helical){
+        abline(h=190,lty=2,lwd=1.5,col="red",cex=2)
+        abline(h=240,lty=2,lwd=1.5,col="red",cex=2)
+        abline(v=150,lty=2,lwd=1.5,col="red",cex=2)
+        abline(v=190,lty=2,lwd=1.5,col="red",cex=2)
+    }
+    axis(1,labels=seq(0,360,by=36),at=seq(0,360,by=36),las=2)
+    axis(2,labels=seq(0,360,by=36),at=seq(0,360,by=36),las=2)
+    if(!is.null(points)){
+        points( ntinfo[ ntinfo$ntID %in% points, eta ],
+        ntinfo[ ntinfo$ntID %in% points, theta],
+        col=colpoints,
+        pch=19,
+        cex=0.3 )
+    }
+    if(drawcontour){
+    levels<-mean_z+sd_over_mean_contours*sd_z
+    if(length(sd_over_mean_contours)==3&&sum(sd_over_mean_contours==c(1,2,4))==3){
+        colors<-c("cadetblue1","deepskyblue","blue4")
+        legendtxt<-c(expression(paste("<",rho,">+1s.d.")),expression(paste("<",rho,">+2s.d.")),expression(paste("<",rho,">+4s.d.")))
+    }else{
+        colors<-suppressWarnings(brewer.pal(length(levels),"Blues"))
+        legendtxt<-paste("<mean>+",sd_over_mean_contours,"sd",sep="")
+    }
+    contour(dens,levels=levels,col=colors,
+                add=TRUE,lwd=2,drawlabels=FALSE)
+    legend("bottomleft",legend=legendtxt,lty=1,lwd=1,bty="n",col=colors)
+    }
+}
+##############################################################################
+#Diego Gallego
+#Created: 2017-Mar-17
+
+#Description: Function that takes a list of nucleotides (ntID) and makes an histogram with the categorical data of interest
+
+#INPUT: ntID: vector of numbers corresponding to nucleotide ID
+#       ntinfo: data.frame with the dataset info
+#       categories: Name of the column of interest. Default of "LW" because it is the data that inspired this function
+
+#Output: A plot 
+
+plot_hist<-function(ntID,ntinfo,categories="LW",rm.na=F,main=categories,cex=0.5){
+    par(mfrow=c(1,1))
+    data<-ntinfo[which(ntinfo$ntID %in% ntID),categories]
+    if(sum(is.na(data))>0){
+        if(rm.na){
+            data<-data[complete.cases(data)]
+        }else{
+            #print("NA substituted by -")
+            data[is.na(data)]<-"-"
+        }
+    }
+    dataFactor<-as.factor(data)
+    labels<-as.numeric(round(100*table(dataFactor)/sum(table(dataFactor)),1))
+    ylim=c(0,1.1*max(table(dataFactor)))
+    xx<-barplot(table(dataFactor),main=main,density=T,ylim=ylim,xaxt="n")
+    text(xx,y=table(dataFactor),labels=paste(labels,"%",sep=""),pos=3,cex=cex)
+    axis(1,at=xx,labels=names(table(dataFactor)),tick=F,las=2,cex.axis=cex)
+}
+##############################################################################
+
+#Created: 2017-Jan-16
+#' Scatter plot into a png file
+#'
+#' Given a data.frame with three columns generate a scatter plot
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+
+rvec_plot<-function(ntID=NULL, df_rvectors, o="", width=15, height=15, bg="white",
+        units="cm", res=200, cex=0.6, cols=3) {
+    if(is.null(ntID)){
+    ntID<-unique(df_rvectors$ntID)
+    }
+
+    ind<-which(df_rvectors$ntID %in% ntID)
+    neighbour5<-ind[df_rvectors[ind, "nt_neighbour"]==5]
+    neighbour3<-ind[df_rvectors[ind, "nt_neighbour"]==3]
+
+    png(paste(o,".png",sep=""),width=15,height=15,bg="white",units="cm",res=200)
+    plot(df_rvectors[neighbour5,"rho"],
+      df_rvectors[neighbour5,"z"],
+      col="red", pch=19, cex=0.5, ylab="z (A)", xlab="rho (A)",
+      ylim=range(df_rvectors[,"z"]), xlim=range(df_rvectors[,"rho"]))
+    points(df_rvectors[neighbour3,"rho"],
+      df_rvectors[neighbour3,"z"],
+      col="green", pch=19, cex=0.5)
+    legendtxt<-c("5'", "3'")
+    legend("bottomleft",legend=legendtxt,pch=19,bty="n",col=c("red","green"))
+    dev.off()
 }
 

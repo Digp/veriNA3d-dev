@@ -1,7 +1,7 @@
 #Subfunctions
 
 ##############################################################################
-# Ping function modified from:
+# Ping function inspired in:
 # "http://stackoverflow.com/questions/5076593/how-to-determine-if-you-
 #have-an-internet-connection-in-r"
 .check_internet <- 
@@ -137,7 +137,7 @@ function( text, info, pdbID ) {
 function( text, info ) {
     if( is.null( text ) ) return( NULL )
     if( info == "expType" ){
-    return( text[[1]]$experimental_method[[1]] )
+        return( text[[1]]$experimental_method[[1]] )
     } else if ( info == "formats" ){
         return( text[[1]]$PDB$downloads )
     } else if ( info == "compound" ){

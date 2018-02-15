@@ -13,8 +13,6 @@ importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circ
 
 #exportPattern("^[[:alpha:]]+")
 export( 
-	addDSSPdata, 
-	addDSSRdata, 
 	angles_dist, 
 
 	binding.RNAprot,
@@ -38,7 +36,6 @@ export(
 	is_valid_eRMSD, 
 
 	make_aantinfo, 
-	make_all_plots, 
 	make_ntinfo, 
 	measure, 
 	measure_pucker, 
@@ -73,7 +70,6 @@ export(
 	query_technique,
 
 	rcpp_hello_world,
-	read.dssp,
 	RNA_classifier, 
 	rvec_plot, 
 	rVECTOR, 
