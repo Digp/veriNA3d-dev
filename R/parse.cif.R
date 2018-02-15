@@ -29,24 +29,22 @@
 #'
 
 parse.cif <-
-function(pdbID, model=NULL, chain=NULL, alt=c("A"), alldata=F, verbose=F)
-{
-    if (verbose) print(pdbID)
+function (pdbID, model=NULL, chain=NULL, alt=c("A"), alldata=F, verbose=F) {
+
+    if (verbose) 
+        print(pdbID)
 
     ## Read CIF block --------------------------------------------------------
     ## Save extension, in case its a file
     ext <- substr(pdbID, nchar(pdbID) - 3, nchar(pdbID))
 
-    if (file.exists(pdbID) && ext == ".cif") # Read file
-    {
+    if (file.exists(pdbID) && ext == ".cif") { # Read file
         pdb <- readLines(pdbID)
-    } else if (nchar(pdbID) == 4) # Otherwise download by pdb ID
-    {
+    } else if (nchar(pdbID) == 4) { # Otherwise download by pdb ID
         cat("Downloading file from Internet")
         URL <- paste("http://mmb.pcb.ub.es/api/pdb/", pdbID, ".cif", sep ="")
         pdb <- veriNA3d:::.launchquery(URL, FUN=readLines, N.TRIES=1)
-    } else # Error
-    {
+    } else { # Error
         stop("Please, provide a valid pdbID or file")
     }
 
@@ -54,12 +52,10 @@ function(pdbID, model=NULL, chain=NULL, alt=c("A"), alldata=F, verbose=F)
     ## Find #, they indicate the beggining/end of each section
     inds <- grep("#", pdb, fixed=T)
     ## Want all data?
-    if (alldata)
-    {
+    if (alldata) {
         ## Define a list of indices for all sections
         sections <- seq(1, length(inds)-1, by=1)
-    } else
-    {
+    } else {
         ## Find start of coordinates section
         st <- grep("_atom_site.group_PDB", pdb, fixed=T) - 2
         ## Define index of interest for coordinates
@@ -77,8 +73,7 @@ function(pdbID, model=NULL, chain=NULL, alt=c("A"), alldata=F, verbose=F)
 
     ## In case there are Sodium ions ("NA"), replace them by "Na" string
     na.ind <- which(is.na( table ), arr.ind = T)
-    if(nrow(na.ind) > 0)
-    {
+    if(nrow(na.ind) > 0) {
         for(i in 1:nrow(na.ind))
         {
             table[ na.ind[ i, 1 ],
