@@ -10,31 +10,31 @@ distances_eleno(cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,
 \arguments{
 \item{cif}{A cif object obtained from parse.cif or a pdb ID.}
 
-\item{model}{The model of interest to use in the calculations. The first 
+\item{model}{The model of interest to use in the calculations. The first
 model is always the default.}
 
 \item{refeleno}{A vector of eleno (element number) to take as reference.}
 
 \item{eleno}{A vector of eleno to measure the distances.}
 
-\item{n}{An integer indicating how many atoms to return. The default 
+\item{n}{An integer indicating how many atoms to return. The default
 n=1 returns only the minimum distance, the closest atom; n=2 would return
-the two closest atoms and so on. In all cases, only atoms within the 
+the two closest atoms and so on. In all cases, only atoms within the
 cutoff will be returned.}
 
-\item{cutoff}{A numeric indicating the maximum radius to consider in 
+\item{cutoff}{A numeric indicating the maximum radius to consider in
 angstroms. Atoms further than the cutoff won't be returned.}
 
 \item{verbose}{A logical indicating whether to print details of the process.}
 
-\item{detailedoutput}{A logical indicating whether to include additional 
+\item{detailedoutput}{A logical indicating whether to include additional
 information for each atom (see data_of_interest below). If FALSE, only
 the eleno (element number) are returned.}
 
-\item{data_of_interest}{A vector of strings. Only used if detailedoutput is 
+\item{data_of_interest}{A vector of strings. Only used if detailedoutput is
 TRUE. The vector should only contain the strings between the following:
 "type", "elety", "alt", "resid", "chain", "resno", "insert", "x", "y",
-"z", "o", "b", "entid", "elesy", "charge", "asym_id", "seq_id", 
+"z", "o", "b", "entid", "elesy", "charge", "asym_id", "seq_id",
 "comp_id", "atom_id", "model".
 The selected fields will be returned for both atoms.}
 }
@@ -42,11 +42,11 @@ The selected fields will be returned for both atoms.}
 A data.frame with the nearest neighbour information.
 }
 \description{
-Given a cif object (or a pdb ID), the function computes the distances 
-between the desired atoms and returns the closest ones. Note that eleno 
+Given a cif object (or a pdb ID), the function computes the distances
+between the desired atoms and returns the closest ones. Note that eleno
 numbers are different in the PDB vs mmCIF formats and this may lead to
-errors. By default this function downloads CIF files, if you need to work 
-with PDB, make sure you provide a valid pdb object as obtained by read.pdb 
+errors. By default this function downloads CIF files, if you need to work
+with PDB, make sure you provide a valid pdb object as obtained by read.pdb
 (bio3d package function) and use the eleno numbers as in the PDB file.
 }
 \author{

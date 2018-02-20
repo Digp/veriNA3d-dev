@@ -1,10 +1,14 @@
 #' An S4 class to represent a structure parsed from its mmCIF file.
 #'
+#' All mmCIF files in the PDB at date 2018-Feb-19th contain (just) 14 common
+#' attributes, which are represented in the CIF objects herein with the same
+#' names as found in mmCIF documentation '[http://mmcif.wwpdb.org/]'.
+#'
 #' @slot entry The ID code
 #' @slot audit_conform 'mmCIF' dictionary version
-#' @slot database_2 Cross-reference ID codes for other databases
+#' @slot database_2 Cross-reference ID codes to other databases
 #' @slot pdbx_database_status Deposition data
-#' @slot audit_author Author data
+#' @slot audit_author Authors
 #' @slot entity Entities (molecules & ions) in the structure
 #' @slot chem_comp Residues (ATOM & HETATM) in the structure
 #' @slot exptl Experimental technique
@@ -35,4 +39,18 @@ CIF <- setClass("CIF",
                              atom_sites           = "character",
                              atom_type            = "data.frame",
                              atom_site            = "data.frame")
+)
+
+setMethod(
+    "show",
+    signature="CIF",
+    definition=function(object) {
+        cat("\n-- mmCIF with ID: ", object@entry,
+            " ------------------------------------------------------\n\n",
+            sep="")
+        cat("Author description: ", cif@struct[2], "\n")
+        cat("mmCIF version:       ", cif@audit_conform[2], "\n\n", sep="")
+        cat("To extract coordinates and other data use accessor functions",
+            "\n(see ?cif_accessors)", "\n\n", sep="")
+    }
 )

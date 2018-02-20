@@ -53,10 +53,10 @@ query_modres(pdbID, onlymodres = F, ...)
 query_orgligands(pdbID, ...)
 }
 \arguments{
-\item{pdbID}{A 4-character string that matches a structure in the Protein 
+\item{pdbID}{A 4-character string that matches a structure in the Protein
 Data Bank.}
 
-\item{...}{For advanced usage, arguments to be passed to subfunction 
+\item{...}{For advanced usage, arguments to be passed to subfunction
 "queryAPI". Type ?queryAPI for documentation.}
 
 \item{NAtoNa}{A logical. If TRUE, sodium ion (NA) is modified as "Na".}
@@ -65,41 +65,43 @@ Data Bank.}
 interested in a particular chain). If NULL, the info about all the chains
 is returned.}
 
-\item{subset}{Optional argument indicating "type", "length" or 
+\item{subset}{Optional argument indicating "type", "length" or
 "description". If NULL, all the columns in the data.frame are returned.}
 
-\item{onlymodres}{A logical. If TRUE, only the modified residues are 
+\item{onlymodres}{A logical. If TRUE, only the modified residues are
 returned.}
 }
 \value{
 A vector with the desired information retrieved from the API.
 }
 \description{
-Suported APIs: MMB (Molecular Modeling and Bioinformatics Laboratoy, 
-Dr.Orozco & Dr.Gelpí groups) and 
-EBI (The European Bioinformatics Institute, EMBL-EBI). Take into account 
-that due to the different structure of the APIs, the outputs might be 
+Suported APIs: MMB (Molecular Modeling and Bioinformatics Laboratoy,
+Dr.Orozco & Dr.Gelpí groups) and
+EBI (The European Bioinformatics Institute, EMBL-EBI). Take into account
+that due to the different structure of the APIs, the outputs might be
 formatted differently.\cr
 Most functions are self-explanatory, but some details might be of interest:
 \cr
- - query_resol: Keep in mind that the resolution will only be returned
-   if the structure was solved by X-RAY or Cryo-EM.\cr
- - query_compound: It returns the title as it appears in the header (PDB 
-   format) or in the "_struct.title" field (mmCIF format).\cr
- - query_header: It returns the classification of the structure as it 
-   appears in the header (PDB format) or in the 
-   "_struct_keywords.pdbx_keywords" field (mmCIF format). (Feature only 
-   accessible through the MMB API).\cr
- - query_compType: It returns the type as defined in the PDB 
-   (e.g. prot-nuc). (Feature only accessible through the MMB API).\cr
- - query_NDBId: It returns the ID of the same structure in the Nucleic
-   Acid Database. (Feature only accessible through the MMB API).\cr
- - query_depdate: It returns the deposition date.\cr
- - query_reldate: It returns the release date. (Feature only accessible
-   through the EBI API).\cr
- - query_revdate: It returns the revision date. (Feature only accessible
-   through the EBI API).\cr
- - query_formats: It returns a vector with the available files (e.g. pdb).
+\itemize{
+\item query_resol: Keep in mind that the resolution will only be returned
+if the structure was solved by X-RAY or Cryo-EM.\cr
+\item query_compound: It returns the title as it appears in the header (PDB
+format) or in the "_struct.title" field (mmCIF format).\cr
+\item query_header: It returns the classification of the structure as it
+appears in the header (PDB format) or in the
+"_struct_keywords.pdbx_keywords" field (mmCIF format). (Feature only
+accessible through the MMB API).\cr
+\item query_compType: It returns the type as defined in the PDB
+(e.g. prot-nuc). (Feature only accessible through the MMB API).\cr
+\item query_NDBId: It returns the ID of the same structure in the Nucleic
+Acid Database. (Feature only accessible through the MMB API).\cr
+\item query_depdate: It returns the deposition date.\cr
+\item query_reldate: It returns the release date. (Feature only accessible
+through the EBI API).\cr
+\item query_revdate: It returns the revision date. (Feature only accessible
+through the EBI API).\cr
+\item query_formats: It returns a vector with the available files (e.g. pdb).
+}
 }
 \author{
 Diego Gallego

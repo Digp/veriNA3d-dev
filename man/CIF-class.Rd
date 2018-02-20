@@ -6,7 +6,9 @@
 \alias{CIF}
 \title{An S4 class to represent a structure parsed from its mmCIF file.}
 \description{
-An S4 class to represent a structure parsed from its mmCIF file.
+All mmCIF files in the PDB at date 2018-Feb-19th contain (just) 14 common
+attributes, which are represented in the CIF objects herein with the same
+names as found in mmCIF documentation '\link{http://mmcif.wwpdb.org/}'.
 }
 \section{Slots}{
 
@@ -41,7 +43,7 @@ An S4 class to represent a structure parsed from its mmCIF file.
 }}
 
 \seealso{
-To create CIF objects use [parse.cif()]
+To create CIF objects use \code{\link[=parse.cif]{parse.cif()}}
 }
 \author{
 Diego Gallego

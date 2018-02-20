@@ -12,24 +12,24 @@ trim_sphere(cif, model = NULL, ntindex, chain, sel = NULL, cutoff = 8,
 \item{cif}{A cif/pdb object obtained from parse.cif/read.pdb respectively
 or a pdb ID so that the function can download the data.}
 
-\item{model}{The model of interest to use in the calculations. The first 
+\item{model}{The model of interest to use in the calculations. The first
 model is always the default.}
 
 \item{ntindex}{A numeric index/indices for the position of the desired
-nucleotides in the given chain. Not necessary if you provide sel (see 
+nucleotides in the given chain. Not necessary if you provide sel (see
 below).}
 
 \item{chain}{A string with the chain of interest.}
 
-\item{sel}{A "select" object as obtained from atom.select (bio3d). Note 
+\item{sel}{A "select" object as obtained from atom.select (bio3d). Note
 that if you are using this option, cif must be the same input object you
 used for the atom.select function.}
 
-\item{cutoff}{A numeric indicating the radius in angstroms to select around 
+\item{cutoff}{A numeric indicating the radius in angstroms to select around
 the desired nucleotides. If 0 only the nucleotides are returned.}
 
 \item{cutres}{A logical. TRUE to return only what it is found in the cutoff
-(residues in the boundaries of the cutoff are usually truncated) or 
+(residues in the boundaries of the cutoff are usually truncated) or
 FALSE to return whole residues even if further than the cutoff.}
 
 \item{file}{A string to save the output in a pdb formated file. If NULL the
@@ -41,7 +41,7 @@ fucntions just returns the pdb object.}
 A smaller pdb object or a pdb file.
 }
 \description{
-From a pdb/cif object, the nucleotide of interest and a radius, the 
+From a pdb/cif object, the nucleotide of interest and a radius, the
 function finds all the atoms in the given area and returns a pdb object
 that only includes the nearest atoms.
 }

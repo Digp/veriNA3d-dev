@@ -10,15 +10,15 @@ angles_dist(ntID = NULL, ntinfo, angles = c("alpha", "beta", "gamma",
   cex = 0.6, cols = 3)
 }
 \arguments{
-\item{ntID}{An obejct of class vector with the desired nucleotides of 
+\item{ntID}{An obejct of class vector with the desired nucleotides of
 analysis. If NULL all the nucleotides in the data.frame will be used}
 
-\item{ntinfo}{A data.frame with the input data. It should contain the 
+\item{ntinfo}{A data.frame with the input data. It should contain the
 columns with the desired angles and a column labeled ntID}
 
 \item{angles}{The column names with the desired data}
 
-\item{o}{the name of the output file (the function will automatically 
+\item{o}{the name of the output file (the function will automatically
 include the .png extension)}
 
 \item{width}{The width of the plot (passed to the png() function)}
@@ -27,7 +27,7 @@ include the .png extension)}
 
 \item{bg}{The background color of the plot (passed to the png() function)}
 
-\item{units}{The unit to measure height and width (passed to the png() 
+\item{units}{The unit to measure height and width (passed to the png()
 function)}
 
 \item{res}{Resolution (passed to the png() function)}

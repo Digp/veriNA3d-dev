@@ -24,7 +24,7 @@ A data.frame with the PDB IDs (first colunm) and the output of the
 function of interest (second column) or a list with the results.
 }
 \description{
-Given a function of interest, it is applied to all the PDB entries. 
+Given a function of interest, it is applied to all the PDB entries.
 See supported functions in ?query_functions.
 }
 \examples{

@@ -8,11 +8,11 @@ cluster.select(ntID = NULL, ntinfo, x = "eta", y = "theta", SD_DENS = 1,
   bandwidths = c(40, 40), dens = NULL, lims = c(0, 360, 0, 360))
 }
 \arguments{
-\item{ntID}{an obejct of class vector with the desired nucleotides of 
+\item{ntID}{an obejct of class vector with the desired nucleotides of
 analysis. If NULL all the nucleotides in the data.frame will be used}
 
-\item{ntinfo}{a data.frame with the input data. It should contain three 
-columns (additional columns will be ignored). One of them should be 
+\item{ntinfo}{a data.frame with the input data. It should contain three
+columns (additional columns will be ignored). One of them should be
 "ntID" and the other two are optional and can be specified using the
 parameters "x" and "y"}
 
@@ -31,14 +31,14 @@ parameters "x" and "y"}
 yl, yu)’.}
 }
 \value{
-a list of vectors containing the nucleotides ID (according with the 
-   ntID column) that clusterize in different regions of the 2D diagram
+a list of vectors containing the nucleotides ID (according with the
+ntID column) that clusterize in different regions of the 2D diagram
 }
 \description{
-Given a data.frame ("ntinfo") with at least three columns (one of them 
+Given a data.frame ("ntinfo") with at least three columns (one of them
 should be "ntID", and the other two specified by the arguments "x" and "y")
-the function computes a 2D Kernel Density Estimation and returns a list of 
-vectors containing the nucleotides ID (according with the ntID column) that 
+the function computes a 2D Kernel Density Estimation and returns a list of
+vectors containing the nucleotides ID (according with the ntID column) that
 clusterize in different regions of the 2D diagram
 }
 \author{

@@ -9,7 +9,7 @@ trim_by_ntID(cif = NULL, ntID, ntinfo, prev = 2, post = 2, verbose = T,
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from parse.cif/read.pdb respectively
-or a pdb ID so that the function can download the data. If NULL, the 
+or a pdb ID so that the function can download the data. If NULL, the
 function will extract the pdb ID from the ntinfo data frame (pdbID col).}
 
 \item{ntID}{An integer/string with the desired nucleotide ID for
@@ -35,7 +35,7 @@ A smaller pdb object or a pdb file.
 }
 \description{
 Given a data frame with nucleotide info (as obtained from make_ntinfo)
-and the desired nucleotide index (ntID), the function returns a pdb 
+and the desired nucleotide index (ntID), the function returns a pdb
 object or file allowing the user to select a number of 5' and 3' neighbors
 in sequence and non-conected residues in a cutoff radius.
 }

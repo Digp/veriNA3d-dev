@@ -8,7 +8,7 @@ select_ntID_neighbours(ntID, ntinfo, prev = 2, post = 2, info = "ntID",
   verbose = T)
 }
 \arguments{
-\item{ntID}{an obejct of class vector with the desired nucleotide of 
+\item{ntID}{an obejct of class vector with the desired nucleotide of
 analysis.}
 
 \item{ntinfo}{a data.frame with the data. It should contain at least the
@@ -27,7 +27,7 @@ output of make_ntinfo() function.}
 A vector with the desired data, extracted from the input data.frame
 }
 \description{
-Given a ntID and a number of neighbors returns the ntIDs of the whole 
+Given a ntID and a number of neighbors returns the ntIDs of the whole
 polinulceotide. The interesting point of this function is that in the case
 of asking for too much neighbors, a vector containing as many NA will be
 returned, so the output vector will always have the desired length.

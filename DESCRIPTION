@@ -18,3 +18,4 @@ Imports: bio3d, Rcpp (>= 0.12.15), circlize, parallel, dplyr, jsonlite,
 LinkingTo: Rcpp
 Packaged: 2017-03-14 18:02:52 UTC; dgallego
 RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)

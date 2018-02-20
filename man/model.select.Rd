@@ -20,9 +20,9 @@ A pdb object with the desired model coordinates.
 \description{
 Given a pdb object read using read.cif.RAM function OR read.cif/read.pdb
 functions (from bio3d) specifying "multi = TRUE", the function returns a
-pdb object with the desired model. 
+pdb object with the desired model.
 Since some structures deposited in the PDB contain models with different
-number of atoms, the pdb objects in R require a special treatment. 
+number of atoms, the pdb objects in R require a special treatment.
 The read.cif.RAM and model.select functions can cope with these structures
 (e.g. 1JTW).
 }

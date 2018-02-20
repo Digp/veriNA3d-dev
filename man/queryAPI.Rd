@@ -8,7 +8,7 @@ queryAPI(pdbID, info, API = "default", reuse = F, envir = parent.frame(n =
   2), verbose = F)
 }
 \arguments{
-\item{pdbID}{A 4-character string that matches a structure in the Protein 
+\item{pdbID}{A 4-character string that matches a structure in the Protein
 Data Bank.}
 
 \item{info}{A string with the desired query nickname.}
@@ -16,7 +16,7 @@ Data Bank.}
 \item{API}{A string that matches "mmb" or "ebi".}
 
 \item{reuse}{A logical. Set to TRUE if the same query is going to be send
-repeatedly, so that the result is saved in RAM (ir provides faster 
+repeatedly, so that the result is saved in RAM (ir provides faster
 user access and avoids unnecessary work in the servers).}
 
 \item{envir}{Environment to save&retrieve the data if reuse is TRUE.}
