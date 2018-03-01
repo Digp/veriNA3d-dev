@@ -67,8 +67,7 @@ setMethod("cifAtom_site",
 
 ## cifParser 
 setMethod("cifParser",
-    definition=function(pdbID, model=NULL, chain=NULL,
-                        alt=c("A"), verbose=F) {
+    definition=function(pdbID, verbose=F) {
 
         if (verbose)
             print(pdbID)
@@ -115,250 +114,82 @@ setMethod("cifParser",
         ## Create CIF S4 object and return output ----------------------------
         out <- CIF(entry                = cif$entry,
                    audit_conform        = cif$audit_conform,
-                   database_2           = cif$database_2,
+                   database_2           = as.data.frame(cif$database_2),
                    pdbx_database_status = cif$pdbx_database_status,
-                   audit_author         = cif$audit_author,
+                   audit_author         = as.data.frame(cif$audit_author),
                    entity               = as.data.frame(cif$entity),
-                   chem_comp            = cif$chem_comp,
-                   exptl                = cif$exptl,
+                   chem_comp            = as.data.frame(cif$chem_comp),
+                   exptl                = as.data.frame(cif$exptl),
                    struct               = cif$struct,
                    struct_keywords      = cif$struct_keywords,
-                   struct_asym          = cif$struct_asym,
-                   atom_sites           = cif$atom_sites,
-                   atom_type            = cif$atom_type,
+                   struct_asym          = as.data.frame(cif$struct_asym),
+                   atom_sites           = as.character(cif$atom_sites),
+                   atom_type            = as.data.frame(cif$atom_type),
                    atom_site            = cif$atom_site)
 
         return(out)
     })
 
-cifAttr <- c("entry",
-             "audit_conform",
-             "database_2",
-             "pdbx_database_status",
-             "audit_author",
-             "entity",
-             "chem_comp",
-             "exptl",
-             "struct",
-             "struct_keywords",
-             "struct_asym",
-             "atom_sites",
-             "atom_type",
-             "atom_site")
-
-## ===========================================================================
-## cifParser subfunctions:
-
-## Parse just a section between hashes
-.cifParser <- 
-function(i, pdb, hash_inds) {
-    ## Save indices for the beggining and end of the the section
-    first <- hash_inds[i] + 1
-    last  <- hash_inds[i + 1] - 1
-
-    ## Is the section a "loop_" section? Save the data table in any case
-    if (pdb[first] == "loop_") {
-        out <- .clean_loop_section(pdb[first:last])
-    } else {
-        out <- .clean_raw_section(pdb[first:last])
-    }
-
-    ## Save field names of the section
-    Names <- out$Names
-    out <- out$out
-
-    ## Find the title of the section encoded in the field names 
-    ## (e.g. for "_entity.id": "entity")
-    title <- gsub("^.", "", Names[1, 1])
-
-    # Give to the output object the names of the fields (either vector or data.fr)
-    names(out) <- .trim(Names[, 2])
-
-    # out is transformed to a list and it's given the title of the section
-    out <- list(out)
-    names(out) <- title
-    return(out)
-}
-
-## ===========================================================================
-## Sub-subfunctions
-
-## Special parser for "loop_" secctions
-## "loop_" sections are organized in two: 1, a list of fields; 2, a table
-.clean_loop_section <- function(data) {
-
-    # Find the name of the fields
-    Names.ind <- grep("^_", data, perl=T)
-    Names <-  do.call(rbind,
-                  strsplit(data[Names.ind], ".", fixed=T))
-
-    ## Redefine where the table starts
-    first <- Names.ind[length(Names.ind)]+1
-
-    ## "totalfields" is the number of fields in the table
-    totalfields <- nrow(Names)
-    data <- data[first:length(data)]
-
-    ## If the sections contains the coordinates, just read the table
-    if (Names[1,1] == "_atom_site") {
-        out <- read.table(textConnection(data), stringsAsFactors=F)
-    } else {
-        #out <- .clean_section(data, loop=T, totalfields=totalfields)
-        data <- .replace_semicolons(data)
-
-        ## in some cases, different lines contain the info of a single row
-        ## (different number of characters in the lines)
-        if (length(unique(nchar(data))) > 1) {
-            out <- .treat_diff_lengths(data, totalfields)
-        } else {
-            out <- .treat_same_lengths(data, totalfields)
-        }
-    }
-
-    return(list(Names=Names, out=out))
-}
-
-## Special parser for non-"loop_" sections
-## If the first line is not "_loop", the section is a table with two columns
-.clean_raw_section <- function(data) {
-    ## in some cases, different lines contain the info of a row,
-    ## "cornercase" contains their indices, if any
-    cornercase <- grep("^_", data, invert=T)
-    if (length(cornercase) > 0) {
-        for (j in cornercase[length(cornercase):1]) {
-            data[j - 1] <- paste(data[j - 1], data[j], sep="")
-        }
-        data <- data[-cornercase]
-        data <- gsub(";", "'", data)
-    }
-
-    ## The section is read to a table
-    con   <- textConnection(data)
-    table <- read.table(con, stringsAsFactors=F)
-    close(con)
-
-    ## Instead of returning it as a two column table it is returned as a vector
-    Names <- do.call(rbind, strsplit(table$V1, ".", fixed=T))
-
-    ## out is a vector containing the data
-    out <- table$V2
-    return(list(Names=Names, out=out))
-}
-## ===========================================================================
-## Sub(-sub-sub)functions for .clean_loop_sections
-
-## In some cases the text lacks the preceding&succeding apostrophe and 
-## starts&ends with a ";". However, the text might contain apostrophes,
-## which confuse R and should be temporarily replaced
-.replace_semicolons <-
-function(data) {
-    semicoloninds_start <- grep("^;", data)
-
-    semicoloninds_end <- semicoloninds_start[c(F, T)]
-    semicoloninds_start <- semicoloninds_start[c(T, F)]
-    if ((!is.na(semicoloninds_start) && length(semicoloninds_start) > 0) &&
-          (!is.na(semicoloninds_end) && length(semicoloninds_end) > 0)) {
-
-        lines <- c(unlist(mapply(
-                                FUN=function(x,y) {
-                                    return(x:y)
-                                }, semicoloninds_start, semicoloninds_end)))
-        data[lines] <- gsub("'", "pRimE", data[lines])
-        data[lines] <- gsub("^;", "'", data[lines])
-    }
-    return(data)
-}
-
-## in some cases, different lines contain the info of a single row
-## (different number of characters in the lines)
-.treat_diff_lengths <-
-function(data, totalfields) {
-    ## This piece of code treats the data by brute force
-    ## All the data is splited by blank spaces and empty strings are removed
-    data3 <- unlist(strsplit(data, " ", perl=T))
-    data3 <- data3[-which(data3=="")]
-
-    ## Isolated apostrophe "'" are the closing apostrophe of a sentence, 
-    ## so they are pasted  to the previous line and removed
-    quoteinds <- grep("^'$", data3)
-
-    if (length(quoteinds) > 0){
-        data3[quoteinds-1] <- paste(data3[quoteinds-1], "'", sep="")
-        data3 <- data3[-quoteinds]
-    }
-
-    ## Since some long strings are splited, they are pasted together again
-    quoteinds_start <- grep("^'", data3)
-    quoteinds_end <- grep("'$", data3)
-
-    if (length(quoteinds_start) > 0 && length(quoteinds_end) > 0){
-        toreplace <- mapply(
-                            FUN=function(x,y) {
-                                return(paste(data3[x:y], collapse=" "))
-                            }, quoteinds_start, quoteinds_end)
-
-        data3[quoteinds_start] <- toreplace
-
-        ## The splited lines are removed
-        toremove <- c(unlist(mapply(
-                                FUN=function(x,y) {
-                                    if (x < y){
-                                        return(x:y)
-                                    } else if (x == y) {
-                                        return(x)
-                                    } else {
-                                        return(NULL)
-                                    }
-                                }, quoteinds_start + 1, quoteinds_end)))
-        exceptions <- which(quoteinds_start %in% toremove)
-        if (length(exceptions) > 0) {
-            toremove <- toremove[-quoteinds_start[exceptions]]
-        }
-        if (length(toremove) > 0) {
-                            data3 <- data3[ -toremove ]
-        }
-    }
-
-    ## If any Apostrophe was replaced before, now it's left as it was
-    data3 <- gsub("pRimE", "'", data3, fixed=T)
-    table <- as.data.frame(matrix(data3, byrow=T, ncol=totalfields),
-                           stringsAsFactors=F)
-
-    return(table)
-}
-
-## Even if all the lines in the section have the same length, the data can
-## contain a complete row in multiple lines, so it cannot be directly
-## coerced to a table yet:
-.treat_same_lengths <-
-function(data, totalfields) {
-    con    <- textConnection(data)
-    table1 <- read.table(con, stringsAsFactors=F, nrows=1)
-    close(con)
-
-    con    <- textConnection(data)
-    table2 <- read.table(con, stringsAsFactors=F, nrows=1, skip=1)
-    close(con)
-
-    if (ncol(table1) == ncol(table2) && ncol(table1) == totalfields) {
-        con   <- textConnection(data)
-        table <- read.table(con, stringsAsFactors=F)
-        close(con)
-    } else {
-        con    <- textConnection(data[c(T, F)])
-        table1 <- read.table(con, stringsAsFactors=F)
-        close(con)
-        con    <- textConnection(data[c(F, T)])
-        table2 <- read.table(con, stringsAsFactors=F)
-        close(con)
-        table  <- cbind(table1, table2, stringsAsFactors=F)
-    }
-    for (k in 1:length(totalfields)) {
-        table[, k] <- gsub("pRimE", "'", table[, k], fixed=T)
-    }
-
-    return(table)
-}
-
 ## End of section CIF S4 constructor
 ##############################################################################
+
+##############################################################################
+## Function to check if an object is CIF cifCheck
+
+#' Is an Object of Class CIF?
+#'
+#' Checks whether an object is of Class CIF.
+#'
+#' @param x An R object
+#'
+#' @return A logical
+#'
+#' @author Diego Gallego
+#'
+is.cif <-
+function(x) {
+  inherits(x, "CIF")
+}
+
+
+#' Is it a CIF object? Make it be!
+#'
+#' Internal function to check if a cif/pdb input is actually a cif/pdb object
+#' If not, the cif file is read from the MMB API.
+#'
+#' @param cif A cif object obtained from cifParser or a pdb ID so that the
+#'    function can download the data.
+#' @param verbose A logical indicating whether to print details of the process
+#' @param check A string with the name of the function to use. It has been
+#'    thought to be used with 'is.cif' function.
+#'
+#' @return A cif object, which might be the same input or the downloaded data
+#'
+#' @author Diego Gallego
+#'
+.make_sure_is_cif <-
+function(cif, verbose=F, check="is.cif") {
+    ## Check if input cif argument is a PDB ID or a "cif" object
+    if (length(class(cif) == 1) && class(cif) == "character") {
+
+        ## If the input is a PDB ID, the data is downloaded from internet
+        if (nchar(cif) == 4){
+            if(verbose)
+                print(cif)
+
+            cif <- cifParser(cif)
+
+        } else {
+            stop("Your input string is not a pdb ID")
+        }
+
+    ## Check if it is a CIF
+    } else if( !do.call(check, list(cif)) ) {
+
+        stop(paste(" Your input is not a 'CIF' object (i.e. from ",
+                   "'cifParser') nor a pdb ID",
+                   sep=""))
+    }
+    return(cif)
+}
+

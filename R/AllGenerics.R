@@ -90,29 +90,27 @@ setGeneric("cifAtom_site",
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein
 #' Data Bank (or an existing file in disk).
-#' @param model A string with the model number (in case you are only
-#' interested in a particular model) If NULL, all models are read. This option
-#' will only be applied to the "atom" attribute of the output pdb object.
-#' @param chain A string with the chain identifier (in case you are only
-#' interested in a particular chain). If NULL, all chains are read. This option
-#' will only be applied to the "atom" attribute of the output pdb object.
-#' @param alt A string or a vector of strings with the desired alternative
-#' records. This option will only be applied to the "atom" attribute of the
-#' output pdb object.
-#' @param alldata A logical default to FALSE to read only coordinates. If TRUE
-#' all the data in the mmCIF is parsed, but it is time consuming. If other
-#' data is needed, check the ?query_functions just in case you can obtain
-#' the desired information from there.
 #' @param verbose A logical indicating whether to print details of the process.
 #'
-#' @return A "pdb" object as defined in the bio3d package (Grant et al. 2006).
-#' The output is also defined as a "cif" object since it includes all the data
-#' in the CIF file in the form of object attributes. The atom coordinates data
-#' is duplicated for retrocompatibility reasons with the bio3d package.
+#' @return A S4 CIF object 
 #'
 #' @author Diego Gallego
 #'
 setGeneric("cifParser",
-            function(pdbID, model=NULL, chain=NULL, alt=c("A"), verbose=F)
+            function(pdbID, verbose=F)
             standardGeneric("cifParser"))
 
+## @param model A string with the model number (in case you are only
+## interested in a particular model) If NULL, all models are read. This option
+## will only be applied to the "atom" attribute of the output pdb object.
+## @param chain A string with the chain identifier (in case you are only
+## interested in a particular chain). If NULL, all chains are read. This option
+## will only be applied to the "atom" attribute of the output pdb object.
+## @param alt A string or a vector of strings with the desired alternative
+## records. This option will only be applied to the "atom" attribute of the
+## output pdb object.
+## @param alldata A logical default to FALSE to read only coordinates. If TRUE
+## all the data in the mmCIF is parsed, but it is time consuming. If other
+## data is needed, check the ?query_functions just in case you can obtain
+## the desired information from there.
+##

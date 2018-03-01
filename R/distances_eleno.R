@@ -8,7 +8,7 @@
 #' with PDB, make sure you provide a valid pdb object as obtained by read.pdb 
 #' (bio3d package function) and use the eleno numbers as in the PDB file.
 #'
-#' @param cif A cif object obtained from parse.cif or a pdb ID.
+#' @param cif A cif object obtained from cifParser or a pdb ID.
 #' @param model The model of interest to use in the calculations. The first 
 #'    model is always the default.
 #' @param refeleno A vector of eleno (element number) to take as reference.

@@ -17,11 +17,11 @@ names as found in mmCIF documentation '\link{http://mmcif.wwpdb.org/}'.
 
 \item{\code{audit_conform}}{'mmCIF' dictionary version}
 
-\item{\code{database_2}}{Cross-reference ID codes for other databases}
+\item{\code{database_2}}{Cross-reference ID codes to other databases}
 
 \item{\code{pdbx_database_status}}{Deposition data}
 
-\item{\code{audit_author}}{Author data}
+\item{\code{audit_author}}{Authors}
 
 \item{\code{entity}}{Entities (molecules & ions) in the structure}
 

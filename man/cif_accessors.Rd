@@ -69,7 +69,7 @@ crystallographic cell
 }
 }
 \description{
-Accessors to a CIF object
+S4 method to access the contents of CIF objects.
 }
 \author{
 Diego Gallego

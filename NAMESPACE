@@ -58,7 +58,6 @@ export(
 
 	last_release,
 
-	parse.cif, 
 	PDBapply, 
 	plot_circular_distribution, 
 	plot.eta.theta2, 

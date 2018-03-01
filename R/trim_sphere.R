@@ -6,7 +6,7 @@
 #' function finds all the atoms in the given area and returns a pdb object
 #' that only includes the nearest atoms.
 #'
-#' @param cif A cif/pdb object obtained from parse.cif/read.pdb respectively
+#' @param cif A cif/pdb object obtained from cifParser/read.pdb respectively
 #'    or a pdb ID so that the function can download the data.
 #' @param model The model of interest to use in the calculations. The first 
 #'    model is always the default.
@@ -43,13 +43,13 @@ function( cif, model=NULL, ntindex,
         if ( nchar( cif )==4 ){
 # If the input is a PDB ID, the data is downloaded from internet
             if(verbose) print( cif )
-            cif <- parse.cif( cif )
+            cif <- cifParser( cif )
         } else {
             stop( "Your input string is not a pdb ID" )
         }
     } else if( !is.cif(cif) & !is.pdb(cif) ){
     stop( paste( "Your input data is not a cif or pdb object, ",
-          "please refer to the parse.cif or read.pdb functions", sep="" ))
+          "please refer to the cifParser or read.pdb functions", sep="" ))
     }
 
 # Select model of interest

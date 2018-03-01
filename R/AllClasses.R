@@ -19,7 +19,7 @@
 #' @slot atom_type Details about the atoms in structure
 #' @slot atom_site The atomic coordinates
 #'
-#' @seealso To create CIF objects use [parse.cif()]
+#' @seealso To create CIF objects use [cifParser()]
 #'
 #' @author Diego Gallego
 #'
@@ -32,7 +32,7 @@ CIF <- setClass("CIF",
                              audit_author         = "data.frame",
                              entity               = "data.frame",
                              chem_comp            = "data.frame",
-                             exptl                = "character",
+                             exptl                = "data.frame", 
                              struct               = "character",
                              struct_keywords      = "character",
                              struct_asym          = "data.frame",

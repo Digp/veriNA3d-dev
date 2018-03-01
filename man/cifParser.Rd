@@ -4,11 +4,13 @@
 \alias{cifParser}
 \title{Parse coordinates from CIF files}
 \usage{
-cifParser(pdbID, model = NULL, chain = NULL, alt = c("A"), verbose = F)
+cifParser(pdbID, verbose = F)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure in the Protein
 Data Bank (or an existing file in disk).}
+
+\item{verbose}{A logical indicating whether to print details of the process.}
 
 \item{model}{A string with the model number (in case you are only
 interested in a particular model) If NULL, all models are read. This option
@@ -21,8 +23,6 @@ will only be applied to the "atom" attribute of the output pdb object.}
 \item{alt}{A string or a vector of strings with the desired alternative
 records. This option will only be applied to the "atom" attribute of the
 output pdb object.}
-
-\item{verbose}{A logical indicating whether to print details of the process.}
 
 \item{alldata}{A logical default to FALSE to read only coordinates. If TRUE
 all the data in the mmCIF is parsed, but it is time consuming. If other

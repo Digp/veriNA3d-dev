@@ -6,7 +6,7 @@
 #' object or file allowing the user to select a number of 5' and 3' neighbors
 #' in sequence and non-conected residues in a cutoff radius.
 #'
-#' @param cif A cif/pdb object obtained from parse.cif/read.pdb respectively
+#' @param cif A cif/pdb object obtained from cifParser/read.pdb respectively
 #'    or a pdb ID so that the function can download the data. If NULL, the 
 #'    function will extract the pdb ID from the ntinfo data frame (pdbID col).
 #' @param ntID An integer/string with the desired nucleotide ID for
