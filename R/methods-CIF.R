@@ -77,7 +77,7 @@ setMethod("cifParser",
         ## Save extension, in case its a file
         ext <- substr(pdbID, nchar(pdbID) - 3, nchar(pdbID))
     
-        if (file.exists(pdbID) && ext == ".cif") { # Read file
+        if (file.exists(pdbID) && (ext == ".cif" || ext == "f.gz")) { # Read
             pdb <- readLines(pdbID)
 
         } else if (nchar(pdbID) == 4) { # Otherwise download by pdb ID
@@ -180,6 +180,9 @@ function(i, pdb, hash_inds) {
     return(out)
 }
 
+## ===========================================================================
+## Sub-subfunctions
+
 ## Special parser for "loop_" secctions
 ## "loop_" sections are organized in two: 1, a list of fields; 2, a table
 .clean_loop_section <- function(data) {
@@ -242,7 +245,7 @@ function(i, pdb, hash_inds) {
     return(list(Names=Names, out=out))
 }
 ## ===========================================================================
-## Sub-subfunctions
+## Sub(-sub-sub)functions for .clean_loop_sections
 
 ## In some cases the text lacks the preceding&succeding apostrophe and 
 ## starts&ends with a ";". However, the text might contain apostrophes,
