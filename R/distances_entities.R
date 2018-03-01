@@ -45,7 +45,7 @@ function( cif, model = NULL, refent,
       detailedoutput = T, data_of_interest = NULL ) {
 
 # Check if input cif argument is a PDB ID or a "cif" object
-    cif <- make_sure_is_cif(cif, verbose=verbose, check="is.cif")
+    cif <- .cifMakeSure(cif, verbose=verbose)
 
 # Select model of interest
     if( !is.null( model ) ) {

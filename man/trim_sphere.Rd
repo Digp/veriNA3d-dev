@@ -9,7 +9,7 @@ trim_sphere(cif, model = NULL, ntindex, chain, sel = NULL, cutoff = 8,
   cutres = F, file = NULL, verbose = T)
 }
 \arguments{
-\item{cif}{A cif/pdb object obtained from parse.cif/read.pdb respectively
+\item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
 or a pdb ID so that the function can download the data.}
 
 \item{model}{The model of interest to use in the calculations. The first

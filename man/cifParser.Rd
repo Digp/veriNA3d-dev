@@ -11,29 +11,9 @@ cifParser(pdbID, verbose = F)
 Data Bank (or an existing file in disk).}
 
 \item{verbose}{A logical indicating whether to print details of the process.}
-
-\item{model}{A string with the model number (in case you are only
-interested in a particular model) If NULL, all models are read. This option
-will only be applied to the "atom" attribute of the output pdb object.}
-
-\item{chain}{A string with the chain identifier (in case you are only
-interested in a particular chain). If NULL, all chains are read. This option
-will only be applied to the "atom" attribute of the output pdb object.}
-
-\item{alt}{A string or a vector of strings with the desired alternative
-records. This option will only be applied to the "atom" attribute of the
-output pdb object.}
-
-\item{alldata}{A logical default to FALSE to read only coordinates. If TRUE
-all the data in the mmCIF is parsed, but it is time consuming. If other
-data is needed, check the ?query_functions just in case you can obtain
-the desired information from there.}
 }
 \value{
-A "pdb" object as defined in the bio3d package (Grant et al. 2006).
-The output is also defined as a "cif" object since it includes all the data
-in the CIF file in the form of object attributes. The atom coordinates data
-is duplicated for retrocompatibility reasons with the bio3d package.
+A S4 CIF object
 }
 \description{
 Given a file or PDB ID, the function parses the coordinates of the

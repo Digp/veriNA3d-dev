@@ -43,7 +43,7 @@ names as found in mmCIF documentation '\link{http://mmcif.wwpdb.org/}'.
 }}
 
 \seealso{
-To create CIF objects use \code{\link[=parse.cif]{parse.cif()}}
+To create CIF objects use \code{\link[=cifParser]{cifParser()}}
 }
 \author{
 Diego Gallego

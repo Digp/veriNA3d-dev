@@ -25,6 +25,7 @@ export(
         cifAtom_type,
         cifAudit_author,
         cifAudit_conform,
+        cifCheck,
         cifChem_comp,
         cifDatabase_2,
         cifEntity,
@@ -47,7 +48,6 @@ export(
 
 	has_x_hetAtms, 
 
-	is.cif, 
 	is_valid_eRMSD, 
 
 	make_aantinfo, 

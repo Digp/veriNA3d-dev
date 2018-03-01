@@ -8,7 +8,7 @@ distances_eleno(cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,
   5), verbose = T, detailedoutput = T, data_of_interest = NULL)
 }
 \arguments{
-\item{cif}{A cif object obtained from parse.cif or a pdb ID.}
+\item{cif}{A cif object obtained from cifParser or a pdb ID.}
 
 \item{model}{The model of interest to use in the calculations. The first
 model is always the default.}

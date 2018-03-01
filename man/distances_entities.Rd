@@ -10,7 +10,7 @@ distances_entities(cif, model = NULL, refent, entities = c("all"), n = 1,
   data_of_interest = NULL)
 }
 \arguments{
-\item{cif}{A cif object obtained from parse.cif or a pdb ID.}
+\item{cif}{A cif object obtained from cifParser or a pdb ID.}
 
 \item{model}{The model of interest to use in the calculations. The first
 model is always the default.}
@@ -51,7 +51,7 @@ between atoms of the selected entity IDs. For each atom/residue of the
 reference entity the function returns the closest atoms of the other
 entities.
 To see the entities and their IDs of a given structure run:
-cif <- parse.cif("XXXX") #Where XXXX is the pdb ID (e.g.1S72)
+cif <- cifParser("XXXX") #Where XXXX is the pdb ID (e.g.1S72)
 View(cif$entity)
 }
 \author{

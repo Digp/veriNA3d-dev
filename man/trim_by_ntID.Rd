@@ -8,7 +8,7 @@ trim_by_ntID(cif = NULL, ntID, ntinfo, prev = 2, post = 2, verbose = T,
   file = NULL, ...)
 }
 \arguments{
-\item{cif}{A cif/pdb object obtained from parse.cif/read.pdb respectively
+\item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
 or a pdb ID so that the function can download the data. If NULL, the
 function will extract the pdb ID from the ntinfo data frame (pdbID col).}
 

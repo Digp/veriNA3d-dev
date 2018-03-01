@@ -47,7 +47,7 @@ function( cif, model=NULL, ntindex,
         } else {
             stop( "Your input string is not a pdb ID" )
         }
-    } else if( !is.cif(cif) & !is.pdb(cif) ){
+    } else if( !icifCheck(cif) & !is.pdb(cif) ){
     stop( paste( "Your input data is not a cif or pdb object, ",
           "please refer to the cifParser or read.pdb functions", sep="" ))
     }

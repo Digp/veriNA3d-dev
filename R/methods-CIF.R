@@ -136,22 +136,13 @@ setMethod("cifParser",
 ##############################################################################
 
 ##############################################################################
-## Function to check if an object is CIF cifCheck
+## Function to check if an object is CIF and related
 
-#' Is an Object of Class CIF?
-#'
-#' Checks whether an object is of Class CIF.
-#'
-#' @param x An R object
-#'
-#' @return A logical
-#'
-#' @author Diego Gallego
-#'
-is.cif <-
-function(x) {
-  inherits(x, "CIF")
-}
+## cifCheck
+setMethod("cifCheck",
+    definition=function(x) {
+        inherits(x, "CIF")
+    })
 
 
 #' Is it a CIF object? Make it be!
@@ -159,18 +150,21 @@ function(x) {
 #' Internal function to check if a cif/pdb input is actually a cif/pdb object
 #' If not, the cif file is read from the MMB API.
 #'
+#' @rdname cifMakeSure
+#'
 #' @param cif A cif object obtained from cifParser or a pdb ID so that the
 #'    function can download the data.
 #' @param verbose A logical indicating whether to print details of the process
 #' @param check A string with the name of the function to use. It has been
-#'    thought to be used with 'is.cif' function.
+#'    thought to be used with 'cifCheck' function.
 #'
 #' @return A cif object, which might be the same input or the downloaded data
 #'
 #' @author Diego Gallego
 #'
-.make_sure_is_cif <-
-function(cif, verbose=F, check="is.cif") {
+## .cifMakeSure
+.cifMakeSure <-
+function(cif, verbose=F, check="cifCheck") {
     ## Check if input cif argument is a PDB ID or a "cif" object
     if (length(class(cif) == 1) && class(cif) == "character") {
 
@@ -194,4 +188,5 @@ function(cif, verbose=F, check="is.cif") {
     }
     return(cif)
 }
-
+## End of section cifCheck
+##############################################################################

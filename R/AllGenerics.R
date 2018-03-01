@@ -100,17 +100,20 @@ setGeneric("cifParser",
             function(pdbID, verbose=F)
             standardGeneric("cifParser"))
 
-## @param model A string with the model number (in case you are only
-## interested in a particular model) If NULL, all models are read. This option
-## will only be applied to the "atom" attribute of the output pdb object.
-## @param chain A string with the chain identifier (in case you are only
-## interested in a particular chain). If NULL, all chains are read. This option
-## will only be applied to the "atom" attribute of the output pdb object.
-## @param alt A string or a vector of strings with the desired alternative
-## records. This option will only be applied to the "atom" attribute of the
-## output pdb object.
-## @param alldata A logical default to FALSE to read only coordinates. If TRUE
-## all the data in the mmCIF is parsed, but it is time consuming. If other
-## data is needed, check the ?query_functions just in case you can obtain
-## the desired information from there.
-##
+
+#' Is an Object of Class CIF?
+#'
+#' Checks whether an object is of Class CIF.
+#'
+#' @rdname cifCheck
+#'
+#' @param x An R object
+#'
+#' @return A logical
+#'
+#' @author Diego Gallego
+#'
+setGeneric("cifCheck",
+            function(x) standardGeneric("cifCheck"))
+
+
