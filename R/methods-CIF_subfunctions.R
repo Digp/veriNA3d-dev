@@ -96,7 +96,12 @@ function(i, pdb, hash_inds) {
     ## "cornercase" contains their indices, if any
     cornercase <- grep("^_", data, invert=T)
     if (length(cornercase) > 0) {
-        ## When content is splited in multiple lines, ' need special attention
+        ## When content is splited in multiple lines, this becomes a nightmare
+        cornercase3 <- grep("^[\\_\\;\\']", data, invert=T) #2A3L
+        if (length(cornercase3) > 0) {
+            data[cornercase3] <- gsub("'", "\\'",
+                                    data[cornercase3], fixed=T)
+        }
         cornercase2 <- grep("^;", data[cornercase], perl=T)
         if (length(cornercase2) > 0) {
             data[cornercase][cornercase2] <- gsub("'", "\\'",
