@@ -48,8 +48,8 @@ setMethod(
         cat("\n-- mmCIF with ID: ", object@entry,
             " ------------------------------------------------------\n\n",
             sep="")
-        cat("Author description: ", cif@struct[2], "\n")
-        cat("mmCIF version:       ", cif@audit_conform[2], "\n\n", sep="")
+        cat("Author description: ", object@struct[2], "\n")
+        cat("mmCIF version:       ", object@audit_conform[2], "\n\n", sep="")
         cat("To extract coordinates and other data use accessor functions",
             "\n(type ?cif_accessors for details)", "\n\n", sep="")
     }
