@@ -28,6 +28,11 @@ A pdb object compatible with bio3d (Grant et al. 2006) functions.
 \description{
 Coerces CIF to pdb class
 }
+\examples{
+cif <- cifParser("1bau")
+pdb <- cifAsPDB(cif)
+
+}
 \author{
 Diego Gallego
 }

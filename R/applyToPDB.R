@@ -16,12 +16,12 @@
 #'
 #' @examples
 #' listpdb <- c("1s72", "1bau", "1rna")
-#' PDBapply(query_technique, listpdb, verbose=F)
+#' applyToPDB(query_technique, listpdb, verbose=F)
 #'
 #' @author Diego Gallego
 #'
 
-PDBapply <-
+applyToPDB <-
 function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
     ## Match function --------------------------------------------------------
     FUNCTION <- match.fun(FUNCTION)

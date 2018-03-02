@@ -20,7 +20,7 @@ r(y)/a, r(z)/b), being a=5 and b=3. \cr
 See reference paper for more details. This does not apply to the \code{gamma}
 and \code{beta} angles.}
 
-\item{simple_out}{A logical to simplify the output to a data.frame.}
+\item{simple_out}{A logical to simplify the output to a matrix.}
 }
 \value{
 A list of data.frames for the values of each base or a single
@@ -37,6 +37,11 @@ projected on the referece base plane and the x axis of the latter. This is
 a metric of the relative rotation between bases along the orthogonal to the
 base plane axis (z).\cr 2. The \code{beta angle}, as obtained between the base
 planes normal to account for the degree of coplanarity between bases.
+}
+\examples{
+cif <- cifParser("2d18")
+vectors <- rVector(cif=cif, simple_out=F)
+
 }
 \author{
 Diego Gallego & Leonardo Darré

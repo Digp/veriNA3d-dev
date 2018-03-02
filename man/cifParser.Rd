@@ -19,6 +19,10 @@ A S4 CIF object
 Given a file or PDB ID, the function parses the coordinates of the
 structure. It can also read all the fields of the mmCIF format.
 }
+\examples{
+cif <- cifParser("1bau")
+
+}
 \author{
 Diego Gallego
 }

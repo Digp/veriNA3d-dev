@@ -15,6 +15,11 @@ A logical
 \description{
 Checks whether an object is of Class CIF.
 }
+\examples{
+cif <- cifParser("1bau")
+cifCheck(cif)
+
+}
 \author{
 Diego Gallego
 }

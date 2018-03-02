@@ -13,9 +13,8 @@ Description: Structural bioinformatics is a hard field we work to make easier.
     analysis of any PDB structure.
 License: GPL (>= 2)
 Depends: R (>= 3.1.0)
-Imports: bio3d, Rcpp (>= 0.12.15), circlize, parallel, dplyr, jsonlite, 
+Imports: bio3d, circlize, parallel, dplyr, jsonlite, 
          plot3D, MASS, RColorBrewer, RANN
-LinkingTo: Rcpp
 Packaged: 2017-03-14 18:02:52 UTC; dgallego
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)

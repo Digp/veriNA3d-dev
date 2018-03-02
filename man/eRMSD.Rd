@@ -33,6 +33,13 @@ Methods allow as input CIF S4 objects (cifParser), pdb S3 objects
 (cifAsPDB/read.pdb/read.cif) or matrices containing the "r" vectors of the
 desired structures.
 }
+\examples{
+cif <- cifParser("2d18")
+model1 <- selectModel(cif=cif, model=1)
+model3 <- selectModel(cif=cif, model=3)
+eRMSD <- eRMSD(cif1=model1, cif2=model3)
+
+}
 \author{
 Diego Gallego
 }

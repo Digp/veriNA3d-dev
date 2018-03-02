@@ -71,6 +71,11 @@ crystallographic cell
 \description{
 S4 method to access the contents of CIF objects.
 }
+\examples{
+cif <- cifParser("1bau")
+coordinates <- cifAtom_site(cif)
+
+}
 \author{
 Diego Gallego
 }

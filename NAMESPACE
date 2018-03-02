@@ -1,7 +1,4 @@
-useDynLib(veriNA3d, .registration=TRUE)
 import(bio3d)
-import(Rcpp)
-#importFrom(Rcpp, evalCpp)
 import(parallel)
 import(plot3D)
 import(MASS)
@@ -14,6 +11,7 @@ importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circ
 #exportPattern("^[[:alpha:]]+")
 export( 
 	angles_dist, 
+	applyToPDB, 
 
 	binding.RNAprot,
 	bp_hist, 
@@ -57,7 +55,6 @@ export(
 	measure, 
 	measure_pucker, 
 
-	PDBapply, 
 	plot_circular_distribution, 
 	plot.eta.theta2, 
 	plot_et, 
@@ -82,7 +79,6 @@ export(
 	query_revdate,
 	query_technique,
 
-	rcpp_hello_world,
 	rvec_plot, 
 	rVector, 
 

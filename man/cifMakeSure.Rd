@@ -22,6 +22,10 @@ A cif object, which might be the same input or the downloaded data
 Internal function to check if an input is actually a CIF object
 If not, the cif file is read from the MMB API.
 }
+\examples{
+cif <- .cifMakeSure("1bau")
+
+}
 \author{
 Diego Gallego
 }
