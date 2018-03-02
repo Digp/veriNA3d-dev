@@ -1,4 +1,3 @@
-#Date: 2017-Jul-12
 #' Applies a function over a list of PDB ID entries.
 #'
 #' Given a function of interest, it is applied to all the PDB entries. 
@@ -16,58 +15,58 @@
 #' function of interest (second column) or a list with the results.
 #'
 #' @examples
-#' listpdb<-c( "1s72", "1bau", "1rna" )
-#' PDBapply( query_technique, listpdb, verbose=F )
+#' listpdb <- c("1s72", "1bau", "1rna")
+#' PDBapply(query_technique, listpdb, verbose=F)
 #'
 #' @author Diego Gallego
 #'
 
 PDBapply <-
 function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
-#Match function
+    ## Match function --------------------------------------------------------
     FUNCTION <- match.fun(FUNCTION)
-#Download full PDB list if necessary
-    if( is.null(listpdb) ) {
-    listpdb <- query_pdblist()
+    ## Download full PDB list if necessary -----------------------------------
+    if (is.null(listpdb)) {
+        listpdb <- query_pdblist()
     }
 
-#Apply function over the list
-    output_list <- lapply( listpdb, 
-         FUN=function( i, FUNCTION, verbose, ... ){
+    ## Apply function over the list ------------------------------------------
+    output_list <- lapply(listpdb, 
+        FUN=function(i, FUNCTION, verbose, ...) {
 
-    Sys.sleep(0.1)
-    if( verbose ) print(i)
+            if (verbose) print(i)
 
-        tryCatch( {
-            return( FUNCTION( i, ... ) )
-        }, error = function(e) {
-            return( NA )
-        })
-    }, FUNCTION=FUNCTION, verbose=verbose, ...=... )
-    
-#Since it receives NA from the API with a certain frequency when it shouldn't
-#the NA in the list are double-checked
-    torepeat <- which( is.na( output_list ) )
-    if( length(torepeat) != 0 ){
-        for( i in torepeat ){
             tryCatch({
-                output_list[[i]] <- FUNCTION( listpdb[i] )
+                return(FUNCTION(i, ...))
+            }, error = function(e) {
+                return(NA)
+            })
+        }, FUNCTION=FUNCTION, verbose=verbose, ...=...)
+    
+    ## Any query might receive NA with a certain frequency, even when it 
+    ## shoudn't, thus the NA in the list are double-checked ------------------
+    torepeat <- which(is.na(output_list))
+    if (length(torepeat) != 0) {
+
+        for (i in torepeat) {
+            tryCatch({
+                output_list[[i]] <- FUNCTION(listpdb[i])
             }, error = function(e) {
                 output_list[[i]] <- NA
-            } )
+            })
         }
     }
 
-#Give format to the output
-    if( as.df ){
+    ## Give format to the output ---------------------------------------------
+    if (as.df) {
         output <- as.data.frame(
-                matrix( c( listpdb, unlist(output_list) ),
-                        byrow=F,
-                        ncol=2 ),
-                stringsAsFactors=F )
+                    matrix(c(listpdb, unlist(output_list)),
+                            byrow=F,
+                            ncol=2),
+                    stringsAsFactors=F)
     } else {
-    names(output_list) <- listpdb
-    output <- output_list
+        names(output_list) <- listpdb
+        output <- output_list
     }
-    return( output )
+    return(output)
 }

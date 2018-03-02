@@ -42,7 +42,7 @@ function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5),
 
 # Select model of interest
     if( !is.null( model ) ) {
-        cif <- model.select( cif, model, verbose=verbose )
+        cif <- selectModel( cif, model, verbose=verbose )
     }
 
     A_eleno <- refeleno
@@ -120,36 +120,4 @@ function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5),
     }
     return( out )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

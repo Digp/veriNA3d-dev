@@ -131,7 +131,7 @@ function( pdb, model=1, chain="all", id=NULL ) {
 .check.nt <-
 function( pdb, model, chain, id=NULL ) {
 #Selection of Model of interest
-    pdb <- model.select( pdb, model, verbose=FALSE )
+    pdb <- selectModel( pdb, model, verbose=FALSE )
 
 #Selection of Chain of interest
     selection <- atom.select( pdb, chain=chain )

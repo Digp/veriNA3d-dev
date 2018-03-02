@@ -2,7 +2,7 @@
 % Please edit documentation in R/AllGenerics.R
 \name{selectModel}
 \alias{selectModel}
-\title{Selects a desired model from a PDB structure}
+\title{Selects a desired model from a CIF/pdb structure}
 \usage{
 selectModel(cif, pdb, model, verbose = F)
 }
@@ -10,7 +10,7 @@ selectModel(cif, pdb, model, verbose = F)
 \item{cif}{A CIF object as otained from cifParser.}
 
 \item{pdb}{A pdb object with multiple models (obtained from cifAsPDB
-or read.cif/read.pdb).}
+or read.cif/read.pdb from bio3d package).}
 
 \item{model}{A string with the desired model number.}
 
@@ -20,7 +20,7 @@ or read.cif/read.pdb).}
 A CIF/pdb object with the desired model coordinates.
 }
 \description{
-Given a object obtained from cifParser OR read.cif/read.pdb
+Given a object obtained from cifParser/cifAsPDB or read.cif/read.pdb
 functions (from bio3d specifying "multi = TRUE"), the function returns an
 object of the same type (CIF or pdb) with the desired model.
 Since some structures deposited in the PDB contain models with different

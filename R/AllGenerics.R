@@ -20,6 +20,10 @@
 #'   * {cifAtom_type} `Data.frame` with about the atoms in structure
 #'   * {cifAtom_site} `Data.frame` with atomic coordinates
 #'
+#' @examples
+#' cif <- cifParser("1bau")
+#' coordinates <- cifAtom_site(cif)
+#'
 #' @author Diego Gallego
 #'
 #' @name cif_accessors
@@ -98,6 +102,9 @@ setGeneric("cifAtom_site",
 #'
 #' @return A S4 CIF object 
 #'
+#' @examples
+#' cif <- cifParser("1bau")
+#'
 #' @author Diego Gallego
 #'
 setGeneric("cifParser",
@@ -117,6 +124,10 @@ setGeneric("cifParser",
 #' @param x An R object
 #'
 #' @return A logical
+#'
+#' @examples
+#' cif <- cifParser("1bau")
+#' cifCheck(cif)
 #'
 #' @author Diego Gallego
 #'
@@ -146,6 +157,10 @@ setGeneric("cifCheck",
 #' output pdb object.
 #'
 #' @return A pdb object compatible with bio3d (Grant et al. 2006) functions.
+#'
+#' @examples
+#' cif <- cifParser("1bau")
+#' pdb <- cifAsPDB(cif)
 #'
 #' @author Diego Gallego
 #'
@@ -177,6 +192,10 @@ setGeneric("cifAsPDB",
 #' 
 #' @return A CIF/pdb object with the desired model coordinates.
 #' 
+#' @examples
+#' cif <- cifParser("1qfq")
+#' model3 <- selectModel(cif=cif, model=3)
+#'
 #' @author Diego Gallego
 #'
 setGeneric("selectModel",
@@ -212,16 +231,60 @@ setGeneric("selectModel",
 #' "cylindrical_coord": (rho, phy, z).\cr
 #' See reference paper for more details. This does not apply to the `gamma` 
 #' and `beta` angles.
-#' @param simple_out A logical to simplify the output to a data.frame.
+#' @param simple_out A logical to simplify the output to a matrix.
 #'
-#' @return A list of data.frames for the values of each base or a single one
-#' with all the data appended.
+#' @return A list of data.frames for the values of each base or a single 
+#' matrix with all the data appended.
+#'
+#' @examples
+#' cif <- cifParser("2d18")
+#' vectors <- rVector(cif=cif, simple_out=F)
 #'
 #' @author Diego Gallego & Leonardo Darré
 #'
 setGeneric("rVector",
             function(cif, pdb, outformat="rvector", simple_out=T)
             standardGeneric("rVector"))
+
+##############################################################################
+
+##############################################################################
+
+#' Compute the epsilon RMSD between two RNA structures
+#'
+#' Given two RNA with the same length, the functions calculates its epsilon
+#' RMSD, as defined by Bottaro et al. 2014 (The role of nucleobase 
+#' interactions in RNA structure and dynamics), reproducing baRNAba software.
+#' Methods allow as input CIF S4 objects (cifParser), pdb S3 objects 
+#' (cifAsPDB/read.pdb/read.cif) or matrices containing the "r" vectors of the
+#' desired structures.
+#'
+#' @rdname eRMSD
+#'
+#' @param cif1 A CIF object as otained from cifParser.
+#' @param cif2 A CIF object as otained from cifParser.
+#' @param pdb1 A pdb object as obtained from cifAsPDB or read.cif/read.pdb
+#' (from bio3d package).
+#' @param pdb2 A pdb object as obtained from cifAsPDB or read.cif/read.pdb
+#' (from bio3d package).
+#' @param rvectors1 A data.frame as obtained from [rVector(simple_out=T)]
+#' @param rvectors2 A data.frame as obtained from [rVector(simple_out=T)]
+#'
+#' @return A numeric with the epsilon RMSD between the two structures
+#'
+#' @examples
+#' cif <- cifParser("2d18")
+#' model1 <- selectModel(cif=cif, model=1)
+#' model3 <- selectModel(cif=cif, model=3)
+#' eRMSD <- eRMSD(cif1=model1, cif2=model3)
+#'
+#' @author Diego Gallego
+#'
+setGeneric("eRMSD",
+            function(cif1=NULL, cif2=NULL,
+                     pdb1=NULL, pdb2=NULL,
+                     rvectors1=NULL, rvectors2=NULL)
+            standardGeneric("eRMSD"))
 
 
 

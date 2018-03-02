@@ -37,6 +37,7 @@ export(
         cifStruct,
         cifStruct_asym,
         cifStruct_keywords,
+	classifyRNA, 
 	cluster.select, 
 
 	distances_entities,
@@ -44,8 +45,8 @@ export(
 
 	eRMSD, 
 
-	get_alternative_representants, 
-	get_leontis_nr_list,
+	getAlternativeRepresentants, 
+	getLeontisList,
 
 	has_x_hetAtms, 
 
@@ -55,8 +56,6 @@ export(
 	make_ntinfo, 
 	measure, 
 	measure_pucker, 
-
-	last_release,
 
 	PDBapply, 
 	plot_circular_distribution, 
@@ -84,9 +83,8 @@ export(
 	query_technique,
 
 	rcpp_hello_world,
-	RNA_classifier, 
 	rvec_plot, 
-	rVECTOR, 
+	rVector, 
 
 	select_ntID_neighbours,
 	selectModel, 

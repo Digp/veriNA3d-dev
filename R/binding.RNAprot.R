@@ -34,7 +34,7 @@ function( pdb, model=NULL, cutoff = 5, select = "RNA", nchain = NULL,
 
 # Select model of interest
     if( !is.null( model ) ) {
-        pdb <- model.select( pdb, model, verbose=verbose )
+        pdb <- selectModel( pdb, model, verbose=verbose )
     }
 
 # In case the pdb object has missing values, they are replaced by a string

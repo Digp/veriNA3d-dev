@@ -23,30 +23,34 @@
 #'
 #' @return A string with the type of RNA.
 #'
+#' @examples
+#' classifyRNA("1S72")
+#'
 #' @author Diego Gallego
 #'
 
-RNA_classifier <-
-function( pdbID, length = 3, ... ){
+classifyRNA <-
+function(pdbID, length = 3, ...) {
+
     check <- corner_cases(pdbID)
-    if(check[[1]]) return(check[[2]])
+    if (check[[1]]) return(check[[2]])
     #Download info about entities, chains and length
     MM <- query_entities(pdbID, ...=...)
 
     #Check corner case in which there's a DNA-RNA hybrid
-    if(any(MM$molecule_type == 
-       "polydeoxyribonucleotide/polyribonucleotide hybrid")){
+    if (any(MM$molecule_type == 
+       "polydeoxyribonucleotide/polyribonucleotide hybrid")) {
 
      return("DNARNA")
     }
 
     #If the PDB entry does not contain RNA it is classified as "NoRNA"
-    if(!any(MM$molecule_type == "polyribonucleotide")) return("NoRNA")
+    if (!any(MM$molecule_type == "polyribonucleotide")) return("NoRNA")
 
     #Index for RNA in the data.frame    
     RNA_ind <- which(MM$molecule_type == "polyribonucleotide")
     # RNA that does not surpass a threshold is also classified as "NoRNA"
-    if(all(MM[RNA_ind, "length"] < length)) return("NoRNA")
+    if (all(MM[RNA_ind, "length"] < length)) return("NoRNA")
 
 
     Other <- which(MM$molecule_type != "polyribonucleotide")
@@ -65,19 +69,19 @@ function( pdbID, length = 3, ... ){
 
 
     #If there are proteins, the PDB entry is classified as "protRNA"
-    if(Pro) return("protRNA")
+    if (Pro) return("protRNA")
                 
     #If there are D proteins, the PDB entry is classified as "DprotRNA"
-    if(DPro) return("DprotRNA")
+    if (DPro) return("DprotRNA")
                 
     #If there are DNA molecules, the PDB entry is classified as "DNARNA"
-    if(DNA) return("DNARNA")
+    if (DNA) return("DNARNA")
 
     #If there are DNA molecules, the PDB entry is classified as "DNARNA"
-    if(PNA) return("PNARNA")
+    if (PNA) return("PNARNA")
 
     #If there are ligands, the PDB entry is classified as "ligandRNA"
-    if(ligands) return("ligandRNA")
+    if (ligands) return("ligandRNA")
 
     #If the only molecule is RNA, then the PDB entry is classified as "nakedRNA"
     return("nakedRNA")
@@ -85,15 +89,15 @@ function( pdbID, length = 3, ... ){
 #Wrong or incomplete data in the API might generate a wrong classification, here I fix the
 #detected ones
 corner_cases <-
-function( pdbID ){
-    if(pdbID %in% c("2P7E",
-            "3CR1")){
+function(pdbID) {
+    if (pdbID %in% c("2P7E",
+            "3CR1")) {
     return(list(TRUE, "nakedRNA"))
-    } else if(pdbID %in% c("3OK2",
-               "3OK4")){
+    } else if (pdbID %in% c("3OK2",
+               "3OK4")) {
     return(list(TRUE, "ANARNA"))
-    } else if(pdbID %in% c("1HHW",
-               "1HHX")){
+    } else if (pdbID %in% c("1HHW",
+               "1HHX")) {
     return(list(TRUE, "LNARNA"))
     }
     return(list(FALSE, ""))

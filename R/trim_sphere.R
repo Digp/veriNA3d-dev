@@ -54,7 +54,7 @@ function( cif, model=NULL, ntindex,
 
 # Select model of interest
     if( !is.null( model ) ) {
-        cif <- model.select( cif, model, verbose=verbose )
+        cif <- selectModel( cif, model, verbose=verbose )
     }
 
 # Find eleno numbers

@@ -243,7 +243,7 @@ function( pdb, model, chain, v_shifted,
   pucker, Dp ) {
 
 #Selection of Model of interest
-    pdb <- model.select( pdb, model, verbose=FALSE )
+    pdb <- selectModel( pdb, model, verbose=FALSE )
 
 #Selection of Chain of interest
     selection <- atom.select( pdb, chain=chain )

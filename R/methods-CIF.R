@@ -160,6 +160,9 @@ setMethod("cifCheck",
 #'
 #' @return A cif object, which might be the same input or the downloaded data
 #'
+#' @examples 
+#' cif <- .cifMakeSure("1bau")
+#'
 #' @author Diego Gallego
 #'
 ## .cifMakeSure
@@ -298,12 +301,51 @@ setMethod("rVector",
 ## End of section for rVector methods
 ##############################################################################
 
+##############################################################################
+## eRMSD. Implemented to reproduce barnaba (Bottaro et al. NAR, 2014)
 
+setMethod("eRMSD",
+    signature(cif1="CIF", cif2="CIF"),
+    definition=function(cif1=NULL, cif2=NULL) {
 
+        rvectors1 <- rVector(cif1, outformat="rvector", simple_out=T)
+        rvectors2 <- rVector(cif2, outformat="rvector", simple_out=T)
 
+        len <- sqrt(nrow(rvectors1))
+        deltaG <- t(apply(cbind(rvectors1[, 1:3], rvectors2[, 1:3]),
+                          MARGIN=1, FUN=.deltaGmodule))
+        return(sqrt(sum(deltaG^2) / len))
+    })
 
+setMethod("eRMSD",
+    definition=function(pdb1=NULL, pdb2=NULL,
+                        rvectors1=NULL, rvectors2=NULL) {
 
+        if (!is.null(rvectors1) && !is.null(rvectors2)) {
+            if (!nrow(rvectors1) == nrow(rvectors2)) {
+                stop("Different number of rvectors.", 
+                     " The original PDB had a different length!", sep="")
+            }
+        } else if (!is.null(pdb1) && !is.null(pdb2)) {
 
+            if (!sum(pdb1$atom$elety == "C4'") == 
+                 sum(pdb2$atom$elety == "C4'")) {
+                stop("Different lengths in input PDB objects")
+            }
+            rvectors1 <- rVector(pdb=pdb1, outformat="rvector", simple_out=T)
+            rvectors2 <- rVector(pdb=pdb2, outformat="rvector", simple_out=T)
+        } else {
+            stop("Introduce two PDB objects or two set of rvectors")
+        }
+
+        len <- sqrt(nrow(rvectors1))
+        deltaG <- t(apply(cbind(rvectors1[, 1:3], rvectors2[, 1:3]),
+                          MARGIN=1, FUN=.deltaGmodule))
+        return(sqrt(sum(deltaG^2) / len))
+    })
+
+## End of section for epsilon RMSD methods
+##############################################################################
 
 
 
