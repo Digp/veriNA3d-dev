@@ -147,7 +147,7 @@ setMethod("cifCheck",
 
 #' Is it a CIF object? Make it be!
 #'
-#' Internal function to check if a cif/pdb input is actually a cif/pdb object
+#' Internal function to check if an input is actually a CIF object
 #' If not, the cif file is read from the MMB API.
 #'
 #' @rdname cifMakeSure
@@ -165,10 +165,10 @@ setMethod("cifCheck",
 ## .cifMakeSure
 .cifMakeSure <-
 function(cif, verbose=F, check="cifCheck") {
-    ## Check if input cif argument is a PDB ID or a "cif" object
+    ## Check if input cif argument is a PDB ID -------------------------------
     if (length(class(cif) == 1) && class(cif) == "character") {
 
-        ## If the input is a PDB ID, the data is downloaded from internet
+        ## If the input is a PDB ID, the data is downloaded from internet ----
         if (nchar(cif) == 4){
             if(verbose)
                 print(cif)
@@ -179,7 +179,7 @@ function(cif, verbose=F, check="cifCheck") {
             stop("Your input string is not a pdb ID")
         }
 
-    ## Check if it is a CIF
+    ## Check if it is a CIF --------------------------------------------------
     } else if( !do.call(check, list(cif)) ) {
 
         stop(paste(" Your input is not a 'CIF' object (i.e. from ",
@@ -190,3 +190,131 @@ function(cif, verbose=F, check="cifCheck") {
 }
 ## End of section cifCheck
 ##############################################################################
+
+##############################################################################
+## Method to coerce CIF S4 object to pdb S3 object as found in bio3d package
+
+## cifAsPDB
+setMethod("cifAsPDB",
+    signature(cif="CIF"),
+    definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
+        return(.cifAsPDB(cif))
+    })
+
+setMethod("cifAsPDB",
+    signature(cif="character"),
+    definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
+        ## Make sure it is a CIF ---------------------------------------------
+        cif <- .cifMakeSure(cif)
+        return(.cifAsPDB(cif))
+    })
+
+## End of section cifAsPDB method
+##############################################################################
+
+##############################################################################
+## Model selection methods
+
+setMethod("selectModel",
+    signature(cif="CIF"),
+    definition=function(cif, model, verbose=F) {
+        atom   <- cifAtom_site(cif)
+        models <- unique(atom$pdbx_PDB_model_num)
+        if (!model %in% models)
+            stop("The model selected does not exist")
+        cif@atom_site <- atom[atom$pdbx_PDB_model_num == model, ]
+        return(cif)
+    })
+
+setMethod("selectModel",
+    definition=function(pdb, model, verbose=F) {
+
+        if (length(grep("trim", pdb$call)) > 0) {
+            stop(paste(
+                "Please, select the model you desire before applying other ",
+                "functions", sep=""))
+        }
+
+        model <- as.numeric(model)
+        if("model" %in% attributes(pdb)$names &&
+           length(pdb$model) == 1 && 
+           pdb$model == model) {
+
+            if(verbose) 
+                print("The input is already the desired model, thus output",
+                      " = input", sep="")
+            return(pdb)
+        }
+
+        ## "flag" is an attirbute given by cifAsPDB. If TRUE, the pdb has
+        ## models with different number of atoms, thus they are treated in a 
+        ## special way
+        if ("flag" %in% attributes(pdb)$names && pdb$flag == T) {
+            pdb$atom <- pdb$model[[model]]
+            pdb$flag <- FALSE
+            pdb$xyz  <- as.xyz(matrix(c(t(pdb$atom[, c("x", "y", "z")])),
+                                     nrow=1))
+        } else {
+            xyz <- pdb$xyz
+            if (model > nrow(xyz)) {
+                stop("The model selected does not exist")
+            }
+            pdb$xyz <- trim(xyz, row.inds=model)
+            coords <- matrix(pdb$xyz, ncol=3, byrow=T)
+            pdb$atom[, "x"] <- coords[, 1]
+            pdb$atom[, "y"] <- coords[, 2]
+            pdb$atom[, "z"] <- coords[, 3]
+        }
+
+        pdb$model <- model
+        return(pdb)
+    })
+
+## End of model selection methods
+##############################################################################
+
+##############################################################################
+## rVector. Implemented to reproduce barnaba (Bottaro et al. NAR, 2014)
+
+setMethod("rVector",
+    signature(cif="CIF"),
+    definition=function(cif, outformat="rvector", simple_out=T) {
+        pdb <- cifAsPDB(cif)
+        return(.rVector(pdb, outformat, simple_out))
+    })
+
+setMethod("rVector",
+    signature(cif="character"),
+    definition=function(cif, outformat="rvector", simple_out=T) {
+        pdb <- cifAsPDB(cif)
+        return(.rVector(pdb, outformat, simple_out))
+    })
+
+setMethod("rVector",
+    definition=function(pdb, outformat="rvector", simple_out=T) {
+        return(.rVector(pdb, outformat, simple_out))
+    })
+
+## End of section for rVector methods
+##############################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

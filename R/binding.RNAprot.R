@@ -3,8 +3,8 @@
 #Function to select the RNA atoms that contact with a protein. The version 2.0 can also select the protein atoms in contact with the RNA.
 # Argument select can have two values: RNA or PROTEIN. RNA is set as default.
 
-#' @param byres A logical to indicate if the output should be referred to the 
-#'    residues (TRUE) or atoms (FALSE) of the refent.
+# @param byres A logical to indicate if the output should be referred to the 
+#    residues (TRUE) or atoms (FALSE) of the refent.
 
 
 #model=NULL; cutoff = 5; select = "RNA"; nchain = NULL; pchain = NULL; hydrogens = FALSE; byres = TRUE; verbose = T
@@ -21,7 +21,7 @@ function( pdb, model=NULL, cutoff = 5, select = "RNA", nchain = NULL,
     if (nchar(pdb)==4){
 # If the input is a PDB ID, the data is downloaded from internet
         if(verbose) print(pdb)
-        pdb<-read.cif.RAM(pdb)
+        pdb <- cifAsPDB(pdb)
     } else {
         stop( "Your input string is not a pdb ID" )
     }

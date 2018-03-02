@@ -20,6 +20,7 @@ export(
 
 	check.nt, 
 	check_etatheta,
+        cifAsPDB,
         cifAtom_site, 
         cifAtom_sites,
         cifAtom_type,
@@ -54,7 +55,6 @@ export(
 	make_ntinfo, 
 	measure, 
 	measure_pucker, 
-	model.select, 
 
 	last_release,
 
@@ -89,6 +89,7 @@ export(
 	rVECTOR, 
 
 	select_ntID_neighbours,
+	selectModel, 
 	shift360, 
 	subset_bypucker, 
 	subset_ntinfo, 

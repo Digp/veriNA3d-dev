@@ -19,7 +19,7 @@ thought to be used with 'cifCheck' function.}
 A cif object, which might be the same input or the downloaded data
 }
 \description{
-Internal function to check if a cif/pdb input is actually a cif/pdb object
+Internal function to check if an input is actually a CIF object
 If not, the cif file is read from the MMB API.
 }
 \author{

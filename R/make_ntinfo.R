@@ -5,7 +5,7 @@
 #' are labeled with a unique ID (column ntID).
 #'
 #' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
-#'    objects as provided by "read.pdb", "read.cif" ...
+#'    objects as provided by "read.pdb", "read.cif", "cifParser" ...
 #' @param model A vector with same length of pdbID containing the
 #'    desired model for each pdbID. If all models are desired, use "all".
 #'    If no models are specified, the first one will be used for each pdbID
@@ -201,9 +201,9 @@ function(.pdbID, .model, .chain, .read,
                     rm.alt=rm.alt, 
                     verbose=F ) )
     } else if( .read == "read.cif" ) {
-    .temp_PDB <- read.cif.RAM( paste( .path, .name, .extension, sep="" ), alt=ALT)
+    .temp_PDB <- cifAsPDB( paste( .path, .name, .extension, sep="" ), alt=ALT)
     } else if( .read == "download.RAM" ) {
-    .temp_PDB <- read.cif.RAM(.name, alt=ALT)
+    .temp_PDB <- cifAsPDB(.name, alt=ALT)
     }
 
     if( .model == "all" | .model == 0 ) {

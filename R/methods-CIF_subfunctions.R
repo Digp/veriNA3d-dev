@@ -1,6 +1,6 @@
 ## CIF methods subfunctions
 
-## ===========================================================================
+## ============================================================================
 ## CIF Attributes object
 cifAttr <- c("entry",
              "audit_conform",
@@ -17,7 +17,7 @@ cifAttr <- c("entry",
              "atom_type",
              "atom_site")
 
-## ===========================================================================
+## ============================================================================
 ## cifParser subfunctions:
 
 ## Parse just a section between hashes
@@ -51,7 +51,7 @@ function(i, pdb, hash_inds) {
     return(out)
 }
 
-## ===========================================================================
+## ============================================================================
 ## cifParser sub-subfunctions (.cifParser subfunctions):
 
 ## Special parser for "loop_" secctions
@@ -64,18 +64,21 @@ function(i, pdb, hash_inds) {
                   strsplit(data[Names.ind], ".", fixed=T))
 
     ## Redefine where the table starts
-    first <- Names.ind[length(Names.ind)]+1
+    first <- Names.ind[length(Names.ind)] + 1
 
     ## "totalfields" is the number of fields in the table
     totalfields <- nrow(Names)
     data <- data[first:length(data)]
 
     ## If the sections contains the coordinates, just read the table
-    if (Names[1,1] == "_atom_site") {
+    if (Names[1, 1] == "_atom_site") {
         out <- read.table(textConnection(data), stringsAsFactors=F)
     } else {
-        #out <- .clean_section(data, loop=T, totalfields=totalfields)
         data <- .replace_semicolons(data)
+
+        ## Corner case derived from pdbID 1TSL
+        data <- gsub("3'-", "3\\'-", data, fixed=T)
+        data <- gsub("-5'", "-5\\'", data, fixed=T)
 
         ## in some cases, different lines contain the info of a single row
         ## (different number of characters in the lines)
@@ -129,7 +132,7 @@ function(i, pdb, hash_inds) {
     out <- table$V2
     return(list(Names=Names, out=out))
 }
-## ===========================================================================
+## ============================================================================
 ## cifParser sub-sub-subfunctions (.clean_loop_sections subfunctions):
 
 ## In some cases the text lacks the preceding&succeding apostrophe and 
@@ -145,7 +148,7 @@ function(data) {
           (!is.na(semicoloninds_end) && length(semicoloninds_end) > 0)) {
 
         lines <- c(unlist(mapply(
-                                FUN=function(x,y) {
+                                FUN=function(x, y) {
                                     return(x:y)
                                 }, semicoloninds_start, semicoloninds_end)))
         data[lines] <- gsub("'", "pRimE", data[lines])
@@ -161,7 +164,7 @@ function(data, totalfields) {
     ## This piece of code treats the data by brute force
     ## All the data is splited by blank spaces and empty strings are removed
     data3 <- unlist(strsplit(data, " ", perl=T))
-    data3 <- data3[-which(data3=="")]
+    data3 <- data3[-which(data3 == "")]
 
     ## Isolated apostrophe "'" are the closing apostrophe of a sentence, 
     ## so they are pasted  to the previous line and removed
@@ -178,7 +181,7 @@ function(data, totalfields) {
 
     if (length(quoteinds_start) > 0 && length(quoteinds_end) > 0) {
         toreplace <- mapply(
-                            FUN=function(x,y) {
+                            FUN=function(x, y) {
                                 return(paste(data3[x:y], collapse=" "))
                             }, quoteinds_start, quoteinds_end)
 
@@ -186,7 +189,7 @@ function(data, totalfields) {
 
         ## The splited lines are removed
         toremove <- c(unlist(mapply(
-                                FUN=function(x,y) {
+                                FUN=function(x, y) {
                                     if (x < y) {
                                         return(x:y)
                                     } else if (x == y) {
@@ -245,6 +248,239 @@ function(data, totalfields) {
 
     return(table)
 }
-## ===========================================================================
+## ============================================================================
 
+## ============================================================================
+## cifAsPDB subfunction
+.cifAsPDB <-
+function(cif, model=NULL, chain=NULL, alt=c("A")) {
+    ## Coordinates are saved apart -------------------------------------------
+    table <- cifAtom_site(cif)
+
+    ## In case there are Sodium ions ("NA"), replace them by "Na" string 
+    na.ind <- which(is.na(table), arr.ind=T)
+    if (nrow(na.ind) > 0) {
+        for (i in 1:nrow(na.ind)) {
+            table[na.ind[i, 1], na.ind[i, 2]] <- "Na"
+        }
+    }
+
+    ## Manage mmCIF version --------------------------------------------------
+    ## mmCIF files newer than 4.073 have just 21 columns
+    totalcol <- ncol(table)
+    if (totalcol == 21) {
+        ## Order columns as in pdb objects (bio3d S3)
+        atom <- cbind(table[, c(1, 2, 4, 5, 6, 19, 17, 10, 11, 12, 13, 14,
+                                15, 8, 3, 16, 7, 9, 18, 20, 21)])
+        names(atom) <- c("type", "eleno", "elety", "alt", "resid",
+                         "chain", "resno", "insert", "x", "y", "z",
+                         "o", "b", "entid", "elesy", "charge",
+                         "asym_id", "seq_id", "comp_id", "atom_id",
+                         "model")
+
+    ## Older mmCIF have 26 columns
+    } else {
+        ## Order columns as in pdb objects (bio3d S3)
+        atom <- cbind(table[, c(1, 2, 4, 5, 6, 24, 22, 10, 11, 12, 13, 14,
+                                15, 8, 3, 21, 7, 9, 16, 17, 18, 19, 20,
+                                23, 25, 26)])
+        names(atom) <- c("type", "eleno", "elety", "alt", "resid", "chain",
+                       "resno", "insert", "x", "y", "z", "o", "b", "entid",
+                       "elesy", "charge", "asym_id", "seq_id", "x_esd",
+                       "y_esd", "z_esd", "o_esd", "b_esd", "comp_id",
+                       "atom_id", "model")
+    }
+
+    ## Check for alternative (alt) records -----------------------------------
+    if (sum(atom$alt != ".") > 0) {
+        altind <- sort(c(which(atom$alt == "."),
+                         which(atom$alt %in% alt)))
+        atom <- atom[altind, ]
+        print(paste("PDB has alt records, taking ", alt, " only", sep=""))
+    }
+
+    ## Return a particular chain if specified in arguments -------------------
+    if (!is.null(chain)) {
+        atom <- atom[atom$chain == chain, ]
+    }
+
+    ## Return a particular model if specified in arguments -------------------
+    if (!is.null(model)) {
+        atom <- atom[atom$model == model, ]
+        xyz.models <- as.xyz(matrix(
+                            c(t(atom[, c("x", "y", "z")])), nrow=1))
+        flag <- FALSE
+
+    ## else returns all models for the desired structure
+    } else {
+        model   <- unique(atom$model)
+        lengths <- unlist(lapply(model,
+                                 FUN=function(x) sum(atom$model == x)))
+
+        ## Check if the different models have the same number of atoms
+        if (length(unique(lengths)) == 1) {
+            xyz.models <- as.xyz(matrix(
+                                    as.numeric(c(t(
+                                                    atom[,
+                                                    c("x", "y", "z")]
+                                              ))),
+                                    byrow=T,
+                                    nrow=length(model)))
+        flag <- FALSE
+
+        ## else: corner case for structures containing models with
+        ## different number of atoms.
+        } else {
+            warning(paste(
+                    cifEntry(cif),
+                    " has models with different number of atoms!",
+                    " Use select.model() to make sure you use the",
+                    " desired one.",
+                    sep=""))
+            model <- lapply(model,
+                        FUN=function(x) return(atom[atom$model == x, ]))
+            atom <- model[[1]]
+            xyz.models <- as.xyz(matrix(
+                                    rep(
+                                        as.numeric(c(t(
+                                                    atom[,
+                                                    c("x", "y", "z")]))),
+                                        length(model)),
+                                  byrow=T,
+                                  nrow=length(model)))
+
+            ## The pdb objects receives a "flag" (logical) TRUE and
+            ## the different models are stored in a list (pdb$model) 
+            ## instead of the coordinate matrix pdb$xyz
+            flag <- TRUE
+        }
+        atom <- atom[atom$model == atom$model[1], ]
+    }
+
+    ## Generate ouput pdb object ---------------------------------------------
+    pdb <- list(atom=atom)
+    pdb[[2]] <- xyz.models
+    pdb[[3]] <- ""
+    pdb[[4]] <- model
+    pdb[[5]] <- flag
+    pdb[[6]] <- match.call()
+
+    names(pdb) <- c("atom", "xyz", "calpha", "model", "flag", "call")
+    class(pdb) <- c("pdb")
+
+    pdb$atom[pdb$atom == ""]  <- NA
+    pdb$atom[pdb$atom == "?"] <- NA
+    pdb$atom[pdb$atom == "."] <- NA
+
+    ca.inds <- atom.select.pdb(pdb, string="calpha", verbose=F)
+    pdb$calpha <- seq(1, nrow(atom)) %in% ca.inds$atom
+    return(pdb)
+}
+## ============================================================================
+
+## ============================================================================
+## rVector subfunctions
+
+.rVector <-
+function(pdb1, outformat="rvector", simple_out=T) {
+    if (!simple_out && 
+        !outformat %in% c("rvector", "vector_coord", "cylindrical_coord")) {
+
+        stop("outformat should be a string 'rvector',
+             'vector_coord', or 'cylindrical_coord'")
+    }
+
+    if (outformat == "rvector") {
+        format_out <- c("r(x) / a", "r(y) / a", "r(z) / b")
+    } else if (outformat == "vector_coord") {
+        format_out <- c("r(x)", "r(y)", "r(z)")
+    } else if (outformat == "cylindrical_coord") {
+        format_out <- c("rho", "phy", "z")
+    }
+
+    pdb1$atom$insert[which(is.na(pdb1$atom$insert))]="?"
+    pdb1$atom$chain[which(is.na(pdb1$atom$chain))]="?"
+    sel1 <- atom.select(pdb1, elety="C4'")
+    resno1 <- pdb1$atom$resno[sel1$atom]
+    resid1 <- pdb1$atom$resid[sel1$atom]
+    insert1 <- pdb1$atom$insert[sel1$atom]
+    chain1 <- pdb1$atom$chain[sel1$atom]
+    resid_list <- paste(pdb1$atom$resno,
+                         pdb1$atom$insert,
+                         pdb1$atom$chain, sep="|")
+
+    baselist1 <- mapply(FUN=.selectbase,
+        resno1,
+        resid1,
+        insert1,
+        chain1,
+        MoreArgs=list(pdb1, pdbID="Base"))
+
+    check_base <- unlist(lapply(baselist1,
+        FUN=function(x) length(get(x, envir=parent.frame(n=2))$atom)))
+    if (any(check_base == 0)) {
+        warning("Some of the residues lacks the base, trying to keep without it ...")
+        check_inds <- which(check_base == 0)
+        resno1 <- resno1[ -check_inds ]
+        resid1 <- resid1[ -check_inds ]
+        insert1 <- insert1[ -check_inds ]
+        chain1 <- chain1[ -check_inds ]
+        baselist1 <- baselist1[ -check_inds ]
+    }
+    len <- length(resno1)
+    com <- matrix(unlist(suppressWarnings(lapply(baselist1,
+        FUN=function(x) com(pdb1, get(x, envir=parent.frame(n=2)))))),
+        ncol=3, byrow=T)
+    nucdata <- pdb1$atom[which(resid_list %in% paste(resno1, insert1, chain1, sep="|")), ]
+    x <- nucdata[ nucdata$elety == "C2", c("x", "y", "z") ]
+#    x <- pdb1$atom[pdb1$atom$elety == "C2", c("x", "y", "z")]
+    y <- matrix(unlist(lapply(baselist1, FUN=function(x)
+        pdb1$atom[intersect(get(x, envir=parent.frame(n=2))$atom,
+        which(pdb1$atom$elety == strsplit(x, "_")[[1]][6])),
+        c("x", "y", "z")])), ncol=3, byrow=T)
+    rr <- sapply(1:len, FUN=.moveO, com=com, y=y, x=x, simplify=F)
+    gg <- sapply(1:len, FUN=.GAMMA, com=com, y=y, x=x, simplify=F)
+    bb <- sapply(1:len, FUN=.BETA, com=com, y=y, x=x, simplify=F)
+    for (i in 1:length(rr)) {rr[[i]] <- rbind(rr[[i]], bb[[i]], gg[[i]])}
+
+    if (simple_out) {
+        rr <- matrix(unlist(rr), ncol=5, byrow=T)
+        if (outformat == "rvector") {
+            rr[, 1] <- rr[, 1] / 5
+            rr[, 2] <- rr[, 2] / 5
+            rr[, 3] <- rr[, 3] / 3
+        } else if (outformat == "cylindrical_coord") {
+            radang <- atan(rr[, 2] / rr[, 1])
+            rr[, 1] <- rr[, 1] / cos(radang) #rho
+            rr[, 2] <- radang * (180 / pi)    #phy
+            rr[is.na(rr)] <- 0
+        }
+        colnames(rr) <- c(format_out, "beta", "gamma")
+    } else {
+        for (i in 1:length(rr)) {rr[[i]] <- t(rr[[i]])}
+        names(rr) <- substr(baselist1, 1, nchar(baselist1)-3)
+        if (outformat == "rvector") {
+            for (i in 1:length(rr)) {
+                rr[[i]][, 1] <- rr[[i]][, 1] / 5
+                rr[[i]][, 2] <- rr[[i]][, 2] / 5
+                rr[[i]][, 3] <- rr[[i]][, 3] / 3
+            }
+        } else if (outformat == "cylindrical_coord") {
+            for (i in 1:length(rr)) {
+                radang <- atan(rr[[i]][, 2] / rr[[i]][, 1])
+                rr[[i]][, 1] <- rr[[i]][, 1] / cos(radang) #rho
+                rr[[i]][, 2] <- radang * (180 / pi)    #phy
+                rr[[i]][is.na(rr[[i]])] <- 0
+            }
+        }
+        for (i in 1:length(rr)) {
+            #rownames(rr[[i]]) <- c(substr(baselist1, 1, nchar(baselist1)-3)[-i])
+            rownames(rr[[i]]) <- c(substr(baselist1, 1, nchar(baselist1)-3))
+            colnames(rr[[i]]) <- c(format_out, "beta", "gamma")
+        }
+    }
+    #rrb=cbind(rr, beta=unlist(bb))
+    #rrbg=cbind(rrb, gamma=unlist(gg))
+    return(rr)
+}
 

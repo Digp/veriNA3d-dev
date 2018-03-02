@@ -10,7 +10,7 @@ make_ntinfo(pdbID, model = NULL, chain = NULL, minlength = 3,
 }
 \arguments{
 \item{pdbID}{A list/vector containing the desired PDB IDs or a list of pdb
-objects as provided by "read.pdb", "read.cif" ...}
+objects as provided by "read.pdb", "read.cif", "cifParser" ...}
 
 \item{model}{A vector with same length of pdbID containing the
 desired model for each pdbID. If all models are desired, use "all".

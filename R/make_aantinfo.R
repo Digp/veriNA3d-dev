@@ -95,7 +95,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
     if(exists(pdbID,envir=.GlobalEnv)){
         pdb<-get(pdbID,envir=.GlobalEnv)
     }else{
-        pdb<-read.cif.RAM(pdbID,model=model)
+        pdb <- cifAsPDB(pdbID, model=model)
         assign(pdbID,pdb,envir=.GlobalEnv)
     }
 
