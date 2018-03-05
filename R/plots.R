@@ -222,9 +222,7 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
 
 #####################################################
 plot.eta.theta<-function(data,pucker,classes,ntinfo,bandwidths=c(36,36)){
-    require(plot3D)
     #if(is.null(z)){
-    require(MASS)
     if(!dir.exists(classes)){
         invisible(dir.create(classes))
     }

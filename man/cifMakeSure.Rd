@@ -23,7 +23,7 @@ Internal function to check if an input is actually a CIF object
 If not, the cif file is read from the MMB API.
 }
 \examples{
-cif <- .cifMakeSure("1bau")
+cif <- veriNA3d:::.cifMakeSure("1bau")
 
 }
 \author{

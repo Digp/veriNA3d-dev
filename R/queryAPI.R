@@ -1,8 +1,8 @@
 #' Launch queries to the MMB or EBI APIs
 #'
-#' Given a 4-character string (PDB ID) and the desired "info", it sends  a
-#' query to the desired API and returns the output. This is a wrapper
-#' function called by most of the queryFunctions (for documentation see
+#' Given a 4-character string (PDB ID) and the desired "info", it sends a
+#' query to the desired API and returns the output. This is an intermediate
+#' wrapper called by most of the queryFunctions (for documentation see
 #' ?queryFunctions).
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein 
@@ -26,7 +26,7 @@
 ## Higher level common function to make API calls
 queryAPI <-
 function(pdbID, info, API="default",
-          reuse=F, envir = parent.frame(n=2), verbose=F) {
+          reuse=F, envir=parent.frame(n=2), verbose=F) {
 
     ## Check that the input pdbID is 4 character string ----------------------
     if (nchar(pdbID) != 4) {
@@ -43,7 +43,7 @@ function(pdbID, info, API="default",
     } else {
         ## Check that the selected API is in the list below ------------------
         API <- tolower(API)
-        .check_api(API, supported = c("mmb", "ebi"))
+        .check_api(API, supported=c("mmb", "ebi"))
     }
 
     ## Warn the user that some data is only taken from mmb/ebi api -----------

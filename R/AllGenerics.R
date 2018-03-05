@@ -238,9 +238,10 @@ setGeneric("selectModel",
 #'
 #' @examples
 #' cif <- cifParser("2d18")
-#' vectors <- rVector(cif=cif, simple_out=F)
+#' model1 <- selectModel(cif=cif, model=1)
+#' vectors <- rVector(cif=model1, simple_out=FALSE)
 #'
-#' @author Diego Gallego & Leonardo Darré
+#' @author Diego Gallego & Leonardo Darre
 #'
 setGeneric("rVector",
             function(cif, pdb, outformat="rvector", simple_out=T)
@@ -267,8 +268,10 @@ setGeneric("rVector",
 #' (from bio3d package).
 #' @param pdb2 A pdb object as obtained from cifAsPDB or read.cif/read.pdb
 #' (from bio3d package).
-#' @param rvectors1 A data.frame as obtained from [rVector(simple_out=T)]
-#' @param rvectors2 A data.frame as obtained from [rVector(simple_out=T)]
+#' @param rvectors1 A data.frame as obtained from [rVector()] using 
+#' simple_out=TRUE.
+#' @param rvectors2 A data.frame as obtained from [rVector()] using 
+#' simple_out=TRUE.
 #'
 #' @return A numeric with the epsilon RMSD between the two structures
 #'

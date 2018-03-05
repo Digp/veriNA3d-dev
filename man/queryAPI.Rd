@@ -27,10 +27,14 @@ user access and avoids unnecessary work in the servers).}
 A vector or data.frame with the desired data.
 }
 \description{
-Given a 4-character string (PDB ID) and the desired "info", it sends  a
-query to the desired API and returns the output. This is a wrapper
-function called by most of the query_functions (for documentation see
-?query_functions).
+Given a 4-character string (PDB ID) and the desired "info", it sends a
+query to the desired API and returns the output. This is an intermediate
+wrapper called by most of the queryFunctions (for documentation see
+?queryFunctions).
+}
+\examples{
+## See wrapper ?queryFunctions
+
 }
 \author{
 Diego Gallego

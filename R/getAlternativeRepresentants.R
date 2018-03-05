@@ -14,6 +14,7 @@
 #' @param resol A positive real number to specify a desired resolution.
 #' @param type A string indicating the type of desired RNA, according with 
 #'  the RNAclassifier function.
+#' @param verbose A logical to print details of the process.
 #'
 #' @return A data.frame with info about all the "Equivalence Classes" and
 #'  the selected Representants according with the specified conditions. 
@@ -72,7 +73,7 @@ function(eqclass, members,
          verbose) {
 
     if (verbose) 
-        at("\n", eqclass, "\n")
+        cat("\n", eqclass, "\n")
 
     members <- strsplit(members, split=";")[[1]]
     Members <- substr(members, 1, 4)

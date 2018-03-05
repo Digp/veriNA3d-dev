@@ -416,7 +416,6 @@ function(pdb1, outformat="rvector", simple_out=T) {
         insert1,
         chain1,
         MoreArgs=list(pdb1, pdbID="Base"))
-
     check_base <- unlist(lapply(baselist1,
         FUN=function(x) length(get(x, envir=parent.frame(n=2))$atom)))
     if (any(check_base == 0)) {
@@ -431,7 +430,7 @@ function(pdb1, outformat="rvector", simple_out=T) {
     }
     len <- length(resno1)
     com <- matrix(unlist(suppressWarnings(lapply(baselist1,
-        FUN=function(x) com(pdb1, get(x, envir=parent.frame(n=2)))))),
+        FUN=function(x) com.pdb(pdb1, get(x, envir=parent.frame(n=2)))))),
         ncol=3, byrow=T)
     nucdata <- pdb1$atom[which(resid_list %in% 
                             paste(resno1, insert1, chain1, sep="|")), ]
@@ -485,6 +484,91 @@ function(pdb1, outformat="rvector", simple_out=T) {
     }
     return(rr)
 }
+## Data frames necessary for the bio3d com() function to work properly
+elements <- data.frame(symb=c("H", "C", "N", "O", "P", "S"),
+                       mass=c(as.numeric("1.00794", "12.01070", "14.00670",
+                              "15.99940", "30.97376", "32.06500")))
+atom.index <- data.frame(name=c("C2", "C4", "C6"), symb=c("C", "C", "C"))
+
+## ============================================================================
+## rVector sub-subfunctions (.rVector subfunctions) from bio3d
+## Code style was not modified, just copy-pasted
+"com.pdb" <-
+  function(pdb, inds=NULL, use.mass=TRUE, ... ) {
+
+    if (missing(pdb))
+      stop("Please supply an input 'pdb' object, i.e. from 'read.pdb()'")
+    if(!is.pdb(pdb))
+      stop("Input 'pdb' must be of type 'pdb'")
+
+    if(is.null(inds)) {
+      xyz <- pdb$xyz
+      at <- pdb$atom[, "elety"]
+    } else {
+      if(!is.select(inds))
+        stop("provide a select object as obtained from 'atom.select'")
+
+      if(length(inds$xyz)<3)
+        stop("insufficient atoms in selection")
+      xyz <- pdb$xyz[,inds$xyz]
+      at <- pdb$atom[inds$atom, "elety"]
+    }
+
+    if(use.mass) {
+      m <- atom2mass(at, ...)
+    }
+    else {
+      m <- NULL
+    }
+
+    com <- com.xyz(xyz, m)
+    return(com)
+  }
+
+atom2mass <- function(x, mass.custom=NULL, elety.custom=NULL,
+                              grpby=NULL, rescue=TRUE, ...){
+  if(!is.null(mass.custom)) {
+    if(!all(c("symb","mass") %in% names(mass.custom)))
+      stop("'mass.custom' must contains 'symb' and 'mass' components")
+    inds <- unlist(lapply(mass.custom, is.factor))
+    mass.custom[inds] <- lapply(mass.custom[inds], as.character)
+  }
+  elements <- rbind(mass.custom[,c("symb","mass")], elements[,c("symb","mass")])
+  symb <- atom2ele.default(x, elety.custom, rescue, ...)
+  M <- elements[match(symb, elements[,"symb"]), "mass"]
+
+  if(any(is.na(M)))
+    stop(paste("\n\tatom2mass: mass of element '", symb[is.na(M)], "' unknown", sep=""))
+
+  if(!is.null(grpby)) {
+    if(length(grpby) != length(M))
+      warning("'grpby' as been recycled")
+    M <- unlist(lapply(split(M, grpby), sum))
+  }
+  return(M)
+}
+
+"com.xyz" <- function(xyz, mass=NULL, ...) {
+  xyz <- as.xyz(xyz)
+  natoms <- ncol(xyz)/3
+
+  if(is.null(mass))
+    mass <- rep(1, times=natoms)
+
+  if (natoms != length(mass))
+    stop("com.xyz: length of input vector 'mass' uequal to number of atoms (ncol(xyz)/3)")
+
+  com1 <- function(x) {
+    xyz <- matrix(x, ncol=3, byrow=T)
+    com <- colSums(xyz * mass) / sum(mass)
+    return(com)
+  }
+
+  com <- t(apply(xyz, 1, com1))
+  colnames(com) <- c("x", "y", "z")
+  return(com)
+}
+
 ## ============================================================================
 ## rVector sub-subfunctions (.rVector subfunctions)
 

@@ -3,58 +3,72 @@
 ##############################################################################
 ## cif-accessors
 
+#' @rdname cif_accessors
 setMethod("cifEntry",
     signature="CIF",
     function(x) x@entry)
 
+#' @rdname cif_accessors
 setMethod("cifAudit_conform",
     signature="CIF",
     function(x) x@audit_conform)
 
+#' @rdname cif_accessors
 setMethod("cifDatabase_2",
     signature="CIF",
     function(x) x@database_2)
 
+#' @rdname cif_accessors
 setMethod("cifPdbx_database_status",
     signature="CIF",
     function(x) x@pdbx_database_status)
 
+#' @rdname cif_accessors
 setMethod("cifAudit_author",
     signature="CIF",
     function(x) x@audit_author)
 
+#' @rdname cif_accessors
 setMethod("cifEntity",
     signature="CIF",
     function(x) x@entity)
 
+#' @rdname cif_accessors
 setMethod("cifChem_comp",
     signature="CIF",
     function(x) x@chem_comp)
 
+#' @rdname cif_accessors
 setMethod("cifExptl",
     signature="CIF",
     function(x) x@exptl)
 
+#' @rdname cif_accessors
 setMethod("cifStruct",
     signature="CIF",
     function(x) x@struct)
 
+#' @rdname cif_accessors
 setMethod("cifStruct_keywords",
     signature="CIF",
     function(x) x@struct_keywords)
 
+#' @rdname cif_accessors
 setMethod("cifStruct_asym",
     signature="CIF",
     function(x) x@struct_asym)
 
+#' @rdname cif_accessors
 setMethod("cifAtom_sites",
     signature="CIF",
     function(x) x@atom_sites)
 
+#' @rdname cif_accessors
 setMethod("cifAtom_type",
     signature="CIF",
     function(x) x@atom_type)
 
+#' @rdname cif_accessors
 setMethod("cifAtom_site",
     signature="CIF",
     function(x) x@atom_site)
@@ -66,6 +80,7 @@ setMethod("cifAtom_site",
 ## CIF S4 constructor
 
 ## cifParser 
+#' @rdname cifParser
 setMethod("cifParser",
     definition=function(pdbID, verbose=F) {
 
@@ -86,7 +101,7 @@ setMethod("cifParser",
             #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
             URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
                          pdbID, ".cif", sep ="")
-            pdb <- veriNA3d:::.launchquery(URL, FUN=readLines, N.TRIES=1)
+            pdb <- .launchquery(URL, FUN=readLines, N.TRIES=1)
 
         } else { # Otherwise it is just an error
             stop("Please, provide a valid pdbID or file")
@@ -110,7 +125,7 @@ setMethod("cifParser",
 
         ## Parse the CIF sections of interest
         cif <- sapply(sections,
-                      FUN=veriNA3d:::.cifParser,
+                      FUN=.cifParser,
                       pdb=pdb, hash_inds=hash_inds,
                       USE.NAMES=T)
 
@@ -140,6 +155,7 @@ setMethod("cifParser",
 ## Function to check if an object is CIF and related
 
 ## cifCheck
+#' @rdname cifCheck
 setMethod("cifCheck",
     definition=function(x) {
         inherits(x, "CIF")
@@ -162,7 +178,7 @@ setMethod("cifCheck",
 #' @return A cif object, which might be the same input or the downloaded data
 #'
 #' @examples 
-#' cif <- .cifMakeSure("1bau")
+#' cif <- veriNA3d:::.cifMakeSure("1bau")
 #'
 #' @author Diego Gallego
 #'
@@ -199,12 +215,14 @@ function(cif, verbose=F, check="cifCheck") {
 ## Method to coerce CIF S4 object to pdb S3 object as found in bio3d package
 
 ## cifAsPDB
+#' @rdname cifAsPDB
 setMethod("cifAsPDB",
     signature(cif="CIF"),
     definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
         return(.cifAsPDB(cif))
     })
 
+#' @rdname cifAsPDB
 setMethod("cifAsPDB",
     signature(cif="character"),
     definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
@@ -219,6 +237,7 @@ setMethod("cifAsPDB",
 ##############################################################################
 ## Model selection methods
 
+#' @rdname selectModel
 setMethod("selectModel",
     signature(cif="CIF"),
     definition=function(cif, model, verbose=F) {
@@ -230,6 +249,7 @@ setMethod("selectModel",
         return(cif)
     })
 
+#' @rdname selectModel
 setMethod("selectModel",
     definition=function(pdb, model, verbose=F) {
 
@@ -280,6 +300,7 @@ setMethod("selectModel",
 ##############################################################################
 ## rVector. Implemented to reproduce barnaba (Bottaro et al. NAR, 2014)
 
+#' @rdname rVector
 setMethod("rVector",
     signature(cif="CIF"),
     definition=function(cif, outformat="rvector", simple_out=T) {
@@ -287,6 +308,7 @@ setMethod("rVector",
         return(.rVector(pdb, outformat, simple_out))
     })
 
+#' @rdname rVector
 setMethod("rVector",
     signature(cif="character"),
     definition=function(cif, outformat="rvector", simple_out=T) {
@@ -294,6 +316,7 @@ setMethod("rVector",
         return(.rVector(pdb, outformat, simple_out))
     })
 
+#' @rdname rVector
 setMethod("rVector",
     definition=function(pdb, outformat="rvector", simple_out=T) {
         return(.rVector(pdb, outformat, simple_out))
@@ -305,6 +328,7 @@ setMethod("rVector",
 ##############################################################################
 ## eRMSD. Implemented to reproduce barnaba (Bottaro et al. NAR, 2014)
 
+#' @rdname eRMSD
 setMethod("eRMSD",
     signature(cif1="CIF", cif2="CIF"),
     definition=function(cif1=NULL, cif2=NULL) {
@@ -318,6 +342,7 @@ setMethod("eRMSD",
         return(sqrt(sum(deltaG^2) / len))
     })
 
+#' @rdname eRMSD
 setMethod("eRMSD",
     definition=function(pdb1=NULL, pdb2=NULL,
                         rvectors1=NULL, rvectors2=NULL) {
@@ -347,17 +372,3 @@ setMethod("eRMSD",
 
 ## End of section for epsilon RMSD methods
 ##############################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-

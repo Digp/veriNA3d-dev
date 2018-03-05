@@ -13,7 +13,7 @@ Data Bank.}
 \item{length}{A positive integer to use as a threshold to classify RNA in
 the NoRNA group.}
 
-\item{...}{Arguments to be passed to query function (see ?query_functions).}
+\item{...}{Arguments to be passed to query function (see ?queryFunctions).}
 }
 \value{
 A string with the type of RNA.

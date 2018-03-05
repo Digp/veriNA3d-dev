@@ -71,7 +71,7 @@
 
 check.nt <-
 function( pdb, model=1, chain="all", id=NULL ) {
-    if( !any( bio3d:::.is.nucleic( pdb ))) {
+    if( !any( .is.nucleic( pdb ))) {
         stop("Does the input pdb object contain a nucleic acid?")
     }
 
@@ -139,7 +139,7 @@ function( pdb, model, chain, id=NULL ) {
 #pdb contains the PDB object ONLY with the selected model and chain
     pdb <- trim( pdb, selection )
 
-    if( !any( bio3d:::.is.nucleic( pdb ))) {
+    if( !any( .is.nucleic( pdb ))) {
         return()
     }
 

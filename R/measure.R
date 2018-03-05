@@ -8,7 +8,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
   distances="default", angles="default", torsionals="default", 
   pucker=T, Dp=T ) {
 
-    if( !any( bio3d:::.is.nucleic( pdb ))) {
+    if( !any( .is.nucleic( pdb ))) {
         stop("Does the input pdb object contain a nucleic acid?")
     }
 
@@ -251,7 +251,7 @@ function( pdb, model, chain, v_shifted,
 #..pdb contains the PDB object ONLY with the selected model and chain
     pdb <- trim( pdb, selection )
 
-    if( !any( bio3d:::.is.nucleic( pdb ))) {
+    if( !any( .is.nucleic( pdb ))) {
         return()
     }
 
@@ -688,3 +688,12 @@ append_selections<-function(.selections){
     }))
     assign(.selections[1],value=unlist(output),envir=parent.frame(n=2))
 }
+
+
+
+".is.nucleic" <- function(pdb) {
+  nuc.aa <- c("A",   "U",  "G",  "C",   "T",  "I",
+              "DA", "DU", "DG", "DC",  "DT", "DI")
+  return(pdb$atom$resid %in% nuc.aa)
+}
+

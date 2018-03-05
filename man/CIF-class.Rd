@@ -8,7 +8,8 @@
 \description{
 All mmCIF files in the PDB at date 2018-Feb-19th contain (just) 14 common
 attributes, which are represented in the CIF objects herein with the same
-names as found in mmCIF documentation '\link{http://mmcif.wwpdb.org/}'.
+names as found in mmCIF documentation
+\url{http://mmcif.wwpdb.org/}.
 }
 \section{Slots}{
 

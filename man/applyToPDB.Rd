@@ -7,17 +7,17 @@
 applyToPDB(FUNCTION, listpdb = NULL, verbose = T, as.df = T, ...)
 }
 \arguments{
-\item{FUNCTION}{A function of interest}
+\item{FUNCTION}{A function of interest.}
 
 \item{listpdb}{A list/vector containing the PDB IDs of interest. If NULL,
 the complete list of PDB entries is downloaded and used.}
 
-\item{verbose}{A logical to print details of the loop process}
+\item{verbose}{A logical to print details of the loop process.}
 
 \item{as.df}{A logical that stands for "as.data.frame". If TRUE, the output
 will be returned in the form of a data.frame, otherwise a list.}
 
-\item{...}{optional arguments to ‘FUNCTION’}
+\item{...}{optional arguments to FUNCTION.}
 }
 \value{
 A data.frame with the PDB IDs (first colunm) and the output of the
@@ -25,11 +25,11 @@ function of interest (second column) or a list with the results.
 }
 \description{
 Given a function of interest, it is applied to all the PDB entries.
-See supported functions in ?query_functions.
+See supported functions in ?queryFunctions.
 }
 \examples{
 listpdb <- c("1s72", "1bau", "1rna")
-applyToPDB(query_technique, listpdb, verbose=F)
+applyToPDB(queryTechnique, listpdb, verbose=FALSE)
 
 }
 \author{

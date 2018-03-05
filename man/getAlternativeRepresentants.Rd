@@ -17,6 +17,8 @@ example below). For the list of techniques, see "bio3dRNA:::allowedtechs".}
 
 \item{type}{A string indicating the type of desired RNA, according with
 the RNAclassifier function.}
+
+\item{verbose}{A logical to print details of the process.}
 }
 \value{
 A data.frame with info about all the "Equivalence Classes" and
