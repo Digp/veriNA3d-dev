@@ -124,10 +124,10 @@ setMethod("cifParser",
                            })
 
         ## Parse the CIF sections of interest
-        cif <- sapply(sections,
+        cif <- lapply(sections,
                       FUN=.cifParser,
-                      pdb=pdb, hash_inds=hash_inds,
-                      USE.NAMES=TRUE)
+                      pdb=pdb, hash_inds=hash_inds)
+        names(cif) <- cifAttr
 
         ## Create CIF S4 object and return output ----------------------------
         out <- CIF(entry                = cif$entry,

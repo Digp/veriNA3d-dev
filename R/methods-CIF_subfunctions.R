@@ -38,16 +38,8 @@ function(i, pdb, hash_inds) {
     Names <- out$Names
     out <- out$out
 
-    ## Find the title of the section encoded in the field names 
-    ## (e.g. for "_entity.id": "entity")
-    title <- gsub("^.", "", Names[1, 1])
-
     # Give to the output object the names of the fields (either vector or data.fr)
     names(out) <- .trim(Names[, 2])
-
-    # out is transformed to a list and it's given the title of the section
-    out <- list(out)
-    names(out) <- title
     return(out)
 }
 
@@ -440,9 +432,9 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
         pdb1$atom[intersect(get(x, envir=parent.frame(n=2))$atom,
         which(pdb1$atom$elety == strsplit(x, "_")[[1]][6])),
         c("x", "y", "z")])), ncol=3, byrow=TRUE)
-    rr <- sapply(1:len, FUN=.moveO, com=com, y=y, x=x, simplify=FALSE)
-    gg <- sapply(1:len, FUN=.GAMMA, com=com, y=y, x=x, simplify=FALSE)
-    bb <- sapply(1:len, FUN=.BETA, com=com, y=y, x=x, simplify=FALSE)
+    rr <- lapply(seq_len(len), FUN=.moveO, com=com, y=y, x=x)
+    gg <- lapply(seq_len(len), FUN=.GAMMA, com=com, y=y, x=x)
+    bb <- lapply(seq_len(len), FUN=.BETA, com=com, y=y, x=x)
     for (i in seq_along(rr)) {rr[[i]] <- rbind(rr[[i]], bb[[i]], gg[[i]])}
 
     if (simple_out) {
