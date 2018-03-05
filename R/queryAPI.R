@@ -2,8 +2,8 @@
 #'
 #' Given a 4-character string (PDB ID) and the desired "info", it sends  a
 #' query to the desired API and returns the output. This is a wrapper
-#' function called by most of the query_functions (for documentation see
-#' ?query_functions).
+#' function called by most of the queryFunctions (for documentation see
+#' ?queryFunctions).
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein 
 #'        Data Bank.
@@ -18,7 +18,7 @@
 #' @return A vector or data.frame with the desired data.
 #'
 #' @examples
-#' ## See wrapper ?query_functions
+#' ## See wrapper ?queryFunctions
 #'
 #' @author Diego Gallego
 #'

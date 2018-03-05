@@ -82,8 +82,9 @@ setMethod("cifParser",
         } else if (nchar(pdbID) == 4) { # Otherwise download by pdb ID
             if (verbose)
                 cat("Downloading file from Internet\n")
-            URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
-            #URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
+            ## For development tests I rather use the internal call
+            #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
+            URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
                          pdbID, ".cif", sep ="")
             pdb <- veriNA3d:::.launchquery(URL, FUN=readLines, N.TRIES=1)
 

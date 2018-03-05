@@ -19,7 +19,7 @@
 #' Data Bank.
 #' @param length A positive integer to use as a threshold to classify RNA in
 #' the NoRNA group.
-#' @param ... Arguments to be passed to query function (see ?query_functions).
+#' @param ... Arguments to be passed to query function (see ?queryFunctions).
 #'
 #' @return A string with the type of RNA.
 #'
@@ -35,7 +35,7 @@ function(pdbID, length = 3, ...) {
     check <- corner_cases(pdbID)
     if (check[[1]]) return(check[[2]])
     #Download info about entities, chains and length
-    MM <- query_entities(pdbID, ...=...)
+    MM <- queryEntities(pdbID, ...=...)
 
     #Check corner case in which there's a DNA-RNA hybrid
     if (any(MM$molecule_type == 
@@ -65,7 +65,7 @@ function(pdbID, length = 3, ...) {
     #Logical, are there organic ligands? 
     #Ions do not categorize a structure as ligandRNA since they are always in 
     #buffers
-    ligands <- length(query_orgligands(pdbID, ...=...)) > 0
+    ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
 
 
     #If there are proteins, the PDB entry is classified as "protRNA"

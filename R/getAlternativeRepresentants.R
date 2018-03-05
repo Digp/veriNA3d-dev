@@ -96,14 +96,14 @@ function(eqclass, members,
 
         ## If interested in any technique, query technique and cache result --
         if (technique != "") {
-            Tech <- query_technique(pdbID, reuse=T, 
+            Tech <- queryTechnique(pdbID, reuse=T, 
                     #verbose=verbose,
                     envir=parent.frame(n=1))
         }
 
         ## If necessary check resol and cache result -------------------------
         if (resol != " ") {
-            Resol <- as.numeric(query_resol(pdbID, reuse=T, API="mmb", 
+            Resol <- as.numeric(queryResol(pdbID, reuse=T, API="mmb", 
                                 #verbose=verbose,
                                 envir=parent.frame(n=1)))
             if (is.na(Resol)) {

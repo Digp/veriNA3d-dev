@@ -1,7 +1,7 @@
 #' Applies a function over a list of PDB ID entries.
 #'
 #' Given a function of interest, it is applied to all the PDB entries. 
-#' See supported functions in ?query_functions.
+#' See supported functions in ?queryFunctions.
 #'
 #' @param FUNCTION A function of interest
 #' @param listpdb A list/vector containing the PDB IDs of interest. If NULL,
@@ -16,7 +16,7 @@
 #'
 #' @examples
 #' listpdb <- c("1s72", "1bau", "1rna")
-#' applyToPDB(query_technique, listpdb, verbose=F)
+#' applyToPDB(queryTechnique, listpdb, verbose=F)
 #'
 #' @author Diego Gallego
 #'
@@ -27,7 +27,7 @@ function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
     FUNCTION <- match.fun(FUNCTION)
     ## Download full PDB list if necessary -----------------------------------
     if (is.null(listpdb)) {
-        listpdb <- query_pdblist()
+        listpdb <- queryEntryList()
     }
 
     ## Apply function over the list ------------------------------------------

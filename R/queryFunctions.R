@@ -1,4 +1,4 @@
-#' General functions to query PDB data from APIs 
+#' General functions to query PDB (Protein Data Bank) data 
 #' 
 #' Suported APIs: MMB (Molecular Modeling and Bioinformatics Laboratoy, 
 #' Dr.Orozco & Dr.Gelpí groups) and 
@@ -7,9 +7,9 @@
 #' formatted differently.\cr
 #' Most functions are self-explanatory, but some details might be of interest:
 #' \cr
-#'  - query_resol: Keep in mind that the resolution will only be returned
+#'  - queryResol: Keep in mind that the resolution will only be returned
 #'    if the structure was solved by X-RAY or Cryo-EM.\cr
-#'  - query_compound: It returns the title as it appears in the header (PDB 
+#'  - queryCompound: It returns the title as it appears in the header (PDB 
 #'    format) or in the "_struct.title" field (mmCIF format).\cr
 #'  - query_header: It returns the classification of the structure as it 
 #'    appears in the header (PDB format) or in the 
@@ -43,69 +43,69 @@
 #'
 #' @author Diego Gallego
 #'
-#' @name query_functions
+#' @name queryFunctions
 NULL
 
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_technique <- 
+#' @rdname queryFunctions
+queryTechnique <- 
 function( pdbID, ... ) {
     info <- "expType"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions 
-query_resol <- 
+#' @rdname queryFunctions 
+queryResol <- 
 function( pdbID, ... ) {
     info <- "resol"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_compound <-
+#' @rdname queryFunctions
+queryCompound <-
 function( pdbID, ... ) {
     info <- "compound"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_header <-
+#' @rdname queryFunctions
+queryHeader <-
 function( pdbID, ... ) {
     info <- "header"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_compType <-
+#' @rdname queryFunctions
+queryCompType <-
 function( pdbID, ... ) {
     info <- "compType"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_NDBId <-
+#' @rdname queryFunctions
+queryNDBId <-
 function( pdbID, ... ) {
     info <- "NDBId"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_authors <-
+#' @rdname queryFunctions
+queryAuthors <-
 function( pdbID, ... ) {
     info <- "autsList"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_depdate <-
+#' @rdname queryFunctions
+queryDepdate <-
 function( pdbID, ... ) {
     info <- "ascDate"
     output <- queryAPI( pdbID = pdbID, info = info, ...=... )
@@ -114,40 +114,40 @@ function( pdbID, ... ) {
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_reldate <-
+#' @rdname queryFunctions
+queryReldate <-
 function( pdbID, ... ) {
     info <- "relDate"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_revdate <-
+#' @rdname queryFunctions
+queryRevdate <-
 function( pdbID, ... ) {
     info <- "revDate"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_formats <-
+#' @rdname queryFunctions
+queryFormats <-
 function( pdbID, ... ) {
     info <- "formats"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_entities <-
+#' @rdname queryFunctions
+queryEntities <-
 function( pdbID, ... ) {
     info <- "entities"
     return( queryAPI( pdbID = pdbID, info = info, ...=... ) )
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_hetAtms <-
+#' @rdname queryFunctions
+queryHetAtms <-
 function( pdbID, NAtoNa=T, ... ) {
     info <- "hetAtms"
     out <- queryAPI( pdbID = pdbID, info = info, ...=... )
@@ -157,8 +157,8 @@ function( pdbID, NAtoNa=T, ... ) {
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_chains <-
+#' @rdname queryFunctions
+queryChains <-
 function( pdbID, chain=NULL, subset=NULL, ... ) {
     pdbID <- tolower(pdbID)
     data <- queryAPI( pdbID, info="chains/header", ...=... )
@@ -173,8 +173,8 @@ function( pdbID, chain=NULL, subset=NULL, ... ) {
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_modres <-
+#' @rdname queryFunctions
+queryModres <-
 function( pdbID, onlymodres=F, ... ) {
     out <- queryAPI( pdbID, info="modres", ...=... ) 
     if( is.null(out) ) return(NULL)
@@ -183,17 +183,17 @@ function( pdbID, onlymodres=F, ... ) {
 }
 ##############################################################################
 #' @export
-#' @rdname query_functions
-query_orgligands <-
+#' @rdname queryFunctions
+queryOrgLigands <-
 function( pdbID, ... ) {
 #Query info about all hetAtms (ligands + modified residues)
-    hetAtms <- query_hetAtms( pdbID, NAtoNa=T, ...=... )
+    hetAtms <- queryHetAtms( pdbID, NAtoNa=T, ...=... )
 
 #Check if there are ligands
     if(is.null(hetAtms)) return(NULL)
 
 #Query info about modified bases (which are also hetAtms)
-    mod_res <- query_modres( pdbID, onlymodres=T, ...=... )
+    mod_res <- queryModres( pdbID, onlymodres=T, ...=... )
 
 #If all hetAtms are in the list of ions and modified residues, there's no
 #organic ligand at all
