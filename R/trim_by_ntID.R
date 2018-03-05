@@ -29,7 +29,7 @@
 trim_by_ntID <-
 function( cif=NULL, ntID, ntinfo,
           prev = 2, post = 2,
-           verbose = T, file=NULL, ... ){
+           verbose = TRUE, file=NULL, ... ){
 
     row.names(ntinfo) <- ntinfo$ntID
     if( is.null(cif) ) cif <- ntinfo[ as.character(ntID), "pdbID" ]

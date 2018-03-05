@@ -37,8 +37,8 @@
 
 distances_eleno <- 
 function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5), 
-      verbose = T,
-          detailedoutput = T, data_of_interest = NULL ) {
+      verbose = TRUE,
+          detailedoutput = TRUE, data_of_interest = NULL ) {
 
 # Select model of interest
     if( !is.null( model ) ) {
@@ -88,8 +88,8 @@ function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5),
         out <- out[ which( out[,3]>=cutoff[1] & out[,3]<=cutoff[2] ),]
                 return(c(t(out)))
             }, A_eleno=A_eleno, dis_map=dis_map, B=B)
-    out <- as.data.frame( matrix( unlist( df_map ), ncol=3, byrow=T ),
-                          stringsAsFactors=F )
+    out <- as.data.frame( matrix( unlist( df_map ), ncol=3, byrow=TRUE ),
+                          stringsAsFactors=FALSE )
     names( out ) <- c("eleno_A", "eleno_B", "distance")
     if( verbose ) print(" ... done")
 

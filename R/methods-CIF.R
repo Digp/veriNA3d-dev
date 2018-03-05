@@ -82,7 +82,7 @@ setMethod("cifAtom_site",
 ## cifParser 
 #' @rdname cifParser
 setMethod("cifParser",
-    definition=function(pdbID, verbose=F) {
+    definition=function(pdbID, verbose=FALSE) {
 
         if (verbose)
             print(pdbID)
@@ -116,7 +116,7 @@ setMethod("cifParser",
         sections <- lapply(cifAttr,
                            function(x) {
                                x  <- paste("^_", x, "\\.", sep="")
-                               st <- grep(x, pdb, perl=T)[1] - 1
+                               st <- grep(x, pdb, perl=TRUE)[1] - 1
                                if (st %in% loop_inds) {
                                    st = st - 1
                                }
@@ -127,7 +127,7 @@ setMethod("cifParser",
         cif <- sapply(sections,
                       FUN=.cifParser,
                       pdb=pdb, hash_inds=hash_inds,
-                      USE.NAMES=T)
+                      USE.NAMES=TRUE)
 
         ## Create CIF S4 object and return output ----------------------------
         out <- CIF(entry                = cif$entry,
@@ -184,7 +184,7 @@ setMethod("cifCheck",
 #'
 ## .cifMakeSure
 .cifMakeSure <-
-function(cif, verbose=F, check="cifCheck") {
+function(cif, verbose=FALSE, check="cifCheck") {
     ## Check if input cif argument is a PDB ID -------------------------------
     if (length(class(cif) == 1) && class(cif) == "character") {
 
@@ -240,7 +240,7 @@ setMethod("cifAsPDB",
 #' @rdname selectModel
 setMethod("selectModel",
     signature(cif="CIF"),
-    definition=function(cif, model, verbose=F) {
+    definition=function(cif, model, verbose=FALSE) {
         atom   <- cifAtom_site(cif)
         models <- unique(atom$pdbx_PDB_model_num)
         if (!model %in% models)
@@ -251,7 +251,7 @@ setMethod("selectModel",
 
 #' @rdname selectModel
 setMethod("selectModel",
-    definition=function(pdb, model, verbose=F) {
+    definition=function(pdb, model, verbose=FALSE) {
 
         if (length(grep("trim", pdb$call)) > 0) {
             stop(paste(
@@ -273,7 +273,7 @@ setMethod("selectModel",
         ## "flag" is an attirbute given by cifAsPDB. If TRUE, the pdb has
         ## models with different number of atoms, thus they are treated in a 
         ## special way
-        if ("flag" %in% attributes(pdb)$names && pdb$flag == T) {
+        if ("flag" %in% attributes(pdb)$names && pdb$flag) {
             pdb$atom <- pdb$model[[model]]
             pdb$flag <- FALSE
             pdb$xyz  <- as.xyz(matrix(c(t(pdb$atom[, c("x", "y", "z")])),
@@ -284,7 +284,7 @@ setMethod("selectModel",
                 stop("The model selected does not exist")
             }
             pdb$xyz <- trim(xyz, row.inds=model)
-            coords <- matrix(pdb$xyz, ncol=3, byrow=T)
+            coords <- matrix(pdb$xyz, ncol=3, byrow=TRUE)
             pdb$atom[, "x"] <- coords[, 1]
             pdb$atom[, "y"] <- coords[, 2]
             pdb$atom[, "z"] <- coords[, 3]
@@ -303,7 +303,7 @@ setMethod("selectModel",
 #' @rdname rVector
 setMethod("rVector",
     signature(cif="CIF"),
-    definition=function(cif, outformat="rvector", simple_out=T) {
+    definition=function(cif, outformat="rvector", simple_out=TRUE) {
         pdb <- cifAsPDB(cif)
         return(.rVector(pdb, outformat, simple_out))
     })
@@ -311,14 +311,14 @@ setMethod("rVector",
 #' @rdname rVector
 setMethod("rVector",
     signature(cif="character"),
-    definition=function(cif, outformat="rvector", simple_out=T) {
+    definition=function(cif, outformat="rvector", simple_out=TRUE) {
         pdb <- cifAsPDB(cif)
         return(.rVector(pdb, outformat, simple_out))
     })
 
 #' @rdname rVector
 setMethod("rVector",
-    definition=function(pdb, outformat="rvector", simple_out=T) {
+    definition=function(pdb, outformat="rvector", simple_out=TRUE) {
         return(.rVector(pdb, outformat, simple_out))
     })
 
@@ -333,8 +333,8 @@ setMethod("eRMSD",
     signature(cif1="CIF", cif2="CIF"),
     definition=function(cif1=NULL, cif2=NULL) {
 
-        rvectors1 <- rVector(cif1, outformat="rvector", simple_out=T)
-        rvectors2 <- rVector(cif2, outformat="rvector", simple_out=T)
+        rvectors1 <- rVector(cif1, outformat="rvector", simple_out=TRUE)
+        rvectors2 <- rVector(cif2, outformat="rvector", simple_out=TRUE)
 
         len <- sqrt(nrow(rvectors1))
         deltaG <- t(apply(cbind(rvectors1[, 1:3], rvectors2[, 1:3]),
@@ -358,8 +358,10 @@ setMethod("eRMSD",
                  sum(pdb2$atom$elety == "C4'")) {
                 stop("Different lengths in input PDB objects")
             }
-            rvectors1 <- rVector(pdb=pdb1, outformat="rvector", simple_out=T)
-            rvectors2 <- rVector(pdb=pdb2, outformat="rvector", simple_out=T)
+            rvectors1 <- rVector(pdb=pdb1, outformat="rvector",
+                                            simple_out=TRUE)
+            rvectors2 <- rVector(pdb=pdb2, outformat="rvector",
+                                            simple_out=TRUE)
         } else {
             stop("Introduce two PDB objects or two set of rvectors")
         }

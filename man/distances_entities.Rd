@@ -6,7 +6,7 @@
 structure}
 \usage{
 distances_entities(cif, model = NULL, refent, entities = c("all"), n = 1,
-  cutoff = c(0, 5), verbose = T, detailedoutput = T,
+  cutoff = c(0, 5), verbose = TRUE, detailedoutput = TRUE,
   data_of_interest = NULL)
 }
 \arguments{

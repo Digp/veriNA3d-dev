@@ -6,7 +6,7 @@
 surrounding area.}
 \usage{
 trim_sphere(cif, model = NULL, ntindex, chain, sel = NULL, cutoff = 8,
-  cutres = F, file = NULL, verbose = T)
+  cutres = FALSE, file = NULL, verbose = TRUE)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively

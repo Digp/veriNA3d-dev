@@ -4,7 +4,7 @@
 \alias{applyToPDB}
 \title{Applies a function over a list of PDB ID entries.}
 \usage{
-applyToPDB(FUNCTION, listpdb = NULL, verbose = T, as.df = T, ...)
+applyToPDB(FUNCTION, listpdb = NULL, verbose = TRUE, as.df = TRUE, ...)
 }
 \arguments{
 \item{FUNCTION}{A function of interest.}

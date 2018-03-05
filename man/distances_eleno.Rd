@@ -5,7 +5,7 @@
 \title{Computes distances between the atoms of interest in a mmCIF structure}
 \usage{
 distances_eleno(cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,
-  5), verbose = T, detailedoutput = T, data_of_interest = NULL)
+  5), verbose = TRUE, detailedoutput = TRUE, data_of_interest = NULL)
 }
 \arguments{
 \item{cif}{A cif object obtained from cifParser or a pdb ID.}

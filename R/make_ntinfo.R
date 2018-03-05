@@ -134,7 +134,7 @@ function( pdbID, model=NULL, chain=NULL, minlength=3, maxlength=100000,
                 .torsionals = torsionals, 
                 .path = path, 
                 .extension = extension ), 
-        SIMPLIFY=F)
+        SIMPLIFY=FALSE)
     }else{
         ntinfo <- mcmapply( FUN=manage_PDB,
             .pdbID = pdbID,
@@ -149,7 +149,7 @@ function( pdbID, model=NULL, chain=NULL, minlength=3, maxlength=100000,
         .torsionals = torsionals,
         .path = path,
         .extension = extension ), 
-        SIMPLIFY=F)
+        SIMPLIFY=FALSE)
     }
     ntinfo <- ntinfo[ which( lapply( ntinfo, length )>0 )]
     if( length(ntinfo) == 0 ){
@@ -172,9 +172,9 @@ function(.pdbID, .model, .chain, .read,
   .distances, .angles, .torsionals, .path=NULL, .extension=NULL
   ) {
     if( length(.model) == 1 && .model == 1){
-    multi <- F
+    multi <- FALSE
     } else {
-    multi <- T
+    multi <- TRUE
     }
 
     if( .read == "read.list" ) {
@@ -185,10 +185,10 @@ function(.pdbID, .model, .chain, .read,
     print(.name)
 
     if( .name == "3OK4" ){
-        rm.alt=F
+        rm.alt=FALSE
         ALT=c("A", "B", "C", "D", "E")
     } else {
-        rm.alt=T
+        rm.alt=TRUE
         ALT="A"
     }
 
@@ -199,7 +199,7 @@ function(.pdbID, .model, .chain, .read,
                     paste( .path, .name, .extension, sep="" ), 
                     multi=multi, 
                     rm.alt=rm.alt, 
-                    verbose=F ) )
+                    verbose=FALSE ) )
     } else if( .read == "read.cif" ) {
     .temp_PDB <- cifAsPDB( paste( .path, .name, .extension, sep="" ), alt=ALT)
     } else if( .read == "download.RAM" ) {
@@ -213,7 +213,7 @@ function(.pdbID, .model, .chain, .read,
     .chain <- unique(.temp_PDB$atom$chain)
     }
 
-    .combinations <- expand.grid( .model, .chain, stringsAsFactors=F  )
+    .combinations <- expand.grid( .model, .chain, stringsAsFactors=FALSE  )
     names( .combinations ) <- c( "model", "chain" )
 
 
@@ -228,7 +228,7 @@ function(.pdbID, .model, .chain, .read,
                 ..angles = .angles,
                 ..torsionals = .torsionals
                 ),
-            SIMPLIFY=F)
+            SIMPLIFY=FALSE)
     .ntinfo <- .ntinfo[ which( lapply( .ntinfo, length )>0 )]
     if( length(.ntinfo) == 0 ){
     print(paste("Nothing to analyse in ", .name,"|",.model,"|",.chain, " according with input parameters", sep=""))
@@ -261,9 +261,9 @@ function(..pdb, ..model, ..chain, ..minlength=3, ..maxlength=1000,
 
     ..ntinfo1<-check.nt( ..pdb, model=..model, chain=..chain, id=..name )
 
-    ..ntinfo2<-measure( ..pdb, model=..model, chain=..chain, v_shifted=T,
+    ..ntinfo2<-measure( ..pdb, model=..model, chain=..chain, v_shifted=TRUE,
         distances=..distances, angles=..angles, torsionals=..torsionals,
-        pucker=T, Dp=T)
+        pucker=TRUE, Dp=TRUE)
 
     ..ntinfo <- cbind(..ntinfo1, ..ntinfo2[, 
         which( !names( ..ntinfo2 ) %in% names( ..ntinfo1 ) ) ])

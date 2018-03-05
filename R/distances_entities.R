@@ -41,8 +41,8 @@
 
 distances_entities <- 
 function( cif, model = NULL, refent, 
-      entities = c("all"), n = 1, cutoff = c(0, 5), verbose = T,
-      detailedoutput = T, data_of_interest = NULL ) {
+      entities = c("all"), n = 1, cutoff = c(0, 5), verbose = TRUE,
+      detailedoutput = TRUE, data_of_interest = NULL ) {
 
 # Check if input cif argument is a PDB ID or a "cif" object
     cif <- .cifMakeSure(cif, verbose=verbose)
@@ -76,7 +76,7 @@ function( cif, model = NULL, refent,
         n=n,
         cutoff=cutoff,
         verbose=verbose,
-        detailedoutput = T, 
+        detailedoutput = TRUE, 
         data_of_interest = NULL
      ) )
 }

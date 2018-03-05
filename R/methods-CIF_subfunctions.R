@@ -59,9 +59,9 @@ function(i, pdb, hash_inds) {
 .clean_loop_section <- function(data) {
 
     # Find the name of the fields
-    Names.ind <- grep("^_", data, perl=T)
+    Names.ind <- grep("^_", data, perl=TRUE)
     Names <-  do.call(rbind,
-                  strsplit(data[Names.ind], ".", fixed=T))
+                  strsplit(data[Names.ind], ".", fixed=TRUE))
 
     ## Redefine where the table starts
     first <- Names.ind[length(Names.ind)] + 1
@@ -72,13 +72,13 @@ function(i, pdb, hash_inds) {
 
     ## If the sections contains the coordinates, just read the table
     if (Names[1, 1] == "_atom_site") {
-        out <- read.table(textConnection(data), stringsAsFactors=F)
+        out <- read.table(textConnection(data), stringsAsFactors=FALSE)
     } else {
         data <- .replace_semicolons(data)
 
         ## Corner case derived from pdbID 1TSL
-        data <- gsub("3'-", "3\\'-", data, fixed=T)
-        data <- gsub("-5'", "-5\\'", data, fixed=T)
+        data <- gsub("3'-", "3\\'-", data, fixed=TRUE)
+        data <- gsub("-5'", "-5\\'", data, fixed=TRUE)
 
         ## in some cases, different lines contain the info of a single row
         ## (different number of characters in the lines)
@@ -97,18 +97,18 @@ function(i, pdb, hash_inds) {
 .clean_raw_section <- function(data) {
     ## in some cases, different lines contain the info of a row,
     ## "cornercase" contains their indices, if any
-    cornercase <- grep("^_", data, invert=T)
+    cornercase <- grep("^_", data, invert=TRUE)
     if (length(cornercase) > 0) {
         ## When content is splited in multiple lines, this becomes a nightmare
-        cornercase3 <- grep("^[\\_\\;\\']", data, invert=T) #2A3L
+        cornercase3 <- grep("^[\\_\\;\\']", data, invert=TRUE) #2A3L
         if (length(cornercase3) > 0) {
             data[cornercase3] <- gsub("'", "\\'",
-                                    data[cornercase3], fixed=T)
+                                    data[cornercase3], fixed=TRUE)
         }
-        cornercase2 <- grep("^;", data[cornercase], perl=T)
+        cornercase2 <- grep("^;", data[cornercase], perl=TRUE)
         if (length(cornercase2) > 0) {
             data[cornercase][cornercase2] <- gsub("'", "\\'",
-                                    data[cornercase][cornercase2], fixed=T)
+                                    data[cornercase][cornercase2], fixed=TRUE)
             data <- gsub("^;", "'", data)
         }
 
@@ -122,11 +122,11 @@ function(i, pdb, hash_inds) {
 
     ## The section is read to a table
     con   <- textConnection(data)
-    table <- read.table(con, stringsAsFactors=F, colClasses="character")
+    table <- read.table(con, stringsAsFactors=FALSE, colClasses="character")
     close(con)
 
     ## Instead of returning it as a two column table it is returned as a vector
-    Names <- do.call(rbind, strsplit(table$V1, ".", fixed=T))
+    Names <- do.call(rbind, strsplit(table$V1, ".", fixed=TRUE))
 
     ## out is a vector containing the data
     out <- table$V2
@@ -142,8 +142,8 @@ function(i, pdb, hash_inds) {
 function(data) {
     semicoloninds_start <- grep("^;", data)
 
-    semicoloninds_end <- semicoloninds_start[c(F, T)]
-    semicoloninds_start <- semicoloninds_start[c(T, F)]
+    semicoloninds_end <- semicoloninds_start[c(FALSE, TRUE)]
+    semicoloninds_start <- semicoloninds_start[c(TRUE, FALSE)]
     if ((!is.na(semicoloninds_start) && length(semicoloninds_start) > 0) &&
           (!is.na(semicoloninds_end) && length(semicoloninds_end) > 0)) {
 
@@ -163,7 +163,7 @@ function(data) {
 function(data, totalfields) {
     ## This piece of code treats the data by brute force
     ## All the data is splited by blank spaces and empty strings are removed
-    data3 <- unlist(strsplit(data, " ", perl=T))
+    data3 <- unlist(strsplit(data, " ", perl=TRUE))
     data3 <- data3[-which(data3 == "")]
 
     ## Isolated apostrophe "'" are the closing apostrophe of a sentence, 
@@ -209,9 +209,9 @@ function(data, totalfields) {
 
 
     ## If any Apostrophe was replaced before, now it's left as it was
-    data3 <- gsub("pRimE", "'", data3, fixed=T)
-    table <- as.data.frame(matrix(data3, byrow=T, ncol=totalfields),
-                           stringsAsFactors=F)
+    data3 <- gsub("pRimE", "'", data3, fixed=TRUE)
+    table <- as.data.frame(matrix(data3, byrow=TRUE, ncol=totalfields),
+                           stringsAsFactors=FALSE)
 
     return(table)
 }
@@ -222,28 +222,28 @@ function(data, totalfields) {
 .treat_same_lengths <-
 function(data, totalfields) {
     con    <- textConnection(data)
-    table1 <- read.table(con, stringsAsFactors=F, nrows=1)
+    table1 <- read.table(con, stringsAsFactors=FALSE, nrows=1)
     close(con)
 
     con    <- textConnection(data)
-    table2 <- read.table(con, stringsAsFactors=F, nrows=1, skip=1)
+    table2 <- read.table(con, stringsAsFactors=FALSE, nrows=1, skip=1)
     close(con)
 
     if (ncol(table1) == ncol(table2) && ncol(table1) == totalfields) {
         con   <- textConnection(data)
-        table <- read.table(con, stringsAsFactors=F)
+        table <- read.table(con, stringsAsFactors=FALSE)
         close(con)
     } else {
-        con    <- textConnection(data[c(T, F)])
-        table1 <- read.table(con, stringsAsFactors=F)
+        con    <- textConnection(data[c(TRUE, FALSE)])
+        table1 <- read.table(con, stringsAsFactors=FALSE)
         close(con)
-        con    <- textConnection(data[c(F, T)])
-        table2 <- read.table(con, stringsAsFactors=F)
+        con    <- textConnection(data[c(FALSE, TRUE)])
+        table2 <- read.table(con, stringsAsFactors=FALSE)
         close(con)
-        table  <- cbind(table1, table2, stringsAsFactors=F)
+        table  <- cbind(table1, table2, stringsAsFactors=FALSE)
     }
-    for (k in 1:length(totalfields)) {
-        table[, k] <- gsub("pRimE", "'", table[, k], fixed=T)
+    for (k in seq_along(totalfields)) {
+        table[, k] <- gsub("pRimE", "'", table[, k], fixed=TRUE)
     }
 
     return(table)
@@ -258,7 +258,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
     table <- cifAtom_site(cif)
 
     ## In case there are Sodium ions ("NA"), replace them by "Na" string 
-    na.ind <- which(is.na(table), arr.ind=T)
+    na.ind <- which(is.na(table), arr.ind=TRUE)
     if (nrow(na.ind) > 0) {
         for (i in 1:nrow(na.ind)) {
             table[na.ind[i, 1], na.ind[i, 2]] <- "Na"
@@ -324,7 +324,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
                                                     atom[,
                                                     c("x", "y", "z")]
                                               ))),
-                                    byrow=T,
+                                    byrow=TRUE,
                                     nrow=length(model)))
         flag <- FALSE
 
@@ -346,7 +346,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
                                                     atom[,
                                                     c("x", "y", "z")]))),
                                         length(model)),
-                                  byrow=T,
+                                  byrow=TRUE,
                                   nrow=length(model)))
 
             ## The pdb objects receives a "flag" (logical) TRUE and
@@ -372,7 +372,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
     pdb$atom[pdb$atom == "?"] <- NA
     pdb$atom[pdb$atom == "."] <- NA
 
-    ca.inds <- atom.select.pdb(pdb, string="calpha", verbose=F)
+    ca.inds <- atom.select.pdb(pdb, string="calpha", verbose=FALSE)
     pdb$calpha <- seq(1, nrow(atom)) %in% ca.inds$atom
     return(pdb)
 }
@@ -383,7 +383,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
 
 ## I should have commented more on the code while I did it, Revision in TODO!
 .rVector <-
-function(pdb1, outformat="rvector", simple_out=T) {
+function(pdb1, outformat="rvector", simple_out=TRUE) {
     if (!simple_out && 
         !outformat %in% c("rvector", "vector_coord", "cylindrical_coord")) {
 
@@ -431,7 +431,7 @@ function(pdb1, outformat="rvector", simple_out=T) {
     len <- length(resno1)
     com <- matrix(unlist(suppressWarnings(lapply(baselist1,
         FUN=function(x) com.pdb(pdb1, get(x, envir=parent.frame(n=2)))))),
-        ncol=3, byrow=T)
+        ncol=3, byrow=TRUE)
     nucdata <- pdb1$atom[which(resid_list %in% 
                             paste(resno1, insert1, chain1, sep="|")), ]
     x <- nucdata[ nucdata$elety == "C2", c("x", "y", "z") ]
@@ -439,14 +439,14 @@ function(pdb1, outformat="rvector", simple_out=T) {
     y <- matrix(unlist(lapply(baselist1, FUN=function(x)
         pdb1$atom[intersect(get(x, envir=parent.frame(n=2))$atom,
         which(pdb1$atom$elety == strsplit(x, "_")[[1]][6])),
-        c("x", "y", "z")])), ncol=3, byrow=T)
-    rr <- sapply(1:len, FUN=.moveO, com=com, y=y, x=x, simplify=F)
-    gg <- sapply(1:len, FUN=.GAMMA, com=com, y=y, x=x, simplify=F)
-    bb <- sapply(1:len, FUN=.BETA, com=com, y=y, x=x, simplify=F)
-    for (i in 1:length(rr)) {rr[[i]] <- rbind(rr[[i]], bb[[i]], gg[[i]])}
+        c("x", "y", "z")])), ncol=3, byrow=TRUE)
+    rr <- sapply(1:len, FUN=.moveO, com=com, y=y, x=x, simplify=FALSE)
+    gg <- sapply(1:len, FUN=.GAMMA, com=com, y=y, x=x, simplify=FALSE)
+    bb <- sapply(1:len, FUN=.BETA, com=com, y=y, x=x, simplify=FALSE)
+    for (i in seq_along(rr)) {rr[[i]] <- rbind(rr[[i]], bb[[i]], gg[[i]])}
 
     if (simple_out) {
-        rr <- matrix(unlist(rr), ncol=5, byrow=T)
+        rr <- matrix(unlist(rr), ncol=5, byrow=TRUE)
         if (outformat == "rvector") {
             rr[, 1] <- rr[, 1] / 5
             rr[, 2] <- rr[, 2] / 5
@@ -459,23 +459,23 @@ function(pdb1, outformat="rvector", simple_out=T) {
         }
         colnames(rr) <- c(format_out, "beta", "gamma")
     } else {
-        for (i in 1:length(rr)) {rr[[i]] <- t(rr[[i]])}
+        for (i in seq_along(rr)) {rr[[i]] <- t(rr[[i]])}
         names(rr) <- substr(baselist1, 1, nchar(baselist1)-3)
         if (outformat == "rvector") {
-            for (i in 1:length(rr)) {
+            for (i in seq_along(rr)) {
                 rr[[i]][, 1] <- rr[[i]][, 1] / 5
                 rr[[i]][, 2] <- rr[[i]][, 2] / 5
                 rr[[i]][, 3] <- rr[[i]][, 3] / 3
             }
         } else if (outformat == "cylindrical_coord") {
-            for (i in 1:length(rr)) {
+            for (i in seq_along(rr)) {
                 radang <- atan(rr[[i]][, 2] / rr[[i]][, 1])
                 rr[[i]][, 1] <- rr[[i]][, 1] / cos(radang) #rho
                 rr[[i]][, 2] <- radang * (180 / pi)    #phy
                 rr[[i]][is.na(rr[[i]])] <- 0
             }
         }
-        for (i in 1:length(rr)) {
+        for (i in seq_along(rr)) {
             ##rownames(rr[[i]]) <- c(substr(baselist1, 1, 
             ##                              nchar(baselist1)-3)[-i])
             rownames(rr[[i]]) <- c(substr(baselist1, 1, nchar(baselist1)-3))
@@ -559,7 +559,7 @@ atom2mass <- function(x, mass.custom=NULL, elety.custom=NULL,
     stop("com.xyz: length of input vector 'mass' uequal to number of atoms (ncol(xyz)/3)")
 
   com1 <- function(x) {
-    xyz <- matrix(x, ncol=3, byrow=T)
+    xyz <- matrix(x, ncol=3, byrow=TRUE)
     com <- colSums(xyz * mass) / sum(mass)
     return(com)
   }

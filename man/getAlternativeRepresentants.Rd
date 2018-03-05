@@ -5,7 +5,7 @@
 \title{Get Alternative Representants}
 \usage{
 getAlternativeRepresentants(data, technique = NULL, resol = NULL,
-  type = NULL, verbose = F)
+  type = NULL, verbose = FALSE)
 }
 \arguments{
 \item{data}{The output of getLeontisList.}

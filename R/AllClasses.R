@@ -26,20 +26,20 @@
 #'
 CIF <- setClass("CIF",
                 slots = list(
-                             entry                = "character",
-                             audit_conform        = "character",
-                             database_2           = "data.frame",
-                             pdbx_database_status = "character",
-                             audit_author         = "data.frame",
-                             entity               = "data.frame",
-                             chem_comp            = "data.frame",
-                             exptl                = "data.frame", 
-                             struct               = "character",
-                             struct_keywords      = "character",
-                             struct_asym          = "data.frame",
-                             atom_sites           = "character",
-                             atom_type            = "data.frame",
-                             atom_site            = "data.frame")
+                                entry                = "character",
+                                audit_conform        = "character",
+                                database_2           = "data.frame",
+                                pdbx_database_status = "character",
+                                audit_author         = "data.frame",
+                                entity               = "data.frame",
+                                chem_comp            = "data.frame",
+                                exptl                = "data.frame", 
+                                struct               = "character",
+                                struct_keywords      = "character",
+                                struct_asym          = "data.frame",
+                                atom_sites           = "character",
+                                atom_type            = "data.frame",
+                                atom_site            = "data.frame")
 )
 
 setMethod(

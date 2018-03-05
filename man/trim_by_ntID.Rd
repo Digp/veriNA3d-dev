@@ -4,8 +4,8 @@
 \alias{trim_by_ntID}
 \title{Calls trim_sphere to generate smaller pdb files}
 \usage{
-trim_by_ntID(cif = NULL, ntID, ntinfo, prev = 2, post = 2, verbose = T,
-  file = NULL, ...)
+trim_by_ntID(cif = NULL, ntID, ntinfo, prev = 2, post = 2,
+  verbose = TRUE, file = NULL, ...)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively

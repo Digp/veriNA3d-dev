@@ -7,11 +7,11 @@
 \alias{selectModel,ANY-method}
 \title{Selects a desired model from a CIF/pdb structure}
 \usage{
-selectModel(cif, pdb, model, verbose = F)
+selectModel(cif, pdb, model, verbose = FALSE)
 
-\S4method{selectModel}{CIF}(cif, model, verbose = F)
+\S4method{selectModel}{CIF}(cif, model, verbose = FALSE)
 
-\S4method{selectModel}{ANY}(pdb, model, verbose = F)
+\S4method{selectModel}{ANY}(pdb, model, verbose = FALSE)
 }
 \arguments{
 \item{cif}{A CIF object as otained from cifParser.}

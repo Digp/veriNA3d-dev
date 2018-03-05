@@ -34,7 +34,7 @@
 trim_sphere <-
 function( cif, model=NULL, ntindex, 
       chain, sel=NULL, cutoff=8, 
-      cutres=F, file=NULL, verbose=T ) {
+      cutres=FALSE, file=NULL, verbose=TRUE ) {
 
 # Check if input cif argument is a PDB ID or a "cif" object
     if( length( class( cif ) == 1 ) &&
@@ -82,7 +82,7 @@ function( cif, model=NULL, ntindex,
                     eleno = eleno, 
                     n = NULL, 
                     cutoff = cutoff,
-                    detailedoutput = T,
+                    detailedoutput = TRUE,
                     data_of_interest = c("resno",
                              "insert",
                              "chain"),
@@ -106,7 +106,7 @@ function( cif, model=NULL, ntindex,
     if( any(nchar( pdb$atom$chain ) > 1) | any(pdb$atom$chain == "?") ){
     query3 <- pdb$atom[ as.character( outeleno ), "chain" ]
     Unique <- unique(query3)
-    for( i in 1:length(Unique) ) {
+    for( i in seq_along(Unique) ) {
             pdb$atom$chain[ query3 == Unique[i] ] <- toupper(letters)[i]
         if( chain == Unique[i] ) chain <- toupper(letters)[i]
         }
@@ -122,7 +122,7 @@ function( cif, model=NULL, ntindex,
             sep="|")
     Unique <- unique(query3)
     resno2 <- c()
-        for( i in 1:length(Unique) ) {
+        for( i in seq_along(Unique) ) {
             pdb$atom$resno[ query3 == Unique[i] ] <- i
             if( any( query == Unique[i] ) ) resno2[query == Unique[i]] <- i
         }
@@ -136,7 +136,7 @@ function( cif, model=NULL, ntindex,
         file <- sub("chain.+_", paste("chain",chain,"_",sep=""), file)
     }
     if( length(grep("resno", file))>0 & exists("resno2") ) {
-        for( i in 1:length(resno2) ) {
+        for( i in seq_along(resno2) ) {
             file <- sub(paste("resno", resno[i], "\\.", sep=""), 
             paste("resno",resno2[i],".",sep=""), file)
         }

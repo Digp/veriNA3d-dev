@@ -45,13 +45,13 @@ function(URL, FUN, ..., N.TRIES=5L, SLEEP=0.05) {
 ## Basic query
 #' @importFrom jsonlite fromJSON
 ..launchquery <-
-function(URL, JSON=F) {
+function(URL, JSON=FALSE) {
     ## Open connection and scan site
     con <- url(URL)
     if (JSON) {
         text <- fromJSON(con)
     } else {
-        text <- scan(con, "character", quiet=T)
+        text <- scan(con, "character", quiet=TRUE)
         ## Close connection manually, since scan does not do it
         close.connection(con)
     }
@@ -64,7 +64,7 @@ function(URL, JSON=F) {
 function(pdbID, info) {
     URL <- paste("http://mmb.pcb.ub.es/api/pdb/", pdbID,
                         "/entry/", info, sep="")
-    return(.launchquery(URL, FUN=..launchquery, JSON=F))
+    return(.launchquery(URL, FUN=..launchquery, JSON=FALSE))
 }
 
 ## ===========================================================================
@@ -93,7 +93,7 @@ function(pdbID, info) {
     stop("Query not supported for the EBI API")
     }
     suppressWarnings(out <- tryCatch({
-        return(.launchquery(URL, FUN=..launchquery, JSON=T))
+        return(.launchquery(URL, FUN=..launchquery, JSON=TRUE))
     }, error = function(e) {
     return(NULL)
     }))
@@ -105,8 +105,8 @@ function(pdbID, info) {
 .process_mmb_call <-
 function(text, info, pdbID) {
     if (info %in% c("hetAtms", "formats")) {
-    start <- grep("[", text, fixed=T)
-        end <- grep("]", text, fixed=T)
+    start <- grep("[", text, fixed=TRUE)
+        end <- grep("]", text, fixed=TRUE)
     if ((end-start) == 1) return(NULL)
 
         text <- text[(start+1):(end-1)]
@@ -118,13 +118,13 @@ function(text, info, pdbID) {
         ind <- grep(pdbID, text)
         ind <- ind[-1]
         text <- as.data.frame(
-            matrix(unlist(strsplit(text[ind], split="  ")), ncol=3, byrow=T),
-            stringsAsFactors=F)
+            matrix(unlist(strsplit(text[ind], split="  ")), 
+                    ncol=3, byrow=TRUE), stringsAsFactors=FALSE)
         text <- as.data.frame(
                     cbind(do.call(rbind, strsplit(text$V1, " ")),
                            do.call(rbind, strsplit(text$V2, " ")),
                            text$V3),
-                    stringsAsFactors=F)
+                    stringsAsFactors=FALSE)
         names(text) <- c("pdbID", "chain", "type", "length", "description")
     return(text)
     } else {

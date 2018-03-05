@@ -1,13 +1,13 @@
 import(bio3d)
 import(parallel)
 importFrom("graphics", "abline", "axis", "barplot", "contour",
-           "legend", "par", "plot", "points", "text", "title")
+       "legend", "par", "plot", "points", "text", "title")
 importFrom("grDevices", "dev.off", "png", "rgb")
 importFrom("methods", "new")
 importFrom("stats", "complete.cases", "sd")
 importFrom("utils", "download.file", "read.table")
 importFrom(plot3D, persp3D)
-importFrom(MASS, kde2d)
+importFrom(MASS, kde2d, bandwidth.nrd)
 importFrom(jsonlite, fromJSON)
 importFrom(dplyr, bind_rows)
 importFrom(RColorBrewer, brewer.pal)
@@ -17,84 +17,84 @@ importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circ
 #exportPattern("^[[:alpha:]]+")
 exportClasses(CIF)
 export( 
-	angles_dist, 
-	applyToPDB, 
+    angles_dist, 
+    applyToPDB, 
 
-	binding.RNAprot,
-	bp_hist, 
+    binding.RNAprot,
+    bp_hist, 
 
-	check.nt, 
-	check_etatheta,
-        cifAsPDB,
-        cifAtom_site, 
-        cifAtom_sites,
-        cifAtom_type,
-        cifAudit_author,
-        cifAudit_conform,
-        cifCheck,
-        cifChem_comp,
-        cifDatabase_2,
-        cifEntity,
-        cifEntry,
-        cifExptl,
-        cifParser,
-        cifPdbx_database_status,
-        cifStruct,
-        cifStruct_asym,
-        cifStruct_keywords,
-	classifyRNA, 
-	cluster.select, 
+    check.nt, 
+    check_etatheta,
+    cifAsPDB,
+    cifAtom_site, 
+    cifAtom_sites,
+    cifAtom_type,
+    cifAudit_author,
+    cifAudit_conform,
+    cifCheck,
+    cifChem_comp,
+    cifDatabase_2,
+    cifEntity,
+    cifEntry,
+    cifExptl,
+    cifParser,
+    cifPdbx_database_status,
+    cifStruct,
+    cifStruct_asym,
+    cifStruct_keywords,
+    classifyRNA, 
+    cluster.select, 
 
-	distances_entities,
-	distances_eleno,
+    distances_entities,
+    distances_eleno,
 
-	eRMSD, 
+    eRMSD, 
 
-	getAlternativeRepresentants, 
-	getLeontisList,
+    getAlternativeRepresentants, 
+    getLeontisList,
 
-	hasHetAtm, 
+    hasHetAtm, 
 
-	is_valid_eRMSD, 
+    is_valid_eRMSD, 
 
-	make_aantinfo, 
-	make_ntinfo, 
-	measure, 
-	measure_pucker, 
+    make_aantinfo, 
+    make_ntinfo, 
+    measure, 
+    measure_pucker, 
 
-	plot_circular_distribution, 
-	plot.eta.theta2, 
-	plot_et, 
-	plot_hist, 
+    plot_circular_distribution, 
+    plot.eta.theta2, 
+    plot_et, 
+    plot_hist, 
 
-	queryAPI,
-	queryAuthors,
-	queryChains, 
-	queryCompound,
-	queryCompType,
-	queryDepdate,
-	queryEntities,
-	queryEntryList,
-	queryFormats,
-	queryHeader,
-	queryHetAtms,
-	queryModres,
-	queryNDBId,
-	queryOrgLigands,
-	queryReldate,
-	queryResol,
-	queryRevdate,
-	queryTechnique,
+    queryAPI,
+    queryAuthors,
+    queryChains, 
+    queryCompound,
+    queryCompType,
+    queryDepdate,
+    queryEntities,
+    queryEntryList,
+    queryFormats,
+    queryHeader,
+    queryHetAtms,
+    queryModres,
+    queryNDBId,
+    queryOrgLigands,
+    queryReldate,
+    queryResol,
+    queryRevdate,
+    queryTechnique,
 
-	rvec_plot, 
-	rVector, 
+    rvec_plot, 
+    rVector, 
 
-	select_ntID_neighbours,
-	selectModel, 
-	shift360, 
-	subset_bypucker, 
-	subset_ntinfo, 
+    select_ntID_neighbours,
+    selectModel, 
+    shift360, 
+    subset_bypucker, 
+    subset_ntinfo, 
 
-	trim_by_ntID,
-	trim_sphere
-	)
+    trim_by_ntID,
+    trim_sphere
+)

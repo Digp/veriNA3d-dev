@@ -7,7 +7,7 @@
 #    residues (TRUE) or atoms (FALSE) of the refent.
 
 
-#model=NULL; cutoff = 5; select = "RNA"; nchain = NULL; pchain = NULL; hydrogens = FALSE; byres = TRUE; verbose = T
+#model=NULL; cutoff = 5; select = "RNA"; nchain = NULL; pchain = NULL; hydrogens = FALSE; byres = TRUE; verbose = TRUE
 binding.RNAprot <- 
 function( pdb, model=NULL, cutoff = 5, select = "RNA", nchain = NULL,
     pchain = NULL, hydrogens = FALSE, byres = TRUE, verbose = FALSE ) {

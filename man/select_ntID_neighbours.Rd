@@ -5,7 +5,7 @@
 \title{Select neighboring nucleotides}
 \usage{
 select_ntID_neighbours(ntID, ntinfo, prev = 2, post = 2, info = "ntID",
-  verbose = T)
+  verbose = TRUE)
 }
 \arguments{
 \item{ntID}{an obejct of class vector with the desired nucleotide of

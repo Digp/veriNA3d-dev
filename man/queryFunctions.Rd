@@ -36,9 +36,9 @@ queryFormats(pdbID, ...)
 
 queryHeader(pdbID, ...)
 
-queryHetAtms(pdbID, NAtoNa = T, ...)
+queryHetAtms(pdbID, NAtoNa = TRUE, ...)
 
-queryModres(pdbID, onlymodres = F, ...)
+queryModres(pdbID, onlymodres = FALSE, ...)
 
 queryNDBId(pdbID, ...)
 

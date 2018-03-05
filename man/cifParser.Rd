@@ -6,9 +6,9 @@
 \alias{cifParser,ANY-method}
 \title{Parse coordinates from CIF files}
 \usage{
-cifParser(pdbID, verbose = F)
+cifParser(pdbID, verbose = FALSE)
 
-\S4method{cifParser}{ANY}(pdbID, verbose = F)
+\S4method{cifParser}{ANY}(pdbID, verbose = FALSE)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure in the Protein

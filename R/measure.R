@@ -4,9 +4,9 @@
 
 
 measure <-
-function( pdb, model=1, chain="all", v_shifted=T, 
+function( pdb, model=1, chain="all", v_shifted=TRUE, 
   distances="default", angles="default", torsionals="default", 
-  pucker=T, Dp=T ) {
+  pucker=TRUE, Dp=TRUE ) {
 
     if( !any( .is.nucleic( pdb ))) {
         stop("Does the input pdb object contain a nucleic acid?")
@@ -30,7 +30,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
 
         labels <- gsub( "'", "p", paste( "dist", atomA, atomB, sep="." ) )
         distances <- as.data.frame( cbind( atomA, atomB, labels ), 
-                    stringsAsFactors=F )
+                    stringsAsFactors=FALSE )
 
     } else if( ( is.matrix( distances ) | is.data.frame( distances ) ) ) {
 
@@ -40,7 +40,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
             labels <- gsub( "'", "p", paste("dist", distances[, 1],
                 distances[ ,2], sep="." ) )
             distances <- as.data.frame( cbind( distances, labels ), 
-                    stringsAsFactors=F )
+                    stringsAsFactors=FALSE )
 
     } else if ( ncol( distances ) > 3 ) {
         stop( "Wrong format of input 'distances': too many columns" )
@@ -73,12 +73,12 @@ function( pdb, model=1, chain="all", v_shifted=T,
                 "O3'",  "C3'",  "C2'",
                 "C3'",  "C2'",  "O2'",
                 "C1'",  "C2'",  "O2'"
-        ), ncol=3, byrow=T )
+        ), ncol=3, byrow=TRUE )
 
         labels <- gsub( "'", "p", paste("angle", angles[, 1], angles[ ,2],
                 angles[ ,3], sep="." ) )
         angles <- as.data.frame( cbind( angles, labels ), 
-                 stringsAsFactors=F )
+                 stringsAsFactors=FALSE )
         colnames( angles )[1:3] <- c( "atomA", "atomB", "atomC")
 
     } else if( ( is.matrix( angles ) | is.data.frame( angles ) ) ) {
@@ -89,7 +89,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
             labels <- gsub( "'", "p", paste("angle", angles[, 1], angles[ ,2],
                     angles[ ,3], sep="." ) )
             angles <- as.data.frame( cbind( angles, labels ), 
-                     stringsAsFactors=F )
+                     stringsAsFactors=FALSE )
     } else if ( ncol( angles ) > 4 ) {
             stop( "Wrong format of input 'angles': too many columns" )
 
@@ -123,12 +123,12 @@ function( pdb, model=1, chain="all", v_shifted=T,
                 "pre_C4'",      "P",            "C4'",          "post_P",
                 "P",            "C4'",          "post_P",       "post_C4'",
                 "O4'",          "C1'",          "N_base",       "C_base"
-        ), ncol=4, byrow=T )
+        ), ncol=4, byrow=TRUE )
 
         labels <- c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
            "nu0", "nu1", "nu2", "nu3", "nu4", "kappa", "eta", "theta", "chi")
         torsionals <- as.data.frame( cbind( torsionals, labels ),
-                     stringsAsFactors=F )
+                     stringsAsFactors=FALSE )
         colnames( torsionals )[1:4] <- c( "atomA", "atomB", "atomC", "atomD")
 
     } else if( ( is.matrix( torsionals ) | is.data.frame( torsionals ) ) ) {
@@ -138,7 +138,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
                     torsionals[ ,2], torsionals[ ,3], torsionals[ ,4], 
             sep="." ) )
             torsionals <- as.data.frame( cbind( torsionals, labels ),
-                     stringsAsFactors=F ) 
+                     stringsAsFactors=FALSE ) 
     } else if ( ncol( torsionals ) > 5 ) {
             stop( "Wrong format of input 'torsionals': too many columns" )
 
@@ -154,7 +154,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
 
     if( !is.null( pucker ) && 
     !is.na( pucker ) && 
-    ( pucker == T | pucker == "default" )) {
+    ( pucker == TRUE | pucker == "default" )) {
 
     add_torsionals <- matrix( c(
                 "C4'",          "O4'",          "C1'",          "C2'",
@@ -162,10 +162,10 @@ function( pdb, model=1, chain="all", v_shifted=T,
                 "C1'",          "C2'",          "C3'",          "C4'",
                 "C2'",          "C3'",          "C4'",          "O4'",
                 "C3'",          "C4'",          "O4'",          "C1'"
-    ), ncol=4, byrow=T )
+    ), ncol=4, byrow=TRUE )
     labels <- c("nu0", "nu1", "nu2", "nu3", "nu4")
     add_torsionals <- as.data.frame( cbind( add_torsionals, labels ),
-                                     stringsAsFactors=F )
+                                     stringsAsFactors=FALSE )
         colnames( add_torsionals )[1:4] <- 
         c( "atomA", "atomB", "atomC", "atomD")
 
@@ -187,7 +187,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
 
     if( !is.null( Dp ) &&
         !is.na( Dp ) && 
-    ( Dp == T | Dp == "default" )) {
+    ( Dp == TRUE | Dp == "default" )) {
 
     Dp <- TRUE
     } else {
@@ -201,7 +201,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
     pdb$atom$elety <- gsub("\"", "", pdb$atom$elety)
     pdb$atom$insert[ is.na( pdb$atom$insert ) ] <- "?"
 
-    combinations <- expand.grid( model, chain, stringsAsFactors=F )
+    combinations <- expand.grid( model, chain, stringsAsFactors=FALSE )
     names( combinations ) <- c( "model", "chain" )
 
     ntinfo <- mapply( FUN=.measure,
@@ -215,7 +215,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
         pucker = pucker,
         Dp = Dp
                 ),
-            SIMPLIFY=F)
+            SIMPLIFY=FALSE)
 
 
 
@@ -225,7 +225,7 @@ function( pdb, model=1, chain="all", v_shifted=T,
         unlist( lapply( ntinfo, function(x){
             return(c(t(x)))
         })),
-        ncol=length(colnames), byrow=T),stringsAsFactors=F)
+        ncol=length(colnames), byrow=TRUE),stringsAsFactors=FALSE)
 
     names(ntinfo) <- colnames
     ntinfo<-cbind(1:nrow(ntinfo),ntinfo)
@@ -283,8 +283,8 @@ function( pdb, model, chain, v_shifted,
             )
     colnames <- names( ntinfo[[1]] )
     ntinfo <- as.data.frame( matrix( unlist( ntinfo ), 
-                ncol=length( colnames ), byrow=T), 
-            stringsAsFactors=F )
+                ncol=length( colnames ), byrow=TRUE), 
+            stringsAsFactors=FALSE )
 
     ntinfo <- cbind( rep( model, total ), 
              rep( chain, total ), 
@@ -394,16 +394,16 @@ function( .index,
 ###Proces to know the atoms necessary for the measures
     .distatoms <- unique( unlist( 
               .distances[, grep( "atom", names( .distances )) ],
-              use.names=F ))
+              use.names=FALSE ))
     .angatoms <- unique( unlist( 
                           .angles[, grep( "atom", names( .angles )) ],
-                          use.names=F ))
+                          use.names=FALSE ))
     .toratoms <- unique( unlist( 
                           .torsionals[, grep( "atom", names( .torsionals )) ],
-                          use.names=F ))
+                          use.names=FALSE ))
 
 #still to work!!!
-    if( !is.null( .Dp ) && .Dp == T ){ 
+    if( !is.null( .Dp ) && .Dp == TRUE ){ 
     .moreatoms<-c(.N_base, "C1'", "post_P")
     }else{
     .moreatoms <- NA
@@ -538,7 +538,7 @@ function( .index,
                .selection=.torsions_sel,
                MoreArgs = list( .pdb=.pdb )))
 
-    if( !is.null( .pucker ) && .pucker == T ) {
+    if( !is.null( .pucker ) && .pucker == TRUE ) {
         .puc <- measure_pucker( .nu0, .nu1, .nu2, .nu3, .nu4 )
         .pu_phase <- .puc$pu_phase
         .pu_amp <- .puc$pu_amp
@@ -580,7 +580,7 @@ function( .index,
 
 #Measure Richardson distance
     .N_chi <- get( paste( ".", .N_base, "_sel", sep="" ))    
-    if( !is.null( .Dp ) && .Dp == T &&
+    if( !is.null( .Dp ) && .Dp == TRUE &&
         length( .pdb$xyz[ .post_P_sel$xyz ]) !=0 &&
         length( .pdb$xyz[ .C1p_sel$xyz ]) !=0 &&
         exists( ".N_chi" ) && length( .pdb$xyz[ .N_chi$xyz ]) != 0 ){
@@ -603,7 +603,7 @@ function( .index,
         .equation_system <- matrix( c( .PLANE[1:3], 
                        .line_eq1[1:3],
                        .line_eq2[1:3]),
-                    nrow=3, byrow=T)
+                    nrow=3, byrow=TRUE)
         .solution_system <- c( -.PLANE[4], -.line_eq1[4], -.line_eq2[4] )
         .point <- solve( .equation_system, .solution_system )
         .Rich_distance <- round( sqrt( sum( 
@@ -637,11 +637,11 @@ function( .index,
         output<-append(output, .torsions_list)
     }
 
-    if( !is.null( .pucker ) && .pucker == T ){
+    if( !is.null( .pucker ) && .pucker == TRUE ){
     output<-append(output, unlist(list(pu_amp=.pu_amp,pu_phase=.pu_phase)))
     }
 
-    if( !is.null( .Dp ) && .Dp == T ){
+    if( !is.null( .Dp ) && .Dp == TRUE ){
     output<-append(output, unlist(list(Dp=.Rich_distance)))
     }
 
@@ -658,10 +658,10 @@ select_many<-function(.out_object,.elety,.pdb,.resno,.insert){
 #    .pdb$atom[which(.pdb$atom$resno==.resno&.pdb$atom$chain==.chain&.pdb$atom$insert==.insert&.pdb$atom$elety==.elety),"eleno"]
     assign(.out_object,
 #    value=atom.select(.pdb,resno=.resno,insert=.insert,
-#    elety=.elety,verbose=F),envir=parent.frame(n=2))
+#    elety=.elety,verbose=FALSE),envir=parent.frame(n=2))
     value=atom.select(.pdb,eleno=.pdb$atom[which(.pdb$atom$resno==.resno&
     .pdb$atom$insert==.insert&
-    .pdb$atom$elety==.elety),"eleno"],verbose=F),
+    .pdb$atom$elety==.elety),"eleno"],verbose=FALSE),
     envir=parent.frame(n=2))
 }
 torsions_many<-function(.out_object,.selection,.pdb){

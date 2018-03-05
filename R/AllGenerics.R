@@ -108,7 +108,7 @@ setGeneric("cifAtom_site",
 #' @author Diego Gallego
 #'
 setGeneric("cifParser",
-            function(pdbID, verbose=F)
+            function(pdbID, verbose=FALSE)
             standardGeneric("cifParser"))
 
 ##############################################################################
@@ -199,7 +199,7 @@ setGeneric("cifAsPDB",
 #' @author Diego Gallego
 #'
 setGeneric("selectModel",
-            function(cif, pdb, model, verbose=F)
+            function(cif, pdb, model, verbose=FALSE)
             standardGeneric("selectModel"))
 
 ##############################################################################
@@ -244,7 +244,7 @@ setGeneric("selectModel",
 #' @author Diego Gallego & Leonardo Darre
 #'
 setGeneric("rVector",
-            function(cif, pdb, outformat="rvector", simple_out=T)
+            function(cif, pdb, outformat="rvector", simple_out=TRUE)
             standardGeneric("rVector"))
 
 ##############################################################################

@@ -13,8 +13,8 @@ subset_ntinfo<-function(ntinfo,class,dir="all"){
     }
     ntinfo_pdbmodch<-paste(ntinfo$pdbID,ntinfo$model,ntinfo$chain,sep="|")
     listpdb<-class[complete.cases(class[dir]),dir]
-    listpdb<-unlist(strsplit(listpdb,split="+",fixed=T))
-#    listpdb<-as.data.frame(matrix(unlist(strsplit(listpdb,split="|",fixed=T)),ncol=3,byrow=T),stringsAsFactors=F)
+    listpdb<-unlist(strsplit(listpdb,split="+",fixed=TRUE))
+#    listpdb<-as.data.frame(matrix(unlist(strsplit(listpdb,split="|",fixed=TRUE)),ncol=3,byrow=TRUE),stringsAsFactors=FALSE)
     listnt<-ntinfo[which(ntinfo_pdbmodch %in% listpdb),"ntID"]
     return(listnt)
 }

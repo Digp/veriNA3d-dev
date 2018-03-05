@@ -4,7 +4,7 @@
 \alias{.cifMakeSure}
 \title{Is it a CIF object? Make it be!}
 \usage{
-.cifMakeSure(cif, verbose = F, check = "cifCheck")
+.cifMakeSure(cif, verbose = FALSE, check = "cifCheck")
 }
 \arguments{
 \item{cif}{A cif object obtained from cifParser or a pdb ID so that the

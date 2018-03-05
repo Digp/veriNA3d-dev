@@ -28,7 +28,7 @@
 #'
 
 getAlternativeRepresentants <-
-function(data, technique=NULL, resol=NULL, type=NULL, verbose=F) {
+function(data, technique=NULL, resol=NULL, type=NULL, verbose=FALSE) {
     ## Make sure the inputs make sense ---------------------------------------
     if (is.null(c(technique, resol, type))) {
     stop("Which features should the alternative representants have?")
@@ -89,7 +89,7 @@ function(eqclass, members,
     }
     out <- NA
 
-    for (i in 1:length(Members)) {
+    for (i in seq_along(Members)) {
         ## Save pdbID instead of Leontis format ------------------------------
         pdbID <- substr(Members[i], 1, 4)
         if (verbose) 
@@ -97,14 +97,14 @@ function(eqclass, members,
 
         ## If interested in any technique, query technique and cache result --
         if (technique != "") {
-            Tech <- queryTechnique(pdbID, reuse=T, 
+            Tech <- queryTechnique(pdbID, reuse=TRUE, 
                     #verbose=verbose,
                     envir=parent.frame(n=1))
         }
 
         ## If necessary check resol and cache result -------------------------
         if (resol != " ") {
-            Resol <- as.numeric(queryResol(pdbID, reuse=T, API="mmb", 
+            Resol <- as.numeric(queryResol(pdbID, reuse=TRUE, API="mmb", 
                                 #verbose=verbose,
                                 envir=parent.frame(n=1)))
             if (is.na(Resol)) {
@@ -114,7 +114,7 @@ function(eqclass, members,
 
         ## If a particular type of RNA is specified, query and cache ---------
         if (type != "") {
-            Type <- classifyRNA(pdbID, reuse=T, 
+            Type <- classifyRNA(pdbID, reuse=TRUE, 
                     #verbose=verbose, 
                     envir=parent.frame(n=1))
         }

@@ -24,7 +24,7 @@
 select_ntID_neighbours <-
 function( ntID, ntinfo,
       prev = 2, post = 2, 
-      info = "ntID", verbose = T ){
+      info = "ntID", verbose = TRUE ){
 
     pdbID <- ntinfo[ ntinfo$ntID == ntID, "pdbID" ]
     chain <- ntinfo[ ntinfo$ntID == ntID, "chain" ]

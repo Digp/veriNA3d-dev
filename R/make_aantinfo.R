@@ -27,20 +27,20 @@
 
 #REQUIRES: The pdb objects should be loaded in RAM or have access to Internet (much much more slower)
 
-make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
+make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=TRUE){
     if(cores>1){
     if(cores>detectCores()){
             stop("Introduce valid number of cores")
         }
     }
-    df<-matrix(unlist(strsplit(effectivelist,split="|",fixed=T)),ncol=3,byrow=T)
+    df<-matrix(unlist(strsplit(effectivelist,split="|",fixed=TRUE)),ncol=3,byrow=TRUE)
     
     if(cores==1){
         system.time(interactionsdata<-mapply(FUN=binding.RNAprot, 
             pdb=df[,1],
         model=df[,2],
             nchain=df[,3],
-            SIMPLIFY=F,
+            SIMPLIFY=FALSE,
             verbose=verbose,
             MoreArgs=list(cutoff = 15, select = "RNA", hydrogens = FALSE)))
     
@@ -56,7 +56,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
             pdb=df[,1],
         model=df[,2],
             nchain=df[,3],
-            SIMPLIFY=F,
+            SIMPLIFY=FALSE,
             mc.cores=cores,
             verbose=verbose,
             MoreArgs=list(cutoff = 15, select = "RNA", hydrogens = FALSE)))
@@ -71,8 +71,8 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
     }
     cols<-12
     colsnames<-names(info[[1]])[1:cols]
-    output<-as.data.frame(matrix(unlist(info),ncol=cols,byrow=T),
-    stringsAsFactors=F)
+    output<-as.data.frame(matrix(unlist(info),ncol=cols,byrow=TRUE),
+    stringsAsFactors=FALSE)
     colnames(output)<-colsnames
     output$ntID<-as.numeric(output$ntID)
     output$elenoRNA<-as.numeric(output$elenoRNA)
@@ -90,7 +90,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=T){
     chain<-df[str,3]
     ntIDlist<-ntinfo[which(ntinfo$pdbID==pdbID&ntinfo$model==model&
         ntinfo$chain==chain),"ntID"]
-    doi<-as.data.frame(interactionsdata[[str]][[1]],stringsAsFactors=F)
+    doi<-as.data.frame(interactionsdata[[str]][[1]],stringsAsFactors=FALSE)
 
     if(exists(pdbID,envir=.GlobalEnv)){
         pdb<-get(pdbID,envir=.GlobalEnv)

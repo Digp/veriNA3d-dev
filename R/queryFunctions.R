@@ -99,7 +99,7 @@ queryDepdate <-
 function(pdbID, ...) {
     info <- "ascDate"
     output <- queryAPI(pdbID=pdbID, info=info, ...=...)
-    output <- gsub(pattern="\\/", replacement="-", output, fixed=T)
+    output <- gsub(pattern="\\/", replacement="-", output, fixed=TRUE)
     return(output)
 }
 
@@ -134,7 +134,7 @@ function(pdbID, ...) {
 #' @export
 #' @rdname queryFunctions
 queryHetAtms <-
-function(pdbID, NAtoNa=T, ...) {
+function(pdbID, NAtoNa=TRUE, ...) {
     info <- "hetAtms"
     out <- queryAPI(pdbID=pdbID, info=info, ...=...)
     if (is.null(out)) return(NULL)
@@ -146,7 +146,7 @@ function(pdbID, NAtoNa=T, ...) {
 #' @export
 #' @rdname queryFunctions
 queryModres <-
-function(pdbID, onlymodres=F, ...) {
+function(pdbID, onlymodres=FALSE, ...) {
     out <- queryAPI(pdbID, info="modres", ...=...) 
     if (is.null(out)) return(NULL)
     if (onlymodres && !is.na(out)) out <- out$chem_comp_id
@@ -168,13 +168,13 @@ function(pdbID, ...) {
 queryOrgLigands <-
 function(pdbID, ...) {
     ## Query info about all hetAtms (ligands + modified residues) ------------
-    hetAtms <- queryHetAtms(pdbID, NAtoNa=T, ...=...)
+    hetAtms <- queryHetAtms(pdbID, NAtoNa=TRUE, ...=...)
 
     ## Check if there are ligands --------------------------------------------
     if (is.null(hetAtms)) return(NULL)
 
     ## Query info about modified bases (which are also hetAtms) --------------
-    mod_res <- queryModres(pdbID, onlymodres=T, ...=...)
+    mod_res <- queryModres(pdbID, onlymodres=TRUE, ...=...)
 
     ## If all hetAtms are in the list of ions and modified residues, there's
     ## no organic ligand at all ----------------------------------------------

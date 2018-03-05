@@ -93,7 +93,7 @@ function( pdb, model=1, chain="all", id=NULL ) {
     pdb$atom$insert[ is.na( pdb$atom$insert ) ] <- "?"
     pdb$atom$elety <- gsub("\"", "", pdb$atom$elety)
 
-    combinations <- expand.grid( model, chain, stringsAsFactors=F )
+    combinations <- expand.grid( model, chain, stringsAsFactors=FALSE )
     names( combinations ) <- c( "model", "chain" )
 
     ntinfo <- mapply( FUN=.check.nt,
@@ -102,7 +102,7 @@ function( pdb, model=1, chain="all", id=NULL ) {
             MoreArgs = list( pdb = pdb,
                 id = id
                 ),
-            SIMPLIFY=F)
+            SIMPLIFY=FALSE)
     
     ntinfo<-ntinfo[which(lapply(ntinfo, length)>0)]
     colnames <- names(ntinfo[[1]])
@@ -110,7 +110,7 @@ function( pdb, model=1, chain="all", id=NULL ) {
         unlist( lapply( ntinfo, function(x){ 
         return(c(t(x))) 
         })), 
-        ncol=length(colnames), byrow=T),stringsAsFactors=F)
+        ncol=length(colnames), byrow=TRUE),stringsAsFactors=FALSE)
     names(ntinfo) <- colnames
     for(i in c( "first", "last", "P", "O5p", "C5p", "C4p", "C3p",
       "O3p", "C2p", "C1p", "O4p", "N1", "N9", "C2", "C4", "C6", "H2p", "O2p",
@@ -158,12 +158,12 @@ function( pdb, model, chain, id=NULL ) {
       .PDB=pdb, .ridlist=ridlist, .reslist=reslist, .inslist=inslist)
 
 #    ntinfo <- ntinfo[ lapply( ntinfo, length ) > 0 ]
-    ncol <- sum( unlist(lapply(1:length(ntinfo[[1]]),FUN=function(x){length(ntinfo[[1]][[x]])})))
+    ncol <- sum( unlist(lapply(seq_along(ntinfo[[1]]),FUN=function(x){length(ntinfo[[1]][[x]])})))
     
-    ntinfo <- as.data.frame( matrix( unlist( ntinfo ),ncol=ncol,byrow=T), stringsAsFactors=F)
+    ntinfo <- as.data.frame( matrix( unlist( ntinfo ),ncol=ncol,byrow=TRUE), stringsAsFactors=FALSE)
     ntinfo<-cbind(rep(id,total),rep(model,total),
       as.character(rep(chain,total)),as.character(reslist),as.character(inslist),ntinfo[,1],
-      as.character(ridlist), indices, ntinfo[,2:ncol], stringsAsFactors=F)
+      as.character(ridlist), indices, ntinfo[,2:ncol], stringsAsFactors=FALSE)
 
     names( ntinfo ) <- c("pdbID","model","chain","resno","insert",
         "base_type","resid","ntindex","localenv","first","last","P","O5p","C5p",
@@ -283,7 +283,7 @@ new_check_nt<-function(.index, .PDB, .ridlist, .reslist, .inslist){
     (.atomA=="C3'"&.atomB=="C2'")|
     (.atomA=="C2'"&.atomB=="C1'")|
     (.atomA=="C1'"&.atomB=="O4'")|
-    (.atomA=="O4'"&.atomB=="C4'")]<2,na.rm=T)==5){
+    (.atomA=="O4'"&.atomB=="C4'")]<2,na.rm=TRUE)==5){
         .puc_valid<-T
     }else{
         .puc_valid<-F
@@ -417,9 +417,9 @@ new_check_nt<-function(.index, .PDB, .ridlist, .reslist, .inslist){
         }
 #Is backbone broken?
         if(sum(!is.na(.distances[1:6])&.distances[1:6]<2)==6){
-            .Break<-F
+            .Break<-FALSE
         }else{
-            .Break<-T
+            .Break<-TRUE
         }
 #Environment?
         .Environment<-paste(.ridlist[.index-1],.resid,
@@ -436,12 +436,12 @@ new_check_nt<-function(.index, .PDB, .ridlist, .reslist, .inslist){
 
 check_etatheta<-function(.ntID,.ntinfo,angle){
     if(angle=="eta"){
-        if(.ntinfo[.ntID,"first"]==T){
+        if(.ntinfo[.ntID,"first"]==TRUE){
             return(FALSE)
         }
-        if(.ntinfo[.ntID,"last"]==T){
-            if(.ntinfo[.ntID-1,"C4p"]==T&.ntinfo[.ntID,"P"]==T&
-            .ntinfo[.ntID,"C4p"]==T&.ntinfo[.ntID,"lastP"]==T&
+        if(.ntinfo[.ntID,"last"]==TRUE){
+            if(.ntinfo[.ntID-1,"C4p"]==TRUE&.ntinfo[.ntID,"P"]==TRUE&
+            .ntinfo[.ntID,"C4p"]==TRUE&.ntinfo[.ntID,"lastP"]==TRUE&
             #sum(as.logical(.ntinfo[(.ntID-1):.ntID,"Break"]))==0){
             sum(as.logical(unlist(.ntinfo[(.ntID-1):.ntID,"big_b"])))==0&
             sum(as.logical(unlist(.ntinfo[(.ntID-1):.ntID,"puc_valid"])))==2&
@@ -451,8 +451,8 @@ check_etatheta<-function(.ntID,.ntinfo,angle){
                 return(FALSE)
             }
         }else{
-            if(.ntinfo[.ntID-1,"C4p"]==T&.ntinfo[.ntID,"P"]==T&
-            .ntinfo[.ntID,"C4p"]==T&.ntinfo[.ntID+1,"P"]==T&
+            if(.ntinfo[.ntID-1,"C4p"]==TRUE&.ntinfo[.ntID,"P"]==TRUE&
+            .ntinfo[.ntID,"C4p"]==TRUE&.ntinfo[.ntID+1,"P"]==TRUE&
             #sum(as.logical(.ntinfo[(.ntID-1):(.ntID+1),"Break"]))==0){
             sum(as.logical(unlist(.ntinfo[(.ntID-1):(.ntID+1),"big_b"])))==0&
             sum(as.logical(unlist(.ntinfo[
@@ -465,11 +465,11 @@ check_etatheta<-function(.ntID,.ntinfo,angle){
         }
     }
     if(angle=="theta"){
-        if(.ntinfo[.ntID,"last"]==T){
+        if(.ntinfo[.ntID,"last"]==TRUE){
             return(FALSE)
         }else{
-            if(.ntinfo[.ntID,"P"]==T&.ntinfo[.ntID,"C4p"]==T&
-            .ntinfo[.ntID+1,"P"]==T&.ntinfo[.ntID+1,"C4p"]==T&
+            if(.ntinfo[.ntID,"P"]==TRUE&.ntinfo[.ntID,"C4p"]==TRUE&
+            .ntinfo[.ntID+1,"P"]==TRUE&.ntinfo[.ntID+1,"C4p"]==TRUE&
             #sum(as.logical(.ntinfo[(.ntID):(.ntID+1),"Break"]))==0){
             sum(as.logical(unlist(.ntinfo[(.ntID):(.ntID+1),"big_b"])))==0&
             sum(as.logical(unlist(.ntinfo[(.ntID):(.ntID+1),"puc_valid"])))==2&
@@ -482,11 +482,11 @@ check_etatheta<-function(.ntID,.ntinfo,angle){
     }
 }
 is_valid_eRMSD<-function(.ntID,.ntinfo){
-    if(.ntinfo[.ntID,"first"]==T | .ntinfo[.ntID,"last"]==T){
+    if(.ntinfo[.ntID,"first"]==TRUE | .ntinfo[.ntID,"last"]==TRUE){
             return(FALSE)
-    }else if(.ntinfo$base_exists[.ntID-1]==T&&
-    .ntinfo$base_exists[.ntID]==T&&
-    .ntinfo$base_exists[.ntID+1]==T){
+    }else if(.ntinfo$base_exists[.ntID-1]==TRUE&&
+    .ntinfo$base_exists[.ntID]==TRUE&&
+    .ntinfo$base_exists[.ntID+1]==TRUE){
         return(TRUE)
     }else{
         return(FALSE)

@@ -11,6 +11,5 @@
 queryEntryList <-
 function(){
     URL <- "http://mmb.pcb.ub.es/api/pdb/?fields=ids&noheaders"
-    return( .launchquery(URL, FUN=..launchquery, JSON=F) )
+    return(.launchquery(URL, FUN=..launchquery, JSON=FALSE))
 }
-

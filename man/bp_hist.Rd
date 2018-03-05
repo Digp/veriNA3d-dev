@@ -4,9 +4,9 @@
 \alias{bp_hist}
 \title{Plot histogram}
 \usage{
-bp_hist(ntID, ntinfo, categories = "LW", o = "bp", main = o, rm.na = F,
-  width = 15, height = 15, bg = "white", units = "cm", res = 200,
-  cex = 0.5)
+bp_hist(ntID, ntinfo, categories = "LW", o = "bp", main = o,
+  rm.na = FALSE, width = 15, height = 15, bg = "white", units = "cm",
+  res = 200, cex = 0.5)
 }
 \description{
 Plot histogram

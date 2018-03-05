@@ -8,7 +8,7 @@
 # ntinfo coulb be any data.frame as long as it contains the column "pu_phase"
 # The phase data should be in the format from 0 to 360º
 
-subset_bypucker<-function(ntinfo, pucker=NULL, paper=T, range=NULL){
+subset_bypucker<-function(ntinfo, pucker=NULL, paper=TRUE, range=NULL){
     if(is.null(pucker)&&is.null(range)){
     stop("Introduce a valid pucker or range")
     }else if(!is.null(pucker)&&!is.null(range)){
@@ -44,8 +44,8 @@ subset_bypucker<-function(ntinfo, pucker=NULL, paper=T, range=NULL){
             "C4'endo",  216,    252,
             "O4'exo",   252,    288,
                 "C1'endo",  288,    324,
-            "C2'exo",   324,    360 ),nrow=14,byrow=T),
-            stringsAsFactors=F)
+            "C2'exo",   324,    360 ),nrow=14,byrow=TRUE),
+            stringsAsFactors=FALSE)
             names(puckeressentials)<-c("pucker","from","to")
             puckeressentials$from<-as.numeric(puckeressentials$from)
             puckeressentials$to<-as.numeric(puckeressentials$to)

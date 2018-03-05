@@ -58,18 +58,19 @@ function(release="current", threshold="all") {
     indices <- grep(pattern=paste("NR_", threshold, "_", sep=""), text)
 
     ## Give format to the data -----------------------------------------------
-    data <- unlist(lapply(1:length(indices), 
+    data <- unlist(lapply(seq_along(indices), 
                    FUN=.see_equivalence_class,
                      text=text, indices=indices,
                      release=release, threshold=threshold))
 
     ## Updated: 2017-Jul-21 CORNER CASE, 4R3I does not have model "0" any more
-    ind <- grep(pattern="4R3I|0", data, fixed=T) 
+    ind <- grep(pattern="4R3I|0", data, fixed=TRUE) 
     if (length(ind) > 0) {
         data[ind] <- gsub(pattern="0", replacement="1", x=data[ind])
     }
 
-    output <- as.data.frame(matrix(data, ncol=3, byrow=T), stringsAsFactors=F)
+    output <- as.data.frame(matrix(data, ncol=3, byrow=TRUE),
+                            stringsAsFactors=FALSE)
     names(output) <- c("Equivalence_class", "Representative", "Class_members")
     return(output)
 }

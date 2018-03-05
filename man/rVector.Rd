@@ -8,13 +8,13 @@
 \alias{rVector,ANY-method}
 \title{Compute the rVectors between the bases of a RNA structure}
 \usage{
-rVector(cif, pdb, outformat = "rvector", simple_out = T)
+rVector(cif, pdb, outformat = "rvector", simple_out = TRUE)
 
-\S4method{rVector}{CIF}(cif, outformat = "rvector", simple_out = T)
+\S4method{rVector}{CIF}(cif, outformat = "rvector", simple_out = TRUE)
 
-\S4method{rVector}{character}(cif, outformat = "rvector", simple_out = T)
+\S4method{rVector}{character}(cif, outformat = "rvector", simple_out = TRUE)
 
-\S4method{rVector}{ANY}(pdb, outformat = "rvector", simple_out = T)
+\S4method{rVector}{ANY}(pdb, outformat = "rvector", simple_out = TRUE)
 }
 \arguments{
 \item{cif}{A CIF object as otained from cifParser.}

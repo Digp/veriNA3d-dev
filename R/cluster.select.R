@@ -54,7 +54,7 @@ function(
     #(according with default)
 
     #Find the cells of the matrix "dens" with density above desired
-    grid_cells<-which(dens$z>mean_dens+SD_DENS*sd_dens, arr.ind=T)
+    grid_cells<-which(dens$z>mean_dens+SD_DENS*sd_dens, arr.ind=TRUE)
     grid_cells<-grid_cells[order(grid_cells[,2]),]
     grid_cells<-grid_cells[order(grid_cells[,1]),]
     grid_cells<-as.data.frame(grid_cells)
@@ -63,7 +63,7 @@ function(
 ###
     vectorA<-rep(0, length(lims[1]:lims[2])*length(lims[3]:lims[4]))
     vectorA[which(dens$z>mean_dens+SD_DENS*sd_dens)]<-1
-    aver<-matrix(vectorA,nrow=length(lims[3]:lims[4]),byrow=F)
+    aver<-matrix(vectorA,nrow=length(lims[3]:lims[4]),byrow=FALSE)
     #image(aver, col=c("white", "black"),xaxt="n",yaxt="n")
     grid_list<-vector(mode="list",length=length(lims[3]:lims[4]))
     for(i in 1:ncol(aver)){
@@ -78,11 +78,11 @@ function(
         }else{
         end<-which(diff(ycoord)!=1)
         start<-1
-        for(h in 1:length(end)){
+        for(h in seq_along(end)){
                 start[h+1]<-end[h]+1
             }
         end[length(end)+1]<-length(ycoord)
-        for(j in 1:length(end)){
+        for(j in seq_along(end)){
             grid_list[[i]][[j]]<-ycoord[start[j]:end[j]]
         }
         
@@ -104,7 +104,7 @@ function(
     gridy<-which(ntinfo[ntinfo$ntID==.ntID,y]<angle_y_intervals)[1]-1
     return(paste(gridx, gridy, sep="_"))
     }))
-    grid_coords<-as.data.frame(cbind(ntID,grid),stringsAsFactors=F)
+    grid_coords<-as.data.frame(cbind(ntID,grid),stringsAsFactors=FALSE)
     grid_coords$ntID<-as.numeric(grid_coords$ntID)
 
     #The cells found for each cluster are compared with the cells of each
@@ -119,11 +119,11 @@ function(
 
 .find_clusters<-function(grid_list){
     kk<-..find_clusters(grid_list)
-    for(i in 1:length(kk)){
+    for(i in seq_along(kk)){
 #print(i)
     ind<-max(names(kk[[i]]))
     #print(ind)
-    for(j in as.vector(1:length(kk))[-i]){
+    for(j in as.vector(seq_along(kk))[-i]){
         if(any(names(kk[[j]])==as.numeric(ind)+1)){
 #print(c(i,j))
         if(any(kk[[j]][[as.character(as.numeric(ind)+1)]] %in% kk[[i]][[ind]])){
@@ -139,7 +139,7 @@ function(
     }
     }
     kk<-kk[!unlist(lapply(kk,anyNA))]
-    for(i in 1:length(kk)){
+    for(i in seq_along(kk)){
     x<-names(kk[[i]])
     cluster<-unlist(lapply(x, FUN=function(name) { 
         return(paste(name, kk[[i]][[name]], sep="_"))
@@ -151,7 +151,7 @@ function(
 
 ..find_clusters<-function(grid_list){
     lens<-vector(mode="numeric",length=length(grid_list))
-    for(i in 1:length(grid_list)){
+    for(i in seq_along(grid_list)){
         len<-length(grid_list[[i]])
             if(any(unlist(lapply(grid_list[i],is.na)))){
                 lens[i]<-len-1
@@ -163,7 +163,7 @@ function(
     end<-which(lens!=0)[which(diff(which(lens!=0))>1)]
     start<-which(lens!=0)[1]
     if(length(end)!=0){
-        for(i in 1:length(end)){
+        for(i in seq_along(end)){
             start[i+1]<-which(lens!=0)[which(diff(which(lens!=0))>1)+1][i]
         }
     }
@@ -176,7 +176,7 @@ function(
     names(clusters)<-start[1]
     for(j in 2:length(inds)){
 #       print(j)
-        for(k in 1:length(grid_list[[inds[j]]])){
+        for(k in seq_along(grid_list[[inds[j]]])){
 #print(c(j,k))
             if(any(grid_list[[inds[j]]][[k]] %in% clusters[[as.character(inds[j-1])]])){
         if(is.null(clusters[[j]])){
@@ -198,7 +198,7 @@ function(
     clusters<-list(clusters[lapply(clusters,length)>0])
 
     lens<-vector(mode="numeric",length=length(grid_list))
-    for(i in 1:length(grid_list)){
+    for(i in seq_along(grid_list)){
         len<-length(grid_list[[i]])
             if(any(unlist(lapply(grid_list[i],is.na)))){
                 lens[i]<-len-1

@@ -22,7 +22,7 @@
 #'
 
 applyToPDB <-
-function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
+function(FUNCTION, listpdb=NULL, verbose=TRUE, as.df=TRUE, ...) {
     ## Match function --------------------------------------------------------
     FUNCTION <- match.fun(FUNCTION)
     ## Download full PDB list if necessary -----------------------------------
@@ -61,9 +61,9 @@ function(FUNCTION, listpdb=NULL, verbose=T, as.df=T, ...) {
     if (as.df) {
         output <- as.data.frame(
                     matrix(c(listpdb, unlist(output_list)),
-                            byrow=F,
+                            byrow=FALSE,
                             ncol=2),
-                    stringsAsFactors=F)
+                    stringsAsFactors=FALSE)
     } else {
         names(output_list) <- listpdb
         output <- output_list

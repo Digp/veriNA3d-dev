@@ -18,7 +18,7 @@
 
 hasHetAtm <-
 function(pdbID, hetAtms) {
-    lig <- queryHetAtms(pdbID, NAtoNa=T)
+    lig <- queryHetAtms(pdbID, NAtoNa=TRUE)
 
     if ((hetAtms == "NA" || is.na(hetAtms) || hetAtms == "Na") && 
         any(lig == "Na")) {

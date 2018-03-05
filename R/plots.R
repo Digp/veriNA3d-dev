@@ -42,7 +42,7 @@ function(ntID=NULL, ntinfo,
     par(mfrow=c(rows,cols),mar=c(2,2,2,2),cex=cex)
     lapply(angles, FUN=function(x){
       plot_circular_distribution(data=ntinfo[ntinfo$ntID %in% ntID,x],
-        clockwise=F, start.degree=0, main=x)
+        clockwise=FALSE, start.degree=0, main=x)
     })
     dev.off()
 }
@@ -66,14 +66,14 @@ function(ntID=NULL, ntinfo,
 #' @author Diego Gallego
 #'
 
-bp_hist<-function(ntID,ntinfo,categories="LW",o="bp",main=o,rm.na=F,width=15,height=15,bg="white",units="cm",res=200,cex=0.5){
+bp_hist<-function(ntID,ntinfo,categories="LW",o="bp",main=o,rm.na=FALSE,width=15,height=15,bg="white",units="cm",res=200,cex=0.5){
     png(paste(o,".png",sep=""),width=width,height=height,bg=bg,units=units,res=res)
     plot_hist(ntID=ntID, ntinfo=ntinfo, categories=categories,
     main=main, cex=cex)
     dev.off()
 }
 
-#bp_hist<-function(.ntID,.ntinfo,.categories="LW",.o="bp",.main=.o,.rm.na=F,.width=15,.height=15,.bg="white",.units="cm",.res=200,.cex=0.5){
+#bp_hist<-function(.ntID,.ntinfo,.categories="LW",.o="bp",.main=.o,.rm.na=FALSE,.width=15,.height=15,.bg="white",.units="cm",.res=200,.cex=0.5){
 #    .data<-.ntinfo[which(.ntinfo$ntID %in% .ntID),.categories]
 #    if(sum(is.na(.data))>0){
 #        if(.rm.na){
@@ -89,7 +89,7 @@ bp_hist<-function(ntID,ntinfo,categories="LW",o="bp",main=o,rm.na=F,width=15,hei
 #    ylim=c(0,1.1*max(table(.dataFactor)))
 #    xx<-barplot(table(.dataFactor),main=.main,density=T,ylim=ylim,xaxt="n")
 #    text(xx,y=table(.dataFactor),labels=paste(.labels,"%",sep=""),pos=3,cex=.cex)
-#    axis(1,at=xx,labels=names(table(.dataFactor)),tick=F,las=2,cex.axis=.cex)
+#    axis(1,at=xx,labels=names(table(.dataFactor)),tick=FALSE,las=2,cex.axis=.cex)
 #    dev.off()
 #}
 
@@ -128,7 +128,7 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
     }
     if(is.null(bandwidths)){
         bandwidths<-c(bandwidth.nrd(data[,eta]),bandwidth.nrd(data[,theta]))
-        write(bandwidths, paste("./",dir,"/",pucker,"bandwidths.txt",sep=""),ncolumns=2,append=F)
+        write(bandwidths, paste("./",dir,"/",pucker,"bandwidths.txt",sep=""),ncolumns=2,append=FALSE)
     }
     z=kde2d(data[,eta],data[,theta],n=c(361,361),h=bandwidths,lims=c(0,360,0,360))
     #}
@@ -159,7 +159,7 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
 
     png(paste("./",dir,"/",pucker,"3D_rightview.png",sep=""),width=15,height=15,bg="white",units="cm",res=600)
     par(mfrow=c(1,1),mar=c(3,3,1.0,3),cex=0.7,lty=1,las=1)
-    persp3D(x=etaseq,y=thetaseq,z=newdensZ,border=NA,theta=100,phi=40,xlab=xlab,ylab=ylab,zlab="",lighting=T)
+    persp3D(x=etaseq,y=thetaseq,z=newdensZ,border=NA,theta=100,phi=40,xlab=xlab,ylab=ylab,zlab="",lighting=TRUE)
     dev.off()
 
     png(paste("./",dir,"/",pucker,".png",sep=""),width=15,height=15,bg="white",units="cm",res=600)
@@ -228,7 +228,7 @@ plot.eta.theta<-function(data,pucker,classes,ntinfo,bandwidths=c(36,36)){
     }
     if(is.null(bandwidths)){
         bandwidths<-c(bandwidth.nrd(data$eta),bandwidth.nrd(data$theta))
-        write(bandwidths, paste("./",classes,"/",pucker,"bandwidths.txt",sep=""),ncolumns=2,append=F)
+        write(bandwidths, paste("./",classes,"/",pucker,"bandwidths.txt",sep=""),ncolumns=2,append=FALSE)
     }
     z=kde2d(data$eta,data$theta,n=c(361,361),h=bandwidths,lims=c(0,360,0,360))
     #}
@@ -313,7 +313,7 @@ plot.eta.theta<-function(data,pucker,classes,ntinfo,bandwidths=c(36,36)){
 #Diego Gallego
 #Created: 2017-Mar-28
 
-plot_circular_distribution<-function(data, clockwise=F, start.degree=0, main=NULL){
+plot_circular_distribution<-function(data, clockwise=FALSE, start.degree=0, main=NULL){
     if(!clockwise){
         data<-abs(data-360)
         labels<-append("", seq(from=330,to=0,by=-30))
@@ -355,7 +355,7 @@ plot_circular_distribution<-function(data, clockwise=F, start.degree=0, main=NUL
 #   contour: logical to indicate if the plot should show contour lines
 #   levels: only applicable if contour is TRUE. Vector specifying the standard deviations over the mean where the contour lines will be drawn.
 #   highlight_helical: logical indicating if the helical regions should be highlighted or not
-plot_et<-function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, eta="eta", theta="theta", drawcontour=T, sd_over_mean_contours=c(1,2,4), highlight_helical=T, points=NULL,colpoints="red"){
+plot_et<-function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, eta="eta", theta="theta", drawcontour=TRUE, sd_over_mean_contours=c(1,2,4), highlight_helical=TRUE, points=NULL,colpoints="red"){
     if(is.null(ntID)){
     ntID<-ntinfo[,"ntID"]
     }else{
@@ -425,7 +425,7 @@ plot_et<-function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, eta="eta", thet
 
 #Output: A plot 
 
-plot_hist<-function(ntID,ntinfo,categories="LW",rm.na=F,main=categories,cex=0.5){
+plot_hist<-function(ntID,ntinfo,categories="LW",rm.na=FALSE,main=categories,cex=0.5){
     par(mfrow=c(1,1))
     data<-ntinfo[which(ntinfo$ntID %in% ntID),categories]
     if(sum(is.na(data))>0){
@@ -439,9 +439,9 @@ plot_hist<-function(ntID,ntinfo,categories="LW",rm.na=F,main=categories,cex=0.5)
     dataFactor<-as.factor(data)
     labels<-as.numeric(round(100*table(dataFactor)/sum(table(dataFactor)),1))
     ylim=c(0,1.1*max(table(dataFactor)))
-    xx<-barplot(table(dataFactor),main=main,density=T,ylim=ylim,xaxt="n")
+    xx<-barplot(table(dataFactor),main=main,density=TRUE,ylim=ylim,xaxt="n")
     text(xx,y=table(dataFactor),labels=paste(labels,"%",sep=""),pos=3,cex=cex)
-    axis(1,at=xx,labels=names(table(dataFactor)),tick=F,las=2,cex.axis=cex)
+    axis(1,at=xx,labels=names(table(dataFactor)),tick=FALSE,las=2,cex.axis=cex)
 }
 ##############################################################################
 
