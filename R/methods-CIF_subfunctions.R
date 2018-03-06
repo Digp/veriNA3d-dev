@@ -29,9 +29,9 @@ function(i, pdb, hash_inds) {
 
     ## Is the section a "loop_" section? Save the data table in any case
     if (pdb[first] == "loop_") {
-        out <- .clean_loop_section(pdb[first:last])
+        out <- .clean_loop_section(pdb[seq(first, last, 1)])
     } else {
-        out <- .clean_raw_section(pdb[first:last])
+        out <- .clean_raw_section(pdb[seq(first, last, 1)])
     }
 
     ## Save field names of the section
@@ -60,7 +60,7 @@ function(i, pdb, hash_inds) {
 
     ## "totalfields" is the number of fields in the table
     totalfields <- nrow(Names)
-    data <- data[first:length(data)]
+    data <- data[seq(first, length(data), 1)]
 
     ## If the sections contains the coordinates, just read the table
     if (Names[1, 1] == "_atom_site") {
@@ -105,7 +105,7 @@ function(i, pdb, hash_inds) {
         }
 
         ## Append lines
-        for (j in cornercase[length(cornercase):1]) {
+        for (j in cornercase[seq(length(cornercase), 1, -1)]) {
             data[j - 1] <- paste(data[j - 1], data[j], sep="")
         }
         ## Now remove repeated lines
@@ -141,7 +141,7 @@ function(data) {
 
         lines <- c(unlist(mapply(
                                 FUN=function(x, y) {
-                                    return(x:y)
+                                    return(seq(x, y, 1))
                                 }, semicoloninds_start, semicoloninds_end)))
         data[lines] <- gsub("'", "pRimE", data[lines])
         data[lines] <- gsub("^;", "'", data[lines])
@@ -174,7 +174,8 @@ function(data, totalfields) {
     if (length(quoteinds_start) > 0 && length(quoteinds_end) > 0) {
         toreplace <- mapply(
                             FUN=function(x, y) {
-                                return(paste(data3[x:y], collapse=" "))
+                                return(paste(data3[seq(x, y, 1)],
+                                            collapse=" "))
                             }, quoteinds_start, quoteinds_end)
 
         data3[quoteinds_start] <- toreplace
@@ -183,7 +184,7 @@ function(data, totalfields) {
         toremove <- c(unlist(mapply(
                                 FUN=function(x, y) {
                                     if (x < y) {
-                                        return(x:y)
+                                        return(seq(x, y, 1))
                                     } else if (x == y) {
                                         return(x)
                                     } else {
@@ -252,7 +253,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
     ## In case there are Sodium ions ("NA"), replace them by "Na" string 
     na.ind <- which(is.na(table), arr.ind=TRUE)
     if (nrow(na.ind) > 0) {
-        for (i in 1:nrow(na.ind)) {
+        for (i in seq_len(nrow(na.ind))) {
             table[na.ind[i, 1], na.ind[i, 2]] <- "Na"
         }
     }
@@ -632,7 +633,7 @@ atom2mass <- function(x, mass.custom=NULL, elety.custom=NULL,
     comNew <- t(com %*% matrix(c(x0, y0, z0), nrow=3))
     xNew   <- t(as.matrix(x) %*% matrix(c(x0, y0, z0), nrow=3))
     x1     <- xNew - comNew
-    gamma  <- unlist(lapply(1:dim(x1)[2],
+    gamma  <- unlist(lapply(seq_len(dim(x1)[2]),
                             function(k) {
                               v1 <- x1[, ind]
                               v2 <- matrix(c(x1[1, k], x1[2, k], 0), nrow=3)
@@ -669,7 +670,7 @@ atom2mass <- function(x, mass.custom=NULL, elety.custom=NULL,
     yNew   <- t(as.matrix(y) %*% matrix(c(x0, y0, z0), nrow=3))
     x1 <- xNew - comNew
     y1 <- yNew - comNew
-    z1 <- unlist(lapply(1:dim(x1)[2],
+    z1 <- unlist(lapply(seq_len(dim(x1)[2]),
                      function(k) {
                           X1 <- x1[, k]
                           Y1 <- y1[, k]
@@ -678,7 +679,7 @@ atom2mass <- function(x, mass.custom=NULL, elety.custom=NULL,
                                   as.numeric(X1[1] * Y1[2] - Y1[1] * X1[2]))
                           Z1 <- (1 / sqrt(sum(Z1^2))) * Z1}))
     z1 <- matrix(z1, nrow=3)
-    beta <- unlist(lapply(1:dim(z1)[2],
+    beta <- unlist(lapply(seq_len(dim(z1)[2]),
                         function(k) {
                               acos((z1[, ind] %*% z1[, k]) / 
                                     ((sqrt(sum(z1[, ind]^2))) * 
@@ -692,8 +693,8 @@ atom2mass <- function(x, mass.custom=NULL, elety.custom=NULL,
 
 ## deltaGmodule 
 .deltaGmodule <- function(vectors, cutoff=2.4, gamma=pi / cutoff) {
-    x <- sqrt(sum(vectors[1:3]^2))
-    y <- sqrt(sum(vectors[4:6]^2))
+    x <- sqrt(sum(vectors[c(1, 2, 3)]^2))
+    y <- sqrt(sum(vectors[c(4, 5, 6)]^2))
     if ((x == 0 & y == 0) || (x >= cutoff & y >= cutoff)) {
         return(c(0, 0, 0, 0))
         #return(0)

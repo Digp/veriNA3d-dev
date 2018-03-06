@@ -337,8 +337,9 @@ setMethod("eRMSD",
         rvectors2 <- rVector(cif2, outformat="rvector", simple_out=TRUE)
 
         len <- sqrt(nrow(rvectors1))
-        deltaG <- t(apply(cbind(rvectors1[, 1:3], rvectors2[, 1:3]),
-                          MARGIN=1, FUN=.deltaGmodule))
+        deltaG <- t(apply(cbind(rvectors1[, c(1, 2, 3)],
+                                rvectors2[, c(1, 2, 3)]),
+                            MARGIN=1, FUN=.deltaGmodule))
         return(sqrt(sum(deltaG^2) / len))
     })
 
@@ -367,7 +368,8 @@ setMethod("eRMSD",
         }
 
         len <- sqrt(nrow(rvectors1))
-        deltaG <- t(apply(cbind(rvectors1[, 1:3], rvectors2[, 1:3]),
+        deltaG <- t(apply(cbind(rvectors1[, c(1, 2, 3)], 
+                                rvectors2[, c(1, 2, 3)]),
                           MARGIN=1, FUN=.deltaGmodule))
         return(sqrt(sum(deltaG^2) / len))
     })

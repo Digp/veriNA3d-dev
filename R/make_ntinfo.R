@@ -1,42 +1,41 @@
-#Date: 2017-May-29
 #' Obtain data from nucleotides
 #' 
 #' Generates a data.frame with the desired info for a list of PDB. Nucleotides
 #' are labeled with a unique ID (column ntID).
 #'
 #' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
-#'    objects as provided by "read.pdb", "read.cif", "cifParser" ...
+#'   objects as provided by "read.pdb", "read.cif", "cifParser" ...
 #' @param model A vector with same length of pdbID containing the
-#'    desired model for each pdbID. If all models are desired, use "all".
-#'    If no models are specified, the first one will be used for each pdbID
+#'   desired model for each pdbID. If all models are desired, use "all".
+#'   If no models are specified, the first one will be used for each pdbID
 #' @param chain A vector with same length of pdbID containing the
-#'    desired chain for each pdbID. If no chain is specified, all chains will
-#'    be analysed by default. Protein chains will be ignored.
+#'   desired chain for each pdbID. If no chain is specified, all chains will
+#'   be analysed by default. Protein chains will be ignored.
 #' @param minlength A numeric indicating the minimum number of residues for 
-#'    the chain to be analysed.
+#'   the chain to be analysed.
 #' @param maxlength A numeric indicating the maximum number of residues for 
-#'    the chain to be analysed.
+#'   the chain to be analysed.
 #' @param distances A matrix with two (or three) columns. First and second 
-#'    column should indicate the atom names of the desired distances to be 
-#'    computed. A third column is accepted (but not necessary) with the 
-#'    labels to be used in the output data.frame. If "default", the default is
-#'    executed.
+#'   column should indicate the atom names of the desired distances to be 
+#'   computed. A third column is accepted (but not necessary) with the 
+#'   labels to be used in the output data.frame. If "default", the default is
+#'   executed.
 #' @param angles Same structure as "distances" but with one more column.
-#'    If "default", the default is executed.
+#'   If "default", the default is executed.
 #' @param torsionals Same structure as "distances" but with two more column.
-#'    If "default", the default is executed.
+#'   If "default", the default is executed.
 #' @param path Directory in which the PDB/CIF files can be found (if NULL, the
-#'    function will download them). If you provide a "path", make sure the
-#'    file names are the PDB IDs followed by ".cif" or ".pdb". The function
-#'    will find them using the strings in pdbID, so make sure you use the 
-#'    same case.
+#'   function will download them). If you provide a "path", make sure the
+#'   file names are the PDB IDs followed by ".cif" or ".pdb". The function
+#'   will find them using the strings in pdbID, so make sure you use the 
+#'   same case.
 #' @param extension A string ".pdb" or ".cif". Only necessary if the PDB files
-#'    are to be read from disk and a path is provided.
+#'   are to be read from disk and a path is provided.
 #' @param cores Number of CPU cores to be used. It is the user responsibility
-#'    to make sure the cores are not busy in other processes (take into account 
-#'    that this function might take from few minutes to over an hour depending 
-#'    on the number of cores, access to the PDB/CIF files and, in case they are
-#'    not provided, Internet connection).
+#'   to make sure the cores are not busy in other processes (take into account
+#'   that this function might take from few minutes to over an hour depending
+#'   on the number of cores, access to the PDB/CIF files and, in case they are
+#'   not provided, Internet connection).
 #'
 #' @return A data frame with info about every nucleotide
 #'

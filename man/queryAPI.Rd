@@ -4,16 +4,21 @@
 \alias{queryAPI}
 \title{Launch queries to the MMB or EBI APIs}
 \usage{
-queryAPI(pdbID, info, API = "default", reuse = F, envir = parent.frame(n =
-  2), verbose = F)
+queryAPI(pdbID, info = NULL, API = "default", string1 = NULL,
+  string2 = NULL, reuse = TRUE, envir = parent.frame(n = 2),
+  verbose = FALSE)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure in the Protein
 Data Bank.}
 
-\item{info}{A string with the desired query nickname.}
+\item{info}{A string with the desired query name.}
 
-\item{API}{A string that matches "mmb" or "ebi".}
+\item{API}{A string that matches "ebi" or "mmb".}
+
+\item{string1}{A string to configure the query. See example below.}
+
+\item{string2}{A string to configure the query. See example below.}
 
 \item{reuse}{A logical. Set to TRUE if the same query is going to be send
 repeatedly, so that the result is saved in RAM (ir provides faster
@@ -33,7 +38,16 @@ wrapper called by most of the queryFunctions (for documentation see
 ?queryFunctions).
 }
 \examples{
-## See wrapper ?queryFunctions
+## Imagine you want to programmatically access the EBI API contents
+## through "http://www.ebi.ac.uk/pdbe/api/topology/entry/1s72/chain/H".
+## 'queryAPI' understands it with four intructions:
+## 'API="ebi"' stands for the root of the website name ("http.../api/").
+## 'string1' is the string from the root to the pdb ID.
+## 'pdbID' is just the 4-character PDB code.
+## 'string2' is the string after the pdb ID.
+## Thus, the call would be:
+data <- queryAPI(pdbID="1s72", API="ebi", 
+                     string1="topology/entry/", string2="chain/H/")
 
 }
 \author{

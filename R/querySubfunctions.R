@@ -5,11 +5,12 @@
 ## "http://stackoverflow.com/questions/5076593/how-to-determine-if-you-
 ## have-an-internet-connection-in-r"
 .check_internet <- 
-function(url = "http://mmb.irbbarcelona.org/www/") {
+function(url="http://mmb.irbbarcelona.org/www/") {
     # test the http capabilities of the current R build
-    if (!capabilities(what = "http/ftp")) return(FALSE)
+    if (!capabilities(what="http/ftp")) 
+        return(FALSE)
     # test connection by trying to read first line of url
-    test <- try(suppressWarnings(readLines(url, n = 1)), silent = TRUE)
+    test <- try(suppressWarnings(readLines(url, n=1)), silent=TRUE)
     # return FALSE if test inherits 'try-error' class
     !inherits(test, "try-error")
 }
@@ -59,61 +60,88 @@ function(URL, JSON=FALSE) {
 }
 
 ## ===========================================================================
-## Function to query the mmb API
-.callAPImmb <-
-function(pdbID, info) {
-    URL <- paste("http://mmb.pcb.ub.es/api/pdb/", pdbID,
-                        "/entry/", info, sep="")
-    return(.launchquery(URL, FUN=..launchquery, JSON=FALSE))
+## From a type of query (given by info) and API, returns the necessary data to
+## make the call
+.get_strings <-
+function(info, API) {
+    ## If no API is selected, set API ----------------------------------------
+    if (API == "default") {
+        if (info %in% onlymmbqueries) {
+            API <- "mmb"
+        } else {
+            API <- "ebi"
+        }
+    } else {
+        ## Check that the selected API is in the list below ------------------
+        API <- tolower(API)
+        .check_api(API, supported=c("mmb", "ebi", "mmb_internal"))
+    }
+
+    ## Warn the user that some data is only taken from mmb/ebi api -----------
+    if (info %in% onlymmbqueries && API == "ebi") {
+        .APIwarning("MMB")
+        API <- "mmb"
+
+    } else if (info %in% onlyebiqueries && 
+                API %in% c("mmb", "mmb_internal")) {
+        .APIwarning("EBI")
+        API <- "ebi"
+    }
+
+    ## Return the strings to make the correct call to the API ----------------
+    if (API %in% c("mmb", "mmb_internal")) {
+        string1 <- ""
+        string2 <- paste("entry/", info, "/", sep="")
+    } else if (API == "ebi") {
+        string1 <- .translate_string(info)
+        string2 <- ""
+    }
+
+    return(list(API=API, string1=string1, string2=string2))
 }
 
 ## ===========================================================================
-## Function to query the ebi API
-.callAPIebi <-
-function(pdbID, info) {
+## Translate the info string into the correct query names for the EBI API
+.translate_string <-
+function(info) {
     if (info %in% c("expType", "compound", "autsList", 
             "ascDate", "relDate", "revDate")) {
-        URL <- paste("http://www.ebi.ac.uk/pdbe/api/pdb/entry/summary/", 
-            pdbID, sep="")
+        return("pdb/entry/summary/")
+
     } else if (info == "formats") {
-    URL <- paste("http://www.ebi.ac.uk/pdbe/api/pdb/entry/files/",
-            pdbID, sep="")
+        return("pdb/entry/files/")
+
     } else if (info == "resol") {
-    URL <- paste("http://www.ebi.ac.uk/pdbe/api/pdb/entry/",
-            "electron_density_statistics/",
-            pdbID, sep="")
+        return("pdb/entry/experiment/")
+
     } else if (info == "entities") {
-    URL <- paste("http://www.ebi.ac.uk/pdbe/api/pdb/entry/molecules/",
-            pdbID, sep="")
+        return("pdb/entry/molecules/")
+
     } else if (info == "modres") {
-    URL <- paste("http://www.ebi.ac.uk/pdbe/api/pdb/entry/",
-            "modified_AA_or_NA/",
-            pdbID, sep="")
+        return("pdb/entry/modified_AA_or_NA/")
+
     } else {
-    stop("Query not supported for the EBI API")
+        stop("Query not supported")
     }
-    suppressWarnings(out <- tryCatch({
-        return(.launchquery(URL, FUN=..launchquery, JSON=TRUE))
-    }, error = function(e) {
-    return(NULL)
-    }))
-    return(out)
 }
+
 ## ===========================================================================
 ## Function to manage the data retrieved from the mmb API to return to the 
 ## user the desired output
 .process_mmb_call <-
 function(text, info, pdbID) {
     if (info %in% c("hetAtms", "formats")) {
-    start <- grep("[", text, fixed=TRUE)
+        start <- grep("[", text, fixed=TRUE)
         end <- grep("]", text, fixed=TRUE)
-    if ((end-start) == 1) return(NULL)
+
+        if ((end-start) == 1) 
+            return(NULL)
 
         text <- text[(start+1):(end-1)]
         if (!all(is.na(text)) && any(text == ",")) {
-        text <- text[-which(text == ",")]
-    }
-    return(text)
+            text <- text[-which(text == ",")]
+        }
+        return(text)
     } else if (info == "chains/header") {
         ind <- grep(pdbID, text)
         ind <- ind[-1]
@@ -136,7 +164,8 @@ function(text, info, pdbID) {
 ## user the desired output
 .process_ebi_call <-
 function(text, info) {
-    if (is.null(text)) return(NULL)
+    if (is.null(text)) 
+        return(NULL)
     if (info == "expType") {
         return(text[[1]]$experimental_method[[1]])
     } else if (info == "formats") {
@@ -152,10 +181,10 @@ function(text, info) {
     } else if (info == "revDate") {
         return(text[[1]]$revision_date)
     } else if (info == "resol") {
-        return(text[[1]]$author_provided$resolution_high)
+        return(text[[1]]$resolution)
     } else if (info == "entities") {
-    text <- text[[1]][order(text[[1]]$entity_id),]
-    return(text)
+        text <- text[[1]][order(text[[1]]$entity_id),]
+        return(text)
     } else if (info == "modres") {
         return(text[[1]])
     }    

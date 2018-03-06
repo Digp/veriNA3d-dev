@@ -13,6 +13,10 @@ A vector with all the PDB ID entries (updated weekly).
 Function to get the list of ALL PDB IDs in the Protein Data Bank at the
 moment.
 }
+\examples{
+pdblist <- queryEntryList()
+
+}
 \author{
 Diego Gallego
 }

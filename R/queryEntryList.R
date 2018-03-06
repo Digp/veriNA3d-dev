@@ -5,6 +5,9 @@
 #' 
 #' @return A vector with all the PDB ID entries (updated weekly).
 #' 
+#' @examples 
+#' pdblist <- queryEntryList()
+#' 
 #' @author Diego Gallego
 #' 
 

@@ -7,8 +7,10 @@
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein 
 #'        Data Bank.
-#' @param info A string with the desired query nickname.
-#' @param API A string that matches "mmb" or "ebi".
+#' @param info A string with the desired query name.
+#' @param API A string that matches "ebi" or "mmb".
+#' @param string1 A string to configure the query. See example below.
+#' @param string2 A string to configure the query. See example below.
 #' @param reuse A logical. Set to TRUE if the same query is going to be send
 #'        repeatedly, so that the result is saved in RAM (ir provides faster 
 #'        user access and avoids unnecessary work in the servers).
@@ -18,77 +20,113 @@
 #' @return A vector or data.frame with the desired data.
 #'
 #' @examples
-#' ## See wrapper ?queryFunctions
+#' ## Imagine you want to programmatically access the EBI API contents
+#' ## through "http://www.ebi.ac.uk/pdbe/api/topology/entry/1s72/chain/H".
+#' ## 'queryAPI' understands it with four intructions:
+#' ## 'API="ebi"' stands for the root of the website name ("http.../api/").
+#' ## 'string1' is the string from the root to the pdb ID.
+#' ## 'pdbID' is just the 4-character PDB code.
+#' ## 'string2' is the string after the pdb ID.
+#' ## Thus, the call would be:
+#' data <- queryAPI(pdbID="1s72", API="ebi", 
+#'                      string1="topology/entry/", string2="chain/H/")
 #'
 #' @author Diego Gallego
 #'
 
 ## Higher level common function to make API calls
 queryAPI <-
-function(pdbID, info, API="default",
-          reuse=F, envir=parent.frame(n=2), verbose=F) {
+function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
+          reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE) {
 
     ## Check that the input pdbID is 4 character string ----------------------
     if (nchar(pdbID) != 4) {
         stop("Please provide a correct PDB ID")
     }
 
-    ## If no API is selected, set API ----------------------------------------
-    if (API == "default") {
-        if (info %in% onlyebiqueries) {
-            API <- "ebi"
-        } else {
-            API <- "mmb"
-        }
+    ## If a query name (info) is provided, get strings to make query ---------
+    if (!is.null(info)) {
+        strings <- .get_strings(info=info, API=API)
+        API <- strings$API
+        string1 <- strings$string1
+        string2 <- strings$string2
+        process <- TRUE
+    } else if (is.null(string1) || is.null(string2) || API == "default") {
+        stop("Provide a valid 'info' string or check documentation ",
+                "for advanced usage of queryAPI", sep="")
     } else {
-        ## Check that the selected API is in the list below ------------------
         API <- tolower(API)
-        .check_api(API, supported=c("mmb", "ebi"))
+        process <- FALSE
     }
 
-    ## Warn the user that some data is only taken from mmb/ebi api -----------
-    if (info %in% onlymmbqueries && API == "ebi") {
-        .APIwarning("MMB")
-        API <- "mmb"
-
-    } else if (info %in% onlyebiqueries && API == "mmb") {
-        .APIwarning("EBI")
-        API <- "ebi"
+    ## Find website name root
+    if (API == "mmb") {
+        webroot <- "http://mmb.pcb.ub.es/api/pdb/"
+    } else if (API == "mmb_internal") {
+        webroot <- "http://web.mmb.pcb.ub.es/MMBApi/web/pdb/"
+    } else if (API == "ebi") {
+        webroot <- "http://www.ebi.ac.uk/pdbe/api/"
     }
 
-    ## Generate string to save/reuse data in RAM -----------------------------
-    infoname <- paste(".", toupper(pdbID), info, API, sep="") 
+    ## Generate string with the website name
+    URL <- paste(webroot, string1, pdbID, "/", string2, sep="")
+    if (verbose)
+        print(paste("Querying: ", URL, sep=""))
 
     ## If data is in RAM, just retrieve it
-    if (reuse && exists(infoname, envir=envir)) {
-        if (verbose) print(paste("Getting ", info, " from RAM", sep=""))
-        return(get(infoname, envir=envir))
+    if (reuse) {
+        ## Generate string to save/reuse data in RAM -------------------------
+        if (is.null(info)) {
+            info <- URL
+        }
+        infoname <- paste(".", toupper(pdbID), info, API, sep="")
+
+        if (exists(infoname, envir=envir)) {
+            if (verbose) 
+                print(paste("Getting ", info, " from RAM", sep=""))
+            return(get(infoname, envir=envir))
+        }
+    }
 
     ## Otherwise, send query to the API
-    } else {
-        if (verbose) print(paste("Getting ", info, " from API", sep=""))
+    if (verbose)
+        print(paste("Getting ", info, " from API", sep=""))
 
-        ## Query to our API, default -----------------------------------------
-        if (API == "mmb") {
-            text <- .callAPImmb(pdbID, info=info)
+    ## Query to MMB API ------------------------------------------------------
+    if (API %in% c("mmb", "mmb_internal")) {
+        text <- .launchquery(URL, FUN=..launchquery, JSON=FALSE)
+        if (process) {
             output <- .process_mmb_call(text, info, pdbID)
+        } else {
+            output <- text
         }
-
-        ## Query to EBI API --------------------------------------------------
-        if (API == "ebi") {
-            text <- .callAPIebi(pdbID, info=info)
-            output <- .process_ebi_call(text, info)
-        }
-
-        ## Save in RAM if desired, so that a later (same) call of the function 
-        ## will be faster ----------------------------------------------------
-        if (reuse) {
-            if (verbose) print(paste("Saving ", info , " in RAM", sep=""))
-            assign(infoname, output, envir=envir)
-        }
-
-        return(output)
     }
+
+    ## Query to EBI API ------------------------------------------------------
+    if (API == "ebi") {
+        text <- tryCatch({
+                    suppressWarnings(
+                        .launchquery(URL, FUN=..launchquery, JSON=TRUE))
+                    }, error = function(e) {
+                        NULL
+                    })
+#        text <- .launchquery(URL, FUN=..launchquery, JSON=TRUE)
+        if (process) {
+            output <- .process_ebi_call(text, info)
+        } else {
+            output <- text
+        }
+    }
+
+    ## Save in RAM if desired, so that a later (same) call of the function 
+    ## will be faster --------------------------------------------------------
+    if (reuse) {
+        if (verbose)
+            print(paste("Saving ", info , " in RAM", sep=""))
+        assign(infoname, output, envir=envir)
+    }
+
+    return(output)
 }
 onlyebiqueries <- c("relDate", "revDate", "entities", "modres")
 onlymmbqueries <- c("header", "compType", "NDBId", "hetAtms",
