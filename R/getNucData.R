@@ -37,7 +37,6 @@
 #'
 #' @author Diego Gallego
 #'
-
 getNucData <-
 function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
   path=NULL, extension=NULL, cores=1, ...) {
