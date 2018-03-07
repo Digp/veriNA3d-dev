@@ -2,6 +2,17 @@
 #Created: 2016-Oct-10
 #Updated: 2017-Mar-10 (Adapted for Alexandra's project) // 2017-Jan-26 (select_many modified) // 2016-Dec-13 // ¿? // ¿?
 
+#' @param distances A matrix with two (or three) columns. First and second 
+#'   column should indicate the atom names of the desired distances to be 
+#'   computed. A third column is accepted (but not necessary) with the 
+#'   labels to be used in the output data.frame. If "default", the default is
+#'   executed.
+#' @param angles Same structure as "distances" but with one more column.
+#'   If "default", the default is executed.
+#' @param torsionals Same structure as "distances" but with two more column.
+#'   If "default", the default is executed.
+
+
 
 measure <-
 function( pdb, model=1, chain="all", v_shifted=TRUE, 
@@ -243,7 +254,7 @@ function( pdb, model, chain, v_shifted,
   pucker, Dp ) {
 
 #Selection of Model of interest
-    pdb <- selectModel( pdb, model, verbose=FALSE )
+    pdb <- selectModel( pdb=pdb, model=model, verbose=FALSE )
 
 #Selection of Chain of interest
     selection <- atom.select( pdb, chain=chain )

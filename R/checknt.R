@@ -81,7 +81,6 @@ function( pdb, model=1, chain="all", id=NULL ) {
     if( chain == "all" ) {
     chain <- as.character( unique( pdb$atom$chain ))
     }
-
     if( is.null( id )) {
         id <- as.character(pdb$call)
         id <- id[ which( nchar(id) == 4)[1] ]
@@ -131,7 +130,7 @@ function( pdb, model=1, chain="all", id=NULL ) {
 .check.nt <-
 function( pdb, model, chain, id=NULL ) {
 #Selection of Model of interest
-    pdb <- selectModel( pdb, model, verbose=FALSE )
+    pdb <- selectModel( pdb=pdb, model=model, verbose=FALSE )
 
 #Selection of Chain of interest
     selection <- atom.select( pdb, chain=chain )

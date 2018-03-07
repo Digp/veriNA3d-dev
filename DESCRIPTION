@@ -14,7 +14,7 @@ Description: Structural bioinformatics is a hard field we work to make easier.
 License: GPL (>= 2)
 Depends: R (>= 3.5)
 Imports: methods, graphics, grDevices, stats, utils,
-         bio3d, circlize, parallel, dplyr, jsonlite, 
+         bio3d, circlize, parallel, jsonlite, 
          plot3D, MASS, RColorBrewer, RANN
 Packaged: 2017-03-14 18:02:52 UTC; dgallego
 RoxygenNote: 6.0.1

@@ -9,7 +9,6 @@ importFrom("utils", "download.file", "read.table")
 importFrom(plot3D, persp3D)
 importFrom(MASS, kde2d, bandwidth.nrd)
 importFrom(jsonlite, fromJSON)
-importFrom(dplyr, bind_rows)
 importFrom(RColorBrewer, brewer.pal)
 importFrom(RANN, nn2)
 importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circos.axis, circos.trackPoints, circos.trackHist, circos.clear)
@@ -52,13 +51,13 @@ export(
 
     getAlternativeRepresentants, 
     getLeontisList,
+    getNucData,
 
     hasHetAtm, 
 
     is_valid_eRMSD, 
 
     make_aantinfo, 
-    make_ntinfo, 
     measure, 
     measure_pucker, 
 
@@ -86,6 +85,7 @@ export(
     queryRevdate,
     queryTechnique,
 
+    repsAsDataFrame,
     rvec_plot, 
     rVector, 
 

@@ -10,180 +10,199 @@
 #'   If no models are specified, the first one will be used for each pdbID
 #' @param chain A vector with same length of pdbID containing the
 #'   desired chain for each pdbID. If no chain is specified, all chains will
-#'   be analysed by default. Protein chains will be ignored.
-#' @param minlength A numeric indicating the minimum number of residues for 
-#'   the chain to be analysed.
-#' @param maxlength A numeric indicating the maximum number of residues for 
-#'   the chain to be analysed.
-#' @param distances A matrix with two (or three) columns. First and second 
-#'   column should indicate the atom names of the desired distances to be 
-#'   computed. A third column is accepted (but not necessary) with the 
-#'   labels to be used in the output data.frame. If "default", the default is
-#'   executed.
-#' @param angles Same structure as "distances" but with one more column.
-#'   If "default", the default is executed.
-#' @param torsionals Same structure as "distances" but with two more column.
-#'   If "default", the default is executed.
+#'   be analysed by default. Non-nucleic acid chains will be ignored.
+#' @param range A numeric vector with two values to indicate the desired
+#'   length range for the Nucleic Acid chains. If a chain falls outside the
+#'   range, it is not analysed.
 #' @param path Directory in which the PDB/CIF files can be found (if NULL, the
 #'   function will download them). If you provide a "path", make sure the
-#'   file names are the PDB IDs followed by ".cif" or ".pdb". The function
+#'   file names are the PDB IDs followed by ".cif" or "pdb". The function
 #'   will find them using the strings in pdbID, so make sure you use the 
 #'   same case.
-#' @param extension A string ".pdb" or ".cif". Only necessary if the PDB files
-#'   are to be read from disk and a path is provided.
-#' @param cores Number of CPU cores to be used. It is the user responsibility
-#'   to make sure the cores are not busy in other processes (take into account
-#'   that this function might take from few minutes to over an hour depending
-#'   on the number of cores, access to the PDB/CIF files and, in case they are
-#'   not provided, Internet connection).
+#' @param extension A string matching the files extension (e.g. ".pdb", 
+#'   ".cif", "pdb.gz", "cif.gz").
+#'   Only necessary if the PDB files are to be read from disk and a path is 
+#'   provided.
+#' @param cores Number of CPU cores to be used.
+#' @param ... Arguments to be passed to [measure()]
 #'
-#' @return A data frame with info about every nucleotide
+#' @return A data.frame with data about every nucleotide in the input set
+#'
+#' @examples 
+#'  ## This is a toy example, see vignettes for more usages.
+#'  pdblist <- list("1bau", "2rn1", "2rn1")
+#'  model <- list("1", "1", "2")
+#'  chain <- list("all", "all", "all")
+#'  ntinfo <- getNucData(pdbID=pdblist, model=model, chain=chain)
 #'
 #' @author Diego Gallego
 #'
 
-make_ntinfo <-
-function( pdbID, model=NULL, chain=NULL, minlength=3, maxlength=100000,
-  distances="default", 
-  angles="default", 
-  torsionals="default", 
-  path=NULL, extension=NULL, cores=1 ) {
+getNucData <-
+function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
+  path=NULL, extension=NULL, cores=1, ...) {
 
-    if( cores>1 ) {
-        if( cores>detectCores() ) {
-            stop( "Introduce valid number of cores" )
-        }
+    ## Make sure the input pdbID is a list -----------------------------------
+    if (class(pdbID) == "CIF")
+        pdbID <- list(pdbID)
+    if (class(pdbID) == "pdb")
+        pdbID <- list(pdbID)
+    if (!is.list(pdbID))
+        pdbID <- as.list(pdbID)
+
+    ## Checking input vectors are equal in length ----------------------------
+    if (is.null(model)) {
+        model <- rep(1, length(pdbID))
+    } else if (length(pdbID) != length(model)) {
+        stop("pdbID and model vectors should have the same length")
+    }
+    if (is.null(chain)) {
+        chain <- rep("all", length(pdbID))
+    } else if (length(pdbID) != length(chain)) {
+        stop("pdbID and chain vectors should have the same length")
     }
 
-    if( is.null( model )) {
-    model <- rep( 1, length( pdbID ))
-    } else if( length( pdbID ) != length( model ) ){
-    stop( "pdbID and model should have the same length" )
-    }
+    ## Determine whether to read CIF/pdb objects from file, internet or input
+    read <- .whereToRead(pdbID=pdbID, path=path, extension=extension)
 
-    if( is.null( chain )) {
-        chain <- rep( "all", length( pdbID ))
-    } else if( length( pdbID ) != length( chain ) ){
-        stop( "pdbID and chain should have the same length" )
-    }
+    ## Print progress bar ----------------------------------------------------
+    total <- length(pdbID)
+    pbar <- txtProgressBar(min = 0, max = total, style = 3)
 
-# Determine if the pdb objects are provided or have to be read from 
-# disk/downloaded from API
-    pdbID<-as.list(pdbID)
-    read <- vector("character", length( pdbID ))
-### If the pdbID contains pdb objects
-    if( all( unlist( lapply( pdbID, function( x ) { 
-                    return( class( x )[1] == "pdb" ) 
-                     })))) {
-    read <- rep( "read.list", length(pdbID))
-    } else if ( !is.null( path ) & 
-        !is.null( extension ) & 
-        Sys.info()[1] == "Linux"  ) {
+    ## Iterate over the list of entries to obtain the desired information ---- 
+    ntinfo <- .xmapply(FUN=.manage_PDB,
+                        index=seq_len(total),
+                        pdbID=pdbID,
+                        model=model,
+                        chain=chain,
+                        read=read,
+                        mc.cores=cores,
+                        MoreArgs=list(range=range, 
+                                        ...=...,
+                                        path=path,
+                                        extension=extension,
+                                        pbar=pbar), 
+                        SIMPLIFY=FALSE)
 
-    inds <- which( file.exists( paste( path, pdbID, extension, sep="" )))
-    if( length( inds ) == 0 ) {
-        inds <- which( file.exists( paste( path, pdbID, sep="" )))
-    }
-    if( length( inds ) == 0 ) {
+    ## Print new line after progress bar -------------------------------------
+    cat("\n")
 
-        stop( 
-        paste( "Nothing found in ", 
-            path, 
-            ". Check the strings provided in the input pdbID.",
-            sep="") )
+    ## Prepare output format -------------------------------------------------
+    ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
+    if (length(ntinfo) == 0) {
+        stop("Are you sure your input data is correct?")
 
     } else {
-
-        read[ inds ] <- paste( "read", extension, sep="" )
-
-    }
-    
-    } else if( any( unlist( lapply( pdbID, function( x ) {
-                                        return( nchar( x )[1] != 4 )
-                                     })))) {
-    stop( "Check if pdbID is as specified in ?make_ntinfo or if the provided path and extension are correct" )
-    }
-    if( any( read == "" ) ) { 
-
-    inds <- which( read == "" )
-    if( any(nchar( pdbID[ inds ] ) != 4 )) {
-        stop( paste(
-            pdbID[ inds ], 
-            "; not found in path and not recognized as PDB IDs\n",
-            sep="") )
-    }
-    read[ inds ] <- "download.RAM"
-    print( paste(
-        "The PDB IDs: ", 
-        paste( pdbID[ inds ], collapse="; " ), 
-        " are going to be downloaded (no temp files generated)", 
-        sep="") )
-    }
-
-    if( cores==1 ){
-        ntinfo <- mapply( FUN=manage_PDB,
-            .pdbID = pdbID,
-            .model = model,
-            .chain = chain,
-        .read = read,
-            MoreArgs = list( .minlength = minlength, 
-                .maxlength = maxlength,
-                .distances = distances,  
-                .angles = angles, 
-                .torsionals = torsionals, 
-                .path = path, 
-                .extension = extension ), 
-        SIMPLIFY=FALSE)
-    }else{
-        ntinfo <- mcmapply( FUN=manage_PDB,
-            .pdbID = pdbID,
-            .model = model,
-            .chain = chain,
-        .read = read,
-            mc.cores = cores,
-            MoreArgs = list( .minlength = minlength, 
-        .maxlength = maxlength, 
-        .distances = distances, 
-        .angles = angles,
-        .torsionals = torsionals,
-        .path = path,
-        .extension = extension ), 
-        SIMPLIFY=FALSE)
-    }
-    ntinfo <- ntinfo[ which( lapply( ntinfo, length )>0 )]
-    if( length(ntinfo) == 0 ){
-    print("Are you sure your input data is correct?")
-        return()
-    } else {
-        #Coerce list to data.frame. Requires package "dplyr"
-        suppressWarnings( ntinfo <- bind_rows(ntinfo) )
+        ## Coerce list to data.frame
+        ntinfo <- do.call(rbind, ntinfo)
         ntinfo$ntID <- 1:nrow(ntinfo)
         return(ntinfo)
     }
-}##############################################################################
+}
 
-#i=35
-#.pdbID = pdbID[i]; .model = model[i]; .chain = chain[i]; .read = read[i]; .minlength = minlength; .maxlength = maxlength; .distances = distances; .angles = angles;  .torsionals = torsionals; .path = path; .extension = extension
+##############################################################################
+## Where should the input be read from?
+.whereToRead <-
+function(pdbID, path=NULL, extension=NULL) {
+    ## Preallocate and fill 'read' object ------------------------------------
+    read <- vector("character", length(pdbID))
 
-manage_PDB<-
-function(.pdbID, .model, .chain, .read,
-  .minlength=3, .maxlength=1000,
-  .distances, .angles, .torsionals, .path=NULL, .extension=NULL
-  ) {
-    if( length(.model) == 1 && .model == 1){
-    multi <- FALSE
-    } else {
-    multi <- TRUE
+    ## If the user provides a path and extension -----------------------------
+    if (!is.null(path) & !is.null(extension)) {
+        ## Find files in path that match the extension
+        files <- dir(path, pattern=extension)
+
+        ## Check if input is the complete file name or without extension
+        file_bool <- all(grepl(extension, pdbID, perl=T))
+
+        ## Find which of the input pdbID has its correspondent file
+        if (file_bool) {
+            inds <- which(pdbID %in% files)
+        } else {
+            inds <- which(paste(pdbID, extension, sep="") %in% files)
+        }
+
+        ## Fill 'read' vector
+        read[inds] <- paste("read", extension, sep="")
+        pdbID[inds] <- ""
     }
 
-    if( .read == "read.list" ) {
-    .name <- .temp_PDB$call
-    } else {
-    .name <- .pdbID[[1]]
-    }
-    print(.name)
+    ## If the pdbID input contains pdb objects -------------------------------
+    if (any(unlist(lapply(pdbID, function(x) { 
+                    return(class(x)[1] == "pdb") 
+                     })))) {
+        inds <- which(unlist(lapply(pdbID, function(x) {
+                    return(class(x)[1] == "pdb")
+                     })))
+        ## Fill 'read' vector with string 'read.list'
+        read[inds] <- "read.list"
+        pdbID[inds] <- ""
+    } 
+    ## If the pdbID input contains CIF objects -------------------------------
+    if (any(unlist(lapply(pdbID, function(x) { 
+                    return(class(x)[1] == "CIF") 
+                     })))) {
+        inds <- which(unlist(lapply(pdbID, function(x) {
+                    return(class(x)[1] == "CIF")
+                     })))
+        ## Fill 'read' vector with string 'read.list'
+        read[inds] <- "read.list.cif"
+        pdbID[inds] <- ""
+    } 
+    ## If the pdbID input contains 4 char PDB ID -----------------------------
+    if (any(unlist(lapply(pdbID, function(x) {
+                                        return(nchar(x) == 4)
+                                     })))) {
+        inds <- which(unlist(lapply(pdbID, function(x) {
+                                        return(nchar(x) == 4)
+                                     })))
+        print(paste(
+            "The PDB IDs: ", 
+            paste(pdbID[inds], collapse="; "), 
+            " are going to be downloaded (no temp files generated)", 
+            sep=""))
 
-    if( .name == "3OK4" ){
+        read[inds] <- "download.RAM"
+        pdbID[inds] <- ""
+    }
+    
+    ## If anything in input pdbID is not recognized, stop --------------------
+    if (any(read == "")) { 
+        inds <- which(read == "")
+        stop("Check input pdbID:\n", paste(pdbID[inds], collapse="; "), 
+                "\nThey should be 4 character PDB IDs or ",
+                "files in path or ",
+                "pdb/CIF objects", sep="")
+    }
+    return(read)
+}
+
+##############################################################################
+## Intermediate wrapper that finds the pdb/CIF object and generates all the 
+## possible model&chain combinations.
+
+.manage_PDB <-
+function(pdbID, model, chain, read, range=c(3, 100000), ..., 
+            path=NULL, extension=NULL, index, pbar) {
+
+    ## Find if the given pdb is multi model ----------------------------------
+    if (length(model) == 1 && model == 1) {
+        multi <- FALSE
+    } else {
+        multi <- TRUE
+    }
+
+    ## Save pdb ID if possible -----------------------------------------------
+    if (read == "read.list") {
+        name <- ""
+    } else if (read == "read.list.cif") {
+        name <- as.character(cifEntry(pdbID))
+    } else {
+        name <- pdbID[[1]]
+    }
+
+    ## Corner case. PATCH
+    if (name == "3OK4") {
         rm.alt=FALSE
         ALT=c("A", "B", "C", "D", "E")
     } else {
@@ -191,82 +210,90 @@ function(.pdbID, .model, .chain, .read,
         ALT="A"
     }
 
-    if( .read == "read.list" ) {
-    .temp_PDB <- .pdbID
-    } else if( .read == "read.pdb" ) {
-    .temp_PDB <- suppressWarnings( read.pdb( 
-                    paste( .path, .name, .extension, sep="" ), 
+    ## Save the atom coordinates in the form of pdb object -------------------
+    if (read == "read.list") {
+        temp_PDB <- pdbID
+    } else if (read == "read.list.cif") {
+        temp_PDB <- cifAsPDB(pdbID)
+    } else if (read == "read.pdb") {
+        temp_PDB <- suppressWarnings(read.pdb(
+                    paste(path, name, extension, sep=""), 
                     multi=multi, 
                     rm.alt=rm.alt, 
-                    verbose=FALSE ) )
-    } else if( .read == "read.cif" ) {
-    .temp_PDB <- cifAsPDB( paste( .path, .name, .extension, sep="" ), alt=ALT)
-    } else if( .read == "download.RAM" ) {
-    .temp_PDB <- cifAsPDB(.name, alt=ALT)
+                    verbose=FALSE))
+    } else if (read == "read.cif") {
+        temp_PDB <- cifAsPDB(paste(path, name, extension, sep=""), alt=ALT)
+    } else if (read == "download.RAM") {
+        temp_PDB <- cifAsPDB(name, alt=ALT)
     }
 
-    if( .model == "all" | .model == 0 ) {
-    .model <- 1:nrow(.temp_PDB$xyz)
+    ## Save the different model numbers --------------------------------------
+    if (model == "all" | model == 0) {
+        model <- seq_len(nrow(temp_PDB$xyz))
     }
-    if( .chain == "all" ) {
-    .chain <- unique(.temp_PDB$atom$chain)
+    ## Save the different chain ids ------------------------------------------
+    if (chain == "all") {
+        chain <- unique(temp_PDB$atom$chain)
     }
+    ## Fins all the necessary combinations of models and chains --------------
+    .combinations <- expand.grid(model, chain, stringsAsFactors=FALSE )
+    names(.combinations) <- c("model", "chain")
 
-    .combinations <- expand.grid( .model, .chain, stringsAsFactors=FALSE  )
-    names( .combinations ) <- c( "model", "chain" )
-
-
-    .ntinfo <- mapply( FUN=make_chain_ntinfo,
-            ..model = .combinations[,"model"],
-            ..chain = .combinations[,"chain"],
-            MoreArgs = list( ..pdb = .temp_PDB,
-        ..name = .name,
-        ..minlength = .minlength,
-                ..maxlength = .maxlength,
-                ..distances = .distances,
-                ..angles = .angles,
-                ..torsionals = .torsionals
-                ),
+    ## Iterate over every combination of chain and model to get data ---------
+    ntinfo <- mapply(FUN=.make_chain_ntinfo,
+            model=.combinations[, "model"],
+            chain=.combinations[, "chain"],
+            MoreArgs=list(pdb=temp_PDB,
+            name=name,
+            range=range,
+            ...=...
+               ),
             SIMPLIFY=FALSE)
-    .ntinfo <- .ntinfo[ which( lapply( .ntinfo, length )>0 )]
-    if( length(.ntinfo) == 0 ){
-    print(paste("Nothing to analyse in ", .name,"|",.model,"|",.chain, " according with input parameters", sep=""))
-    return()
+
+    ## Print progress bar
+    setTxtProgressBar(pbar, index)
+
+    ## Return output for every chain and model as given by input -------------
+    ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
+    if (length(ntinfo) == 0) {
+        print(paste("Nothing to analyse in ", name, "|", model, "|", chain, 
+                    " according with input parameters", sep=""))
+        return()
     } else {
-        .ntinfo <- suppressWarnings( bind_rows(.ntinfo) )
-        return( .ntinfo )
+        ntinfo <- bind_rows(ntinfo)
+        return(ntinfo)
     }
 }
 
-#..pdb = .temp_PDB; ..model = .combinations[,"model"][1]; ..chain = .combinations[,"chain"][1]; ..name=.name; ..minlength = .minlength; ..maxlength = .maxlength; ..distances = .distances; ..angles = .angles; ..torsionals = .torsionals
+##############################################################################
+## Takes a chain and model and calls the functions to get the desired data
 
-make_chain_ntinfo <-
-function(..pdb, ..model, ..chain, ..minlength=3, ..maxlength=1000,
-  ..distances, ..angles, ..torsionals, ..name
-  ){
+.make_chain_ntinfo <-
+function(pdb, model, chain, range, ..., name) {
 
-#Selection of chain of interest
-    ..selection <- atom.select( ..pdb, chain=..chain )
+    ## Select chain of interest ----------------------------------------------
+    selection <- atom.select(pdb, chain=chain)
 
-#..pdb contains the PDB object ONLY with the selected model and chain
-    ..pdb_ch <- trim( ..pdb, ..selection )
-#Obtain number of (R/D)NA residues
-    ..reslist <- ..pdb_ch$atom$resno[ which( ..pdb_ch$atom$elety == c("C4'")) ]
-    ..total <- length( ..reslist )
+    ## pdb contains the PDB object ONLY with the selected model and chain ----
+    pdb_ch <- trim(pdb, selection)
 
-    if( ..total < ..minlength | ..total > ..maxlength ){
+    ## Obtain number of (R/D)NA residues -------------------------------------
+    reslist <- pdb_ch$atom$resno[which(pdb_ch$atom$elety == c("C4'"))]
+    total <- length(reslist)
+
+    ## Check that the given chain is the desired length range ----------------
+    if (total < range[1] | total > range[2]) {
         return()
     }
 
-    ..ntinfo1<-check.nt( ..pdb, model=..model, chain=..chain, id=..name )
+    ## Check and measure the chain and make common data.frame ----------------
+    ntinfo1 <- check.nt(pdb, model=model, chain=chain, id=name)
+    ntinfo2 <- measure(pdb, model=model, chain=chain, v_shifted=TRUE,
+        ..., pucker=TRUE, Dp=TRUE)
 
-    ..ntinfo2<-measure( ..pdb, model=..model, chain=..chain, v_shifted=TRUE,
-        distances=..distances, angles=..angles, torsionals=..torsionals,
-        pucker=TRUE, Dp=TRUE)
+    ntinfo <- cbind(ntinfo1, ntinfo2[, 
+        which(!names(ntinfo2) %in% names(ntinfo1))])
 
-    ..ntinfo <- cbind(..ntinfo1, ..ntinfo2[, 
-        which( !names( ..ntinfo2 ) %in% names( ..ntinfo1 ) ) ])
-
-    return(..ntinfo)
+    return(ntinfo)
 }
 

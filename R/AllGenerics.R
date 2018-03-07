@@ -1,3 +1,6 @@
+
+##############################################################################
+
 #' Accessors to a CIF object
 #'
 #' S4 method to access the contents of CIF objects.
@@ -289,5 +292,39 @@ setGeneric("eRMSD",
                      rvectors1=NULL, rvectors2=NULL)
             standardGeneric("eRMSD"))
 
+##############################################################################
 
+##############################################################################
+
+## Wrapper to choose between lapply and mclapply accordingly
+.xlapply <- 
+function(X, FUN, ..., mc.cores=1) {
+
+    if (mc.cores > detectCores()) {
+        warning("The machine does not have ", mc.cores, " cores. Using 1.")
+        mc.cores <- 1
+    }
+
+    if (mc.cores > 1) {
+        mclapply(X=X, FUN=FUN, ...=..., mc.cores=mc.cores)
+    } else {
+        lapply(X=X, FUN=FUN, ...=...)
+    }
+}
+
+## Wrapper to choose between lapply and mclapply accordingly
+.xmapply <- 
+function(FUN, ..., mc.cores=1) {
+    
+    if (mc.cores > detectCores()) {
+        warning("The machine does not have ", mc.cores, " cores. Using 1.")
+        mc.cores <- 1
+    }
+
+    if (mc.cores > 1) {
+        mcmapply(FUN=FUN, ...=..., mc.cores=mc.cores)
+    } else {
+        mapply(FUN=FUN, ...=...)
+    }
+}
 
