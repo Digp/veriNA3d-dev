@@ -58,8 +58,7 @@ export(
     is_valid_eRMSD, 
 
     make_aantinfo, 
-    measure, 
-    measure_pucker, 
+    measureNuc, 
 
     plot_circular_distribution, 
     plot.eta.theta2, 
@@ -91,7 +90,6 @@ export(
 
     select_ntID_neighbours,
     selectModel, 
-    shift360, 
     subset_bypucker, 
     subset_ntinfo, 
 

@@ -24,7 +24,7 @@
 #'   Only necessary if the PDB files are to be read from disk and a path is 
 #'   provided.
 #' @param cores Number of CPU cores to be used.
-#' @param ... Arguments to be passed to [measure()]
+#' @param ... Arguments to be passed to [measureNuc()]
 #'
 #' @return A data.frame with data about every nucleotide in the input set
 #'
@@ -287,7 +287,7 @@ function(pdb, model, chain, range, ..., name) {
 
     ## Check and measure the chain and make common data.frame ----------------
     ntinfo1 <- check.nt(pdb, model=model, chain=chain, id=name)
-    ntinfo2 <- measure(pdb, model=model, chain=chain, v_shifted=TRUE,
+    ntinfo2 <- measureNuc(pdb, model=model, chain=chain, v_shifted=TRUE,
         ..., pucker=TRUE, Dp=TRUE)
 
     ntinfo <- cbind(ntinfo1, ntinfo2[, 
