@@ -142,7 +142,7 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
 
     png(paste("./",dir,"/",pucker,"3D_upview.png",sep=""),width=15,height=15,bg="white",units="cm",res=600)
     par(mfrow=c(1,1),mar=c(3,3,1.0,3),cex=0.7,lty=1,las=1)
-    persp3D(x=etaseq,y=thetaseq,z=newdensZ,border=NA,theta=0,phi=90,xlab=xlab,ylab=ylab,zlab="",lighting=T)
+    persp3D(x=etaseq,y=thetaseq,z=newdensZ,border=NA,theta=0,phi=90,xlab=xlab,ylab=ylab,zlab="",lighting=TRUE)
     dev.off()
 
     for(j in 1:ncol(newdensZ)){

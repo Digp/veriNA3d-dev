@@ -28,7 +28,7 @@ function(pdb, model=1, chain="all", id=NULL) {
 
     ## Save desired model if necessary ---------------------------------------
     if (model == "all") {
-        model <- 1:nrow(pdb$xyz)
+        model <- seq_len(nrow(pdb$xyz))
     }
 
     ## Save desired chain if necessary ---------------------------------------
@@ -77,7 +77,7 @@ function(pdb, model=1, chain="all", id=NULL) {
     for (fi in grep("dist", names(ntinfo))) {
         suppressWarnings(class(ntinfo[, fi]) <- "numeric")
     }
-    ntinfo <- cbind(1:nrow(ntinfo), ntinfo)
+    ntinfo <- cbind(seq_len(nrow(ntinfo), ntinfo))
     names(ntinfo)[1] <- "ntID"
     class(ntinfo$resno) <- "integer"
     class(ntinfo$ntindex) <- "integer"
@@ -160,13 +160,13 @@ function(pdb, model, chain, id=NULL) {
                         "kappa_valid", "base_exists")
 
     ## Make last calls to check for every nt whether eta/theta can be measured
-    eta <- as.character(unlist(lapply(1:nrow(ntinfo), FUN=.check_etatheta,
+    eta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), FUN=.check_etatheta,
                                             ntinfo=ntinfo, angle="eta")))
-    theta <- as.character(unlist(lapply(1:nrow(ntinfo), FUN=.check_etatheta,
+    theta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), FUN=.check_etatheta,
                                             ntinfo=ntinfo, angle="theta")))
 
     ## and if they can be used for trinucleotide eRMSD comparisons -----------
-    eRMSD_valid <- as.character(unlist(lapply(1:nrow(ntinfo), 
+    eRMSD_valid <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), 
                                                 FUN=.is_valid_eRMSD,
                                                 ntinfo=ntinfo)))
 
@@ -191,9 +191,9 @@ function(pdb, model, chain, id=NULL) {
 
     ## Is the b factor of the phosphate or C4' atoms bigger than 60? ---------
     if (any(nt[nt$elety %in% c("P", "C4'"), "b"] > 60)) {
-        big_b <- T
+        big_b <- TRUE
     } else {
-        big_b <- F
+        big_b <- FALSE
     }
 
     ## Check if backbone, sugar and base atoms exist -------------------------

@@ -49,7 +49,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=TRUE){
         }
     
         system.time(info<-lapply(1:nrow(df), FUN=.getinfocontacts, df=df,
-            interactionsdata=interactionsdata))
+            interactionsdata=interactionsdata, ntinfo=ntinfo))
     
     }else{
         system.time(interactionsdata<-mcmapply(FUN=binding.RNAprot,
@@ -66,7 +66,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=TRUE){
         }
     
         system.time(info<-mclapply(1:nrow(df), FUN=.getinfocontacts, df=df,
-            interactionsdata=interactionsdata,mc.cores=cores))
+            interactionsdata=interactionsdata,mc.cores=cores, ntinfo=ntinfo))
     
     }
     cols<-12
@@ -84,7 +84,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=TRUE){
 
 
 
-.getinfocontacts<-function(str, df, interactionsdata){
+.getinfocontacts<-function(str, df, interactionsdata, ntinfo){
     pdbID<-df[str,1]
     model<-df[str,2]
     chain<-df[str,3]
