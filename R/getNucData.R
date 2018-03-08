@@ -259,7 +259,7 @@ function(pdbID, model, chain, read, range=c(3, 100000), ...,
                     " according with input parameters", sep=""))
         return()
     } else {
-        ntinfo <- bind_rows(ntinfo)
+        ntinfo <- do.call(rbind, ntinfo)
         return(ntinfo)
     }
 }

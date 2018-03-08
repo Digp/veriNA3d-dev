@@ -123,6 +123,8 @@ function( pdb, model=1, chain="all", id=NULL ) {
     }
     ntinfo<-cbind(1:nrow(ntinfo),ntinfo)
     names(ntinfo)[1]<-"ntID"
+    class(ntinfo$resno) <- "numeric"
+    class(ntinfo$ntindex) <- "numeric"
     return(ntinfo)
 }
 

@@ -138,14 +138,16 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
     colnames <- names(ntinfo[[1]])
     ntinfo <- as.data.frame(matrix(
-        unlist(lapply(ntinfo, function(x) {
-            return(c(t(x)))
-        })),
-        ncol=length(colnames), byrow=TRUE), stringsAsFactors=FALSE)
+                                unlist(lapply(ntinfo, function(x) {
+                                    return(c(t(x)))
+                                    })),
+                                ncol=length(colnames), byrow=TRUE),
+                            stringsAsFactors=FALSE)
 
     names(ntinfo) <- colnames
     ntinfo <- cbind(seq_len(nrow(ntinfo)), ntinfo)
     names(ntinfo)[1] <- "ntID"
+    class(ntinfo$resno) <- "numeric"
 
     for (i in seq(7, ncol(ntinfo), 1)) {
         suppressWarnings(class(ntinfo[, i]) <- "numeric")
