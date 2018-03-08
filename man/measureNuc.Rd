@@ -41,6 +41,9 @@ seen typing 'veriNA3d::.torsionals'.}
 
 \item{Dp}{A logical indicating whether to compute the Dp distance.}
 }
+\value{
+A data.frame with the measurements for every nucleotide.
+}
 \description{
 From a nucleic acid structure (pdb object), it computes the desired
 atomic distances, angles, dihedral angles, puckering conformation and Dp
@@ -61,10 +64,10 @@ labels=c("interphosphate"),
 stringsAsFactors=FALSE)\cr
 }
 \examples{
-  distances=data.frame(atomA=c("P"), atomB=c("post_P"), 
+  distances <- data.frame(atomA=c("P"), atomB=c("post_P"), 
                              labels=c("interphosphate"), 
                              stringsAsFactors=FALSE)
-  measure(cifAsPDB("1bna"), distances=distances, angles=NULL, 
+  measureNuc(cifAsPDB("1bna"), distances=distances, angles=NULL, 
                      torsionals=NULL, Dp=NULL)
 
 }

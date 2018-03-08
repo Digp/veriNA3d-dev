@@ -47,9 +47,9 @@ are labeled with a unique ID (column ntID).
 }
 \examples{
  ## This is a toy example, see vignettes for more usages.
- pdblist <- list("1bau", "2rn1", "2rn1")
- model <- list("1", "1", "2")
- chain <- list("all", "all", "all")
+ pdblist <- list("1bau", "2rn1")
+ model <- list("1", "2")
+ chain <- list("all", "all")
  ntinfo <- getNucData(pdbID=pdblist, model=model, chain=chain)
 
 }

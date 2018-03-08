@@ -19,7 +19,7 @@
 #' @param bandwidths object to be passed to the "kde2d" function (only used if
 #'    "dens" is NULL)
 #' @param dens optional object containing the output of "kde2d" or equivalent
-#' @param lims: The limits of the rectangle covered by the grid as c(xl, xu,
+#' @param lims The limits of the rectangle covered by the grid as c(xl, xu,
 #'          yl, yu).
 #'
 #' @return a list of vectors containing the nucleotides ID (according with the 
@@ -66,7 +66,7 @@ function(
     aver<-matrix(vectorA,nrow=length(lims[3]:lims[4]),byrow=FALSE)
     #image(aver, col=c("white", "black"),xaxt="n",yaxt="n")
     grid_list<-vector(mode="list",length=length(lims[3]:lims[4]))
-    for(i in 1:ncol(aver)){
+    for(i in seq_len(ncol(aver))){
     ycoord<-which(aver[i,]==1)
     if(length(ycoord)==0){
         grid_list[[i]]<-list(NA)

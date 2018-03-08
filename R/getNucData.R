@@ -30,16 +30,16 @@
 #'
 #' @examples 
 #'  ## This is a toy example, see vignettes for more usages.
-#'  pdblist <- list("1bau", "2rn1", "2rn1")
-#'  model <- list("1", "1", "2")
-#'  chain <- list("all", "all", "all")
+#'  pdblist <- list("1bau", "2rn1")
+#'  model <- list("1", "2")
+#'  chain <- list("all", "all")
 #'  ntinfo <- getNucData(pdbID=pdblist, model=model, chain=chain)
 #'
 #' @author Diego Gallego
 #'
 getNucData <-
 function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
-  path=NULL, extension=NULL, cores=1, ...) {
+            path=NULL, extension=NULL, cores=1, ...) {
 
     ## Make sure the input pdbID is a list -----------------------------------
     if (class(pdbID) == "CIF")
@@ -94,7 +94,7 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
     } else {
         ## Coerce list to data.frame
         ntinfo <- do.call(rbind, ntinfo)
-        ntinfo$ntID <- 1:nrow(ntinfo)
+        ntinfo$ntID <- seq_len(nrow(ntinfo))
         return(ntinfo)
     }
 }
@@ -112,7 +112,7 @@ function(pdbID, path=NULL, extension=NULL) {
         files <- dir(path, pattern=extension)
 
         ## Check if input is the complete file name or without extension
-        file_bool <- all(grepl(extension, pdbID, perl=T))
+        file_bool <- all(grepl(extension, pdbID, perl=TRUE))
 
         ## Find which of the input pdbID has its correspondent file
         if (file_bool) {
@@ -128,33 +128,35 @@ function(pdbID, path=NULL, extension=NULL) {
 
     ## If the pdbID input contains pdb objects -------------------------------
     if (any(unlist(lapply(pdbID, function(x) { 
-                    return(class(x)[1] == "pdb") 
-                     })))) {
+                        return(class(x)[1] == "pdb") 
+                    })))) {
+
         inds <- which(unlist(lapply(pdbID, function(x) {
-                    return(class(x)[1] == "pdb")
-                     })))
+                            return(class(x)[1] == "pdb")
+                        })))
         ## Fill 'read' vector with string 'read.list'
         read[inds] <- "read.list"
         pdbID[inds] <- ""
     } 
     ## If the pdbID input contains CIF objects -------------------------------
     if (any(unlist(lapply(pdbID, function(x) { 
-                    return(class(x)[1] == "CIF") 
-                     })))) {
+                        return(class(x)[1] == "CIF") 
+                    })))) {
+
         inds <- which(unlist(lapply(pdbID, function(x) {
-                    return(class(x)[1] == "CIF")
-                     })))
+                                return(class(x)[1] == "CIF")
+                            })))
         ## Fill 'read' vector with string 'read.list'
         read[inds] <- "read.list.cif"
         pdbID[inds] <- ""
     } 
     ## If the pdbID input contains 4 char PDB ID -----------------------------
     if (any(unlist(lapply(pdbID, function(x) {
-                                        return(nchar(x) == 4)
-                                     })))) {
+                                            return(nchar(x) == 4)
+                                        })))) {
         inds <- which(unlist(lapply(pdbID, function(x) {
-                                        return(nchar(x) == 4)
-                                     })))
+                                            return(nchar(x) == 4)
+                                        })))
         print(paste(
             "The PDB IDs: ", 
             paste(pdbID[inds], collapse="; "), 
@@ -240,14 +242,13 @@ function(pdbID, model, chain, read, range=c(3, 100000), ...,
 
     ## Iterate over every combination of chain and model to get data ---------
     ntinfo <- mapply(FUN=.make_chain_ntinfo,
-            model=.combinations[, "model"],
-            chain=.combinations[, "chain"],
-            MoreArgs=list(pdb=temp_PDB,
-            name=name,
-            range=range,
-            ...=...
-               ),
-            SIMPLIFY=FALSE)
+                            model=.combinations[, "model"],
+                            chain=.combinations[, "chain"],
+                            MoreArgs=list(pdb=temp_PDB,
+                            name=name,
+                            range=range,
+                            ...=...),
+                        SIMPLIFY=FALSE)
 
     ## Print progress bar
     setTxtProgressBar(pbar, index)

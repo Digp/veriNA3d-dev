@@ -288,8 +288,8 @@ setGeneric("rVector",
 #'
 setGeneric("eRMSD",
             function(cif1=NULL, cif2=NULL,
-                     pdb1=NULL, pdb2=NULL,
-                     rvectors1=NULL, rvectors2=NULL)
+                        pdb1=NULL, pdb2=NULL,
+                        rvectors1=NULL, rvectors2=NULL)
             standardGeneric("eRMSD"))
 
 ##############################################################################

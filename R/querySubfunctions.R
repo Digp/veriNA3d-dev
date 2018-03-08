@@ -35,8 +35,8 @@ function(URL, FUN, ..., N.TRIES=5L, SLEEP=0.05) {
 
     if (N.TRIES == 0L) {
         stop("'query' failed:",
-             "\n  URL: ", URL,
-             "\n  error: ", conditionMessage(result))
+                "\n  URL: ", URL,
+                "\n  error: ", conditionMessage(result))
     }
 
     return(result)
@@ -150,8 +150,8 @@ function(text, info, pdbID) {
                     ncol=3, byrow=TRUE), stringsAsFactors=FALSE)
         text <- as.data.frame(
                     cbind(do.call(rbind, strsplit(text$V1, " ")),
-                           do.call(rbind, strsplit(text$V2, " ")),
-                           text$V3),
+                            do.call(rbind, strsplit(text$V2, " ")),
+                            text$V3),
                     stringsAsFactors=FALSE)
         names(text) <- c("pdbID", "chain", "type", "length", "description")
     return(text)

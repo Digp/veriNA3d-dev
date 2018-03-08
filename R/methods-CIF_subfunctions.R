@@ -2,20 +2,20 @@
 
 ## ============================================================================
 ## CIF Attributes object
-cifAttr <- c("entry",
-             "audit_conform",
-             "database_2",
-             "pdbx_database_status",
-             "audit_author",
-             "entity",
-             "chem_comp",
-             "exptl",
-             "struct",
-             "struct_keywords",
-             "struct_asym",
-             "atom_sites",
-             "atom_type",
-             "atom_site")
+cifAttr <- c(   "entry",
+                "audit_conform",
+                "database_2",
+                "pdbx_database_status",
+                "audit_author",
+                "entity",
+                "chem_comp",
+                "exptl",
+                "struct",
+                "struct_keywords",
+                "struct_asym",
+                "atom_sites",
+                "atom_type",
+                "atom_site")
 
 ## ============================================================================
 ## cifParser subfunctions:
@@ -38,7 +38,8 @@ function(i, pdb, hash_inds) {
     Names <- out$Names
     out <- out$out
 
-    # Give to the output object the names of the fields (either vector or data.fr)
+    ## Give to the output object the names of the fields 
+    ## (either vector or data.fr)
     names(out) <- .trim(Names[, 2])
     return(out)
 }
@@ -53,7 +54,7 @@ function(i, pdb, hash_inds) {
     # Find the name of the fields
     Names.ind <- grep("^_", data, perl=TRUE)
     Names <-  do.call(rbind,
-                  strsplit(data[Names.ind], ".", fixed=TRUE))
+                    strsplit(data[Names.ind], ".", fixed=TRUE))
 
     ## Redefine where the table starts
     first <- Names.ind[length(Names.ind)] + 1
@@ -137,7 +138,7 @@ function(data) {
     semicoloninds_end <- semicoloninds_start[c(FALSE, TRUE)]
     semicoloninds_start <- semicoloninds_start[c(TRUE, FALSE)]
     if ((!is.na(semicoloninds_start) && length(semicoloninds_start) > 0) &&
-          (!is.na(semicoloninds_end) && length(semicoloninds_end) > 0)) {
+            (!is.na(semicoloninds_end) && length(semicoloninds_end) > 0)) {
 
         lines <- c(unlist(mapply(
                                 FUN=function(x, y) {
@@ -204,7 +205,7 @@ function(data, totalfields) {
     ## If any Apostrophe was replaced before, now it's left as it was
     data3 <- gsub("pRimE", "'", data3, fixed=TRUE)
     table <- as.data.frame(matrix(data3, byrow=TRUE, ncol=totalfields),
-                           stringsAsFactors=FALSE)
+                            stringsAsFactors=FALSE)
 
     return(table)
 }
@@ -265,29 +266,29 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
         ## Order columns as in pdb objects (bio3d S3)
         atom <- cbind(table[, c(1, 2, 4, 5, 6, 19, 17, 10, 11, 12, 13, 14,
                                 15, 8, 3, 16, 7, 9, 18, 20, 21)])
-        names(atom) <- c("type", "eleno", "elety", "alt", "resid",
-                         "chain", "resno", "insert", "x", "y", "z",
-                         "o", "b", "entid", "elesy", "charge",
-                         "asym_id", "seq_id", "comp_id", "atom_id",
-                         "model")
+        names(atom) <- c(   "type", "eleno", "elety", "alt", "resid",
+                            "chain", "resno", "insert", "x", "y", "z",
+                            "o", "b", "entid", "elesy", "charge",
+                            "asym_id", "seq_id", "comp_id", "atom_id",
+                            "model")
 
     ## Older mmCIF have 26 columns
     } else {
         ## Order columns as in pdb objects (bio3d S3)
         atom <- cbind(table[, c(1, 2, 4, 5, 6, 24, 22, 10, 11, 12, 13, 14,
-                                15, 8, 3, 21, 7, 9, 16, 17, 18, 19, 20,
-                                23, 25, 26)])
+                                    15, 8, 3, 21, 7, 9, 16, 17, 18, 19, 20,
+                                    23, 25, 26)])
         names(atom) <- c("type", "eleno", "elety", "alt", "resid", "chain",
-                       "resno", "insert", "x", "y", "z", "o", "b", "entid",
-                       "elesy", "charge", "asym_id", "seq_id", "x_esd",
-                       "y_esd", "z_esd", "o_esd", "b_esd", "comp_id",
-                       "atom_id", "model")
+                        "resno", "insert", "x", "y", "z", "o", "b", "entid",
+                        "elesy", "charge", "asym_id", "seq_id", "x_esd",
+                        "y_esd", "z_esd", "o_esd", "b_esd", "comp_id",
+                        "atom_id", "model")
     }
 
     ## Check for alternative (alt) records -----------------------------------
     if (sum(atom$alt != ".") > 0) {
         altind <- sort(c(which(atom$alt == "."),
-                         which(atom$alt %in% alt)))
+                            which(atom$alt %in% alt)))
         atom <- atom[altind, ]
         print(paste("PDB has alt records, taking ", alt, " only", sep=""))
     }
@@ -308,7 +309,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
     } else {
         model   <- unique(atom$model)
         lengths <- unlist(lapply(model,
-                                 FUN=function(x) sum(atom$model == x)))
+                                    FUN=function(x) sum(atom$model == x)))
 
         ## Check if the different models have the same number of atoms
         if (length(unique(lengths)) == 1) {
@@ -316,7 +317,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
                                     as.numeric(c(t(
                                                     atom[,
                                                     c("x", "y", "z")]
-                                              ))),
+                                            ))),
                                     byrow=TRUE,
                                     nrow=length(model)))
         flag <- FALSE
@@ -339,8 +340,8 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
                                                     atom[,
                                                     c("x", "y", "z")]))),
                                         length(model)),
-                                  byrow=TRUE,
-                                  nrow=length(model)))
+                                    byrow=TRUE,
+                                    nrow=length(model)))
 
             ## The pdb objects receives a "flag" (logical) TRUE and
             ## the different models are stored in a list (pdb$model) 
@@ -381,7 +382,7 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
         !outformat %in% c("rvector", "vector_coord", "cylindrical_coord")) {
 
         stop("outformat should be a string 'rvector',
-             'vector_coord', or 'cylindrical_coord'")
+                'vector_coord', or 'cylindrical_coord'")
     }
 
     if (outformat == "rvector") {
@@ -400,8 +401,8 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
     insert1 <- pdb1$atom$insert[sel1$atom]
     chain1 <- pdb1$atom$chain[sel1$atom]
     resid_list <- paste(pdb1$atom$resno,
-                         pdb1$atom$insert,
-                         pdb1$atom$chain, sep="|")
+                        pdb1$atom$insert,
+                        pdb1$atom$chain, sep="|")
 
     baselist1 <- mapply(FUN=.selectbase,
         resno1,
@@ -479,87 +480,89 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
 }
 ## Data frames necessary for the bio3d com() function to work properly
 .elements <- data.frame(symb=c("H", "C", "N", "O", "P", "S"),
-                       mass=c(as.numeric("1.00794", "12.01070", "14.00670",
-                              "15.99940", "30.97376", "32.06500")))
+                        mass=c(as.numeric("1.00794", "12.01070", "14.00670",
+                                "15.99940", "30.97376", "32.06500")))
 .atom.index <- data.frame(name=c("C2", "C4", "C6"), symb=c("C", "C", "C"))
 
 ## ============================================================================
 ## rVector sub-subfunctions (.rVector subfunctions) from bio3d
 ## Code style was not modified, just copy-pasted
 ".com.pdb" <-
-  function(pdb, inds=NULL, use.mass=TRUE, ... ) {
+    function(pdb, inds=NULL, use.mass=TRUE, ... ) {
 
     if (missing(pdb))
-      stop("Please supply an input 'pdb' object, i.e. from 'read.pdb()'")
+        stop("Please supply an input 'pdb' object, i.e. from 'read.pdb()'")
     if(!is.pdb(pdb))
-      stop("Input 'pdb' must be of type 'pdb'")
+        stop("Input 'pdb' must be of type 'pdb'")
 
     if(is.null(inds)) {
-      xyz <- pdb$xyz
-      at <- pdb$atom[, "elety"]
+        xyz <- pdb$xyz
+        at <- pdb$atom[, "elety"]
     } else {
-      if(!is.select(inds))
-        stop("provide a select object as obtained from 'atom.select'")
+        if(!is.select(inds))
+            stop("provide a select object as obtained from 'atom.select'")
 
-      if(length(inds$xyz)<3)
-        stop("insufficient atoms in selection")
-      xyz <- pdb$xyz[,inds$xyz]
-      at <- pdb$atom[inds$atom, "elety"]
+        if(length(inds$xyz)<3)
+            stop("insufficient atoms in selection")
+        xyz <- pdb$xyz[,inds$xyz]
+        at <- pdb$atom[inds$atom, "elety"]
     }
 
     if(use.mass) {
-      m <- .atom2mass(at, ...)
-    }
-    else {
-      m <- NULL
+        m <- .atom2mass(at, ...)
+    } else {
+        m <- NULL
     }
 
     com <- .com.xyz(xyz, m)
     return(com)
-  }
+}
 
 .atom2mass <- function(x, mass.custom=NULL, elety.custom=NULL,
-                              grpby=NULL, rescue=TRUE, ...){
-  if(!is.null(mass.custom)) {
-    if(!all(c("symb","mass") %in% names(mass.custom)))
-      stop("'mass.custom' must contains 'symb' and 'mass' components")
-    inds <- unlist(lapply(mass.custom, is.factor))
-    mass.custom[inds] <- lapply(mass.custom[inds], as.character)
-  }
-  .elements <- rbind(mass.custom[,c("symb","mass")], .elements[,c("symb","mass")])
-  symb <- atom2ele.default(x, elety.custom, rescue, ...)
-  M <- .elements[match(symb, .elements[,"symb"]), "mass"]
+                                grpby=NULL, rescue=TRUE, ...){
+    if(!is.null(mass.custom)) {
+        if(!all(c("symb","mass") %in% names(mass.custom)))
+            stop("'mass.custom' must contains 'symb' and 'mass' components")
+        inds <- unlist(lapply(mass.custom, is.factor))
+        mass.custom[inds] <- lapply(mass.custom[inds], as.character)
+    }
+    .elements <- rbind(mass.custom[,c("symb","mass")], 
+                        .elements[,c("symb","mass")])
+    symb <- atom2ele.default(x, elety.custom, rescue, ...)
+    M <- .elements[match(symb, .elements[,"symb"]), "mass"]
 
-  if(any(is.na(M)))
-    stop(paste("\n\t.atom2mass: mass of element '", symb[is.na(M)], "' unknown", sep=""))
+    if(any(is.na(M)))
+        stop(paste("\n\t.atom2mass: mass of element '", symb[is.na(M)], 
+                        "' unknown", sep=""))
 
-  if(!is.null(grpby)) {
-    if(length(grpby) != length(M))
-      warning("'grpby' as been recycled")
-    M <- unlist(lapply(split(M, grpby), sum))
-  }
-  return(M)
+    if(!is.null(grpby)) {
+        if(length(grpby) != length(M))
+            warning("'grpby' as been recycled")
+        M <- unlist(lapply(split(M, grpby), sum))
+    }
+    return(M)
 }
 
 ".com.xyz" <- function(xyz, mass=NULL, ...) {
-  xyz <- as.xyz(xyz)
-  natoms <- ncol(xyz)/3
+    xyz <- as.xyz(xyz)
+    natoms <- ncol(xyz)/3
 
-  if(is.null(mass))
-    mass <- rep(1, times=natoms)
+    if(is.null(mass))
+        mass <- rep(1, times=natoms)
 
-  if (natoms != length(mass))
-    stop(".com.xyz: length of input vector 'mass' uequal to number of atoms (ncol(xyz)/3)")
+    if (natoms != length(mass))
+        stop(".com.xyz: length of input vector 'mass' uequal",
+            " to number of atoms (ncol(xyz)/3)")
 
-  com1 <- function(x) {
-    xyz <- matrix(x, ncol=3, byrow=TRUE)
-    com <- colSums(xyz * mass) / sum(mass)
+    com1 <- function(x) {
+        xyz <- matrix(x, ncol=3, byrow=TRUE)
+        com <- colSums(xyz * mass) / sum(mass)
+        return(com)
+    }
+
+    com <- t(apply(xyz, 1, com1))
+    colnames(com) <- c("x", "y", "z")
     return(com)
-  }
-
-  com <- t(apply(xyz, 1, com1))
-  colnames(com) <- c("x", "y", "z")
-  return(com)
 }
 
 ## ============================================================================
@@ -574,13 +577,13 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
     x0 <- as.numeric(x[ind, ] - newO)
     y0 <- y[ind, ] - newO
     x0 <- (1 / sqrt(sum(x0^2))) * x0
-    z0 <- c(as.numeric(x0[2] * y0[3] - y0[2] * x0[3]), 
-            as.numeric(x0[3] * y0[1] - y0[3] * x0[1]),
-            as.numeric(x0[1] * y0[2] - y0[1] * x0[2]))
+    z0 <- c(    as.numeric(x0[2] * y0[3] - y0[2] * x0[3]), 
+                as.numeric(x0[3] * y0[1] - y0[3] * x0[1]),
+                as.numeric(x0[1] * y0[2] - y0[1] * x0[2]))
     z0 <- (1 / sqrt(sum(z0^2))) * z0
-    y0 <- -c(as.numeric(x0[2] * z0[3] - z0[2] * x0[3]),
-             as.numeric(x0[3] * z0[1] - z0[3] * x0[1]),
-             as.numeric(x0[1] * z0[2] - z0[1] * x0[2]))
+    y0 <- -c(   as.numeric(x0[2] * z0[3] - z0[2] * x0[3]),
+                as.numeric(x0[3] * z0[1] - z0[3] * x0[1]),
+                as.numeric(x0[1] * z0[2] - z0[1] * x0[2]))
     y0 <- (1 / sqrt(sum(y0^2))) * y0
     return(t(com %*% matrix(c(x0, y0, z0), nrow=3)))
 }
@@ -588,24 +591,24 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
 ## Base selection ## Messy with envs but for now it works. TODO
 .selectbase <- function(resno, resid, insert, chain, pdb, pdbID) {
     sel <- atom.select(pdb,
-           resno=resno,
-           resid=resid,
-           insert=insert,
-           chain=chain,
-           elety=c("C2", "C4", "C6"))
+                        resno=resno,
+                        resid=resid,
+                        insert=insert,
+                        chain=chain,
+                        elety=c("C2", "C4", "C6"))
     sel1 <- which(pdb$atom$resno == resno&
-        pdb$atom$resid == resid&
-        pdb$atom$insert == insert&
-        pdb$atom$chain == chain&
-        (pdb$atom$elety == "N7"|pdb$atom$elety == "C8"
-        |pdb$atom$elety == "N9"))
+                    pdb$atom$resid == resid&
+                    pdb$atom$insert == insert&
+                    pdb$atom$chain == chain&
+                    (pdb$atom$elety == "N7"|pdb$atom$elety == "C8"
+                    |pdb$atom$elety == "N9"))
     if (length(sel1)>0) {
         assign(x=paste(pdbID, resid, resno, insert, chain, "C6", sep="_"),
-            value=sel, envir=parent.frame(n=2))
+                value=sel, envir=parent.frame(n=2))
         return(paste(pdbID, resid, resno, insert, chain, "C6", sep="_"))
     } else {
         assign(x=paste(pdbID, resid, resno, insert, chain, "C4", sep="_"),
-            value=sel, envir=parent.frame(n=2))
+                value=sel, envir=parent.frame(n=2))
         return(paste(pdbID, resid, resno, insert, chain, "C4", sep="_"))
     }
 }
@@ -619,13 +622,13 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
     x0 <- as.numeric(x[ind, ] - newO)
     y0 <- y[ind, ] - newO
     x0 <- (1 / sqrt(sum(x0^2))) * x0
-    z0 <- c(as.numeric(x0[2] * y0[3] - y0[2] * x0[3]),
-            as.numeric(x0[3] * y0[1] - y0[3] * x0[1]),
-            as.numeric(x0[1] * y0[2] - y0[1] * x0[2]))
+    z0 <- c(    as.numeric(x0[2] * y0[3] - y0[2] * x0[3]),
+                as.numeric(x0[3] * y0[1] - y0[3] * x0[1]),
+                as.numeric(x0[1] * y0[2] - y0[1] * x0[2]))
     z0 <- (1 / sqrt(sum(z0^2))) * z0
-    y0 <- -c(as.numeric(x0[2] * z0[3] - z0[2] * x0[3]),
-             as.numeric(x0[3] * z0[1] - z0[3] * x0[1]),
-             as.numeric(x0[1] * z0[2] - z0[1] * x0[2]))
+    y0 <- -c(   as.numeric(x0[2] * z0[3] - z0[2] * x0[3]),
+                as.numeric(x0[3] * z0[1] - z0[3] * x0[1]),
+                as.numeric(x0[1] * z0[2] - z0[1] * x0[2]))
     y0 <- (1 / sqrt(sum(y0^2))) * y0
     x[, 1] <- x[, 1] - newO[1]
     x[, 2] <- x[, 2] - newO[2]
@@ -634,10 +637,10 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
     xNew   <- t(as.matrix(x) %*% matrix(c(x0, y0, z0), nrow=3))
     x1     <- xNew - comNew
     gamma  <- unlist(lapply(seq_len(dim(x1)[2]),
-                            function(k) {
-                              v1 <- x1[, ind]
-                              v2 <- matrix(c(x1[1, k], x1[2, k], 0), nrow=3)
-                              acos((v1 %*% v2) / ((sqrt(sum(v1^2))) * 
+                                function(k) {
+                                v1 <- x1[, ind]
+                                v2 <- matrix(c(x1[1, k], x1[2, k], 0), nrow=3)
+                                    acos((v1 %*% v2) / ((sqrt(sum(v1^2))) *
                                     (sqrt(sum(v2^2))))) * (180 / pi)}))
     return(gamma)
 }
@@ -651,13 +654,13 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
     x0 <- as.numeric(x[ind, ] - newO)
     y0 <- y[ind, ] - newO
     x0 <- (1 / sqrt(sum(x0^2))) * x0
-    z0 <- c(as.numeric(x0[2] * y0[3] - y0[2] * x0[3]), 
-            as.numeric(x0[3] * y0[1] - y0[3] * x0[1]),
-            as.numeric(x0[1] * y0[2] - y0[1] * x0[2]))
+    z0 <- c(    as.numeric(x0[2] * y0[3] - y0[2] * x0[3]), 
+                as.numeric(x0[3] * y0[1] - y0[3] * x0[1]),
+                as.numeric(x0[1] * y0[2] - y0[1] * x0[2]))
     z0 <- (1 / sqrt(sum(z0^2))) * z0
-    y0 <- -c(as.numeric(x0[2] * z0[3] - z0[2] * x0[3]),
-             as.numeric(x0[3] * z0[1] - z0[3] * x0[1]),
-             as.numeric(x0[1] * z0[2] - z0[1] * x0[2]))
+    y0 <- -c(   as.numeric(x0[2] * z0[3] - z0[2] * x0[3]),
+                as.numeric(x0[3] * z0[1] - z0[3] * x0[1]),
+                as.numeric(x0[1] * z0[2] - z0[1] * x0[2]))
     y0 <- (1 / sqrt(sum(y0^2))) * y0
     x[, 1] <- x[, 1] - newO[1]
     x[, 2] <- x[, 2] - newO[2]
@@ -671,17 +674,17 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
     x1 <- xNew - comNew
     y1 <- yNew - comNew
     z1 <- unlist(lapply(seq_len(dim(x1)[2]),
-                     function(k) {
-                          X1 <- x1[, k]
-                          Y1 <- y1[, k]
-                          Z1 <- c(as.numeric(X1[2] * Y1[3] - Y1[2] * X1[3]), 
-                                  as.numeric(X1[3] * Y1[1] - Y1[3] * X1[1]),
-                                  as.numeric(X1[1] * Y1[2] - Y1[1] * X1[2]))
-                          Z1 <- (1 / sqrt(sum(Z1^2))) * Z1}))
+                        function(k) {
+                            X1 <- x1[, k]
+                            Y1 <- y1[, k]
+                            Z1 <- c(as.numeric(X1[2] * Y1[3] - Y1[2] * X1[3]),
+                                    as.numeric(X1[3] * Y1[1] - Y1[3] * X1[1]),
+                                    as.numeric(X1[1] * Y1[2] - Y1[1] * X1[2]))
+                            Z1 <- (1 / sqrt(sum(Z1^2))) * Z1}))
     z1 <- matrix(z1, nrow=3)
     beta <- unlist(lapply(seq_len(dim(z1)[2]),
                         function(k) {
-                              acos((z1[, ind] %*% z1[, k]) / 
+                                acos((z1[, ind] %*% z1[, k]) / 
                                     ((sqrt(sum(z1[, ind]^2))) * 
                                     (sqrt(sum(z1[, k]^2))))) * (180 / pi)}))
     return(beta)

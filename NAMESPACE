@@ -5,7 +5,7 @@ importFrom("graphics", "abline", "axis", "barplot", "contour",
 importFrom("grDevices", "dev.off", "png", "rgb")
 importFrom("methods", "new")
 importFrom("stats", "complete.cases", "sd")
-importFrom("utils", "download.file", "read.table")
+importFrom("utils", "download.file", "read.table", "setTxtProgressBar", "txtProgressBar")
 importFrom(plot3D, persp3D)
 importFrom(MASS, kde2d, bandwidth.nrd)
 importFrom(jsonlite, fromJSON)
@@ -23,7 +23,6 @@ export(
     bp_hist, 
 
     check.nt, 
-    check_etatheta,
     cifAsPDB,
     cifAtom_site, 
     cifAtom_sites,
@@ -54,8 +53,6 @@ export(
     getNucData,
 
     hasHetAtm, 
-
-    is_valid_eRMSD, 
 
     make_aantinfo, 
     measureNuc, 

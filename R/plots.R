@@ -61,10 +61,10 @@ function(ntID=NULL, ntinfo,
 
 #Output: A plot saved in disk
 
-#' Plot histogram
-#'
-#' @author Diego Gallego
-#'
+# Plot histogram
+#
+# @author Diego Gallego
+#
 
 bp_hist<-function(ntID,ntinfo,categories="LW",o="bp",main=o,rm.na=FALSE,width=15,height=15,bg="white",units="cm",res=200,cex=0.5){
     png(paste(o,".png",sep=""),width=width,height=height,bg=bg,units=units,res=res)
@@ -446,17 +446,8 @@ plot_hist<-function(ntID,ntinfo,categories="LW",rm.na=FALSE,main=categories,cex=
 ##############################################################################
 
 #Created: 2017-Jan-16
-#' Scatter plot into a png file
-#'
-#' Given a data.frame with three columns generate a scatter plot
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
+# Scatter plot into a png file
+# Given a data.frame with three columns generate a scatter plot
 
 rvec_plot<-function(ntID=NULL, df_rvectors, o="", width=15, height=15, bg="white",
         units="cm", res=200, cex=0.6, cols=3) {

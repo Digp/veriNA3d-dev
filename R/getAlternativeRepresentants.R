@@ -31,46 +31,45 @@ getAlternativeRepresentants <-
 function(data, technique=NULL, resol=NULL, type=NULL, verbose=FALSE) {
     ## Make sure the inputs make sense ---------------------------------------
     if (is.null(c(technique, resol, type))) {
-    stop("Which features should the alternative representants have?")
+        stop("Which features should the alternative representants have?")
     }
 
     if (!is.null(technique)) { 
-    if (!all(technique %in% allowedtechs)) {
-        stop(paste("Introduce one or more techniques: ", 
-          paste(allowedtechs, collapse="; ") , sep=""))
-    }
+        if (!all(technique %in% allowedtechs)) {
+            stop(paste("Introduce one or more techniques: ", 
+                paste(allowedtechs, collapse="; ") , sep=""))
+        }
     } 
 
     if (!is.null(type) && !type %in% 
-    c("protRNA", "DNARNA", "ligandRNA", "nakedRNA")) {
+            c("protRNA", "DNARNA", "ligandRNA", "nakedRNA")) {
+
         stop(paste("Introduce a valid type (according with", 
             " the RNAclassifier): 'protRNA', 'nakedRNA', ",
             "'ligandRNA' or 'DNARNA'", sep=""))
     }
 
     if (!is.null(resol) && resol <= 0) {
-    stop("'resol' must be a positive value")
+        stop("'resol' must be a positive value")
     }
 
     ## Do the real work ------------------------------------------------------
-    data$Representative <-
-    invisible(mapply(
-        FUN=.get_alternative_representant,
-        data[, 1],
-        data[, 3],
-        MoreArgs=list(technique=technique,
-                resol=resol, 
-                type=type, 
-                verbose=verbose)))
-
+    data$Representative <- invisible(mapply(
+                                        FUN=.get_alternative_representant,
+                                            data[, 1],
+                                            data[, 3],
+                                            MoreArgs=list(technique=technique,
+                                                            resol=resol, 
+                                                            type=type, 
+                                                            verbose=verbose)))
     return(data[, 2:1])
 }
 
 ##############################################################################
 .get_alternative_representant <-
 function(eqclass, members,
-         technique, resol, type,
-         verbose) {
+            technique, resol, type,
+            verbose) {
 
     if (verbose) 
         cat("\n", eqclass, "\n")

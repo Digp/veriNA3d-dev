@@ -30,8 +30,8 @@ function(release="current", threshold="all") {
     ## Check argument threshold is correct -----------------------------------
     if (!threshold %in% thresholds) { 
         stop(paste('threshold can only be into one of the following ',
-                   'categories: "1.5A", "2.0A", "2.5A", "3.0A", "3.5A", ',
-                   ' "4.0A", "20.0A" or "all"', sep=""))
+                    'categories: "1.5A", "2.0A", "2.5A", "3.0A", "3.5A", ',
+                    ' "4.0A", "20.0A" or "all"', sep=""))
     }
 
     ## Check Leontis server --------------------------------------------------
@@ -59,9 +59,9 @@ function(release="current", threshold="all") {
 
     ## Give format to the data -----------------------------------------------
     data <- unlist(lapply(seq_along(indices), 
-                   FUN=.see_equivalence_class,
-                     text=text, indices=indices,
-                     release=release, threshold=threshold))
+                    FUN=.see_equivalence_class,
+                        text=text, indices=indices,
+                        release=release, threshold=threshold))
 
     ## Updated: 2017-Jul-21 CORNER CASE, 4R3I does not have model "0" any more
     ind <- grep(pattern="4R3I|0", data, fixed=TRUE) 
@@ -94,7 +94,8 @@ function(release="current", threshold="all") {
     if (length(ind2)!=1) {
         stop("!")
     }
-    repstr <- substring(strsplit(splited_terms[ind2], split="\ ")[[1]][1], first=8)
+    repstr <- substring(strsplit(splited_terms[ind2], 
+                                    split="\ ")[[1]][1], first=8)
 
     ## Obtain the list of members of the equivalence class -------------------
     ind3 <- grep(pattern="class='pdb'", splited_terms)

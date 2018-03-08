@@ -27,7 +27,7 @@ parameters "x" and "y"}
 
 \item{dens}{optional object containing the output of "kde2d" or equivalent}
 
-\item{lims:}{The limits of the rectangle covered by the grid as c(xl, xu,
+\item{lims}{The limits of the rectangle covered by the grid as c(xl, xu,
 yl, yu).}
 }
 \value{

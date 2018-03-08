@@ -41,19 +41,21 @@
 #'                              labels=c("interphosphate"), 
 #'                              stringsAsFactors=FALSE)\cr
 #'
+#' @return A data.frame with the measurements for every nucleotide.
+#'
 #' @examples
-#'   distances=data.frame(atomA=c("P"), atomB=c("post_P"), 
+#'   distances <- data.frame(atomA=c("P"), atomB=c("post_P"), 
 #'                              labels=c("interphosphate"), 
 #'                              stringsAsFactors=FALSE)
-#'   measure(cifAsPDB("1bna"), distances=distances, angles=NULL, 
+#'   measureNuc(cifAsPDB("1bna"), distances=distances, angles=NULL, 
 #'                      torsionals=NULL, Dp=NULL)
 #'
 #' @author Diego Gallego 
 #' 
 measureNuc <-
 function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE, 
-  distances="default", angles="default", torsionals="default", 
-  pucker=TRUE, Dp=TRUE) {
+            distances="default", angles="default", torsionals="default", 
+            pucker=TRUE, Dp=TRUE) {
 
     ## Check that the input has a nucleic acid -------------------------------
     if (!any(.is.nucleic(pdb))) {
@@ -78,7 +80,8 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     if (!is.null(pucker) && !is.na(pucker) && 
             (pucker == TRUE | pucker == "default")) {
 
-        add_torsionals <- .torsionals[grep("nu", .torsionals$labels, perl=T),]
+        add_torsionals <- .torsionals[grep("nu", 
+                                .torsionals$labels, perl=TRUE),]
 
         ## If torsionals were not going to be computed, now they are
         if (is.null(torsionals)) {
@@ -222,7 +225,7 @@ function(distances) {
     } else if ((is.matrix(distances) | is.data.frame(distances))) {
 
         if (ncol(distances) == 2 & 
-                  length(grep("atom", colnames(distances))) == 2) {
+                    length(grep("atom", colnames(distances))) == 2) {
 
             labels <- gsub("'", "p", paste("dist", distances[, 1],
                             distances[, 2], sep="."))
@@ -260,9 +263,9 @@ function(angles) {
             length(grep("atom", colnames(angles))) == 3) {
 
             labels <- gsub("'", "p", paste("angle", angles[, 1], angles[, 2],
-                    angles[, 3], sep="."))
+                                angles[, 3], sep="."))
             angles <- as.data.frame(cbind(angles, labels), 
-                     stringsAsFactors=FALSE)
+                                    stringsAsFactors=FALSE)
         } else if (ncol(angles) > 4) {
             stop("Wrong format of input 'angles': too many columns")
 
@@ -295,7 +298,7 @@ function(torsionals) {
                     torsionals[, 2], torsionals[, 3], torsionals[, 4], 
             sep="."))
             torsionals <- as.data.frame(cbind(torsionals, labels),
-                     stringsAsFactors=FALSE) 
+                                        stringsAsFactors=FALSE) 
         } else if (ncol(torsionals) > 5) {
             stop("Wrong format of input 'torsionals': too many columns")
 
@@ -369,12 +372,12 @@ function(pdb, model, chain, v_shifted, b_shifted,
                                     ncol=length(colnames), byrow=TRUE), 
                             stringsAsFactors=FALSE)
 
-    ntinfo <- cbind( rep(model, total), 
-                     rep(chain, total), 
-                     ridlist, 
-                     reslist, 
-                     inslist, 
-                     ntinfo)
+    ntinfo <- cbind(rep(model, total), 
+                    rep(chain, total), 
+                    ridlist, 
+                    reslist, 
+                    inslist, 
+                    ntinfo)
 
     names(ntinfo) <- c("model", "chain", "resid", "resno", "insert", colnames)
     return(ntinfo)
@@ -477,14 +480,14 @@ function(index, reslist, inslist, ridlist, pdb,
 
     ## Proces to know the atoms necessary for the measures -------------------
     distatoms <- unique(unlist(
-              distances[, grep("atom", names(distances))],
-              use.names=FALSE))
+                            distances[, grep("atom", names(distances))],
+                            use.names=FALSE))
     angatoms <- unique(unlist(
-                          angles[, grep("atom", names(angles))],
-                          use.names=FALSE))
+                            angles[, grep("atom", names(angles))],
+                            use.names=FALSE))
     toratoms <- unique(unlist(
-                          torsionals[, grep("atom", names(torsionals))],
-                          use.names=FALSE))
+                            torsionals[, grep("atom", names(torsionals))],
+                            use.names=FALSE))
 
     ## still to work!!!
     if (!is.null(Dp) && Dp == TRUE) { 
@@ -497,9 +500,10 @@ function(index, reslist, inslist, ridlist, pdb,
     ## Generate vector with all necessary atom names that will be used for the
     ## calculations ----------------------------------------------------------
     atomlist <- sort(unique(c(distatoms, 
-                  angatoms, 
-                  toratoms, 
-                  moreatoms))) #add moreatoms object in the c() function!!!!
+                                angatoms, 
+                                toratoms, 
+                                moreatoms)
+                            )) #add moreatoms object in the c() function!!!!
 
     ## Generate vector with the name of the objects that will contain the atom
     ## selection -------------------------------------------------------------
@@ -507,9 +511,9 @@ function(index, reslist, inslist, ridlist, pdb,
 
     ## Generate vector with real elety names (remove prefix "pre" and "post")
     atomelety <- lapply(strsplit(atomlist, split="_"), 
-              function(x) { 
-                  return(x[length(x)]) 
-              })
+                        function(x) { 
+                            return(x[length(x)]) 
+                        })
 
     ## Generate vector with apropiate strings to call the correct object, 
     ## in case there are atoms of the previous or following nucleotides to be
@@ -631,13 +635,17 @@ function(index, reslist, inslist, ridlist, pdb,
                                 torsionals$atomD), 
                         MARGIN=1, FUN=.append_selections))
 
-        invisible(mapply(  FUN=.torsions_many, 
-                           out_object=torsions_list,
-                           selection=torsions_sel,
-                           MoreArgs=list(pdb=pdb)))
+        invisible(mapply(FUN=.torsions_many, 
+                            out_object=torsions_list,
+                            selection=torsions_sel,
+                            MoreArgs=list(pdb=pdb)))
 
         if (!is.null(pucker) && pucker == TRUE) {
-            puc <- .measure_pucker(nu0, nu1, nu2, nu3, nu4)
+            puc <- .measure_pucker( get("nu0"), 
+                                    get("nu1"),
+                                    get("nu2"),
+                                    get("nu3"),
+                                    get("nu4"))
             pu_phase <- puc$pu_phase
             pu_amp <- puc$pu_amp
         } else {
@@ -688,6 +696,8 @@ function(index, reslist, inslist, ridlist, pdb,
     ## Measure Richardson distance -------------------------------------------
     if (!is.null(Dp) && Dp == TRUE) {
         N_chi <- get(paste( N_base, "_sel", sep=""))
+        post_P_sel <- get("post_P_sel")
+        C1p_sel <- get("C1p_sel")
 
         if (length(pdb$xyz[post_P_sel$xyz]) !=0 &&
                 length(pdb$xyz[C1p_sel$xyz]) !=0 &&
@@ -699,21 +709,21 @@ function(index, reslist, inslist, ridlist, pdb,
                         sum(glyc_vector * -pdb$xyz[post_P_sel$xyz]))
     
             line_eq1 <- c(glyc_vector[2], -glyc_vector[1], 0,
-                            -pdb$xyz[C1p_sel$xyz][1] * glyc_vector[2] +
-                             pdb$xyz[C1p_sel$xyz][2] * glyc_vector[1])
+                                -pdb$xyz[C1p_sel$xyz][1] * glyc_vector[2] +
+                                pdb$xyz[C1p_sel$xyz][2] * glyc_vector[1])
             line_eq2 <- c(0, glyc_vector[3], -glyc_vector[2],
-                            -pdb$xyz[C1p_sel$xyz][2] * glyc_vector[3] +
-                             pdb$xyz[C1p_sel$xyz][3] * glyc_vector[2])
+                                -pdb$xyz[C1p_sel$xyz][2] * glyc_vector[3] +
+                                pdb$xyz[C1p_sel$xyz][3] * glyc_vector[2])
         
             equation_system <- matrix(c(PLANE[c(1, 2, 3)], 
-                                           line_eq1[c(1, 2, 3)],
-                                           line_eq2[c(1, 2, 3)]),
+                                            line_eq1[c(1, 2, 3)],
+                                            line_eq2[c(1, 2, 3)]),
                                         nrow=3, byrow=TRUE)
             solution_system <- c(-PLANE[4], -line_eq1[4], -line_eq2[4])
             point <- solve(equation_system, solution_system)
             Rich_distance <- round(sqrt(sum(
-                                    (pdb$xyz[post_P_sel$xyz] - point)^2
-                                   )), 3)
+                                        (pdb$xyz[post_P_sel$xyz] - point)^2
+                                    )), 3)
         } else {
             Rich_distance <- NA
         }
@@ -792,8 +802,8 @@ function(nu0, nu1, nu2, nu3, nu4) {
         sumA <- 0
         sumB <- 0
         for (rt in seq_len(5)) {
-              sumA <- sumA + (pu_vec[rt] * cos((4 / 5) * pi * (rt - 1)))
-              sumB <- sumB + (pu_vec[rt] * sin((4 / 5) * pi * (rt - 1)))
+                sumA <- sumA + (pu_vec[rt] * cos((4 / 5) * pi * (rt - 1)))
+                sumB <- sumB + (pu_vec[rt] * sin((4 / 5) * pi * (rt - 1)))
         }
         A <- (2 / 5) * sumA
         B <- -(2 / 5) * sumB
@@ -818,14 +828,14 @@ function(tor) {
         return(tor_shifted)
 
     } else {
-      return(NA)
+        return(NA)
     }
 }
 
 ##############################################################################
 ## Code addapted from bio3d
 ".is.nucleic" <- function(pdb) {
-  nuc.aa <- c("A",   "U",  "G",  "C",   "T",  "I",
-              "DA", "DU", "DG", "DC",  "DT", "DI")
-  return(pdb$atom$resid %in% nuc.aa)
+    nuc.aa <- c("A",   "U",  "G",  "C",   "T",  "I",
+                "DA", "DU", "DG", "DC",  "DT", "DI")
+    return(pdb$atom$resid %in% nuc.aa)
 }

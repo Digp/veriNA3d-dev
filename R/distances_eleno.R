@@ -77,7 +77,7 @@ function( cif, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,5),
             radius=cutoff[2], 
             k=n )
     df_map <- lapply(
-            1:nrow(A),
+            seq_len(nrow(A)),
             FUN = function( i, A_eleno, dis_map, B ){
                 elenoA <- A_eleno[i]
                 indsB <- dis_map$nn.idx[i,]

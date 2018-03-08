@@ -37,7 +37,7 @@
 ## Higher level common function to make API calls
 queryAPI <-
 function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
-          reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE) {
+            reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE) {
 
     ## Check that the input pdbID is 4 character string ----------------------
     if (nchar(pdbID) != 4) {

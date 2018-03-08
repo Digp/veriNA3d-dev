@@ -28,15 +28,15 @@ function(nrlist) {
     rep        <- sort(rep[!is.na(rep)])
 
     ## Manage "XXXX|M|C+XXXX|M|C" cases --------------------------------------
-    rep <- unlist(strsplit(rep, split="+", fixed=T))
+    rep <- unlist(strsplit(rep, split="+", fixed=TRUE))
     eq_classes <- names(rep)
 
     ## Generate new data.frame -----------------------------------------------
     rep <- as.data.frame(matrix(
-                                unlist(strsplit(rep, split="|", fixed=T)),
+                                unlist(strsplit(rep, split="|", fixed=TRUE)),
                                 ncol=3,
-                                byrow=T),
-                            stringsAsFactors=F)
+                                byrow=TRUE),
+                            stringsAsFactors=FALSE)
     out <- cbind(eq_classes, rep)
     names(out) <- c("Equivalence_class", "pdb", "model", "chain")
     return(out)

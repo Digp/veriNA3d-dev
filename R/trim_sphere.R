@@ -114,7 +114,7 @@ function( cif, model=NULL, ntindex,
     if(any( is.na( pdb$atom$alt ) )) pdb$atom$alt<-""
     pdb$atom$charge<-""
     pdb$atom$entid<-""
-    if( any( outeleno > 99999 ) ) pdb$atom$eleno <- 1:nrow( pdb$atom )
+    if( any( outeleno > 99999 ) ) pdb$atom$eleno <- seq_len(nrow( pdb$atom ))
     if( any( pdb$atom$resno > 9999 ) ) {
     query3 <- paste(cif$atom[ as.character( outeleno ), "resno" ], 
             cif$atom[ as.character( outeleno ), "insert" ],
@@ -130,7 +130,7 @@ function( cif, model=NULL, ntindex,
     if( any( is.na( pdb$atom$insert ) ) ) pdb$atom$insert <- ""
 # Save the output to a file if a name is specified
     if( is.null(file) ){
-        return( out )
+        return( pdb )
     } else {
     if( length(grep("chain", file))>0 ) {
         file <- sub("chain.+_", paste("chain",chain,"_",sep=""), file)

@@ -100,7 +100,7 @@ setMethod("cifParser",
             ## For development tests I rather use the internal call
             #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
             URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
-                         pdbID, ".cif", sep ="")
+                            pdbID, ".cif", sep ="")
             pdb <- .launchquery(URL, FUN=readLines, N.TRIES=1)
 
         } else { # Otherwise it is just an error
@@ -114,36 +114,36 @@ setMethod("cifParser",
 
         ## Define a list of indices for sections of interest
         sections <- lapply(cifAttr,
-                           function(x) {
-                               x  <- paste("^_", x, "\\.", sep="")
-                               st <- grep(x, pdb, perl=TRUE)[1] - 1
-                               if (st %in% loop_inds) {
-                                   st = st - 1
-                               }
-                               return(which(hash_inds == st))
-                           })
+                            function(x) {
+                                x  <- paste("^_", x, "\\.", sep="")
+                                st <- grep(x, pdb, perl=TRUE)[1] - 1
+                                if (st %in% loop_inds) {
+                                    st = st - 1
+                                }
+                                return(which(hash_inds == st))
+                            })
 
         ## Parse the CIF sections of interest
         cif <- lapply(sections,
-                      FUN=.cifParser,
-                      pdb=pdb, hash_inds=hash_inds)
+                        FUN=.cifParser,
+                        pdb=pdb, hash_inds=hash_inds)
         names(cif) <- cifAttr
 
         ## Create CIF S4 object and return output ----------------------------
-        out <- CIF(entry                = cif$entry,
-                   audit_conform        = cif$audit_conform,
-                   database_2           = as.data.frame(cif$database_2),
-                   pdbx_database_status = cif$pdbx_database_status,
-                   audit_author         = as.data.frame(cif$audit_author),
-                   entity               = as.data.frame(cif$entity),
-                   chem_comp            = as.data.frame(cif$chem_comp),
-                   exptl                = as.data.frame(cif$exptl),
-                   struct               = cif$struct,
-                   struct_keywords      = cif$struct_keywords,
-                   struct_asym          = as.data.frame(cif$struct_asym),
-                   atom_sites           = as.character(cif$atom_sites),
-                   atom_type            = as.data.frame(cif$atom_type),
-                   atom_site            = cif$atom_site)
+        out <- CIF( entry                = cif$entry,
+                    audit_conform        = cif$audit_conform,
+                    database_2           = as.data.frame(cif$database_2),
+                    pdbx_database_status = cif$pdbx_database_status,
+                    audit_author         = as.data.frame(cif$audit_author),
+                    entity               = as.data.frame(cif$entity),
+                    chem_comp            = as.data.frame(cif$chem_comp),
+                    exptl                = as.data.frame(cif$exptl),
+                    struct               = cif$struct,
+                    struct_keywords      = cif$struct_keywords,
+                    struct_asym          = as.data.frame(cif$struct_asym),
+                    atom_sites           = as.character(cif$atom_sites),
+                    atom_type            = as.data.frame(cif$atom_type),
+                    atom_site            = cif$atom_site)
 
         return(out)
     })
@@ -203,8 +203,8 @@ function(cif, verbose=FALSE, check="cifCheck") {
     } else if( !do.call(check, list(cif)) ) {
 
         stop(paste(" Your input is not a 'CIF' object (i.e. from ",
-                   "'cifParser') nor a pdb ID",
-                   sep=""))
+                    "'cifParser') nor a pdb ID",
+                    sep=""))
     }
     return(cif)
 }
@@ -261,12 +261,12 @@ setMethod("selectModel",
 
         model <- as.numeric(model)
         if("model" %in% attributes(pdb)$names &&
-           length(pdb$model) == 1 && 
-           pdb$model == model) {
+                length(pdb$model) == 1 && 
+                pdb$model == model) {
 
             if(verbose) 
                 print("The input is already the desired model, thus output",
-                      " = input", sep="")
+                        " = input", sep="")
             return(pdb)
         }
 
@@ -277,7 +277,7 @@ setMethod("selectModel",
             pdb$atom <- pdb$model[[model]]
             pdb$flag <- FALSE
             pdb$xyz  <- as.xyz(matrix(c(t(pdb$atom[, c("x", "y", "z")])),
-                                     nrow=1))
+                                        nrow=1))
         } else {
             xyz <- pdb$xyz
             if (model > nrow(xyz)) {
@@ -351,12 +351,13 @@ setMethod("eRMSD",
         if (!is.null(rvectors1) && !is.null(rvectors2)) {
             if (!nrow(rvectors1) == nrow(rvectors2)) {
                 stop("Different number of rvectors.", 
-                     " The original PDB had a different length!", sep="")
+                        " The original PDB had a different length!", sep="")
             }
         } else if (!is.null(pdb1) && !is.null(pdb2)) {
 
             if (!sum(pdb1$atom$elety == "C4'") == 
-                 sum(pdb2$atom$elety == "C4'")) {
+                    sum(pdb2$atom$elety == "C4'")) {
+
                 stop("Different lengths in input PDB objects")
             }
             rvectors1 <- rVector(pdb=pdb1, outformat="rvector",
@@ -370,7 +371,7 @@ setMethod("eRMSD",
         len <- sqrt(nrow(rvectors1))
         deltaG <- t(apply(cbind(rvectors1[, c(1, 2, 3)], 
                                 rvectors2[, c(1, 2, 3)]),
-                          MARGIN=1, FUN=.deltaGmodule))
+                            MARGIN=1, FUN=.deltaGmodule))
         return(sqrt(sum(deltaG^2) / len))
     })
 
