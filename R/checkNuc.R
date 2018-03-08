@@ -77,7 +77,7 @@ function(pdb, model=1, chain="all", id=NULL) {
     for (fi in grep("dist", names(ntinfo))) {
         suppressWarnings(class(ntinfo[, fi]) <- "numeric")
     }
-    ntinfo <- cbind(seq_len(nrow(ntinfo), ntinfo))
+    ntinfo <- cbind(seq_len(nrow(ntinfo)), ntinfo)
     names(ntinfo)[1] <- "ntID"
     class(ntinfo$resno) <- "integer"
     class(ntinfo$ntindex) <- "integer"
