@@ -137,7 +137,7 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
                                         Dp=Dp),
                         SIMPLIFY=FALSE)
 
-
+    ## Give format to the output ---------------------------------------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
     colnames <- names(ntinfo[[1]])
     ntinfo <- as.data.frame(matrix(
@@ -158,59 +158,9 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     return(ntinfo)
 }
 
-##############################################################################
-## Necessary internal data.frames for measure usage
-.distances <- as.data.frame(cbind(
-                    c("P",   "O5'", "C5'", "C4'", "C3'", "O3'",
-                        "C1'", "C2'", "C3'", "O4'", "C1'", "C1'"),
-                    c("O5'", "C5'", "C4'", "C3'", "O3'", "post_P",
-                        "O4'", "C1'", "C2'", "C4'", "N9",  "N1"),
-                    c("dist.P.O5p", "dist.O5p.C5p", "dist.C5p.C4p",
-                        "dist.C4p.C3p", "dist.C3p.O3p", "dist.O3p.post_P",
-                        "dist.C1p.O4p", "dist.C2p.C1p", "dist.C3p.C2p",
-                        "dist.O4p.C4p", "dist.C1p.N9", "dist.C1p.N1")),
-                stringsAsFactors=FALSE)
-colnames(.distances) <- c("atomA", "atomB", "labels")
-
-.angles <- as.data.frame(matrix(c(
-                        "P",    "O5'",  "C5'",          "angle.P.O5p.C5p",
-                        "O5'",  "C5'",  "C4'",          "angle.O5p.C5p.C4p",
-                        "C5'",  "C4'",  "C3'",          "angle.C5p.C4p.C3p",
-                        "C5'",  "C4'",  "O4'",          "angle.C5p.C4p.O4p",
-                        "C4'",  "C3'",  "O3'",          "angle.C4p.C3p.O3p",
-                        "C4'",  "C3'",  "C2'",          "angle.C4p.C3p.C2p",
-                        "C4'",  "O4'",  "C1'",          "angle.C4p.O4p.C1p",
-                        "C3'",  "O3'",  "post_P",       "angle.C3p.O3p.post_P",
-                        "C3'",  "C2'",  "C1'",          "angle.C3p.C2p.C1p",
-                        "C2'",  "C1'",  "O4'",          "angle.C2p.C1p.O4p",
-                        "O3'",  "C3'",  "C2'",          "angle.O3p.C3p.C2p",
-                        "C3'",  "C2'",  "O2'",          "angle.C3p.C2p.O2p",
-                        "C1'",  "C2'",  "O2'",          "angle.C1p.C2p.O2p"), 
-                        ncol=4, byrow=TRUE), 
-                stringsAsFactors=FALSE)
-colnames(.angles) <- c("atomA", "atomB", "atomC", "labels")
-
-.torsionals <- as.data.frame(matrix(c(
-                    "pre_O3'",  "P",     "O5'",      "C5'",         "alpha",
-                    "P",        "O5'",   "C5'",      "C4'",         "beta",
-                    "O5'",      "C5'",   "C4'",      "C3'",         "gamma",
-                    "C5'",      "C4'",   "C3'",      "O3'",         "delta",
-                    "C4'",      "C3'",   "O3'",      "post_P",      "epsilon",
-                    "C3'",      "O3'",   "post_P",   "post_O5'",    "zeta",
-                    "C4'",      "O4'",   "C1'",      "C2'",         "nu0",
-                    "O4'",      "C1'",   "C2'",      "C3'",         "nu1",
-                    "C1'",      "C2'",   "C3'",      "C4'",         "nu2",
-                    "C2'",      "C3'",   "C4'",      "O4'",         "nu3",
-                    "C3'",      "C4'",   "O4'",      "C1'",         "nu4",
-                    "H2'",      "C2'",   "O2'",      "HO2'",        "kappa",
-                    "pre_C4'",  "P",     "C4'",      "post_P",      "eta",
-                    "P",        "C4'",   "post_P",   "post_C4'",    "theta",
-                    "O4'",      "C1'",   "N_base",   "C_base",      "chi"
-                    ), ncol=5, byrow=TRUE),
-                stringsAsFactors=FALSE)
-colnames(.torsionals) <- c("atomA", "atomB", "atomC", "atomD", "labels")
-
-##############################################################################
+###############################################################################
+## Subfuncitons 
+## ============================================================================
 ## Necessary internal functions to check input objects
 
 .check_distances <-
@@ -315,8 +265,60 @@ function(torsionals) {
     return(torsionals)
 }
 
-##############################################################################
-## Intermediate wrapper that generates all the possible combinatios of
+## ============================================================================
+## Necessary internal data.frames for measure usage
+.distances <- as.data.frame(cbind(
+                    c("P",   "O5'", "C5'", "C4'", "C3'", "O3'",
+                        "C1'", "C2'", "C3'", "O4'", "C1'", "C1'"),
+                    c("O5'", "C5'", "C4'", "C3'", "O3'", "post_P",
+                        "O4'", "C1'", "C2'", "C4'", "N9",  "N1"),
+                    c("dist.P.O5p", "dist.O5p.C5p", "dist.C5p.C4p",
+                        "dist.C4p.C3p", "dist.C3p.O3p", "dist.O3p.post_P",
+                        "dist.C1p.O4p", "dist.C2p.C1p", "dist.C3p.C2p",
+                        "dist.O4p.C4p", "dist.C1p.N9", "dist.C1p.N1")),
+                stringsAsFactors=FALSE)
+colnames(.distances) <- c("atomA", "atomB", "labels")
+
+.angles <- as.data.frame(matrix(c(
+                        "P",    "O5'",  "C5'",          "angle.P.O5p.C5p",
+                        "O5'",  "C5'",  "C4'",          "angle.O5p.C5p.C4p",
+                        "C5'",  "C4'",  "C3'",          "angle.C5p.C4p.C3p",
+                        "C5'",  "C4'",  "O4'",          "angle.C5p.C4p.O4p",
+                        "C4'",  "C3'",  "O3'",          "angle.C4p.C3p.O3p",
+                        "C4'",  "C3'",  "C2'",          "angle.C4p.C3p.C2p",
+                        "C4'",  "O4'",  "C1'",          "angle.C4p.O4p.C1p",
+                        "C3'",  "O3'",  "post_P",       "angle.C3p.O3p.post_P",
+                        "C3'",  "C2'",  "C1'",          "angle.C3p.C2p.C1p",
+                        "C2'",  "C1'",  "O4'",          "angle.C2p.C1p.O4p",
+                        "O3'",  "C3'",  "C2'",          "angle.O3p.C3p.C2p",
+                        "C3'",  "C2'",  "O2'",          "angle.C3p.C2p.O2p",
+                        "C1'",  "C2'",  "O2'",          "angle.C1p.C2p.O2p"), 
+                        ncol=4, byrow=TRUE), 
+                stringsAsFactors=FALSE)
+colnames(.angles) <- c("atomA", "atomB", "atomC", "labels")
+
+.torsionals <- as.data.frame(matrix(c(
+                    "pre_O3'",  "P",     "O5'",      "C5'",         "alpha",
+                    "P",        "O5'",   "C5'",      "C4'",         "beta",
+                    "O5'",      "C5'",   "C4'",      "C3'",         "gamma",
+                    "C5'",      "C4'",   "C3'",      "O3'",         "delta",
+                    "C4'",      "C3'",   "O3'",      "post_P",      "epsilon",
+                    "C3'",      "O3'",   "post_P",   "post_O5'",    "zeta",
+                    "C4'",      "O4'",   "C1'",      "C2'",         "nu0",
+                    "O4'",      "C1'",   "C2'",      "C3'",         "nu1",
+                    "C1'",      "C2'",   "C3'",      "C4'",         "nu2",
+                    "C2'",      "C3'",   "C4'",      "O4'",         "nu3",
+                    "C3'",      "C4'",   "O4'",      "C1'",         "nu4",
+                    "H2'",      "C2'",   "O2'",      "HO2'",        "kappa",
+                    "pre_C4'",  "P",     "C4'",      "post_P",      "eta",
+                    "P",        "C4'",   "post_P",   "post_C4'",    "theta",
+                    "O4'",      "C1'",   "N_base",   "C_base",      "chi"
+                    ), ncol=5, byrow=TRUE),
+                stringsAsFactors=FALSE)
+colnames(.torsionals) <- c("atomA", "atomB", "atomC", "atomD", "labels")
+
+## ============================================================================
+## Intermediate wrapper that generates all the possible combinations of
 ## models and chains and calls the function to really make the measurments
 
 .measure <-
@@ -383,7 +385,7 @@ function(pdb, model, chain, v_shifted, b_shifted,
     return(ntinfo)
 }
 
-##############################################################################
+## ============================================================================
 ## Function that actually does the maths
 .new_measure <-
 function(index, reslist, inslist, ridlist, pdb, 
@@ -755,7 +757,7 @@ function(index, reslist, inslist, ridlist, pdb,
     return(output)
 }
 
-##############################################################################
+## ============================================================================
 ## Additional subfunctions to .new_measure
 .select_many <- function(out_object, elety, pdb, resno, insert) {
     resno <- get(resno, envir=parent.frame(n=2))
@@ -832,7 +834,7 @@ function(tor) {
     }
 }
 
-##############################################################################
+## ============================================================================
 ## Code addapted from bio3d
 ".is.nucleic" <- function(pdb) {
     nuc.aa <- c("A",   "U",  "G",  "C",   "T",  "I",

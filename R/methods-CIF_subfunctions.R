@@ -1,5 +1,4 @@
 ## CIF methods subfunctions
-
 ## ============================================================================
 ## CIF Attributes object
 cifAttr <- c(   "entry",

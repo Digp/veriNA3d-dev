@@ -1,5 +1,4 @@
 ## Query Subfunctions
-
 ## ===========================================================================
 ## Ping function inspired in:
 ## "http://stackoverflow.com/questions/5076593/how-to-determine-if-you-

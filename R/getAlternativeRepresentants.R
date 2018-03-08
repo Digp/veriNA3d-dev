@@ -10,7 +10,7 @@
 #'
 #' @param data The output of getLeontisList.
 #' @param technique One or more techniques of interest (For correct use, see 
-#'  example below). For the list of techniques, see "bio3dRNA:::allowedtechs".
+#'  example below). For the list of techniques, see "bio3dRNA:::.allowedtechs".
 #' @param resol A positive real number to specify a desired resolution.
 #' @param type A string indicating the type of desired RNA, according with 
 #'  the RNAclassifier function.
@@ -35,9 +35,9 @@ function(data, technique=NULL, resol=NULL, type=NULL, verbose=FALSE) {
     }
 
     if (!is.null(technique)) { 
-        if (!all(technique %in% allowedtechs)) {
+        if (!all(technique %in% .allowedtechs)) {
             stop(paste("Introduce one or more techniques: ", 
-                paste(allowedtechs, collapse="; ") , sep=""))
+                paste(.allowedtechs, collapse="; ") , sep=""))
         }
     } 
 
@@ -65,7 +65,10 @@ function(data, technique=NULL, resol=NULL, type=NULL, verbose=FALSE) {
     return(data[, 2:1])
 }
 
-##############################################################################
+###############################################################################
+## Subfunctions
+## ============================================================================
+
 .get_alternative_representant <-
 function(eqclass, members,
             technique, resol, type,
@@ -128,9 +131,10 @@ function(eqclass, members,
         ## If the script does not find a proper representative, return NA ----
     return(out)
 }
-##############################################################################
+## ============================================================================
+## Internal objects
 
-allowedtechs <- c(
+.allowedtechs <- c(
     "X-RAY DIFFRACTION",        #X-RAY DIFFRACTION
     "SOLUTION NMR",             #SOLUTION NMR
     "SOLID-STATE NMR",          #SOLID-STATE NMR
@@ -142,11 +146,4 @@ allowedtechs <- c(
     "SOLUTION SCATTERING",      #SOLUTION SCATTERING
     "NEUTRON DIFFRACTION",      #NEUTRON DIFFRACTION
     "INFRARED SPECTROSCOPY")    #INFRARED SPECTROSCOPY
-
-resoltechs <- c(
-    "X-RAY DIFFRACTION",
-    "ELECTRON MICROSCOPY",
-    "FIBER DIFFRACTION",
-    "ELECTRON CRYSTALLOGRAPHY",
-    "NEUTRON DIFFRACTION")
 

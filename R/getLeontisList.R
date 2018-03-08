@@ -75,8 +75,9 @@ function(release="current", threshold="all") {
     return(output)
 }
 
-##############################################################################
+###############################################################################
 ## Subfunctions
+## ============================================================================
 
 ## Manage format of data for a given entry (equivalence class)
 .see_equivalence_class <- function(x, text, indices, release, threshold) {
@@ -112,8 +113,7 @@ function(release="current", threshold="all") {
 thresholds <- 
     c("1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all")
 
-##############################################################################
-
+## ============================================================================
 ## Get Leontis List last release number and date
 .getLastRelease <-
 function() {
@@ -134,4 +134,4 @@ function() {
 
     return(list(releasenum, date))
 }
-##############################################################################
+## ============================================================================

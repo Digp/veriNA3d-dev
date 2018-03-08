@@ -22,7 +22,7 @@ export(
     binding.RNAprot,
     bp_hist, 
 
-    check.nt, 
+    checkNuc, 
     cifAsPDB,
     cifAtom_site, 
     cifAtom_sites,
