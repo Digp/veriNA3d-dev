@@ -154,37 +154,51 @@ setMethod("cifParser",
 ##############################################################################
 ## Function to check if an object is CIF and related
 
-## cifCheck
-#' @rdname cifCheck
-setMethod("cifCheck",
-    definition=function(x) {
-        inherits(x, "CIF")
-    })
+# Is an Object of Class CIF?
+#
+# Checks whether an object is of Class CIF.
+#
+# @rdname .isCIF
+#
+# @param x An R object
+#
+# @return A logical
+#
+# @examples
+# cif <- cifParser("1bau")
+# .isCIF(cif)
+#
+# @author Diego Gallego
+#
+.isCIF <-
+function(x) {
+    inherits(x, "CIF")
+}
 
 
-#' Is it a CIF object? Make it be!
-#'
-#' Internal function to check if an input is actually a CIF object
-#' If not, the cif file is read from the MMB API.
-#'
-#' @rdname cifMakeSure
-#'
-#' @param cif A cif object obtained from cifParser or a pdb ID so that the
-#'    function can download the data.
-#' @param verbose A logical indicating whether to print details of the process
-#' @param check A string with the name of the function to use. It has been
-#'    thought to be used with 'cifCheck' function.
-#'
-#' @return A cif object, which might be the same input or the downloaded data
-#'
-#' @examples 
-#' cif <- veriNA3d:::.cifMakeSure("1bau")
-#'
-#' @author Diego Gallego
-#'
+# Is it a CIF object? Make it be!
+#
+# Internal function to check if an input is actually a CIF object
+# If not, the cif file is read from the MMB API.
+#
+# @rdname cifMakeSure
+#
+# @param cif A cif object obtained from cifParser or a pdb ID so that the
+#    function can download the data.
+# @param verbose A logical indicating whether to print details of the process
+# @param check A string with the name of the function to use. It has been
+#    thought to be used with '.isCIF' function.
+#
+# @return A cif object, which might be the same input or the downloaded data
+#
+# @examples 
+# cif <- veriNA3d:::.cifMakeSure("1bau")
+#
+# @author Diego Gallego
+#
 ## .cifMakeSure
 .cifMakeSure <-
-function(cif, verbose=FALSE, check="cifCheck") {
+function(cif, verbose=FALSE, check="isCIF") {
     ## Check if input cif argument is a PDB ID -------------------------------
     if (length(class(cif) == 1) && class(cif) == "character") {
 
@@ -208,7 +222,7 @@ function(cif, verbose=FALSE, check="cifCheck") {
     }
     return(cif)
 }
-## End of section cifCheck
+## End of section .isCIF 
 ##############################################################################
 
 ##############################################################################
@@ -219,7 +233,7 @@ function(cif, verbose=FALSE, check="cifCheck") {
 setMethod("cifAsPDB",
     signature(cif="CIF"),
     definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
-        return(.cifAsPDB(cif))
+        return(.cifAsPDB(cif, model=model, chain=chain, alt=alt))
     })
 
 #' @rdname cifAsPDB
@@ -228,7 +242,7 @@ setMethod("cifAsPDB",
     definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
         ## Make sure it is a CIF ---------------------------------------------
         cif <- .cifMakeSure(cif)
-        return(.cifAsPDB(cif))
+        return(.cifAsPDB(cif, model=model, chain=chain, alt=alt))
     })
 
 ## End of section cifAsPDB method

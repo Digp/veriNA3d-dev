@@ -160,9 +160,11 @@ function(pdb, model, chain, id=NULL) {
                         "kappa_valid", "base_exists")
 
     ## Make last calls to check for every nt whether eta/theta can be measured
-    eta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), FUN=.check_etatheta,
+    eta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), 
+                                            FUN=.check_etatheta,
                                             ntinfo=ntinfo, angle="eta")))
-    theta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), FUN=.check_etatheta,
+    theta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), 
+                                            FUN=.check_etatheta,
                                             ntinfo=ntinfo, angle="theta")))
 
     ## and if they can be used for trinucleotide eRMSD comparisons -----------

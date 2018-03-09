@@ -286,10 +286,11 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
 
     ## Check for alternative (alt) records -----------------------------------
     if (sum(atom$alt != ".") > 0) {
-        altind <- sort(c(which(atom$alt == "."),
-                            which(atom$alt %in% alt)))
+        altind <- unique(sort(c(which(atom$alt == "."),
+                            which(atom$alt %in% alt))))
         atom <- atom[altind, ]
-        print(paste("PDB has alt records, taking ", alt, " only", sep=""))
+        print(paste("PDB has alt records, taking ", paste(alt, collapse=","),
+                        " only", sep=""))
     }
 
     ## Return a particular chain if specified in arguments -------------------

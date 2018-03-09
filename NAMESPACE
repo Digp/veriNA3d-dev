@@ -29,7 +29,6 @@ export(
     cifAtom_type,
     cifAudit_author,
     cifAudit_conform,
-    cifCheck,
     cifChem_comp,
     cifDatabase_2,
     cifEntity,
@@ -43,9 +42,6 @@ export(
     classifyRNA, 
     cluster.select, 
 
-    distances_entities,
-    distances_eleno,
-
     eRMSD, 
 
     getAlternativeRepresentants, 
@@ -55,6 +51,8 @@ export(
     hasHetAtm, 
 
     make_aantinfo, 
+    measureEntityDist,
+    measureElenoDist,
     measureNuc, 
 
     plot_circular_distribution, 
@@ -90,6 +88,6 @@ export(
     subset_bypucker, 
     subset_ntinfo, 
 
-    trim_by_ntID,
-    trim_sphere
+    trimByID,
+    trimSphere
 )

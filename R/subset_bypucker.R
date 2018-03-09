@@ -1,6 +1,6 @@
 #Diego Gallego
 #Date: 2017-Mar-22
-#INPUT: ntinfo is the output of the make_ntinfo function
+#INPUT: ntinfo is the output of the getNucData function
 #   pucker is the pucker state
 #   paper is a logical: if TRUE it adds additional conditions to reproduce the future published results
 #       if FALSE, it just return the desired nucleotides according with the phase
@@ -12,7 +12,8 @@ subset_bypucker<-function(ntinfo, pucker=NULL, paper=TRUE, range=NULL){
     if(is.null(pucker)&&is.null(range)){
     stop("Introduce a valid pucker or range")
     }else if(!is.null(pucker)&&!is.null(range)){
-    print("If you specify the 'pucker', your 'range' will be ignored. If you want a particular range, then use 'pucker=NULL'")
+    cat("If you specify the 'pucker', your 'range' will be ignored.",
+        " If you want a particular range, then use 'pucker=NULL'", sep="")
     }
     if(!is.null(pucker)){
     if(!class(pucker)=="character"){

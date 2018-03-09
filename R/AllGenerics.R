@@ -118,29 +118,6 @@ setGeneric("cifParser",
 
 ##############################################################################
 
-#' Is an Object of Class CIF?
-#'
-#' Checks whether an object is of Class CIF.
-#'
-#' @rdname cifCheck
-#'
-#' @param x An R object
-#'
-#' @return A logical
-#'
-#' @examples
-#' cif <- cifParser("1bau")
-#' cifCheck(cif)
-#'
-#' @author Diego Gallego
-#'
-setGeneric("cifCheck",
-            function(x) standardGeneric("cifCheck"))
-
-##############################################################################
-
-##############################################################################
-
 #' Coerce CIF S4 object to pdb S3 object as found in bio3d package
 #'
 #' Coerces CIF to pdb class

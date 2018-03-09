@@ -1,6 +1,6 @@
 #Diego Gallego
 #Date: 2017-Mar-22
-#INPUT: ntinfo is the output of the make_ntinfo function
+#INPUT: ntinfo is the output of the getNucData function
 #   class is a data.frame where each column is a list of chains with the Leontis format (pdbID|model|chain)
 #   dir is the string with the name of the desired column
 

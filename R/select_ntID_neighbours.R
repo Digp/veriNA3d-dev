@@ -10,7 +10,7 @@
 #'    analysis.
 #' @param ntinfo a data.frame with the data. It should contain at least the
 #'    columns "pdbID", "chain", "model", "resno", "insert" and "ntID" (as the
-#'    output of make_ntinfo() function.
+#'    output of getNucData() function.
 #' @param prev Number of desired 5' neigbours to be returned.
 #' @param post Number of desired 3' neigbours to be returned.
 #' @param info Column name of the desired data to be returned.
