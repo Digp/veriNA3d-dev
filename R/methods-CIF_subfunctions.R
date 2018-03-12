@@ -357,7 +357,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
     pdb[[3]] <- ""
     pdb[[4]] <- model
     pdb[[5]] <- flag
-    pdb[[6]] <- match.call()
+    pdb[[6]] <- as.character(cifEntry(cif))
 
     names(pdb) <- c("atom", "xyz", "calpha", "model", "flag", "call")
     class(pdb) <- c("pdb")

@@ -35,7 +35,6 @@ function(pdb, cutoff=5, select="Nuc", nchain=NULL,
 
     ## Make sure the object is a S3 pdb object with the desired model --------
     pdb <- .input_to_pdb(cif=pdb, verbose=verbose, ...=...)
-
     ## Make sure the pdb object has the necessary format ---------------------
     pdb <- .perfect_input_format(pdb)
 

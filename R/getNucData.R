@@ -42,9 +42,9 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
             path=NULL, extension=NULL, cores=1, ...) {
 
     ## Make sure the input pdbID is a list -----------------------------------
-    if (class(pdbID) == "CIF")
+    if (.isCIF(pdbID))
         pdbID <- list(pdbID)
-    if (class(pdbID) == "pdb")
+    if (is.pdb(pdbID))
         pdbID <- list(pdbID)
     if (!is.list(pdbID))
         pdbID <- as.list(pdbID)
@@ -76,8 +76,9 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
                         chain=chain,
                         read=read,
                         mc.cores=cores,
-                        MoreArgs=list(range=range, 
-                                        ...=...,
+                        MoreArgs=list(...=...,
+                                        FUN=.make_chain_ntinfo,
+                                        range=range,
                                         path=path,
                                         extension=extension,
                                         pbar=pbar), 
@@ -183,8 +184,8 @@ function(pdbID, path=NULL, extension=NULL) {
 ## possible model&chain combinations.
 
 .manage_PDB <-
-function(pdbID, model, chain, read, range=c(3, 100000), ..., 
-            path=NULL, extension=NULL, index, pbar) {
+function(pdbID, model, chain, read, ..., 
+            path=NULL, extension=NULL, index, pbar, FUN) {
 
     ## Find if the given pdb is multi model ----------------------------------
     if (length(model) == 1 && model == 1) {
@@ -195,7 +196,7 @@ function(pdbID, model, chain, read, range=c(3, 100000), ...,
 
     ## Save pdb ID if possible -----------------------------------------------
     if (read == "read.list") {
-        name <- ""
+        name <- pdbID$call
     } else if (read == "read.list.cif") {
         name <- as.character(cifEntry(pdbID))
     } else {
@@ -241,20 +242,20 @@ function(pdbID, model, chain, read, range=c(3, 100000), ...,
     names(.combinations) <- c("model", "chain")
 
     ## Iterate over every combination of chain and model to get data ---------
-    ntinfo <- mapply(FUN=.make_chain_ntinfo,
-                            model=.combinations[, "model"],
-                            chain=.combinations[, "chain"],
-                            MoreArgs=list(pdb=temp_PDB,
-                            name=name,
-                            range=range,
-                            ...=...),
+    FUN <- match.fun(FUN) # .make_chain_ntinfo
+    ntinfo <- mapply(FUN=FUN,
+                        model=.combinations[, "model"],
+                        chain=.combinations[, "chain"],
+                        MoreArgs=list(pdb=temp_PDB,
+                                        name=name,
+                                        ...=...),
                         SIMPLIFY=FALSE)
 
     ## Print progress bar
     setTxtProgressBar(pbar, index)
 
     ## Return output for every chain and model as given by input -------------
-    ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
+    ntinfo <- ntinfo[which(lapply(ntinfo, length) > 0)]
     if (length(ntinfo) == 0) {
         print(paste("Nothing to analyse in ", name, "|", model, "|", chain, 
                     " according with input parameters", sep=""))

@@ -27,111 +27,118 @@
 
 #REQUIRES: The pdb objects should be loaded in RAM or have access to Internet (much much more slower)
 
-make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=TRUE){
-    if(cores>1){
-    if(cores>detectCores()){
-            stop("Introduce valid number of cores")
-        }
+make_aantinfo <-
+function(pdbID, model=NULL, chain=NULL, ntinfo,
+            path=NULL, extension=NULL, cores=1, ...) {
+
+    ## Make sure the input pdbID is a list -----------------------------------
+    if (class(pdbID) == "CIF")
+        pdbID <- list(pdbID)
+    if (class(pdbID) == "pdb")
+        pdbID <- list(pdbID)
+    if (!is.list(pdbID))
+        pdbID <- as.list(pdbID)
+
+    ## Checking input vectors are equal in length ----------------------------
+    if (is.null(model)) {
+        model <- rep(1, length(pdbID))
+    } else if (length(pdbID) != length(model)) {
+        stop("pdbID and model vectors should have the same length")
     }
-    df<-matrix(unlist(strsplit(effectivelist,split="|",fixed=TRUE)),ncol=3,byrow=TRUE)
-    
-    if(cores==1){
-        system.time(interactionsdata<-mapply(FUN=findProtNucBindingSite, 
-            pdb=df[,1],
-        model=df[,2],
-            nchain=df[,3],
-            SIMPLIFY=FALSE,
-            verbose=verbose,
-            MoreArgs=list(cutoff = 15, select = "RNA", hydrogens = FALSE)))
-    
-        if(nrow(df)!=length(interactionsdata)){
-            stop("Different dimensions in 'df' and 'interactionsdata' input")
-        }
-    
-        system.time(info<-lapply(1:nrow(df), FUN=.getinfocontacts, df=df,
-            interactionsdata=interactionsdata, ntinfo=ntinfo))
-    
-    }else{
-        system.time(interactionsdata<-mcmapply(FUN=findProtNucBindingSite,
-            pdb=df[,1],
-        model=df[,2],
-            nchain=df[,3],
-            SIMPLIFY=FALSE,
-            mc.cores=cores,
-            verbose=verbose,
-            MoreArgs=list(cutoff = 15, select = "RNA", hydrogens = FALSE)))
-    
-        if(nrow(df)!=length(interactionsdata)){
-            stop("Different dimensions in 'df' and 'interactionsdata' input")
-        }
-    
-        system.time(info<-mclapply(1:nrow(df), FUN=.getinfocontacts, df=df,
-            interactionsdata=interactionsdata,mc.cores=cores, ntinfo=ntinfo))
-    
+    if (is.null(chain)) {
+        chain <- rep("all", length(pdbID))
+    } else if (length(pdbID) != length(chain)) {
+        stop("pdbID and chain vectors should have the same length")
     }
-    cols<-12
-    colsnames<-names(info[[1]])[1:cols]
-    output<-as.data.frame(matrix(unlist(info),ncol=cols,byrow=TRUE),
-    stringsAsFactors=FALSE)
-    colnames(output)<-colsnames
-    output$ntID<-as.numeric(output$ntID)
-    output$elenoRNA<-as.numeric(output$elenoRNA)
-    output$elenoPROT<-as.numeric(output$elenoPROT)
-    output$resnoPROT<-as.numeric(output$resnoPROT)
-    output$distance<-as.numeric(output$distance)
+
+    ## Determine whether to read CIF/pdb objects from file, internet or input
+    read <- .whereToRead(pdbID=pdbID, path=path, extension=extension)
+
+    ## Print progress bar ----------------------------------------------------
+    total <- length(pdbID)
+    pbar <- txtProgressBar(min = 0, max = total, style = 3)
+
+    ## Iterate over the list of entries to obtain the desired information ---- 
+    interactionsdata <- .xmapply(FUN=.manage_PDB,
+                                    index=seq_len(total),
+                                    pdbID=pdbID,
+                                    model=model,
+                                    chain=chain,
+                                    read=read,
+                                    mc.cores=cores,
+                                    MoreArgs=list(...=...,
+                                                    FUN=.WrapperBindingSite,
+                                                    ntinfo=ntinfo,
+                                                    path=path,
+                                                    extension=extension,
+                                                    pbar=pbar,
+                                                    cutoff=15, 
+                                                    select="RNA", 
+                                                    hydrogens=FALSE),
+                                    SIMPLIFY=FALSE)
+
+    ## Print new line after progress bar -------------------------------------
+    cat("\n")
+
+    
+    
+    #system.time(info <- lapply(1:nrow(df), FUN=.getinfocontacts, df=df,
+    #   interactionsdata=interactionsdata, ntinfo=ntinfo))
+
+    ## Return output for every chain and model as given by input -------------
+    interactionsdata <- interactionsdata[
+                                which(lapply(interactionsdata, length) > 0)]
+
+    ## Coerce list to data.frame
+    output <- do.call(rbind, interactionsdata)
+
+
+
+#    cols <- 12
+#    colsnames <- names(info[[1]])[1:cols]
+#    output <- as.data.frame(matrix(unlist(info), ncol=cols, byrow=TRUE),
+#    stringsAsFactors=FALSE)
+#    colnames(output) <- colsnames
+#    output$ntID <- as.numeric(output$ntID)
+#    output$elenoRNA <- as.numeric(output$elenoRNA)
+#    output$elenoPROT <- as.numeric(output$elenoPROT)
+#    output$resnoPROT <- as.numeric(output$resnoPROT)
+#    output$distance <- as.numeric(output$distance)
     return(output)
 }
 
+.WrapperBindingSite <-
+function(pdb, model, chain, ..., name, ntinfo) {
 
+    residues <- unique(pdb$atom[pdb$atom$chain == chain, "resid"])
+    if (any(residues %in% .nucleotides)) {
 
-.getinfocontacts<-function(str, df, interactionsdata, ntinfo){
-    pdbID<-df[str,1]
-    model<-df[str,2]
-    chain<-df[str,3]
-    ntIDlist<-ntinfo[which(ntinfo$pdbID==pdbID&ntinfo$model==model&
-        ntinfo$chain==chain),"ntID"]
-    doi<-as.data.frame(interactionsdata[[str]][[1]],stringsAsFactors=FALSE)
+        ## Check and measure the chain and make common data.frame ------------
+        aantinfo <- findProtNucBindingSite(pdb=pdb,
+                                            model=model,
+                                            nchain=chain,
+                                            ...)
+        residues <- paste(aantinfo$resno_A, aantinfo$insert_A, 
+                            aantinfo$chain_A, sep=".")
+        #unique_res <- unique(residues)
+        ntinfo_res <- paste(ntinfo$resno, ntinfo$insert, 
+                            ntinfo$chain, sep=".")
 
-    if(exists(pdbID,envir=.GlobalEnv)){
-        pdb<-get(pdbID,envir=.GlobalEnv)
-    }else{
-        pdb <- cifAsPDB(pdbID, model=model)
-        assign(pdbID,pdb,envir=.GlobalEnv)
+        nt_id <- lapply(residues, FUN=function(x, ntinfo_res) {
+                                        which(ntinfo_res == x)
+                                    }, ntinfo_res=ntinfo_res)
+
+        ntID <- ntinfo[unlist(nt_id), "ntID"]
+        
+        ## Add pdbID/name
+        aantinfo <- cbind(ntID=ntID, 
+                            pdbID=rep(name, nrow(aantinfo)), 
+                            model=rep(model, nrow(aantinfo)),
+                            aantinfo)
+
+        return(aantinfo)
+
+    } else {
+        return()
     }
-
-    aa.nt.info<-lapply(ntIDlist, FUN=.infocontacts, ntinfo=ntinfo,doi=doi,pdb=pdb)
-    return(unlist(aa.nt.info))
-
 }
-
-.infocontacts<-function(ntID,ntinfo,doi,pdb){
-    resno<-ntinfo[ntinfo$ntID==ntID,"resno"]
-    insert<-ntinfo[ntinfo$ntID==ntID,"insert"]
-    chain<-ntinfo[ntinfo$ntID==ntID,"chain"]
-
-    eleno<-pdb$atom[which(pdb$atom$chain==chain&
-        pdb$atom$resno==resno&pdb$atom$insert==insert),"eleno"]
-
-    indices<-which(doi[,"eleno_RNA"] %in% eleno)
-    ind_closest_at<-indices[which.min(doi[indices,"distance"])]
-
-    elenoRNA<-doi[ind_closest_at,"eleno_RNA"]
-    eletyRNA<-pdb$atom[which(pdb$atom$eleno==elenoRNA),"elety"]
-    residRNA<-pdb$atom[which(pdb$atom$eleno==elenoRNA),"resid"]
-
-    elenoPROT<-doi[ind_closest_at,"eleno_PROTEIN"]
-    eletyPROT<-pdb$atom[which(pdb$atom$eleno==elenoPROT),"elety"]
-    resnoPROT<-pdb$atom[which(pdb$atom$eleno==elenoPROT),"resno"]
-    residPROT<-pdb$atom[which(pdb$atom$eleno==elenoPROT),"resid"]
-    chainPROT<-pdb$atom[which(pdb$atom$eleno==elenoPROT),"chain"]
-    asym_idPROT<-pdb$atom[which(pdb$atom$eleno==elenoPROT),"asym_id"]
-    insertPROT<-pdb$atom[which(pdb$atom$eleno==elenoPROT),"insert"]
-
-    distance<-doi[ind_closest_at,"distance"]
-
-    return(c(ntID=ntID, elenoRNA=elenoRNA, eletyRNA=eletyRNA,
-        residRNA=residRNA, elenoPROT=elenoPROT, eletyPROT=eletyPROT,
-        resnoPROT=resnoPROT, residPROT=residPROT, chainPROT=chainPROT,
-        asym_idPROT=asym_idPROT, insertPROT=insertPROT, distance=distance))
-}
-

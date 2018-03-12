@@ -142,7 +142,6 @@ function(cif, model=NULL, ntindex, chain, sel=NULL, cutoff=8,
 function(cif, model=NULL, verbose, alt=NULL) {
     ## Check if input cif argument is a PDB ID or a "cif" object -------------
     if (length(class(cif) == 1) && class(cif) == "character") {
-
         ## If the input is a PDB ID, the data is downloaded
         if (nchar(cif) == 4) {
             if (verbose)
@@ -160,7 +159,11 @@ function(cif, model=NULL, verbose, alt=NULL) {
 
     ## Select model of interest ----------------------------------------------
     if (!is.null(model)) {
-        cif <- selectModel(cif, model, verbose=verbose)
+        if(.isCIF(cif)) {
+            cif <- selectModel(cif=cif, model=model, verbose=verbose)
+        } else if(is.pdb(cif)) {
+            cif <- selectModel(pdb=cif, model=model, verbose=verbose)
+        }
     }
 
     ## Make sure the object is a S3 pdb object -------------------------------
