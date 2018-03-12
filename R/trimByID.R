@@ -18,7 +18,8 @@
 #' @param verbose A logical to print details of the process.
 #' @param file A string to save the output in a pdb formated file. If NULL the
 #'    fucntions just returns the pdb object.
-#' @param ... arguments to pass to trimSphere (type ?trimSphere for details)
+#' @param ... Arguments to be passed to trimSphere (type ?trimSphere for 
+#'    details)
 #' 
 #' @return A smaller pdb object or a pdb file. 
 #'

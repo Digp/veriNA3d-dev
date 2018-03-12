@@ -19,7 +19,6 @@ export(
     angles_dist, 
     applyToPDB, 
 
-    binding.RNAprot,
     bp_hist, 
 
     checkNuc, 
@@ -43,6 +42,8 @@ export(
     cluster.select, 
 
     eRMSD, 
+
+    findProtNucBindingSite,
 
     getAlternativeRepresentants, 
     getLeontisList,

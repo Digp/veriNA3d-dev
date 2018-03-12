@@ -25,11 +25,12 @@
 #' @param file A string to save the output in a pdb formated file. If NULL the
 #'    fucntions just returns the pdb object.
 #' @param verbose A logical to print details of the process.
+#' @param ... Arguments to be passed to internal functions.
 #'
 #' @return A smaller pdb object or a pdb file. 
 #'
 #' @examples
-#'    ## Toy example
+#'    ## Toy example:
 #'    cif <- cifParser("1s72")
 #'
 #'    ## Generate a smaller pdb with the atoms 55 to 58 of the RNA chain "9"
@@ -41,48 +42,25 @@
 #'    smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
 #'      cutoff=5, verbose=FALSE, file="output.pdb")
 #'
+#'    ## Second example:
+#'    ## Obtain a PDB with just the interacting region between RNA and protein
+#'    pdb <- cifAsPDB("1nyb")
+#'    data <- findProtNucBindingSite(pdb, select="RNA", byres=T)
+#'    sel <- bio3d::atom.select(pdb,
+#'                              eleno=append(data$eleno_A, data$eleno_B))
+#'    trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
 #'
 #' @author Diego Gallego
 #'
 trimSphere <-
 function(cif, model=NULL, ntindex, chain, sel=NULL, cutoff=8, 
-            cutres=FALSE, file=NULL, verbose=TRUE) {
+            cutres=FALSE, file=NULL, verbose=TRUE, ...) {
 
-    ## Check if input cif argument is a PDB ID or a "cif" object -------------
-    if (length(class(cif) == 1) && class(cif) == "character") {
-
-        ## If the input is a PDB ID, the data is downloaded
-        if (nchar(cif) == 4) {
-            if (verbose)
-                print(cif)
-            cif <- cifParser(cif)
-        } else {
-            stop("Your input string is not a pdb ID")
-        }
-
-    } else if (!.isCIF(cif) & !is.pdb(cif)) {
-        stop(paste("Your input data is not a cif or pdb object, ",
-                    "please refer to the cifParser or read.pdb functions", 
-                    sep=""))
-    }
-
-    ## Select model of interest ----------------------------------------------
-    if (!is.null(model)) {
-        cif <- selectModel(cif, model, verbose=verbose)
-    }
-
-    ## Make sure the object is a S3 pdb object -------------------------------
-    if (.isCIF(cif)) {
-        alt <- unique(cifAtom_site(cif)$label_alt_id)
-        cif <- cifAsPDB(cif, alt=alt)
-    }
+    ## Make sure the object is a S3 pdb object with the desired model --------
+    cif <- .input_to_pdb(cif=cif, model=model, verbose=verbose, ...)
 
     ## Make sure the pdb object has the necessary format ---------------------
-    cif$atom$insert[which(is.na(cif$atom$insert))] <- "?"
-    cif$atom$chain[which(is.na(cif$atom$chain))] <- "?"
-    if (is.na(chain)) 
-        chain[is.na(chain)] <- "?"
-    row.names(cif$atom) <- cif$atom$eleno
+    cif <- .perfect_input_format(cif)
 
     ## Find eleno numbers ----------------------------------------------------
     data <- paste(cif$atom$resno, cif$atom$insert, cif$atom$chain, sep="|")
@@ -138,26 +116,7 @@ function(cif, model=NULL, ntindex, chain, sel=NULL, cutoff=8,
     }
 
     ## Ensure that the output pdb has the correct format ---------------------
-    if (any(is.na(pdb$atom$alt))) 
-        pdb$atom$alt <- ""
-
-    pdb$atom$charge <- ""
-    pdb$atom$entid <- ""
-    if (any(outeleno > 99999)) 
-        pdb$atom$eleno <- seq_len(nrow(pdb$atom))
-    if (any(pdb$atom$resno > 9999)) {
-        query3 <- paste(cif$atom[as.character(outeleno), "resno"], 
-                        cif$atom[as.character(outeleno), "insert"],
-                        cif$atom[as.character(outeleno), "chain"],
-                        sep="|")
-        Unique <- unique(query3)
-        resno2 <- c()
-        for (i in seq_along(Unique)) {
-            pdb$atom$resno[query3 == Unique[i]] <- i
-            if (any(query == Unique[i])) resno2[query == Unique[i]] <- i
-        }
-    }
-    if (any(is.na(pdb$atom$insert))) pdb$atom$insert <- ""
+    pdb <- .perfect_output_format(pdb, outeleno)
 
     ## Save the output to a file if a name is specified ----------------------
     if (is.null(file)) {
@@ -174,4 +133,88 @@ function(cif, model=NULL, ntindex, chain, sel=NULL, cutoff=8,
         }
         write.pdb(pdb=pdb, file=file, segid=pdb$atom$entid)
     }
+}
+##############################################################################
+## Subfunctions
+## ===========================================================================
+## Input to pdb
+.input_to_pdb <-
+function(cif, model=NULL, verbose, alt=NULL) {
+    ## Check if input cif argument is a PDB ID or a "cif" object -------------
+    if (length(class(cif) == 1) && class(cif) == "character") {
+
+        ## If the input is a PDB ID, the data is downloaded
+        if (nchar(cif) == 4) {
+            if (verbose)
+                print(cif)
+            cif <- cifParser(cif)
+        } else {
+            stop("Your input string is not a pdb ID")
+        }
+
+    } else if (!.isCIF(cif) & !is.pdb(cif)) {
+        stop(paste("Your input data is not a cif or pdb object, ",
+                    "please refer to the cifParser or read.pdb functions",
+                    sep=""))
+    }
+
+    ## Select model of interest ----------------------------------------------
+    if (!is.null(model)) {
+        cif <- selectModel(cif, model, verbose=verbose)
+    }
+
+    ## Make sure the object is a S3 pdb object -------------------------------
+    if (.isCIF(cif)) {
+        if(is.null(alt))
+            alt <- unique(cifAtom_site(cif)$label_alt_id)
+
+        cif <- cifAsPDB(cif, alt=alt)
+    }
+    return(cif)
+}
+
+.perfect_input_format <-
+function(pdb) {
+    if (any(is.na(pdb$atom$insert)) | 
+            any(pdb$atom$insert == "") |
+            any(pdb$atom$insert == " ")) {
+
+        pdb$atom$insert[is.na(pdb$atom$insert)] <- "?"
+        pdb$atom$insert[pdb$atom$insert == ""]  <- "?"
+        pdb$atom$insert[pdb$atom$insert == " "] <- "?"
+    }
+
+    pdb$atom$chain[which(is.na(pdb$atom$chain))] <- "?"
+    if (any(is.na(pdb$atom$alt))) {
+        pdb$atom$alt[is.na(pdb$atom$alt)] <- "."
+    }
+    row.names(pdb$atom) <- pdb$atom$eleno
+    return(pdb)
+}
+
+.perfect_output_format <-
+function(pdb, outeleno) {
+    if (any(is.na(pdb$atom$alt)))
+        pdb$atom$alt <- ""
+
+    pdb$atom$charge <- ""
+    pdb$atom$entid <- ""
+    if (any(outeleno > 99999))
+        pdb$atom$eleno <- seq_len(nrow(pdb$atom))
+    if (any(pdb$atom$resno > 9999)) {
+        query3 <- paste(pdb$atom[as.character(outeleno), "resno"],
+                        pdb$atom[as.character(outeleno), "insert"],
+                        pdb$atom[as.character(outeleno), "chain"],
+                        sep="|")
+        Unique <- unique(query3)
+        resno2 <- c()
+        for (i in seq_along(Unique)) {
+            pdb$atom$resno[query3 == Unique[i]] <- i
+            if (any(query == Unique[i])) resno2[query == Unique[i]] <- i
+        }
+    }
+    if (any(is.na(pdb$atom$insert))) 
+        pdb$atom$insert <- ""
+
+    return(pdb)
 }

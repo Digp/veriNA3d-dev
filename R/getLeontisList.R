@@ -100,12 +100,12 @@ function(release="current", threshold="all") {
 
     ## Obtain the list of members of the equivalence class -------------------
     ind3 <- grep(pattern="class='pdb'", splited_terms)
-    all_members <- unlist(lapply(ind3, FUN=.aa, splited_terms))
+    all_members <- unlist(lapply(ind3, FUN=.kk, splited_terms))
 
     return(c(eq_class, repstr, paste(all_members, collapse=";")))
 }
 
-.aa <- function(.ind3, splited_terms) {
+.kk <- function(.ind3, splited_terms) {
     temp <- strsplit(splited_terms[.ind3], split=">")[[1]]
     return(substr(temp[length(temp)], 1, nchar(temp[length(temp)])-1))
 }

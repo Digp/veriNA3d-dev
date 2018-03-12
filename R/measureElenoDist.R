@@ -122,6 +122,9 @@ function(pdb, model=NULL, refeleno, eleno, n=1, cutoff=c(0, 5), verbose=FALSE,
                             stringsAsFactors=FALSE)
     names(out) <- c("eleno_A", "eleno_B", "distance")
 
+    ## Round distances -------------------------------------------------------
+    out$distance <- round(out$distance, 3)
+
     if (verbose) 
         print(" ... done")
 
@@ -129,7 +132,7 @@ function(pdb, model=NULL, refeleno, eleno, n=1, cutoff=c(0, 5), verbose=FALSE,
     if (detailedoutput) {
         if (is.null(data_of_interest)) {
             data_of_interest <- c("elety", "resid", "resno",
-                                    "chain", "insert", "alt", "entid", "b")
+                                    "chain", "insert", "alt", "b")
         }
         if (nrow(out) == 0) {
             out2 <- rep(NA, length(data_of_interest))

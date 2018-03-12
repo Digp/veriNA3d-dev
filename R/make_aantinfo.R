@@ -36,7 +36,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=TRUE){
     df<-matrix(unlist(strsplit(effectivelist,split="|",fixed=TRUE)),ncol=3,byrow=TRUE)
     
     if(cores==1){
-        system.time(interactionsdata<-mapply(FUN=binding.RNAprot, 
+        system.time(interactionsdata<-mapply(FUN=findProtNucBindingSite, 
             pdb=df[,1],
         model=df[,2],
             nchain=df[,3],
@@ -52,7 +52,7 @@ make_aantinfo<-function(effectivelist, ntinfo, cores=1, verbose=TRUE){
             interactionsdata=interactionsdata, ntinfo=ntinfo))
     
     }else{
-        system.time(interactionsdata<-mcmapply(FUN=binding.RNAprot,
+        system.time(interactionsdata<-mcmapply(FUN=findProtNucBindingSite,
             pdb=df[,1],
         model=df[,2],
             nchain=df[,3],
