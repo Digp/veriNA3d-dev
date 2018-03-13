@@ -189,7 +189,7 @@ function(pdbID, read) {
         }
 
     } else if (read == "read.list.cif") {
-        resid <- unique(cifAtom_site(cif)$label_comp_id)
+        resid <- unique(cifAtom_site(pdbID)$label_comp_id)
         
         if (any(resid %in% .aa)) {
             return(FALSE)

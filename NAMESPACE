@@ -1,7 +1,7 @@
 import(bio3d)
 import(parallel)
 importFrom("graphics", "abline", "axis", "barplot", "contour",
-       "legend", "par", "plot", "points", "text", "title")
+            "legend", "par", "plot", "points", "text", "title")
 importFrom("grDevices", "dev.off", "png", "rgb")
 importFrom("methods", "new")
 importFrom("stats", "complete.cases", "sd")
@@ -38,7 +38,11 @@ export(
     cifStruct,
     cifStruct_asym,
     cifStruct_keywords,
-    classifyRNA, 
+    classifyRNA,
+
+    cleanByPucker,
+    subset_ntinfo,
+ 
     cluster.select, 
 
     eRMSD, 
@@ -86,8 +90,6 @@ export(
     rVector, 
 
     selectModel, 
-    subset_bypucker, 
-    subset_ntinfo, 
 
     trimByID,
     trimSphere

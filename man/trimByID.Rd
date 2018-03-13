@@ -17,7 +17,7 @@ analysis.}
 
 \item{ntinfo}{a data.frame with the data. It should contain at least the
 columns "pdbID", "chain", "model", "resno", "insert" and "ntID" (as the
-output of getNucData function).}
+output of pipeNucData function).}
 
 \item{prev}{Number of desired 5' neigbours to be returned.}
 
@@ -35,14 +35,14 @@ details)}
 A smaller pdb object or a pdb file.
 }
 \description{
-Given a data frame with nucleotide info (as obtained from getNucData)
+Given a data frame with nucleotide info (as obtained from pipeNucData)
 and the desired nucleotide index (ntID), the function returns a pdb
 object or file allowing the user to select a number of 5' and 3' neighbors
 in sequence and non-conected residues in a cutoff radius.
 }
 \examples{
    cif <- cifParser("1bau")
-   ntinfo <- getNucData(cif, torsionals=NULL, distances=NULL, angles=NULL)
+   ntinfo <- pipeNucData(cif, torsionals=NULL, distances=NULL, angles=NULL)
 
    ## Obtain a smaller pdb of the 4th nucleotide +-2 neigbours and a 
    ## sorrounding sphere of 5 Angstroms

@@ -93,22 +93,22 @@ cifAtom_site(x)
 \item{x}{a CIF object}
 }
 \value{
-\itemize{
-\item {cifEntry} \code{Character} with the mmCIF PDB ID
-\item {cifAudit_conform} \code{Character} vector with dictionary version
-\item {cifDatabase_2} \code{Data.frame} with cross-references
-\item {cifPdbx_database_status} \code{Character} vector with deposition data
-\item {cifAudit_author} \code{Data.frame} with author names
-\item {cifEntity} \code{Data.frame} with molecules & ions in the structure
-\item {cifChem_comp} \code{Data.frame} with residues records in the structure
-\item {cifExptl} \code{Character} vector with experimental technique
-\item {cifStruct} \code{Character} vector with author description of the structure
-\item {cifStruct_keywords} \code{Character} vector with author selected key words
-\item {cifStruct_asym} \code{Data.frame} with chain-entity equivalences
-\item {cifAtom_sites} \code{Character} vector with details about the
-crystallographic cell
-\item {cifAtom_type} \code{Data.frame} with about the atoms in structure
-\item {cifAtom_site} \code{Data.frame} with atomic coordinates
+\preformatted{* {cifEntry} `Character` with the mmCIF PDB ID
+* {cifAudit_conform} `Character` vector with dictionary version
+* {cifDatabase_2} `Data.frame` with cross-references
+* {cifPdbx_database_status} `Character` vector with deposition data
+* {cifAudit_author} `Data.frame` with author names
+* {cifEntity} `Data.frame` with molecules & ions in the structure
+* {cifChem_comp} `Data.frame` with residues records in the structure
+* {cifExptl} `Character` vector with experimental technique
+* {cifStruct} `Character` vector with author description of the 
+    structure
+* {cifStruct_keywords} `Character` vector with author selected key words
+* {cifStruct_asym} `Data.frame` with chain-entity equivalences
+* {cifAtom_sites} `Character` vector with details about the 
+    crystallographic cell
+* {cifAtom_type} `Data.frame` with about the atoms in structure
+* {cifAtom_site} `Data.frame` with atomic coordinates
 }
 }
 \description{

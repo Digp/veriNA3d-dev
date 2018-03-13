@@ -4,7 +4,7 @@
 #' nucleotide atoms, bond distances, chain breaks and others.
 #'
 #' @param pdb A pdb object as obtained from cifAsPDB or read.cif/read.pdb 
-#'   (bio3d package).
+#'     (bio3d package).
 #' @param model A string with the desired model number.
 #' @param chain A string with the desired chain id.
 #' @param id A string with the ID of the input pdb structure.
@@ -12,9 +12,9 @@
 #' @return A data.frame with the data for every nucleotide.
 #'
 #' @examples
-#'   data <- checkNuc(cifAsPDB("1am0"))
-#'   broken <- which(data$Break == TRUE)
-#'   data[broken, ] ## See the places in which the chain is broken
+#'     data <- checkNuc(cifAsPDB("1am0"))
+#'     broken <- which(data$Break == TRUE)
+#'     data[broken, ] ## See the places in which the chain is broken
 #'
 #' @author Diego Gallego
 #'

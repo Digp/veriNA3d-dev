@@ -8,22 +8,22 @@
 #' clusterize in different regions of the 2D diagram
 #'
 #' @param ntID an obejct of class vector with the desired nucleotides of 
-#'    analysis. If NULL all the nucleotides in the data.frame will be used
+#'     analysis. If NULL all the nucleotides in the data.frame will be used
 #' @param ntinfo a data.frame with the input data. It should contain three 
-#'    columns (additional columns will be ignored). One of them should be 
-#'    "ntID" and the other two are optional and can be specified using the
-#'    parameters "x" and "y"
+#'     columns (additional columns will be ignored). One of them should be 
+#'     "ntID" and the other two are optional and can be specified using the
+#'     parameters "x" and "y"
 #' @param x name of the column that will be used as "x" axis
 #' @param y name of the column that will be used as "y" axis
 #' @param SD_DENS height above the mean to be used to select the nucleotides
 #' @param bandwidths object to be passed to the "kde2d" function (only used if
-#'    "dens" is NULL)
+#'     "dens" is NULL)
 #' @param dens optional object containing the output of "kde2d" or equivalent
 #' @param lims The limits of the rectangle covered by the grid as c(xl, xu,
-#'          yl, yu).
+#'     yl, yu).
 #'
 #' @return a list of vectors containing the nucleotides ID (according with the 
-#'    ntID column) that clusterize in different regions of the 2D diagram
+#'     ntID column) that clusterize in different regions of the 2D diagram
 #'
 #' @author Diego Gallego
 #'

@@ -37,8 +37,8 @@ A pdb object compatible with bio3d (Grant et al. 2006) functions.
 Coerces CIF to pdb class
 }
 \examples{
-cif <- cifParser("1bau")
-pdb <- cifAsPDB(cif)
+    cif <- cifParser("1bau")
+    pdb <- cifAsPDB(cif)
 
 }
 \author{

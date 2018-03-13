@@ -24,9 +24,9 @@ From a nucleic acid structure (pdb object), it checks the presence of all
 nucleotide atoms, bond distances, chain breaks and others.
 }
 \examples{
-  data <- checkNuc(cifAsPDB("1am0"))
-  broken <- which(data$Break == TRUE)
-  data[broken, ] ## See the places in which the chain is broken
+    data <- checkNuc(cifAsPDB("1am0"))
+    broken <- which(data$Break == TRUE)
+    data[broken, ] ## See the places in which the chain is broken
 
 }
 \author{

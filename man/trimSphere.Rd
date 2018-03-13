@@ -64,7 +64,7 @@ that only includes the nearest atoms.
    ## Second example:
    ## Obtain a PDB with just the interacting region between RNA and protein
    pdb <- cifAsPDB("1nyb")
-   data <- findProtNucBindingSite(pdb, select="RNA", byres=TRUE)
+   data <- findBindingSite(pdb, select="RNA", byres=TRUE)
    sel <- bio3d::atom.select(pdb,
                              eleno=append(data$eleno_A, data$eleno_B))
    trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)

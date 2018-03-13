@@ -5,27 +5,27 @@
 #' the nucleic acid, the protein, or particular desired chains.
 #'
 #' @param pdb A cif/pdb object obtained from cifParser/read.pdb respectively
-#'    or a pdb ID so that the function can download the data.
+#'     or a pdb ID so that the function can download the data.
 #' @param cutoff A numeric to set the maximum distance for atoms to be 
-#'    returned.
+#'     returned.
 #' @param select A string that should match "Nuc", "Prot", "DNA" or "RNA", to
-#'    be used as reference.
+#'     be used as reference.
 #' @param nchain A string with the nucleic acid chain to get data about.
-#'    If NULL, all of them are selected (according with select argument).
+#'     If NULL, all of them are selected (according with select argument).
 #' @param pchain A string with the protein chain to get data about.
-#'    If NULL, all of them are selected.
+#'     If NULL, all of them are selected.
 #' @param hydrogens A logical to use the hydrogens in the structure or remove 
-#'    them.
+#'     them.
 #' @param byres A logical to indicate if the output should be referred to the 
-#'    residues rather than atoms.
+#'     residues rather than atoms.
 #' @param verbose A logical to print details of the process.
 #' @param ... Arguments to select model and/or alt records.
 #'
 #' @return A data.frame with the atomic distances in the interacting site.
 #'
 #' @examples
-#'    pdb <- cifParser("1b3t") # A protein-DNA complex
-#'    data <- findBindingSite(pdb, select="DNA", byres=TRUE)
+#'     pdb <- cifParser("1b3t") # A protein-DNA complex
+#'     data <- findBindingSite(pdb, select="DNA", byres=TRUE)
 #'
 #' @author Diego Gallego
 #'
