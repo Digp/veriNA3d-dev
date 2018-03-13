@@ -1,7 +1,7 @@
-#' Obtain data from nucleotides
+#' Obtain nucleotide details from a data set of RNA structures
 #' 
-#' Generates a data.frame with the desired info for a list of PDB. Nucleotides
-#' are labeled with a unique ID (column ntID).
+#' Pipeline to generate a data.frame with the desired info for a list of PDB. 
+#' Nucleotides are labeled with a unique identifier (column ntID).
 #'
 #' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
 #'   objects as provided by "read.pdb", "read.cif", "cifParser" ...
@@ -29,7 +29,7 @@
 #' @return A data.frame with data about every nucleotide in the input set
 #'
 #' @examples 
-#'  ## This is a toy example, see vignettes for more usages.
+#'  ## This is a toy example, see vignettes for real-world usages.
 #'  pdblist <- list("1bau", "2rn1")
 #'  model <- list("1", "2")
 #'  chain <- list("all", "all")
@@ -103,7 +103,7 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
 ##############################################################################
 ## Where should the input be read from?
 .whereToRead <-
-function(pdbID, path=NULL, extension=NULL) {
+function(pdbID, path=NULL, extension=NULL, verbose=TRUE) {
     ## Preallocate and fill 'read' object ------------------------------------
     read <- vector("character", length(pdbID))
 
@@ -158,11 +158,13 @@ function(pdbID, path=NULL, extension=NULL) {
         inds <- which(unlist(lapply(pdbID, function(x) {
                                             return(nchar(x) == 4)
                                         })))
-        print(paste(
-            "The PDB IDs: ", 
-            paste(pdbID[inds], collapse="; "), 
-            " are going to be downloaded (no temp files generated)", 
-            sep=""))
+        if (verbose) {
+            print(paste(
+                "The PDB IDs: ", 
+                paste(pdbID[inds], collapse="; "), 
+                " are going to be downloaded (no temp files generated)", 
+                sep=""))
+        }
 
         read[inds] <- "download.RAM"
         pdbID[inds] <- ""

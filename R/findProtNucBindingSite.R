@@ -25,7 +25,7 @@
 #'
 #' @examples
 #'    pdb <- cifParser("1b3t") # A protein-DNA complex
-#'    data <- findProtNucBindingSite(pdb, select="DNA", byres=T)
+#'    data <- findProtNucBindingSite(pdb, select="DNA", byres=TRUE)
 #'
 #' @author Diego Gallego
 #'
@@ -33,57 +33,53 @@ findProtNucBindingSite <-
 function(pdb, cutoff=5, select="Nuc", nchain=NULL,
             pchain=NULL, hydrogens=FALSE, byres=FALSE, verbose=FALSE, ...) {
 
+    ## Check input
+    if (!select %in% c("Nuc", "RNA", "DNA", "Prot"))
+        stop("Introduce a valid 'select' argument")
+
     ## Make sure the object is a S3 pdb object with the desired model --------
     pdb <- .input_to_pdb(cif=pdb, verbose=verbose, ...=...)
+
     ## Make sure the pdb object has the necessary format ---------------------
     pdb <- .perfect_input_format(pdb)
 
-    ## Save original pdb object ----------------------------------------------
-    pdb.orig <- pdb
-
-    ## Remove hydrogens from data if FALSE -----------------------------------
-    if (!hydrogens) {
-        pdb.inds <- atom.select(pdb, string="noh", verbose=verbose)
-        if (length(pdb.inds$atom) == 0) {
-            stop("Wrong hydrogen removal, try with hydrogens=TRUE")
-        }
-        pdb  <- trim.pdb(pdb, pdb.inds)
-    }
+    ## Remove hydrogens from coordinates if ncessary -------------------------
+    tmp_pdb <- .treatH(pdb, hydrogens, verbose)
 
     ## Which nucleotides should be taken into account? -----------------------
-    if (select == "RNA") {
-        nucleotides <- .Rnucleotides
-    } else if (select == "DNA") {
-        nucleotides <- .Dnucleotides
-    } else if (select == "Nuc") {
-        nucleotides <- .nucleotides
-    }
+    nucleotides <- .select_nucleotides(select)
 
     ## If no nucleic chain is provided, all are used -------------------------
     if (is.null(nchain)) {
-        nchain <- as.character(unique(
-                        pdb$atom[pdb$atom$resid %in% nucleotides, "chain"]))
+        nchain <- as.character(unique(tmp_pdb$atom[
+                            tmp_pdb$atom$resid %in% nucleotides, "chain"]))
     }
+    ## Double check
+    resid <- unique(tmp_pdb$atom[tmp_pdb$atom$chain %in% nchain, "resid"])
+    if (!any(resid %in% nucleotides)) {
+        stop("Insufficent ", select, " atoms in structure. Chain:",
+                 paste(nchain, collapse=", "), sep="")
+    }
+
     ## Same for protein chains -----------------------------------------------
     if (is.null(pchain)) {
         pchain <- as.character(unique(
-                        pdb$atom[pdb$atom$resid %in% .aa, "chain"]))
+                        tmp_pdb$atom[tmp_pdb$atom$resid %in% .aa, "chain"]))
     }
-
 
     ## Select element numbers (eleno) ----------------------------------------
     ## Selection by entity molecule is more desirable, but not always possible
-    if ("entid" %in% names(pdb$atom)) {
+    if ("entid" %in% names(tmp_pdb$atom)) {
         entity <- TRUE
         ## Save nucleic and protein entity IDs
-        nentid <- unique(pdb$atom[pdb$atom$chain %in% nchain & 
-                            (pdb$atom$resid %in% nucleotides), "entid"])
-        pentid <- unique(pdb$atom[pdb$atom$chain %in% pchain & 
-                            (pdb$atom$resid %in% .aa), "entid"])
+        nentid <- unique(tmp_pdb$atom[tmp_pdb$atom$chain %in% nchain & 
+                            (tmp_pdb$atom$resid %in% nucleotides), "entid"])
+        pentid <- unique(tmp_pdb$atom[tmp_pdb$atom$chain %in% pchain & 
+                            (tmp_pdb$atom$resid %in% .aa), "entid"])
 
         ## Save nucleic and protein atoms
-        neleno <- pdb$atom[pdb$atom$entid %in% nentid, "eleno"]
-        peleno <- pdb$atom[pdb$atom$entid %in% pentid, "eleno"]
+        neleno <- tmp_pdb$atom[tmp_pdb$atom$entid %in% nentid, "eleno"]
+        peleno <- tmp_pdb$atom[tmp_pdb$atom$entid %in% pentid, "eleno"]
 
         ## Duble-check
         if (length(neleno) == 0 | length(peleno) == 0) {
@@ -95,19 +91,19 @@ function(pdb, cutoff=5, select="Nuc", nchain=NULL,
 
     if (!entity) {
         ## Save nucleic and protein indices
-        ninds  <- atom.select(pdb, chain=nchain)
-        pinds <- atom.select(pdb, string='protein', chain=pchain)
+        ninds  <- atom.select(tmp_pdb, chain=nchain)
+        pinds <- atom.select(tmp_pdb, string='protein', chain=pchain)
 
         ## Save nucleic and protein atoms
-        neleno <- pdb$atom[ninds$atom, "eleno"]
-        peleno <- pdb$atom[pinds$atom, "eleno"]
+        neleno <- tmp_pdb$atom[ninds$atom, "eleno"]
+        peleno <- tmp_pdb$atom[pinds$atom, "eleno"]
     }
 
     ## Check atoms were selected ---------------------------------------------
     if (length(neleno) == 0)
-        stop("insufficent 'nucleic' atoms in structure")
+        stop("Insufficent 'nucleic' atoms in structure")
     if (length(peleno) == 0)
-        stop("insufficent 'protein' atoms in structure")
+        stop("Insufficent 'protein' atoms in structure")
 
     ## According with desired analysis, set reference ------------------------
     if (select %in% c("RNA", "DNA", "Nuc")) {
@@ -119,7 +115,7 @@ function(pdb, cutoff=5, select="Nuc", nchain=NULL,
     }
 
     ## Obtain data.frame of distances ----------------------------------------
-    out <- measureElenoDist(pdb.orig, 
+    out <- measureElenoDist(pdb, 
                             refeleno=refeleno,
                             eleno=eleno,
                             cutoff=cutoff,
@@ -153,3 +149,31 @@ function(pdb, cutoff=5, select="Nuc", nchain=NULL,
 .aa <- c("GLY", "ALA", "VAL", "LEU", "ILE", "PHE", "TRP", "MET", "CYS",
             "PRO", "THR", "SER", "TYR", "GLN", "ASN",
             "ASP", "GLU", "HIS", "LYS", "ARG")
+
+## ===========================================================================
+## Subfunctions
+
+.select_nucleotides <-
+function(select) {
+    if (select == "RNA") {
+        return(.Rnucleotides)
+    } else if (select == "DNA") {
+        return(.Dnucleotides)
+    } else if (select == "Nuc") {
+        return(.nucleotides)
+    }
+}
+
+.treatH <-
+function(pdb, hydrogens, verbose) {
+    if (!hydrogens) {
+        pdb.inds <- atom.select(pdb, string="noh", verbose=verbose)
+        if (length(pdb.inds$atom) == 0) {
+            stop("Wrong hydrogen removal, try with hydrogens=TRUE")
+        }
+        return(trim.pdb(pdb, pdb.inds, verbose=verbose))
+    } else {
+        return(pdb)
+    }
+}
+

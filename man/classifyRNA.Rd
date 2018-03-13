@@ -7,8 +7,8 @@
 classifyRNA(pdbID, length = 3, ...)
 }
 \arguments{
-\item{pdbID}{A 4-character string that matches a structure in the Protein
-Data Bank.}
+\item{pdbID}{A 4-character string that matches a structure ID in the
+Protein Data Bank.}
 
 \item{length}{A positive integer to use as a threshold to classify RNA in
 the NoRNA group.}
@@ -22,17 +22,17 @@ A string with the type of RNA.
 From different queries to databases, the function classifies a structure in
 different groups:\cr
 \itemize{
-\item NoRNA: the structure does not contain RNA or it is shorter than a
+\item {NoRNA}: the structure does not contain RNA or it is shorter than a
 threshold set by "length".\cr
-\item nakedRNA: the only molecule(s) in the PDB ID is RNA.\cr
-\item protRNA: the PDB contains a protein-RNA complex.\cr
-\item DprotRNA: the PDB contains a protein-RNA complex and the protein has D
+\item {nakedRNA}: the only molecule(s) in the PDB ID is RNA.\cr
+\item {protRNA}: the PDB contains a protein-RNA complex.\cr
+\item {DprotRNA}: the PDB contains a protein-RNA complex and the protein has D
 aminoacids.\cr
--DNARNA: the PDB contains a DNA-RNA hybrid.\cr
--PNARNA: the PDB contains a PNA-RNA hybrid.\cr
--ANARNA: the PDB contains a ANA-RNA hybrid.\cr
--LNARNA: the PDB contains a LNA-RNA hybrid.\cr
--ligandRNA: the RNA is interacting with an organic ligand, ions are not
+\item {DNARNA}: the PDB contains a DNA-RNA hybrid.\cr
+\item {PNARNA}: the PDB contains a PNA-RNA hybrid.\cr
+\item {ANARNA}: the PDB contains a ANA-RNA hybrid.\cr
+\item {LNARNA}: the PDB contains a LNA-RNA hybrid.\cr
+\item {ligandRNA}: the RNA is interacting with an organic ligand, ions are not
 considered.\cr
 }
 }

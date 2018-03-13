@@ -45,7 +45,7 @@
 #'    ## Second example:
 #'    ## Obtain a PDB with just the interacting region between RNA and protein
 #'    pdb <- cifAsPDB("1nyb")
-#'    data <- findProtNucBindingSite(pdb, select="RNA", byres=T)
+#'    data <- findProtNucBindingSite(pdb, select="RNA", byres=TRUE)
 #'    sel <- bio3d::atom.select(pdb,
 #'                              eleno=append(data$eleno_A, data$eleno_B))
 #'    trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
@@ -116,7 +116,9 @@ function(cif, model=NULL, ntindex, chain, sel=NULL, cutoff=8,
     }
 
     ## Ensure that the output pdb has the correct format ---------------------
-    pdb <- .perfect_output_format(pdb, outeleno)
+    tmp <- .perfect_output_format(pdb, outeleno, query)
+    resno2 <- tmp$resno2
+    pdb <- tmp$pdb
 
     ## Save the output to a file if a name is specified ----------------------
     if (is.null(file)) {
@@ -196,7 +198,7 @@ function(pdb) {
 }
 
 .perfect_output_format <-
-function(pdb, outeleno) {
+function(pdb, outeleno, query) {
     if (any(is.na(pdb$atom$alt)))
         pdb$atom$alt <- ""
 
@@ -215,9 +217,11 @@ function(pdb, outeleno) {
             pdb$atom$resno[query3 == Unique[i]] <- i
             if (any(query == Unique[i])) resno2[query == Unique[i]] <- i
         }
+    } else {
+        resno2 <- NULL
     }
     if (any(is.na(pdb$atom$insert))) 
         pdb$atom$insert <- ""
 
-    return(pdb)
+    return(list(pdb=pdb, resno2=resno2))
 }

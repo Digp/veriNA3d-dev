@@ -1,6 +1,45 @@
-#Diego Gallego
-#Created: 2017-Mar-17
-#Updated: 2017-Apr-05
+#' Obtain nucleotide-protein interactions from a data set of structures
+#'
+#' Pipeline to generate a data.frame with the data about the closests 
+#' nucleotides to the protein for a list of PDB. 
+#' The data can be related to unique nucleotide
+#' indentifiers (ntID) by providing the output of the independent
+#' pipeline [getNucData()].
+#'
+#' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
+#'   objects as provided by "read.pdb", "read.cif", "cifParser" ...
+#' @param model A vector with same length of pdbID containing the
+#'   desired model for each pdbID. If all models are desired, use "all".
+#'   If no models are specified, the first one will be used for each pdbID
+#' @param chain A vector with same length of pdbID containing the
+#'   desired chain for each pdbID. If no chain is specified, all chains will
+#'   be analysed by default. Non-nucleic acid chains will be ignored.
+#' @param ntinfo Optional. A data.frame obtained from [getNucData()] for the
+#'   same dataset (or bigger), but not smaller.
+#' @param path Directory in which the PDB/CIF files can be found (if NULL, the
+#'   function will download them). If you provide a "path", make sure the
+#'   file names are the PDB IDs followed by ".cif" or "pdb". The function
+#'   will find them using the strings in pdbID, so make sure you use the 
+#'   same case.
+#' @param extension A string matching the files extension (e.g. ".pdb", 
+#'   ".cif", "pdb.gz", "cif.gz").
+#'   Only necessary if the PDB files are to be read from disk and a path is 
+#'   provided.
+#' @param cores Number of CPU cores to be used.
+#' @param cutoff A numeric with the maximum distance to return. To be passed 
+#'   to [findProtNucBindingSite()]
+#' @param ... Additional arguments to be passed to [findProtNucBindingSite()]
+#'
+#' @return A data.frame with data about the atomic distances in the 
+#'   interacting sites of every structure in the input set.
+#'
+#' @examples 
+#'  ## This is a toy example, see vignettes for more usages.
+#'  pdblist <- list("1nyb", "2ms1")
+#'  ntinfo <- make_aantinfo(pdbID=pdblist)
+#'
+#' @author Diego Gallego
+#'
 
 #Description: Function to generate a data.frame with the data about the closests ribonucleotides to the protein. 
 #It finds the eleno of each nucleotide, then use these eleno to find the minimum distance to the protein.
@@ -28,8 +67,8 @@
 #REQUIRES: The pdb objects should be loaded in RAM or have access to Internet (much much more slower)
 
 make_aantinfo <-
-function(pdbID, model=NULL, chain=NULL, ntinfo,
-            path=NULL, extension=NULL, cores=1, ...) {
+function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
+            path=NULL, extension=NULL, cores=1, cutoff=15, ...) {
 
     ## Make sure the input pdbID is a list -----------------------------------
     if (class(pdbID) == "CIF")
@@ -52,7 +91,20 @@ function(pdbID, model=NULL, chain=NULL, ntinfo,
     }
 
     ## Determine whether to read CIF/pdb objects from file, internet or input
-    read <- .whereToRead(pdbID=pdbID, path=path, extension=extension)
+    read <- .whereToRead(pdbID=pdbID, path=path, 
+                            extension=extension, verbose=FALSE)
+
+    ## Make sure that all pdbID are actually prot-nuc complexes --------------
+    to_remove <- .find_wrong_input(pdbID, read, cores)
+    if (length(to_remove) > 0) {
+        pdbID <- pdbID[-to_remove]
+        model <- model[-to_remove]
+        chain <- chain[-to_remove]
+        read  <- read[-to_remove]
+    }
+    if (length(pdbID) == 0) {
+        stop("You pdbID input is not a valid set of prot-nuc structures")
+    }
 
     ## Print progress bar ----------------------------------------------------
     total <- length(pdbID)
@@ -72,9 +124,7 @@ function(pdbID, model=NULL, chain=NULL, ntinfo,
                                                     path=path,
                                                     extension=extension,
                                                     pbar=pbar,
-                                                    cutoff=15, 
-                                                    select="RNA", 
-                                                    hydrogens=FALSE),
+                                                    cutoff=cutoff),
                                     SIMPLIFY=FALSE)
 
     ## Print new line after progress bar -------------------------------------
@@ -92,23 +142,13 @@ function(pdbID, model=NULL, chain=NULL, ntinfo,
     ## Coerce list to data.frame
     output <- do.call(rbind, interactionsdata)
 
-
-
-#    cols <- 12
-#    colsnames <- names(info[[1]])[1:cols]
-#    output <- as.data.frame(matrix(unlist(info), ncol=cols, byrow=TRUE),
-#    stringsAsFactors=FALSE)
-#    colnames(output) <- colsnames
-#    output$ntID <- as.numeric(output$ntID)
-#    output$elenoRNA <- as.numeric(output$elenoRNA)
-#    output$elenoPROT <- as.numeric(output$elenoPROT)
-#    output$resnoPROT <- as.numeric(output$resnoPROT)
-#    output$distance <- as.numeric(output$distance)
     return(output)
 }
-
+##############################################################################
+## Subfunctions
+## ===========================================================================
 .WrapperBindingSite <-
-function(pdb, model, chain, ..., name, ntinfo) {
+function(pdb, model, chain, ..., name, ntinfo=NULL) {
 
     residues <- unique(pdb$atom[pdb$atom$chain == chain, "resid"])
     if (any(residues %in% .nucleotides)) {
@@ -118,27 +158,76 @@ function(pdb, model, chain, ..., name, ntinfo) {
                                             model=model,
                                             nchain=chain,
                                             ...)
-        residues <- paste(aantinfo$resno_A, aantinfo$insert_A, 
-                            aantinfo$chain_A, sep=".")
-        #unique_res <- unique(residues)
-        ntinfo_res <- paste(ntinfo$resno, ntinfo$insert, 
-                            ntinfo$chain, sep=".")
 
-        nt_id <- lapply(residues, FUN=function(x, ntinfo_res) {
-                                        which(ntinfo_res == x)
-                                    }, ntinfo_res=ntinfo_res)
+        ## Add the nucleotide identifier if ntinfo was provided --------------
+        if (!is.null(ntinfo)) {
+            residues <- paste(aantinfo$resno_A, aantinfo$insert_A, 
+                                aantinfo$chain_A, sep=".")
+            ntinfo_res <- paste(ntinfo$resno, ntinfo$insert, 
+                                ntinfo$chain, sep=".")
+    
+            nt_id <- lapply(residues, FUN=function(x, ntinfo_res) {
+                                            which(ntinfo_res == x)
+                                        }, ntinfo_res=ntinfo_res)
+    
+            ntID <- ntinfo[unlist(nt_id), "ntID"]
+            
+            aantinfo <- cbind(ntID=ntID, 
+                                pdbID=rep(name, nrow(aantinfo)), 
+                                model=rep(model, nrow(aantinfo)),
+                                aantinfo)
 
-        ntID <- ntinfo[unlist(nt_id), "ntID"]
-        
-        ## Add pdbID/name
-        aantinfo <- cbind(ntID=ntID, 
-                            pdbID=rep(name, nrow(aantinfo)), 
+        ## In any case, add the pdbID and model to the output data.frame -----
+        } else {
+            aantinfo <- cbind(
+                            pdbID=rep(name, nrow(aantinfo)),
                             model=rep(model, nrow(aantinfo)),
                             aantinfo)
-
+        }
         return(aantinfo)
 
+    ## If there is no nucleotide in the given chain, return nothing ----------
     } else {
         return()
+    }
+}
+
+## Check that all pdbID are actually prot-nuc complexes
+.find_wrong_input <-
+function(pdbID, read, cores) {
+    inds <- .xmapply(FUN=.is_wrong_input,
+                        pdbID=pdbID,
+                        read=read,
+                        mc.cores=cores)
+    return(which(inds))
+}
+
+.is_wrong_input <-
+function(pdbID, read) {
+
+    if (read == "read.list") {
+        if (any(pdbID$calpha)) {
+            return(FALSE)
+        } else {
+            return(TRUE)
+        }
+
+    } else if (read == "read.list.cif") {
+        resid <- unique(cifAtom_site(cif)$label_comp_id)
+        
+        if (any(resid %in% .aa)) {
+            return(FALSE)
+        } else {
+            return(TRUE)
+        }
+
+    } else {
+        name <- pdbID
+
+        if (queryCompType(name) == "Prot-nuc") {
+            return(FALSE)
+        } else {
+            return(TRUE)
+        }
     }
 }

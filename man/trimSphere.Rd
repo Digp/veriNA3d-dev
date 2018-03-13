@@ -6,7 +6,7 @@
 surrounding area.}
 \usage{
 trimSphere(cif, model = NULL, ntindex, chain, sel = NULL, cutoff = 8,
-  cutres = FALSE, file = NULL, verbose = TRUE)
+  cutres = FALSE, file = NULL, verbose = TRUE, ...)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
@@ -37,6 +37,8 @@ FALSE to return whole residues even if further than the cutoff.}
 fucntions just returns the pdb object.}
 
 \item{verbose}{A logical to print details of the process.}
+
+\item{...}{Arguments to be passed to internal functions.}
 }
 \value{
 A smaller pdb object or a pdb file.
@@ -47,7 +49,7 @@ function finds all the atoms in the given area and returns a pdb object
 that only includes the nearest atoms.
 }
 \examples{
-   ## Toy example
+   ## Toy example:
    cif <- cifParser("1s72")
 
    ## Generate a smaller pdb with the atoms 55 to 58 of the RNA chain "9"
@@ -59,6 +61,13 @@ that only includes the nearest atoms.
    smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
      cutoff=5, verbose=FALSE, file="output.pdb")
 
+   ## Second example:
+   ## Obtain a PDB with just the interacting region between RNA and protein
+   pdb <- cifAsPDB("1nyb")
+   data <- findProtNucBindingSite(pdb, select="RNA", byres=TRUE)
+   sel <- bio3d::atom.select(pdb,
+                             eleno=append(data$eleno_A, data$eleno_B))
+   trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
 
 }
 \author{

@@ -2,21 +2,21 @@
 #'
 #' From different queries to databases, the function classifies a structure in
 #' different groups:\cr
-#' - NoRNA: the structure does not contain RNA or it is shorter than a 
+#' - {NoRNA}: the structure does not contain RNA or it is shorter than a 
 #' threshold set by "length".\cr
-#' - nakedRNA: the only molecule(s) in the PDB ID is RNA.\cr
-#' - protRNA: the PDB contains a protein-RNA complex.\cr
-#' - DprotRNA: the PDB contains a protein-RNA complex and the protein has D 
+#' - {nakedRNA}: the only molecule(s) in the PDB ID is RNA.\cr
+#' - {protRNA}: the PDB contains a protein-RNA complex.\cr
+#' - {DprotRNA}: the PDB contains a protein-RNA complex and the protein has D 
 #' aminoacids.\cr
-#' -DNARNA: the PDB contains a DNA-RNA hybrid.\cr
-#' -PNARNA: the PDB contains a PNA-RNA hybrid.\cr
-#' -ANARNA: the PDB contains a ANA-RNA hybrid.\cr
-#' -LNARNA: the PDB contains a LNA-RNA hybrid.\cr
-#' -ligandRNA: the RNA is interacting with an organic ligand, ions are not 
+#' - {DNARNA}: the PDB contains a DNA-RNA hybrid.\cr
+#' - {PNARNA}: the PDB contains a PNA-RNA hybrid.\cr
+#' - {ANARNA}: the PDB contains a ANA-RNA hybrid.\cr
+#' - {LNARNA}: the PDB contains a LNA-RNA hybrid.\cr
+#' - {ligandRNA}: the RNA is interacting with an organic ligand, ions are not 
 #' considered.\cr
 #'
-#' @param pdbID A 4-character string that matches a structure in the Protein 
-#' Data Bank.
+#' @param pdbID A 4-character string that matches a structure ID in the
+#' Protein Data Bank.
 #' @param length A positive integer to use as a threshold to classify RNA in
 #' the NoRNA group.
 #' @param ... Arguments to be passed to query function (see ?queryFunctions).

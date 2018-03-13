@@ -28,7 +28,8 @@ output of getNucData function).}
 \item{file}{A string to save the output in a pdb formated file. If NULL the
 fucntions just returns the pdb object.}
 
-\item{...}{arguments to pass to trimSphere (type ?trimSphere for details)}
+\item{...}{Arguments to be passed to trimSphere (type ?trimSphere for
+details)}
 }
 \value{
 A smaller pdb object or a pdb file.
