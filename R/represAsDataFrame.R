@@ -1,6 +1,6 @@
 #' Coerce Representative list to a data.frame
 #'
-#' Takes the output of getLeontisList or getAlternativeRepresentants, which
+#' Takes the output of getLeontisList or getAltRepres, which
 #' represent molecules with the format "XXXX|M|C+XXXX|M|C" (XXXX: PDB ID; 
 #' M: Model; C: Chain) and returns a data.frame with a more friendly 
 #' structure:\cr 
@@ -8,19 +8,19 @@
 #' Col 2: PDB ID.\cr
 #' Col 3: Model.\cr
 #' Col 4: Chain.\cr
-#' Columns 2 to 4 can be the direct input of [getNucData()]
+#' Columns 2 to 4 can be the direct input of [pipeNucData()]
 #' 
-#' @param nrlist The output of getLeontisList or getAlternativeRepresentants.
+#' @param nrlist The output of getLeontisList or getAltRepres.
 #'
 #' @return A data frame with the data of the representative structures
 #' 
 #' @examples 
 #'  data <- getLeontisList(release=3.2, threshold="1.5A")
-#'  reps <- repsAsDataFrame(nrlist=data)
+#'  reps <- represAsDataFrame(nrlist=data)
 #'
 #' @author Diego Gallego
 #'
-repsAsDataFrame <-
+represAsDataFrame <-
 function(nrlist) {
     ## Get repreesntative list -----------------------------------------------
     rep        <- nrlist$Representative

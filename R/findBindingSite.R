@@ -25,11 +25,11 @@
 #'
 #' @examples
 #'    pdb <- cifParser("1b3t") # A protein-DNA complex
-#'    data <- findProtNucBindingSite(pdb, select="DNA", byres=TRUE)
+#'    data <- findBindingSite(pdb, select="DNA", byres=TRUE)
 #'
 #' @author Diego Gallego
 #'
-findProtNucBindingSite <-
+findBindingSite <-
 function(pdb, cutoff=5, select="Nuc", nchain=NULL,
             pchain=NULL, hydrogens=FALSE, byres=FALSE, verbose=FALSE, ...) {
 
@@ -58,7 +58,7 @@ function(pdb, cutoff=5, select="Nuc", nchain=NULL,
     resid <- unique(tmp_pdb$atom[tmp_pdb$atom$chain %in% nchain, "resid"])
     if (!any(resid %in% nucleotides)) {
         stop("Insufficent ", select, " atoms in structure. Chain:",
-                 paste(nchain, collapse=", "), sep="")
+                    paste(nchain, collapse=", "), sep="")
     }
 
     ## Same for protein chains -----------------------------------------------

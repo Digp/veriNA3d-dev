@@ -33,11 +33,11 @@
 #'  pdblist <- list("1bau", "2rn1")
 #'  model <- list("1", "2")
 #'  chain <- list("all", "all")
-#'  ntinfo <- getNucData(pdbID=pdblist, model=model, chain=chain)
+#'  ntinfo <- pipeNucData(pdbID=pdblist, model=model, chain=chain)
 #'
 #' @author Diego Gallego
 #'
-getNucData <-
+pipeNucData <-
 function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
             path=NULL, extension=NULL, cores=1, ...) {
 
@@ -99,8 +99,9 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
         return(ntinfo)
     }
 }
-
 ##############################################################################
+## Subfunctions
+## ===========================================================================
 ## Where should the input be read from?
 .whereToRead <-
 function(pdbID, path=NULL, extension=NULL, verbose=TRUE) {
@@ -181,10 +182,9 @@ function(pdbID, path=NULL, extension=NULL, verbose=TRUE) {
     return(read)
 }
 
-##############################################################################
+## ===========================================================================
 ## Intermediate wrapper that finds the pdb/CIF object and generates all the 
 ## possible model&chain combinations.
-
 .manage_PDB <-
 function(pdbID, model, chain, read, ..., 
             path=NULL, extension=NULL, index, pbar, FUN) {
@@ -268,9 +268,8 @@ function(pdbID, model, chain, read, ...,
     }
 }
 
-##############################################################################
+## ===========================================================================
 ## Takes a chain and model and calls the functions to get the desired data
-
 .make_chain_ntinfo <-
 function(pdb, model, chain, range, ..., name) {
 
@@ -299,4 +298,3 @@ function(pdb, model, chain, range, ..., name) {
 
     return(ntinfo)
 }
-

@@ -1,9 +1,11 @@
 #Diego Gallego
 #Date: 2017-Mar-22
-#INPUT: ntinfo is the output of the getNucData function
+#INPUT: ntinfo is the output of the pipeNucData function
 #   pucker is the pucker state
-#   paper is a logical: if TRUE it adds additional conditions to reproduce the future published results
-#       if FALSE, it just return the desired nucleotides according with the phase
+#   paper is a logical: if TRUE it adds additional conditions to reproduce
+# the future published results
+#       if FALSE, it just return the desired nucleotides according with the 
+#phase
 
 # ntinfo coulb be any data.frame as long as it contains the column "pu_phase"
 # The phase data should be in the format from 0 to 360º
@@ -23,12 +25,12 @@ subset_bypucker<-function(ntinfo, pucker=NULL, paper=TRUE, range=NULL){
         if(paper&&pucker %in% c("north","south","C3'endo","C2'endo")){
             if(pucker %in% c("north","C3'endo")){
                 return(ntinfo[which(complete.cases(ntinfo$pu_phase)&
-          (ntinfo$pu_phase>342|ntinfo$pu_phase<54)&ntinfo$Dp>2.9&
-          (ntinfo$delta>54|ntinfo$delta<114)),"ntID"])
+                (ntinfo$pu_phase>342|ntinfo$pu_phase<54)&ntinfo$Dp>2.9&
+                (ntinfo$delta>54|ntinfo$delta<114)),"ntID"])
             }else if(pucker %in% c("south","C2'endo")){
                 return(ntinfo[which(complete.cases(ntinfo$pu_phase)&
-          ntinfo$pu_phase>126&ntinfo$pu_phase<198&ntinfo$Dp<=2.9&
-          (ntinfo$delta>117|ntinfo$delta<177)),"ntID"])
+                        ntinfo$pu_phase>126&ntinfo$pu_phase<198&ntinfo$Dp<=2.9&
+                        (ntinfo$delta>117|ntinfo$delta<177)),"ntID"])
             }
         }else{
             puckeressentials<-as.data.frame(matrix(c(
@@ -52,7 +54,7 @@ subset_bypucker<-function(ntinfo, pucker=NULL, paper=TRUE, range=NULL){
             puckeressentials$to<-as.numeric(puckeressentials$to)
             if(!pucker %in% puckeressentials$pucker){
                 stop(paste("Introduce valid pucker state: ", 
-          paste(puckeressentials$pucker, collapse="; "),sep=""))
+                        paste(puckeressentials$pucker, collapse="; "),sep=""))
             }
             range<-as.numeric(puckeressentials[puckeressentials$pucker==pucker,
             c("from","to")])
@@ -60,10 +62,10 @@ subset_bypucker<-function(ntinfo, pucker=NULL, paper=TRUE, range=NULL){
     }
     if(range[2]>range[1]){
         output<-ntinfo[which(ntinfo$pu_phase>range[1]&
-      ntinfo$pu_phase<=range[2]),"ntID"]
+        ntinfo$pu_phase<=range[2]),"ntID"]
     }else{
-    output<-ntinfo[which(ntinfo$pu_phase>range[1]|
-      ntinfo$pu_phase<=range[2]),"ntID"]
+        output<-ntinfo[which(ntinfo$pu_phase>range[1]|
+        ntinfo$pu_phase<=range[2]),"ntID"]
     }
     return(output)
 }

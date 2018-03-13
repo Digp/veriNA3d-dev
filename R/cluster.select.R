@@ -45,8 +45,8 @@ function(
     if(is.null(dens)){
     #Calculate density using a kernel density estimation function
         dens=kde2d(ntinfo[ntID,x],ntinfo[ntID,y],
-      n=c(length(lims[1]:lims[2]),length(lims[3]:lims[4])),
-          h=bandwidths,lims=lims)
+        n=c(length(lims[1]:lims[2]),length(lims[3]:lims[4])),
+            h=bandwidths,lims=lims)
     }
     mean_dens=mean(dens$z)
     sd_dens=sd(dens$z)
@@ -126,12 +126,14 @@ function(
     for(j in as.vector(seq_along(kk))[-i]){
         if(any(names(kk[[j]])==as.numeric(ind)+1)){
 #print(c(i,j))
-        if(any(kk[[j]][[as.character(as.numeric(ind)+1)]] %in% kk[[i]][[ind]])){
+        if(any(kk[[j]][[as.character(as.numeric(ind)+1)]] %in% 
+                                                kk[[i]][[ind]])){
             #same cluster
 #           print("HI")
             inds<-names(kk[[i]])
             for(name in inds){
-            kk[[j]][[ name ]] <- sort(append(kk[[j]][[ name ]], kk[[i]][[ name ]]))
+            kk[[j]][[ name ]] <- sort(append(kk[[j]][[ name ]], 
+                                                kk[[i]][[ name ]]))
             }
             kk[[i]][[ind]]<-NA
         }
@@ -178,21 +180,25 @@ function(
 #       print(j)
         for(k in seq_along(grid_list[[inds[j]]])){
 #print(c(j,k))
-            if(any(grid_list[[inds[j]]][[k]] %in% clusters[[as.character(inds[j-1])]])){
+            if(any(grid_list[[inds[j]]][[k]] %in% 
+                                    clusters[[as.character(inds[j-1])]])){
         if(is.null(clusters[[j]])){
                     clusters[[j]]<-grid_list[[inds[j]]][[k]]
                     names(clusters)[j]<-inds[j]
         }else{
-            clusters[[j]]<-sort(append(clusters[[j]],grid_list[[inds[j]]][[k]]))
+            clusters[[j]]<-sort(append(clusters[[j]],
+                                    grid_list[[inds[j]]][[k]]))
         }
                 grid_list[[inds[j]]][[k]]<-NA
                 #break()
             }
         }
-    if(length(grid_list[[inds[j]]][!unlist(lapply(grid_list[inds[j]],is.na))])==0){
+    if(length(grid_list[[inds[j]]][!unlist(
+                                lapply(grid_list[inds[j]],is.na))])==0){
             grid_list[[inds[j]]]<-list(NA)
         }else{
-            grid_list[[inds[j]]]<-grid_list[[inds[j]]][!unlist(lapply(grid_list[inds[j]],is.na))]
+            grid_list[[inds[j]]]<-grid_list[[inds[j]]][!unlist(
+                                lapply(grid_list[inds[j]],is.na))]
         }
     }
     clusters<-list(clusters[lapply(clusters,length)>0])

@@ -21,13 +21,13 @@
 #'
 #' @examples 
 #'  data <- getLeontisList(release=3.2, threshold="1.5A")
-#'  alternative <- getAlternativeRepresentants(data=data, 
+#'  alternative <- getAltRepres(data=data, 
 #'          type="nakedRNA")
 #'
 #' @author Diego Gallego
 #'
 
-getAlternativeRepresentants <-
+getAltRepres <-
 function(data, technique=NULL, resol=NULL, type=NULL, verbose=FALSE) {
     ## Make sure the inputs make sense ---------------------------------------
     if (is.null(c(technique, resol, type))) {

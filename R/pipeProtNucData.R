@@ -4,7 +4,7 @@
 #' nucleotides to the protein for a list of PDB. 
 #' The data can be related to unique nucleotide
 #' indentifiers (ntID) by providing the output of the independent
-#' pipeline [getNucData()].
+#' pipeline [pipeNucData()].
 #'
 #' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
 #'   objects as provided by "read.pdb", "read.cif", "cifParser" ...
@@ -14,7 +14,7 @@
 #' @param chain A vector with same length of pdbID containing the
 #'   desired chain for each pdbID. If no chain is specified, all chains will
 #'   be analysed by default. Non-nucleic acid chains will be ignored.
-#' @param ntinfo Optional. A data.frame obtained from [getNucData()] for the
+#' @param ntinfo Optional. A data.frame obtained from [pipeNucData()] for the
 #'   same dataset (or bigger), but not smaller.
 #' @param path Directory in which the PDB/CIF files can be found (if NULL, the
 #'   function will download them). If you provide a "path", make sure the
@@ -27,8 +27,8 @@
 #'   provided.
 #' @param cores Number of CPU cores to be used.
 #' @param cutoff A numeric with the maximum distance to return. To be passed 
-#'   to [findProtNucBindingSite()]
-#' @param ... Additional arguments to be passed to [findProtNucBindingSite()]
+#'   to [findBindingSite()]
+#' @param ... Additional arguments to be passed to [findBindingSite()]
 #'
 #' @return A data.frame with data about the atomic distances in the 
 #'   interacting sites of every structure in the input set.
@@ -36,37 +36,11 @@
 #' @examples 
 #'  ## This is a toy example, see vignettes for more usages.
 #'  pdblist <- list("1nyb", "2ms1")
-#'  ntinfo <- make_aantinfo(pdbID=pdblist)
+#'  aantinfo <- pipeProtNucData(pdbID=pdblist)
 #'
 #' @author Diego Gallego
 #'
-
-#Description: Function to generate a data.frame with the data about the closests ribonucleotides to the protein. 
-#It finds the eleno of each nucleotide, then use these eleno to find the minimum distance to the protein.
-
-#INPUT: effectivelist: vector of strings with Leontis format ("pdbID|model|chain"). It should only contain pdbID of the protRNA type.
-#   ntinfo
-#   cores
-
-#OUTPUT: a data.frame with the following columns:
-# 1, ntID to identify the ribonucleotide
-# 2, eleno of the closest RNA atom to the protein
-# 3, elety of the closest RNA atom to the protein
-# 4, resid of the closest RNA residue to the protein
-#Then, about the protein:
-# 5, eleno of the closest protein atom to the RNA
-# 6, elety of the closest protein atom to the RNA
-# 7, resno of the closest protein residue to the RNA
-# 8, resid of the closest protein residue to the RNA
-# 9, chain of the closest protein residue to the RNA
-#10, asym_id of the closest protein residue to the RNA (a different identifier for the chain necessary to work with CIF files and DSSP at date 2017-04-05, due to a bug in DSSP when working with CIF files)
-#11, insert of the closest protein residue to the RNA
-#Finally
-#12, distance to the protein
-
-#REQUIRES: The pdb objects should be loaded in RAM or have access to Internet (much much more slower)
-
-make_aantinfo <-
+pipeProtNucData <-
 function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
             path=NULL, extension=NULL, cores=1, cutoff=15, ...) {
 
@@ -154,16 +128,18 @@ function(pdb, model, chain, ..., name, ntinfo=NULL) {
     if (any(residues %in% .nucleotides)) {
 
         ## Check and measure the chain and make common data.frame ------------
-        aantinfo <- findProtNucBindingSite(pdb=pdb,
+        aantinfo <- findBindingSite(pdb=pdb,
                                             model=model,
                                             nchain=chain,
                                             ...)
 
         ## Add the nucleotide identifier if ntinfo was provided --------------
         if (!is.null(ntinfo)) {
-            residues <- paste(aantinfo$resno_A, aantinfo$insert_A, 
+            residues <- paste(name, model,
+                                aantinfo$resno_A, aantinfo$insert_A, 
                                 aantinfo$chain_A, sep=".")
-            ntinfo_res <- paste(ntinfo$resno, ntinfo$insert, 
+            ntinfo_res <- paste(ntinfo$pdbID, ntinfo$model,
+                                ntinfo$resno, ntinfo$insert, 
                                 ntinfo$chain, sep=".")
     
             nt_id <- lapply(residues, FUN=function(x, ntinfo_res) {

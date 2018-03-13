@@ -27,7 +27,7 @@
 angles_dist <-
 function(ntID=NULL, ntinfo,
     angles=c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
-     "chi", "pu_phase"),
+                "chi", "pu_phase"),
     o="dihedrals", width=15, height=15, bg="white",
     units="cm", res=200, cex=0.6, cols=3){
 
@@ -38,10 +38,10 @@ function(ntID=NULL, ntinfo,
     rows<-ceiling(length(angles)/cols)
 
     png(paste(o,".png",sep=""), width=width, height=height, bg=bg,
-     units=units, res=res)
+                units=units, res=res)
     par(mfrow=c(rows,cols),mar=c(2,2,2,2),cex=cex)
     lapply(angles, FUN=function(x){
-      plot_circular_distribution(data=ntinfo[ntinfo$ntID %in% ntID,x],
+        plot_circular_distribution(data=ntinfo[ntinfo$ntID %in% ntID,x],
         clockwise=FALSE, start.degree=0, main=x)
     })
     dev.off()
@@ -146,11 +146,11 @@ plot.eta.theta2<-function(data,pucker,dir,ntinfo,bandwidths=NULL,eta="eta",theta
     dev.off()
 
     for(j in 1:ncol(newdensZ)){
-     for(i in 1:nrow(newdensZ)){
-      if(newdensZ[i,j]<mean_z){
-       newdensZ[i,j]<-NA
-      }
-     }
+        for(i in 1:nrow(newdensZ)){
+            if(newdensZ[i,j]<mean_z){
+                newdensZ[i,j]<-NA
+            }
+        }
     }
     png(paste("./",dir,"/",pucker,"3D_leftview.png",sep=""),width=15,height=15,bg="white",units="cm",res=600)
     par(mfrow=c(1,1),mar=c(3,3,1.0,3),cex=0.7,lty=1,las=1)
@@ -240,11 +240,11 @@ plot.eta.theta<-function(data,pucker,classes,ntinfo,bandwidths=c(36,36)){
     thetaseq<-seq(thetarange[1],thetarange[2],length=361)
     newdensZ<-z$z
     for(j in 1:ncol(newdensZ)){
-     for(i in 1:nrow(newdensZ)){
-      if(newdensZ[i,j]<mean_z){
-       newdensZ[i,j]<-NA
-      }
-     }
+        for(i in 1:nrow(newdensZ)){
+            if(newdensZ[i,j]<mean_z){
+                newdensZ[i,j]<-NA
+            }
+        }
     }
     png(paste("./",classes,"/",pucker,"3D.png",sep=""),width=15,height=15,bg="white",units="cm",res=600)
     par(mfrow=c(1,1),mar=c(3,3,1.0,3),cex=0.7,lty=1,las=1)
@@ -326,9 +326,9 @@ plot_circular_distribution<-function(data, clockwise=FALSE, start.degree=0, main
     circos.initialize( factors=fac, x=data, xlim = c(0, 360))
     circos.par("track.height" = 0.05)
     circos.trackPlotRegion(factors = fac, ylim=c(0,0.1), bg.border="white",
-      panel.fun = function(x, y) {
-        circos.axis(major.at=seq(from=0,to=360,by=30), labels=labels)
-      })
+        panel.fun = function(x, y) {
+            circos.axis(major.at=seq(from=0,to=360,by=30), labels=labels)
+        })
     circos.trackPoints(fac, data, y=rep(0.05,times=length(data)), col = "blue", pch = 16, cex = 0.5)
     circos.par("track.height" = 0.2)
     circos.trackHist(fac, data, bg.col = "white", bg.border="white", col = rgb(0.1,0.5,0.8,0.3),breaks=360)
@@ -379,11 +379,11 @@ plot_et<-function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, eta="eta", thet
     sd_z=sd(dens$z)
     }
     plot(ntinfo[ntinfo$ntID %in% ntID, eta],
-     ntinfo[ntinfo$ntID %in% ntID, theta],
-     xlim=c(0,360),ylim=c(0,360),
-     xlab=expression(paste(eta," (degrees)",sep="")),
-     ylab=expression(paste(theta," (degrees)",sep="")),
-     pch=19,cex=0.3,col="gray70",xaxt="n",yaxt="n")
+        ntinfo[ntinfo$ntID %in% ntID, theta],
+        xlim=c(0,360),ylim=c(0,360),
+        xlab=expression(paste(eta," (degrees)",sep="")),
+        ylab=expression(paste(theta," (degrees)",sep="")),
+        pch=19,cex=0.3,col="gray70",xaxt="n",yaxt="n")
     if(highlight_helical){
         abline(h=190,lty=2,lwd=1.5,col="red",cex=2)
         abline(h=240,lty=2,lwd=1.5,col="red",cex=2)
@@ -461,12 +461,12 @@ rvec_plot<-function(ntID=NULL, df_rvectors, o="", width=15, height=15, bg="white
 
     png(paste(o,".png",sep=""),width=15,height=15,bg="white",units="cm",res=200)
     plot(df_rvectors[neighbour5,"rho"],
-      df_rvectors[neighbour5,"z"],
-      col="red", pch=19, cex=0.5, ylab="z (A)", xlab="rho (A)",
-      ylim=range(df_rvectors[,"z"]), xlim=range(df_rvectors[,"rho"]))
+        df_rvectors[neighbour5,"z"],
+        col="red", pch=19, cex=0.5, ylab="z (A)", xlab="rho (A)",
+        ylim=range(df_rvectors[,"z"]), xlim=range(df_rvectors[,"rho"]))
     points(df_rvectors[neighbour3,"rho"],
-      df_rvectors[neighbour3,"z"],
-      col="green", pch=19, cex=0.5)
+        df_rvectors[neighbour3,"z"],
+        col="green", pch=19, cex=0.5)
     legendtxt<-c("5'", "3'")
     legend("bottomleft",legend=legendtxt,pch=19,bty="n",col=c("red","green"))
     dev.off()

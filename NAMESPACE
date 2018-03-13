@@ -43,15 +43,13 @@ export(
 
     eRMSD, 
 
-    findProtNucBindingSite,
+    findBindingSite,
 
-    getAlternativeRepresentants, 
+    getAltRepres, 
     getLeontisList,
-    getNucData,
 
     hasHetAtm, 
 
-    make_aantinfo, 
     measureEntityDist,
     measureElenoDist,
     measureNuc, 
@@ -80,11 +78,13 @@ export(
     queryRevdate,
     queryTechnique,
 
-    repsAsDataFrame,
+    pipeNucData,
+    pipeProtNucData, 
+
+    represAsDataFrame,
     rvec_plot, 
     rVector, 
 
-    select_ntID_neighbours,
     selectModel, 
     subset_bypucker, 
     subset_ntinfo, 
