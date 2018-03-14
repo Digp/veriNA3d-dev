@@ -28,8 +28,8 @@ Given a function of interest, it is applied to all the PDB entries.
 See supported functions in ?queryFunctions.
 }
 \examples{
-listpdb <- c("1s72", "1bau", "1rna")
-applyToPDB(queryTechnique, listpdb, verbose=FALSE)
+    listpdb <- c("1s72", "1bau", "1rna")
+    applyToPDB(queryTechnique, listpdb, verbose=FALSE)
 
 }
 \author{

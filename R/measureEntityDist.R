@@ -46,11 +46,11 @@ measureEntityDist <-
 function(cif, model=NULL, refent, entities=c("all"), ...) { 
 
     ## Check if input cif argument is a PDB ID or a "cif" object -------------
-    cif <- .cifMakeSure(cif, ...)
+    cif <- .cifMakeSure(cif)
 
     ## Select model of interest ----------------------------------------------
     if (!is.null(model)) {
-        cif <- selectModel(cif, model, ...)
+        cif <- selectModel(cif, model)
     }
 
     ## If the reference entity is to be compared with all the rest, they must
@@ -62,7 +62,7 @@ function(cif, model=NULL, refent, entities=c("all"), ...) {
 
     ## Now coerce the CIF S4 object to a pdb S3 object -----------------------
     alt <- unique(cifAtom_site(cif)$label_alt_id)
-    pdb <- cifAsPDB(pdb, alt=alt)
+    pdb <- cifAsPDB(cif, alt=alt)
 
     ## Find element numbers (eleno) ------------------------------------------
     refent_ind <- which(pdb$atom$entid == refent)
@@ -77,5 +77,5 @@ function(cif, model=NULL, refent, entities=c("all"), ...) {
         pdb=pdb,
         refeleno=A_eleno,
         eleno=B_eleno,
-        ...))
+        ...=...))
 }

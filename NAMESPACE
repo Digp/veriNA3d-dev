@@ -41,7 +41,6 @@ export(
     classifyRNA,
 
     cleanByPucker,
-    subset_ntinfo,
  
     cluster.select, 
 
@@ -59,7 +58,7 @@ export(
     measureNuc, 
 
     plot_circular_distribution, 
-    plot.eta.theta2, 
+    plotEtaTheta, 
     plot_et, 
     plot_hist, 
 

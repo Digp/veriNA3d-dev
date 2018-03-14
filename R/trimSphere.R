@@ -202,6 +202,9 @@ function(pdb, outeleno, query) {
     if (any(is.na(pdb$atom$alt)))
         pdb$atom$alt <- ""
 
+    if (any(pdb$atom$alt == "."))
+        pdb$atom$alt <- ""
+
     pdb$atom$charge <- ""
     pdb$atom$entid <- ""
     if (any(outeleno > 99999))
@@ -221,6 +224,9 @@ function(pdb, outeleno, query) {
         resno2 <- NULL
     }
     if (any(is.na(pdb$atom$insert))) 
+        pdb$atom$insert <- ""
+
+    if (any(pdb$atom$insert == "?")) 
         pdb$atom$insert <- ""
 
     return(list(pdb=pdb, resno2=resno2))

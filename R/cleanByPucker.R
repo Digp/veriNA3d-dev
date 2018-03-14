@@ -38,8 +38,8 @@ function(ntinfo, surenorth=FALSE, suresouth=FALSE,
     ## Return north without outliers -----------------------------------------
     if (surenorth) {
         if (verbose) {
-            cat("Returning nucleotides in north with phase between 342-54º,",
-                    " delta between 54-114º and Dp distance > 2.9 A\n", 
+            cat("Returning nucleotides in north with phase between 342-54,",
+                    " delta between 54-114 and Dp distance > 2.9 A\n", 
                     sep="")
         }
         return(ntinfo[which(complete.cases(ntinfo$pu_phase) &
@@ -50,8 +50,8 @@ function(ntinfo, surenorth=FALSE, suresouth=FALSE,
     ## Return south without outliers -----------------------------------------
     } else if (suresouth) {
         if (verbose) {
-            cat("Returning nucleotides in south with phase between 126-198º,",
-                    " delta between 117-177º and Dp distance < 2.9 A\n", 
+            cat("Returning nucleotides in south with phase between 126-198,",
+                    " delta between 117-177 and Dp distance < 2.9 A\n", 
                     sep="")
         }
         return(ntinfo[which(complete.cases(ntinfo$pu_phase) & 
@@ -85,14 +85,14 @@ function(ntinfo, surenorth=FALSE, suresouth=FALSE,
                             ntinfo$pu_phase <= range[2]), "ntID"]
         if (verbose) {
             cat("Returning nucleotides in phase between: ", 
-                range[1], "-",range[2], "º\n", sep="")
+                range[1], "-",range[2], "\n", sep="")
         }
     } else {
         output <- ntinfo[which(ntinfo$pu_phase > range[1] |
                             ntinfo$pu_phase <= range[2]), "ntID"]
         if (verbose) {
             cat("Returning nucleotides in phase between: ", 
-                range[2], "-",range[1], "º\n", sep="")
+                range[2], "-",range[1], "\n", sep="")
         }
     }
     return(output)

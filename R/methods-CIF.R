@@ -198,7 +198,7 @@ function(x) {
 #
 ## .cifMakeSure
 .cifMakeSure <-
-function(cif, verbose=FALSE, check="isCIF") {
+function(cif, verbose=FALSE, check=".isCIF") {
     ## Check if input cif argument is a PDB ID -------------------------------
     if (length(class(cif) == 1) && class(cif) == "character") {
 
