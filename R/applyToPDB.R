@@ -5,36 +5,38 @@
 #'
 #' @param FUNCTION A function of interest.
 #' @param listpdb A list/vector containing the PDB IDs of interest. If NULL,
-#' the complete list of PDB entries is downloaded and used.
+#'     the complete list of PDB entries is downloaded and used.
 #' @param verbose A logical to print details of the loop process.
 #' @param as.df A logical that stands for "as.data.frame". If TRUE, the output
-#' will be returned in the form of a data.frame, otherwise a list.
+#'     will be returned in the form of a data.frame, otherwise a list.
 #' @param ... optional arguments to FUNCTION.
 #'
 #' @return A data.frame with the PDB IDs (first colunm) and the output of the
-#' function of interest (second column) or a list with the results.
+#'     function of interest (second column) or a list with the results.
 #'
 #' @examples
-#' listpdb <- c("1s72", "1bau", "1rna")
-#' applyToPDB(queryTechnique, listpdb, verbose=FALSE)
+#'     listpdb <- c("1s72", "1bau", "1rna")
+#'     applyToPDB(queryTechnique, listpdb, verbose=FALSE)
 #'
 #' @author Diego Gallego
 #'
 
 applyToPDB <-
 function(FUNCTION, listpdb=NULL, verbose=TRUE, as.df=TRUE, ...) {
+
     ## Match function --------------------------------------------------------
     FUNCTION <- match.fun(FUNCTION)
+
     ## Download full PDB list if necessary -----------------------------------
-    if (is.null(listpdb)) {
+    if (is.null(listpdb))
         listpdb <- queryEntryList()
-    }
 
     ## Apply function over the list ------------------------------------------
     output_list <- lapply(listpdb, 
         FUN=function(i, FUNCTION, verbose, ...) {
 
-            if (verbose) print(i)
+            if (verbose) 
+                print(i)
 
             tryCatch({
                 return(FUNCTION(i, ...))

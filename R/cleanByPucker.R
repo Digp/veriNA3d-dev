@@ -1,55 +1,99 @@
-#Diego Gallego
-#Date: 2017-Mar-22
-#INPUT: ntinfo is the output of the pipeNucData function
-#   pucker is the pucker state
-#   paper is a logical: if TRUE it adds additional conditions to reproduce
-# the future published results
-#       if FALSE, it just return the desired nucleotides according with the 
-#phase
-
-# ntinfo coulb be any data.frame as long as it contains the column "pu_phase"
-# The phase data should be in the format from 0 to 360º
-
+#' Subset nucleotide data according with puckering
+#'
+#' Function to clean raw data after the pipeline [pipeNucData()]. It takes a
+#' data.frame that should have the columns "pu_phase", "delta" and "Dp", and
+#' returns the same data.frame for the nucleotides matching the desired 
+#' puckering state.
+#'
+#' @param ntinfo A data.frame. The output of [pipeNucData()].
+#' @param surenorth A logical to return nucleotides in north with restrictions
+#'     in delta and Dp.
+#' @param suresouth A logical to return nucleotides in south with restrictions
+#'     in delta and Dp.
+#' @param pucker A string with the puckering state of interest. Only necessary
+#'     if surenorth and suresouth are FALSE and range is NULL. When using this
+#'     option, only the phase is used to subset the data.
+#' @param range A numeric vector with the desired phaserange. Only used if no
+#'     other argument above could be applyed.
+#' @param verbose A logical to print details of the process.
+#'
+#' @return The same data.frame for the nucleotides matching the desired 
+#'     puckering state.
+#'
+#' @examples
+#'     ntinfo <- pipeNucData("1bau")
+#'     north <- cleanByPucker(ntinfo, surenorth=TRUE)
+#' 
+#' @author Diego Gallego
+#'
 cleanByPucker <-
-function(ntinfo, pucker=NULL, paper=TRUE, range=NULL) {
+function(ntinfo, surenorth=FALSE, suresouth=FALSE, 
+            pucker="C3'endo", range=NULL, verbose=TRUE) {
 
+    ## Check input -----------------------------------------------------------
+    if (surenorth && suresouth) {
+        stop("Please, chose only one puckering state")
+    }
+
+    ## Return north without outliers -----------------------------------------
+    if (surenorth) {
+        if (verbose) {
+            cat("Returning nucleotides in north with phase between 342-54º,",
+                    " delta between 54-114º and Dp distance > 2.9 A\n", 
+                    sep="")
+        }
+        return(ntinfo[which(complete.cases(ntinfo$pu_phase) &
+                        (ntinfo$pu_phase > 342 | ntinfo$pu_phase < 54) &
+                        (ntinfo$delta > 54 | ntinfo$delta < 114) &
+                        ntinfo$Dp > 2.9), "ntID"])
+
+    ## Return south without outliers -----------------------------------------
+    } else if (suresouth) {
+        if (verbose) {
+            cat("Returning nucleotides in south with phase between 126-198º,",
+                    " delta between 117-177º and Dp distance < 2.9 A\n", 
+                    sep="")
+        }
+        return(ntinfo[which(complete.cases(ntinfo$pu_phase) & 
+                        ntinfo$pu_phase > 126 & ntinfo$pu_phase < 198 & 
+                        (ntinfo$delta>117 | ntinfo$delta < 177) &
+                        ntinfo$Dp < 2.9), "ntID"])
+    }
+
+    ## Check input -----------------------------------------------------------
     if (is.null(pucker) && is.null(range)) {
         stop("Introduce a valid pucker or range")
-    } else if (!is.null(pucker) && !is.null(range)) {
-        cat("If you specify the 'pucker', your 'range' will be ignored.",
-            " If you want a particular range, then use 'pucker=NULL'", sep="")
-    }
+    } 
+
+    ## If a pucker conformation is provided, the range is set automatically --
     if (!is.null(pucker)) {
-        if (!class(pucker) == "character") {
+        if (!is.character(pucker)) {
             stop("introduce valid pucker state")
         }
 
-        if (paper && pucker %in% c("north", "south", "C3'endo", "C2'endo")) {
-            if (pucker %in% c("north", "C3'endo")) {
-                return(ntinfo[which(complete.cases(ntinfo$pu_phase) &
-                (ntinfo$pu_phase > 342 | ntinfo$pu_phase<54) & ntinfo$Dp>2.9 &
-                (ntinfo$delta > 54 | ntinfo$delta < 114)), "ntID"])
-            } else if (pucker %in% c("south", "C2'endo")) {
-                return(ntinfo[which(complete.cases(ntinfo$pu_phase) &
-                        ntinfo$pu_phase > 126 & ntinfo$pu_phase < 198 & 
-                        ntinfo$Dp <= 2.9 &
-                        (ntinfo$delta>117 | ntinfo$delta < 177)), "ntID"])
-            }
-        } else {
-            if (!pucker %in% .puckerdata$pucker) {
-                stop(paste("Introduce valid pucker state: ", 
-                        paste(.puckerdata$pucker, collapse="; "), sep=""))
-            }
-            range <- as.numeric(.puckerdata[.puckerdata$pucker == pucker,
-                        c("from", "to")])
+        if (!pucker %in% .puckerdata$pucker) {
+            stop(paste("Introduce valid pucker state: ", 
+                    paste(.puckerdata$pucker, collapse="; "), sep=""))
         }
+
+        range <- .puckerdata[.puckerdata$pucker == pucker, c("from", "to")]
     }
+    
+    ## Check the range is correct and use it to subset -----------------------
     if (range[2] > range[1]) {
         output <- ntinfo[which(ntinfo$pu_phase > range[1] &
                             ntinfo$pu_phase <= range[2]), "ntID"]
+        if (verbose) {
+            cat("Returning nucleotides in phase between: ", 
+                range[1], "-",range[2], "º\n", sep="")
+        }
     } else {
         output <- ntinfo[which(ntinfo$pu_phase > range[1] |
                             ntinfo$pu_phase <= range[2]), "ntID"]
+        if (verbose) {
+            cat("Returning nucleotides in phase between: ", 
+                range[2], "-",range[1], "º\n", sep="")
+        }
     }
     return(output)
 }
