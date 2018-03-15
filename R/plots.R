@@ -44,10 +44,7 @@ function(ntinfo, ntID=NULL,
         file=NULL, width=15, height=15,
         bg="white", units="cm", res=200) {
 
-    if (is.null(ntID)) {
-        ntID <- ntinfo$ntID
-    }
-
+    ntID <- .giveMeValidntIDs(ntinfo, ntID)
     rows <- ceiling(length(angles)/cols)
 
     if (!is.null(file)) {
@@ -161,9 +158,7 @@ function(ntinfo, field, ntID=NULL, na.rm=FALSE,
             bg="white", units="cm", res=200) {
 
     ## Subset the data of interest -------------------------------------------
-    if (is.null(ntID)) {
-        ntID <- ntinfo$ntID
-    }
+    ntID <- .giveMeValidntIDs(ntinfo, ntID)
     data <- ntinfo[which(ntinfo$ntID %in% ntID), field]
 
     ## Replace missing data by - or remove it --------------------------------
@@ -186,22 +181,115 @@ function(ntinfo, field, ntID=NULL, na.rm=FALSE,
     }
 }
 ##############################################################################
-## Subfunctions
-## ===========================================================================
-.plot_hist <- function(data, main=NULL, cex=0.5) {
-    par(mfrow=c(1, 1))
-    dataFactor <- as.factor(data)
-    labels <- as.numeric(round(100 *
-                                table(dataFactor)/sum(table(dataFactor)), 1))
-    ylim=c(0, 1.1 * max(table(dataFactor)))
 
-    xx <- barplot(table(dataFactor), main=main, 
-                    density=TRUE, ylim=ylim, xaxt="n")
+#Author: Diego Gallego
+#Created: 2017-Mar-15
+#Description: Generates a eta-theta plot on screen
+#Input: ntinfo: data.frame with the columns "eta", "theta" and "ntID"
+#   ntID: vector of IDs of the desired nucleotides (selected from the column "ntID")
+#   dens: output of kde2d function over the data of interest
+#   bandwidths: in case "dens" is not provided and "contour" is TRUE, then "dens" will be computed with the desired bandwidths. The parameter will be directly placed as an argument to the kde2d function.
+#   eta: parameter in the x axis, it should be a string.
+#   theta: parameter in the y axis, it should be a string.
+#   contour: logical to indicate if the plot should show contour lines
+#   levels: only applicable if contour is TRUE. Vector specifying the standard deviations over the mean where the contour lines will be drawn.
+#   highlight_helical: logical indicating if the helical regions should be highlighted or not
+plot_et <-
+function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, 
+            eta="eta", theta="theta", drawcontour=TRUE, 
+            sd_over_mean_contours=c(1, 2, 4), highlight_helical=TRUE, 
+            points=NULL, colpoints="red") {
 
-    text(xx, y=table(dataFactor), 
-            labels=paste(labels, "%", sep=""), pos=3, cex=cex)
-    axis(1, at=xx, labels=names(table(dataFactor)), 
-            tick=FALSE, las=2, cex.axis=cex)
+    ntID <- .giveMeValidntIDs(ntinfo, ntID)
+
+    if (!eta %in% colnames(ntinfo) | !theta %in% colnames(ntinfo)) {
+        stop("Provide strings in the eta&theta arguments that match ", 
+                "two columns of the data.frame ntinfo", sep="")
+    }
+    if (drawcontour) {
+        if (is.null(dens)) {
+            if (is.null(bandwidths)) {
+                bandwidths <- c(40, 40)
+            }
+            dens <- kde2d(ntinfo[ntinfo$ntID %in% ntID, eta],
+                            ntinfo[ntinfo$ntID %in% ntID, theta],
+                            n=c(361, 361), h=bandwidths, 
+                            lims=c(0, 360, 0, 360))
+        }
+        mean_z <- mean(dens$z)
+        sd_z=sd(dens$z)
+    }
+
+    plot(ntinfo[ntinfo$ntID %in% ntID, eta],
+            ntinfo[ntinfo$ntID %in% ntID, theta],
+            xlim=c(0, 360), ylim=c(0, 360),
+            xlab=expression(paste(eta, " (degrees)", sep="")),
+            ylab=expression(paste(theta, " (degrees)", sep="")),
+            pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
+
+    if (highlight_helical) {
+        abline(h=190, lty=2, lwd=1.5, col="red", cex=2)
+        abline(h=240, lty=2, lwd=1.5, col="red", cex=2)
+        abline(v=150, lty=2, lwd=1.5, col="red", cex=2)
+        abline(v=190, lty=2, lwd=1.5, col="red", cex=2)
+    }
+
+    axis(1, labels=seq(0, 360, by=36), at=seq(0, 360, by=36), las=2)
+    axis(2, labels=seq(0, 360, by=36), at=seq(0, 360, by=36), las=2)
+
+    if (!is.null(points)) {
+        points(ntinfo[ntinfo$ntID %in% points, eta],
+                ntinfo[ntinfo$ntID %in% points, theta],
+                col=colpoints, pch=19, cex=0.3)
+    }
+
+    if (drawcontour) {
+        levels <- mean_z + sd_over_mean_contours * sd_z
+        if (length(sd_over_mean_contours) == 3 &&
+                    sum(sd_over_mean_contours == c(1, 2, 4)) == 3) {
+
+            colors <- c("cadetblue1", "deepskyblue", "blue4")
+            legendtxt <- c(expression(paste("<", rho, ">+1s.d.")),
+                            expression(paste("<", rho, ">+2s.d.")),
+                            expression(paste("<", rho, ">+4s.d.")))
+        } else {
+            colors <- suppressWarnings(brewer.pal(length(levels), "Blues"))
+            legendtxt <- paste("<mean>+", sd_over_mean_contours, "sd", sep="")
+        }
+
+        contour(dens, levels=levels, col=colors,
+                add=TRUE, lwd=2, drawlabels=FALSE)
+        legend("bottomleft", legend=legendtxt, 
+                    lty=1, lwd=1, bty="n", col=colors)
+    }
+}
+##############################################################################
+
+#Created: 2017-Jan-16
+# Scatter plot into a png file
+# Given a data.frame with three columns generate a scatter plot
+
+rvec_plot <- function(ntID=NULL, df_rvectors, o="", width=15, height=15, bg="white",
+        units="cm", res=200, cex=0.6, cols=3) {
+    if (is.null(ntID)) {
+    ntID <- unique(df_rvectors$ntID)
+    }
+
+    ind <- which(df_rvectors$ntID %in% ntID)
+    neighbour5 <- ind[df_rvectors[ind, "nt_neighbour"] == 5]
+    neighbour3 <- ind[df_rvectors[ind, "nt_neighbour"] == 3]
+
+    png(paste(o, ".png", sep=""), width=15, height=15, bg="white", units="cm", res=200)
+    plot(df_rvectors[neighbour5, "rho"],
+        df_rvectors[neighbour5, "z"],
+        col="red", pch=19, cex=0.5, ylab="z (A)", xlab="rho (A)",
+        ylim=range(df_rvectors[, "z"]), xlim=range(df_rvectors[, "rho"]))
+    points(df_rvectors[neighbour3, "rho"],
+        df_rvectors[neighbour3, "z"],
+        col="green", pch=19, cex=0.5)
+    legendtxt <- c("5'", "3'")
+    legend("bottomleft", legend=legendtxt, pch=19, bty="n", col=c("red", "green"))
+    dev.off()
 }
 ##############################################################################
 
@@ -326,103 +414,249 @@ plotEtaTheta <- function(data, pucker, dir, ntinfo, bandwidths=NULL,
 
 
 ##############################################################################
+## Subfunctions
+## ===========================================================================
 
-#Author: Diego Gallego
-#Created: 2017-Mar-15
-#Description: Generates a eta-theta plot on screen
-#Input: ntinfo: data.frame with the columns "eta", "theta" and "ntID"
-#   ntID: vector of IDs of the desired nucleotides (selected from the column "ntID")
-#   dens: output of kde2d function over the data of interest
-#   bandwidths: in case "dens" is not provided and "contour" is TRUE, then "dens" will be computed with the desired bandwidths. The parameter will be directly placed as an argument to the kde2d function.
-#   eta: parameter in the x axis, it should be a string.
-#   theta: parameter in the y axis, it should be a string.
-#   contour: logical to indicate if the plot should show contour lines
-#   levels: only applicable if contour is TRUE. Vector specifying the standard deviations over the mean where the contour lines will be drawn.
-#   highlight_helical: logical indicating if the helical regions should be highlighted or not
-plot_et <- function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, eta="eta", theta="theta", drawcontour=TRUE, sd_over_mean_contours=c(1, 2, 4), highlight_helical=TRUE, points=NULL, colpoints="red") {
+.plot_hist <-
+function(data, main=NULL, cex=0.5) {
+
+    par(mfrow=c(1, 1))
+    dataFactor <- as.factor(data)
+    labels <- as.numeric(round(100 *
+                                table(dataFactor)/sum(table(dataFactor)), 1))
+    ylim=c(0, 1.1 * max(table(dataFactor)))
+
+    xx <- barplot(table(dataFactor), main=main, 
+                    density=TRUE, ylim=ylim, xaxt="n")
+
+    text(xx, y=table(dataFactor), 
+            labels=paste(labels, "%", sep=""), pos=3, cex=cex)
+    axis(1, at=xx, labels=names(table(dataFactor)), 
+            tick=FALSE, las=2, cex.axis=cex)
+}
+## ===========================================================================
+
+.giveMeValidntIDs <-
+function(ntinfo, ntID) {
+
     if (is.null(ntID)) {
-    ntID <- ntinfo[, "ntID"]
+        ntID <- ntinfo[, "ntID"]
     } else {
-    if (sum(ntID %in% ntinfo$ntID)!=length(ntID)) {
-        stop("Some of the specified IDs does not match an existing ID in your data.frame")
-    }
-    }
-    if (!eta %in% colnames(ntinfo)|!theta %in% colnames(ntinfo)) {
-    stop("Provide strings in the eta&theta arguments that match two columns of the data.frame ntinfo")
-    }
-    if (drawcontour) {
-    if (is.null(dens)) {
-        if (is.null(bandwidths)) {
-        bandwidths <- c(40, 40)
+        if (sum(ntID %in% ntinfo$ntID)!=length(ntID)) {
+            stop("Some of the specified IDs does not match an existing ID",
+                    " in your data.frame", sep="")
         }
-        dens <- kde2d(ntinfo[ntinfo$ntID %in% ntID, eta],
-            ntinfo[ntinfo$ntID %in% ntID, theta],
-            n=c(361, 361), h=bandwidths, lims=c(0, 360, 0, 360))
     }
-    mean_z <- mean(dens$z)
-    sd_z=sd(dens$z)
+    return(ntID)
+}
+## ===========================================================================
+
+# Select nucleotides that fall in a 2D region
+#
+# Given a data.frame ("ntinfo") with at least three columns (one of them 
+# should be "ntID", and the other two specified by the arguments "x" and "y")
+# the function computes a 2D Kernel Density Estimation and returns a list of 
+# vectors containing the nucleotides ID (according with the ntID column) that 
+# clusterize in different regions of the 2D diagram
+#
+# @param ntID an obejct of class vector with the desired nucleotides of 
+#     analysis. If NULL all the nucleotides in the data.frame will be used
+# @param ntinfo a data.frame with the input data. It should contain three 
+#     columns (additional columns will be ignored). One of them should be 
+#     "ntID" and the other two are optional and can be specified using the
+#     parameters "x" and "y"
+# @param x name of the column that will be used as "x" axis
+# @param y name of the column that will be used as "y" axis
+# @param SD_DENS height above the mean to be used to select the nucleotides
+# @param bandwidths object to be passed to the "kde2d" function (only used if
+#     "dens" is NULL)
+# @param dens optional object containing the output of "kde2d" or equivalent
+# @param lims The limits of the rectangle covered by the grid as c(xl, xu,
+#     yl, yu).
+#
+# @return a list of vectors containing the nucleotides ID (according with the 
+#     ntID column) that clusterize in different regions of the 2D diagram
+#
+# @author Diego Gallego
+#
+.cluster.select <-
+function(ntID=NULL, ntinfo, x="eta", y="theta", SD_DENS=1, 
+            bandwidths=c(40, 40), dens=NULL, lims=c(0, 360, 0, 360)) {
+
+    ntID <- .giveMeValidntIDs(ntinfo, ntID)
+
+    if (is.null(dens)) {
+    #Calculate density using a kernel density estimation function
+        dens=kde2d(ntinfo[ntID, x], ntinfo[ntID, y],
+        n=c(length(lims[1]:lims[2]), length(lims[3]:lims[4])),
+            h=bandwidths, lims=lims)
     }
-    plot(ntinfo[ntinfo$ntID %in% ntID, eta],
-        ntinfo[ntinfo$ntID %in% ntID, theta],
-        xlim=c(0, 360), ylim=c(0, 360),
-        xlab=expression(paste(eta, " (degrees)", sep="")),
-        ylab=expression(paste(theta, " (degrees)", sep="")),
-        pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
-    if (highlight_helical) {
-        abline(h=190, lty=2, lwd=1.5, col="red", cex=2)
-        abline(h=240, lty=2, lwd=1.5, col="red", cex=2)
-        abline(v=150, lty=2, lwd=1.5, col="red", cex=2)
-        abline(v=190, lty=2, lwd=1.5, col="red", cex=2)
-    }
-    axis(1, labels=seq(0, 360, by=36), at=seq(0, 360, by=36), las=2)
-    axis(2, labels=seq(0, 360, by=36), at=seq(0, 360, by=36), las=2)
-    if (!is.null(points)) {
-        points(ntinfo[ntinfo$ntID %in% points, eta],
-        ntinfo[ntinfo$ntID %in% points, theta],
-        col=colpoints,
-        pch=19,
-        cex=0.3)
-    }
-    if (drawcontour) {
-    levels <- mean_z + sd_over_mean_contours * sd_z
-    if (length(sd_over_mean_contours) == 3&&sum(sd_over_mean_contours == c(1, 2, 4)) == 3) {
-        colors <- c("cadetblue1", "deepskyblue", "blue4")
-        legendtxt <- c(expression(paste("<", rho, "> + 1s.d.")), expression(paste("<", rho, "> + 2s.d.")), expression(paste("<", rho, "> + 4s.d.")))
+    mean_dens=mean(dens$z)
+    sd_dens=sd(dens$z)
+    #The object dens is a matrix with dimensions 361x361 
+    #(according with default)
+
+    #Find the cells of the matrix "dens" with density above desired
+    grid_cells <- which(dens$z>mean_dens + SD_DENS * sd_dens, arr.ind=TRUE)
+    grid_cells <- grid_cells[order(grid_cells[, 2]),]
+    grid_cells <- grid_cells[order(grid_cells[, 1]),]
+    grid_cells <- as.data.frame(grid_cells)
+    #clusters <- vector(mode="numeric", length=nrow(grid_cells))
+
+###
+    vectorA <- rep(0, length(lims[1]:lims[2]) * length(lims[3]:lims[4]))
+    vectorA[which(dens$z>mean_dens + SD_DENS * sd_dens)] <- 1
+    aver <- matrix(vectorA, nrow=length(lims[3]:lims[4]), byrow=FALSE)
+    #image(aver, col=c("white", "black"), xaxt="n", yaxt="n")
+    grid_list <- vector(mode="list", length=length(lims[3]:lims[4]))
+    for (i in seq_len(ncol(aver))) {
+    ycoord <- which(aver[i,] == 1)
+    if (length(ycoord) == 0) {
+        grid_list[[i]] <- list(NA)
+    } else if (length(ycoord) == 1) {
+        grid_list[[i]] <- list(ycoord)
     } else {
-        colors <- suppressWarnings(brewer.pal(length(levels), "Blues"))
-        legendtxt <- paste("<mean> + ", sd_over_mean_contours, "sd", sep="")
+        if (all(diff(ycoord) == 1)) {
+        grid_list[[i]] <- list(ycoord)
+        } else {
+        end <- which(diff(ycoord)!=1)
+        start <- 1
+        for (h in seq_along(end)) {
+                start[h + 1] <- end[h] + 1
+            }
+        end[length(end) + 1] <- length(ycoord)
+        for (j in seq_along(end)) {
+            grid_list[[i]][[j]] <- ycoord[start[j]:end[j]]
+        }
+
+        }
     }
-    contour(dens, levels=levels, col=colors,
-                add=TRUE, lwd=2, drawlabels=FALSE)
-    legend("bottomleft", legend=legendtxt, lty=1, lwd=1, bty="n", col=colors)
+    }
+    clusters <- .find_clusters(grid_list)
+
+    #A continuous range 0 to 360 has to be separated in 361 cells (default)
+    #therefore the intervals are defined in thw following variables
+    angle_x_intervals <- seq(lims[1], lims[2], by=lims[2]/length(lims[1]:lims[2]))
+    angle_y_intervals <- seq(lims[3], lims[4], by=lims[4]/length(lims[3]:lims[4]))
+    #angle_y_intervals <- seq(0, 360, by=360/361)
+
+    #Each of the points is assigned to one of the cells of the matrix
+    grid <- unlist(lapply(ntID, FUN=function(.ntID) {
+        gridx <- which(ntinfo[ntinfo$ntID == .ntID, x]<angle_x_intervals)[1]-1
+    gridy <- which(ntinfo[ntinfo$ntID == .ntID, y]<angle_y_intervals)[1]-1
+    return(paste(gridx, gridy, sep="_"))
+    }))
+    grid_coords <- as.data.frame(cbind(ntID, grid), stringsAsFactors=FALSE)
+    grid_coords$ntID <- as.numeric(grid_coords$ntID)
+
+    #The cells found for each cluster are compared with the cells of each
+    #point and the population for each cluster is found
+    output <- lapply(clusters, FUN=function(.cluster) {
+#   print(class(.cluster))
+    return(grid_coords[which(grid_coords$grid %in% .cluster), "ntID"])
+    })
+    return(output)
+}
+.find_clusters <- function(grid_list) {
+    kk <- ..find_clusters(grid_list)
+    for (i in seq_along(kk)) {
+#print(i)
+    ind <- max(names(kk[[i]]))
+    #print(ind)
+    for (j in as.vector(seq_along(kk))[-i]) {
+        if (any(names(kk[[j]]) == as.numeric(ind) + 1)) {
+#print(c(i, j))
+        if (any(kk[[j]][[as.character(as.numeric(ind) + 1)]] %in%
+                                                kk[[i]][[ind]])) {
+            #same cluster
+#           print("HI")
+            inds <- names(kk[[i]])
+            for (name in inds) {
+            kk[[j]][[name]] <- sort(append(kk[[j]][[name]],
+                                                kk[[i]][[name]]))
+            }
+            kk[[i]][[ind]] <- NA
+        }
+        }
+    }
+    }
+    kk <- kk[!unlist(lapply(kk, anyNA))]
+    for (i in seq_along(kk)) {
+    x <- names(kk[[i]])
+    cluster <- unlist(lapply(x, FUN=function(name) {
+        return(paste(name, kk[[i]][[name]], sep="_"))
+    }))
+    kk[[i]] <- cluster
+    }
+    return(kk)
+}
+
+..find_clusters <- function(grid_list) {
+    lens <- vector(mode="numeric", length=length(grid_list))
+    for (i in seq_along(grid_list)) {
+        len <- length(grid_list[[i]])
+            if (any(unlist(lapply(grid_list[i], is.na)))) {
+                lens[i] <- len-1
+            } else {
+                lens[i] <- len
+            }
+    }
+
+    end <- which(lens!=0)[which(diff(which(lens!=0))>1)]
+    start <- which(lens!=0)[1]
+    if (length(end)!=0) {
+        for (i in seq_along(end)) {
+            start[i + 1] <- which(lens!=0)[which(diff(which(lens!=0))>1) + 1][i]
+        }
+    }
+    end[length(end) + 1] <- which(lens!=0)[length(which(lens!=0))]
+
+    inds <- start[1]:end[1]
+    clusters <- vector(mode="list", length=length(inds))
+    clusters[[1]] <- grid_list[[start[1]]][[1]]
+    grid_list[[start[1]]][[1]] <- NA
+    names(clusters) <- start[1]
+    for (j in 2:length(inds)) {
+#       print(j)
+        for (k in seq_along(grid_list[[inds[j]]])) {
+#print(c(j, k))
+            if (any(grid_list[[inds[j]]][[k]] %in%
+                                    clusters[[as.character(inds[j-1])]])) {
+        if (is.null(clusters[[j]])) {
+                    clusters[[j]] <- grid_list[[inds[j]]][[k]]
+                    names(clusters)[j] <- inds[j]
+        } else {
+            clusters[[j]] <- sort(append(clusters[[j]],
+                                    grid_list[[inds[j]]][[k]]))
+        }
+                grid_list[[inds[j]]][[k]] <- NA
+                #break()
+            }
+        }
+    if (length(grid_list[[inds[j]]][!unlist(
+                                lapply(grid_list[inds[j]], is.na))]) == 0) {
+            grid_list[[inds[j]]] <- list(NA)
+        } else {
+            grid_list[[inds[j]]] <- grid_list[[inds[j]]][!unlist(
+                                lapply(grid_list[inds[j]], is.na))]
+        }
+    }
+    clusters <- list(clusters[lapply(clusters, length)>0])
+
+    lens <- vector(mode="numeric", length=length(grid_list))
+    for (i in seq_along(grid_list)) {
+        len <- length(grid_list[[i]])
+            if (any(unlist(lapply(grid_list[i], is.na)))) {
+                lens[i] <- len-1
+            } else {
+                lens[i] <- len
+            }
+    }
+
+    if (all(lens == 0)) {
+        return(clusters)
+    } else {
+        return(append(clusters, ..find_clusters(grid_list)))
     }
 }
 ##############################################################################
-
-#Created: 2017-Jan-16
-# Scatter plot into a png file
-# Given a data.frame with three columns generate a scatter plot
-
-rvec_plot <- function(ntID=NULL, df_rvectors, o="", width=15, height=15, bg="white",
-        units="cm", res=200, cex=0.6, cols=3) {
-    if (is.null(ntID)) {
-    ntID <- unique(df_rvectors$ntID)
-    }
-
-    ind <- which(df_rvectors$ntID %in% ntID)
-    neighbour5 <- ind[df_rvectors[ind, "nt_neighbour"] == 5]
-    neighbour3 <- ind[df_rvectors[ind, "nt_neighbour"] == 3]
-
-    png(paste(o, ".png", sep=""), width=15, height=15, bg="white", units="cm", res=200)
-    plot(df_rvectors[neighbour5, "rho"],
-        df_rvectors[neighbour5, "z"],
-        col="red", pch=19, cex=0.5, ylab="z (A)", xlab="rho (A)",
-        ylim=range(df_rvectors[, "z"]), xlim=range(df_rvectors[, "rho"]))
-    points(df_rvectors[neighbour3, "rho"],
-        df_rvectors[neighbour3, "z"],
-        col="green", pch=19, cex=0.5)
-    legendtxt <- c("5'", "3'")
-    legend("bottomleft", legend=legendtxt, pch=19, bty="n", col=c("red", "green"))
-    dev.off()
-}
-
