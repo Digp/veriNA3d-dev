@@ -1,34 +1,48 @@
 #' Plot distribution of desired angles in circular plots
 #'
 #' Given a data.frame with nucleotides data, it generates a series of circular
-#' plots with the desired angles. NA in the data are ignored.
+#' plots for the desired angles. NA in the data are ignored.
 #'
-#' @param ntID An obejct of class vector with the desired nucleotides of 
-#'    analysis. If NULL all the nucleotides in the data.frame will be used
 #' @param ntinfo A data.frame with the input data. It should contain the 
-#'    columns with the desired angles and a column labeled ntID
+#'     columns with the desired angles and a column labeled ntID
+#' @param ntID A vector of integers with the desired nucleotides of 
+#'     analysis. If NULL all the nucleotides in the data.frame will be used
 #' @param angles The column names with the desired data
-#' @param o the name of the output file (the function will automatically 
-#'    include the .png extension)
+#' @param cex To be passed to the par() function
+#' @param cols Number of columns in the ouput picture.
+#' @param file A string with the name of the output file. If NULL, the
+#'     plot will be printed to screen.
 #' @param width The width of the plot (passed to the png() function)
 #' @param height The height of the plot (passed to the png() function)
 #' @param bg The background color of the plot (passed to the png() function)
 #' @param units The unit to measure height and width (passed to the png() 
-#'    function)
+#'     function)
 #' @param res Resolution (passed to the png() function)
-#' @param cex To be passed to the par() function
-#' @param cols Number of columns in the ouput picture.
 #'
-#' @return A ".png" file with the desired plots
+#' @return A series of circular plots with the distributions of the desired
+#'     angles, which can be directly saved  to a ".png" file.
+#'
+#' @examples
+#'     ntinfo <- pipeNucData("1bau")
+#'     C3endo <- cleanByPucker(ntinfo, pucker="C3'endo")
+#'     C3endo_ntID <- C3endo$ntID
+#'
+#'     ## Plot torsional angles for C3'endo nucleotides
+#'     plotSetOfDistributions(ntinfo=ntinfo, ntID=C3endo_ntID, 
+#'                             file="1bau_C3endo.png")
+#'
+#'     ## Which is the same as doing:
+#'     plotSetOfDistributions(ntinfo=C3endo, file="1bau_C3endo.png")
 #'
 #' @author Diego Gallego
 #'
-angles_dist <-
-function(ntID=NULL, ntinfo,
-    angles=c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
-                "chi", "pu_phase"),
-    o="dihedrals", width=15, height=15, bg="white",
-    units="cm", res=200, cex=0.6, cols=3) {
+plotSetOfDistributions <-
+function(ntinfo, ntID=NULL,
+        angles=c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
+                    "chi", "pu_phase"),
+        cex=0.6, cols=3,
+        file=NULL, width=15, height=15,
+        bg="white", units="cm", res=200) {
 
     if (is.null(ntID)) {
         ntID <- ntinfo$ntID
@@ -36,76 +50,173 @@ function(ntID=NULL, ntinfo,
 
     rows <- ceiling(length(angles)/cols)
 
-    png(paste(o, ".png", sep=""), width=width, height=height, bg=bg,
+    if (!is.null(file)) {
+        png(file, width=width, height=height, bg=bg,
                 units=units, res=res)
+    }
     par(mfrow=c(rows, cols), mar=c(2, 2, 2, 2), cex=cex)
     lapply(angles, FUN=function(x) {
-        plot_circular_distribution(data=ntinfo[ntinfo$ntID %in% ntID, x],
+        plotCircularDistribution(data=ntinfo[ntinfo$ntID %in% ntID, x],
         clockwise=FALSE, start.degree=0, main=x)
     })
-    dev.off()
+    if (!is.null(file)) {
+        dev.off()
+    }
 }
-
-##############################################################################
-#Created: 2017-Jan-16
-
-#Description: Function that takes a list of nucleotides (ntID) and makes an histogram with the categorical data of interest
-
-#INPUT: .ntID: vector of numbers corresponding to nucleotide ID
-#       .ntinfo: data.frame with the dataset info
-#       .categories: Name of the column of interest. Default of "LW" because it is the data that inspired this function
-#       .o: prefix to give to the output name
-
-#Output: A plot saved in disk
-
-# Plot histogram
-#
-# @author Diego Gallego
-#
-
-bp_hist <- function(ntID, ntinfo, categories="LW", o="bp", main=o, rm.na=FALSE, width=15, height=15, bg="white", units="cm", res=200, cex=0.5) {
-    png(paste(o, ".png", sep=""), width=width, height=height, bg=bg, units=units, res=res)
-    plot_hist(ntID=ntID, ntinfo=ntinfo, categories=categories,
-    main=main, cex=cex)
-    dev.off()
-}
-
-#bp_hist <- function(.ntID, .ntinfo, .categories="LW", .o="bp", .main=.o, .rm.na=FALSE, .width=15, .height=15, .bg="white", .units="cm", .res=200, .cex=0.5) {
-#    .data <- .ntinfo[which(.ntinfo$ntID %in% .ntID), .categories]
-#    if (sum(is.na(.data))>0) {
-#        if (.rm.na) {
-#            .data <- complete.cases(.data)
-#        } else {
-#            #print("NA substituted by -")
-#            .data[is.na(.data)] <- "-"
-#        }
-#    }
-#    .dataFactor <- as.factor(.data)
-#    .labels <- as.numeric(round(100 * table(.dataFactor)/sum(table(.dataFactor)), 1))
-#    png(paste(.o, ".png", sep=""), width=.width, height=.height, bg=.bg, units=.units, res=.res)
-#    ylim=c(0, 1.1 * max(table(.dataFactor)))
-#    xx <- barplot(table(.dataFactor), main=.main, density=T, ylim=ylim, xaxt="n")
-#    text(xx, y=table(.dataFactor), labels=paste(.labels, "%", sep=""), pos=3, cex=.cex)
-#    axis(1, at=xx, labels=names(table(.dataFactor)), tick=FALSE, las=2, cex.axis=.cex)
-#    dev.off()
-#}
-
 ##############################################################################
 
-#!/usr/bin/Rscript
-#Author: Diego Gallego
-#Created: ?
-#Updated: 2017-Mar-1 (bandwidths) // 2016-Dec-23
+#' Plot a scatter&frequency circular plot for angular data
+#'
+#' For a vector of angular data (0 to 360), the function plots the 
+#' distribution in a circular format.
+#'
+#' @param data A numeric vector with the data to plot.
+#' @param clockwise A logical indicating the sense in which the data should be
+#'     displayed.
+#' @param start.degree An integer with the position in which the data starts
+#'     being ploted.
+#' @param main A string with the title of the plot.
+#'
+#' @return A circular plot with the input data
+#'
+#' @examples
+#'     ntinfo <- pipeNucData("1bau")
+#'     C3endo <- cleanByPucker(ntinfo, pucker="C3'endo")
+#'     plotCircularDistribution(C3endo, "delta")
+#'
+#' @author Diego Gallego
+#'
+plotCircularDistribution <-
+function(data, clockwise=FALSE, start.degree=0, main=NULL) {
+
+    ## Prepare data to and labels to fit arguments ---------------------------
+    if (!clockwise) {
+        data <- abs(data-360)
+        labels <- append("", seq(from=330, to=0, by=-30))
+    } else {
+        labels <- append(seq(from=0, to=330, by=30), "")
+    }
+
+    ## Do the plot -----------------------------------------------------------
+    fac <- factor(rep(1, times=length(data)))
+    circos.par(start.degree=start.degree)
+    circos.initialize(factors=fac, x=data, xlim=c(0, 360))
+    circos.par("track.height"=0.05)
+    circos.trackPlotRegion(factors=fac, ylim=c(0, 0.1), bg.border="white",
+        panel.fun=function(x, y) {
+            circos.axis(major.at=seq(from=0, to=360, by=30), labels=labels)
+        })
+
+    circos.trackPoints(fac, data, y=rep(0.05, times=length(data)),
+                        col="blue", pch=16, cex=0.5)
+    circos.par("track.height"=0.2)
+    circos.trackHist(fac, data, bg.col="white", bg.border="white",
+                        col=rgb(0.1, 0.5, 0.8, 0.3), breaks=360)
+
+    ## Print title to plot ---------------------------------------------------
+    if (!is.null(main)) {
+        title(main=main)
+    }
+
+    circos.clear()
+}
+##############################################################################
+
+#' Barplot wrapper
+#'
+#' Function to make more straigtforward the process of ploting a barplot for
+#' categorical data.
+#'
+#' @param ntinfo A data.frame with the input data. It should contain the 
+#'     columns with the desired categorical data and a column labeled ntID.
+#' @param ntID A vector of integers with the desired nucleotides of 
+#'     analysis. If NULL all the nucleotides in the data.frame will be used.
+#' @param field The column name with the desired data.
+#' @param na.rm A logical to remove missing data.
+#' @param main A string with the title of the plot.
+#' @param cex To be passed to the par() function
+#' @param file A string with the name of the output file. If NULL, the
+#'     plot will be printed to screen.
+#' @param width The width of the plot (passed to the png() function)
+#' @param height The height of the plot (passed to the png() function)
+#' @param bg The background color of the plot (passed to the png() function)
+#' @param units The unit to measure height and width (passed to the png() 
+#'     function)
+#' @param res Resolution (passed to the png() function)
+#'
+#' @return A barplot with the categorical data of interest, which can be
+#'     directly saved  to a ".png" file.
+#'
+#' @examples
+#'     ## To see all the types of trinucleotides in the dataset:
+#'     ntinfo <- pipeNucData("1bau")
+#'     plotCategorical(ntinfo=ntinfo, categories="localenv")
+#' 
+#' @author Diego Gallego
+#'
+plotCategorical <-
+function(ntinfo, field, ntID=NULL, na.rm=FALSE,
+            main=NULL, cex=0.5,
+            file=NULL, width=15, height=15,
+            bg="white", units="cm", res=200) {
+
+    ## Subset the data of interest -------------------------------------------
+    if (is.null(ntID)) {
+        ntID <- ntinfo$ntID
+    }
+    data <- ntinfo[which(ntinfo$ntID %in% ntID), field]
+
+    ## Replace missing data by - or remove it --------------------------------
+    if (sum(is.na(data)) > 0) {
+        if (na.rm) {
+            data <- data[complete.cases(data)]
+        } else {
+            data[is.na(data)] <- "-"
+        }
+    }
+
+    ## Make the plot ---------------------------------------------------------
+    if (!is.null(file)) {
+        png(file, width=width, height=height, bg=bg, units=units, res=res)
+    }
+    .plot_hist(data=data, main=main, cex=cex)
+
+    if (!is.null(file)) {
+        dev.off()
+    }
+}
+##############################################################################
+## Subfunctions
+## ===========================================================================
+.plot_hist <- function(data, main=NULL, cex=0.5) {
+    par(mfrow=c(1, 1))
+    dataFactor <- as.factor(data)
+    labels <- as.numeric(round(100 *
+                                table(dataFactor)/sum(table(dataFactor)), 1))
+    ylim=c(0, 1.1 * max(table(dataFactor)))
+
+    xx <- barplot(table(dataFactor), main=main, 
+                    density=TRUE, ylim=ylim, xaxt="n")
+
+    text(xx, y=table(dataFactor), 
+            labels=paste(labels, "%", sep=""), pos=3, cex=cex)
+    axis(1, at=xx, labels=names(table(dataFactor)), 
+            tick=FALSE, las=2, cex.axis=cex)
+}
+##############################################################################
+
 #Description: takes eta-theta data and generates plots saved on disk
-
 #INPUT: 
 #-"data": a data.frame with three columns named: eta, theta and ntID
 #-"pucker": a string specifying 3endo or 2endo
 #-"dir": a string with the folder where the plots will be saved
-#-"z": density matrix for eta-theta (output of kde2d function). If not provided it will be calculated on fly. THESE OPTION IS NOT AVAILABLE NOW
+#-"z": density matrix for eta-theta (output of kde2d function). If not 
+#provided it will be calculated on fly. THESE OPTION IS NOT AVAILABLE NOW
 
-#data=data.frame(scan(file="./pipe_info/3endo_nohelical.dat", what=list(e=0, t=0, nt="")))
-plotEtaTheta <- function(data, pucker, dir, ntinfo, bandwidths=NULL, eta="eta", theta="theta") {
+#data=data.frame(scan(file="./pipe_info/3endo_nohelical.dat", 
+#what=list(e=0, t=0, nt="")))
+plotEtaTheta <- function(data, pucker, dir, ntinfo, bandwidths=NULL, 
+                            eta="eta", theta="theta") {
     #if (is.null(z)) {
     if (!dir.exists(dir)) {
         invisible(dir.create(dir))
@@ -212,36 +323,6 @@ plotEtaTheta <- function(data, pucker, dir, ntinfo, bandwidths=NULL, eta="eta", 
     }
 
 }
-##############################################################################
-#Diego Gallego
-#Created: 2017-Mar-28
-
-plot_circular_distribution <- function(data, clockwise=FALSE, start.degree=0, main=NULL) {
-    if (!clockwise) {
-        data <- abs(data-360)
-        labels <- append("", seq(from=330, to=0, by=-30))
-    } else {
-        labels <- append(seq(from=0, to=330, by=30), "")
-    }
-    fac <- factor(rep(1, times=length(data)))
-#    circos.par("clock.wise"=FALSE, start.degree=0)
-    circos.par(start.degree=start.degree)
-    circos.initialize(factors=fac, x=data, xlim=c(0, 360))
-    circos.par("track.height"=0.05)
-    circos.trackPlotRegion(factors=fac, ylim=c(0, 0.1), bg.border="white",
-        panel.fun=function(x, y) {
-            circos.axis(major.at=seq(from=0, to=360, by=30), labels=labels)
-        })
-    circos.trackPoints(fac, data, y=rep(0.05, times=length(data)), col="blue", pch=16, cex=0.5)
-    circos.par("track.height"=0.2)
-    circos.trackHist(fac, data, bg.col="white", bg.border="white", col=rgb(0.1, 0.5, 0.8, 0.3), breaks=360)
-    if (!is.null(main)) {
-        title(main=main)
-#   title(sub=paste("n=", length(data), sep=""))
-    }
-    circos.clear()
-}
-
 
 
 ##############################################################################
@@ -315,36 +396,6 @@ plot_et <- function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, eta="eta", th
                 add=TRUE, lwd=2, drawlabels=FALSE)
     legend("bottomleft", legend=legendtxt, lty=1, lwd=1, bty="n", col=colors)
     }
-}
-##############################################################################
-#Diego Gallego
-#Created: 2017-Mar-17
-
-#Description: Function that takes a list of nucleotides (ntID) and makes an histogram with the categorical data of interest
-
-#INPUT: ntID: vector of numbers corresponding to nucleotide ID
-#       ntinfo: data.frame with the dataset info
-#       categories: Name of the column of interest. Default of "LW" because it is the data that inspired this function
-
-#Output: A plot 
-
-plot_hist <- function(ntID, ntinfo, categories="LW", rm.na=FALSE, main=categories, cex=0.5) {
-    par(mfrow=c(1, 1))
-    data <- ntinfo[which(ntinfo$ntID %in% ntID), categories]
-    if (sum(is.na(data))>0) {
-        if (rm.na) {
-            data <- data[complete.cases(data)]
-        } else {
-            #print("NA substituted by -")
-            data[is.na(data)] <- "-"
-        }
-    }
-    dataFactor <- as.factor(data)
-    labels <- as.numeric(round(100 * table(dataFactor)/sum(table(dataFactor)), 1))
-    ylim=c(0, 1.1 * max(table(dataFactor)))
-    xx <- barplot(table(dataFactor), main=main, density=TRUE, ylim=ylim, xaxt="n")
-    text(xx, y=table(dataFactor), labels=paste(labels, "%", sep=""), pos=3, cex=cex)
-    axis(1, at=xx, labels=names(table(dataFactor)), tick=FALSE, las=2, cex.axis=cex)
 }
 ##############################################################################
 

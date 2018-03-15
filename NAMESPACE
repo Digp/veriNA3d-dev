@@ -16,10 +16,7 @@ importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circ
 #exportPattern("^[[:alpha:]]+")
 exportClasses(CIF)
 export( 
-    angles_dist, 
     applyToPDB, 
-
-    bp_hist, 
 
     checkNuc, 
     cifAsPDB,
@@ -57,10 +54,11 @@ export(
     measureElenoDist,
     measureNuc, 
 
-    plot_circular_distribution, 
+    plotCategorical, 
+    plotCircularDistribution, 
     plotEtaTheta, 
     plot_et, 
-    plot_hist, 
+    plotSetOfDistributions, 
 
     queryAPI,
     queryAuthors,

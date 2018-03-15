@@ -47,8 +47,8 @@
 #'
 #' @name queryFunctions
 NULL
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryAuthors <-
@@ -56,8 +56,8 @@ function(pdbID, ...) {
     info <- "autsList"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryChains <-
@@ -73,8 +73,8 @@ function(pdbID, chain=NULL, subset=NULL, ...) {
     }
     return(data)
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryCompound <-
@@ -82,8 +82,8 @@ function(pdbID, ...) {
     info <- "compound"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryCompType <-
@@ -91,8 +91,8 @@ function(pdbID, ...) {
     info <- "compType"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryDepdate <-
@@ -102,8 +102,8 @@ function(pdbID, ...) {
     output <- gsub(pattern="\\/", replacement="-", output, fixed=TRUE)
     return(output)
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryEntities <-
@@ -111,8 +111,8 @@ function(pdbID, ...) {
     info <- "entities"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryFormats <-
@@ -120,8 +120,8 @@ function(pdbID, ...) {
     info <- "formats"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryHeader <-
@@ -129,8 +129,8 @@ function(pdbID, ...) {
     info <- "header"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryHetAtms <-
@@ -141,8 +141,8 @@ function(pdbID, NAtoNa=TRUE, ...) {
     if (NAtoNa && any(is.na(out))) out[which(is.na(out))] <- "Na"
     return(out)
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryModres <-
@@ -152,8 +152,8 @@ function(pdbID, onlymodres=FALSE, ...) {
     if (onlymodres && !is.na(out)) out <- out$chem_comp_id
     return(out)
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryNDBId <-
@@ -161,8 +161,8 @@ function(pdbID, ...) {
     info <- "NDBId"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryOrgLigands <-
@@ -178,14 +178,14 @@ function(pdbID, ...) {
 
     ## If all hetAtms are in the list of ions and modified residues, there's
     ## no organic ligand at all ----------------------------------------------
-    if (sum(hetAtms %in% ions) + 
+    if (sum(hetAtms %in% .ions) + 
         sum(hetAtms %in% mod_res) == length(hetAtms)) {
         return(NULL)
     }
 
     ## If reached this point, return the organic ligands ---------------------
     indices <- union(which(hetAtms %in% mod_res),
-                which(hetAtms %in% ions))
+                which(hetAtms %in% .ions))
 
     if (length(indices) == 0) {
         orgligands <- hetAtms
@@ -195,8 +195,8 @@ function(pdbID, ...) {
 
     return(orgligands)
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryReldate <-
@@ -204,8 +204,8 @@ function(pdbID, ...) {
     info <- "relDate"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions 
 queryResol <- 
@@ -213,8 +213,8 @@ function(pdbID, ...) {
     info <- "resol"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryRevdate <-
@@ -222,8 +222,8 @@ function(pdbID, ...) {
     info <- "revDate"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
+
 #' @export
 #' @rdname queryFunctions
 queryTechnique <- 
@@ -231,10 +231,12 @@ function(pdbID, ...) {
     info <- "expType"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
-
 ##############################################################################
-#Define a 'dictionary' of ions
-ions <- c(
+## Internal objects
+## ===========================================================================
+
+## Define a 'dictionary' of ions
+.ions <- c(
     "2HP", "3CO", "ACT", "AG", "ALF", "AU3", "BA", "BEF", "BO4",
     "BR", "CA", "CAC", "CD", "CL", "CO", "CS", "CU", "F", "FE2", "FLC",
     "HG", "IOD", "IR3", "IRI", "IUM", "K", "LU", "MG", "MLI", "MMC", "MN",
