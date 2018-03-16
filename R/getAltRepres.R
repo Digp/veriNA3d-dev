@@ -22,7 +22,7 @@
 #' @examples 
 #'     data <- getLeontisList(release=3.2, threshold="1.5A")
 #'     alternative <- getAltRepres(data=data, 
-#'                                   type="nakedRNA")
+#'                                 type="nakedRNA")
 #'
 #' @author Diego Gallego
 #'

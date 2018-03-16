@@ -1,11 +1,12 @@
 #' Subset nucleotide data according with puckering
 #'
-#' Function to clean raw data after the pipeline [pipeNucData()]. It takes a
-#' data.frame that should have the columns "pu_phase", "delta" and "Dp", and
-#' returns the same data.frame for the nucleotides matching the desired 
-#' puckering state.
+#' Function to clean raw data after the pipeline 
+#' [pipeNucData()]. 
+#' It takes a data.frame that should have the columns "pu_phase", "delta" and 
+#' "Dp", and returns the nucleotides matching the desired puckering state.
 #'
-#' @param ntinfo A data.frame. The output of [pipeNucData()].
+#' @param ntinfo A data.frame. The output of 
+#'     [pipeNucData()].
 #' @param surenorth A logical to return nucleotides in north with restrictions
 #'     in delta and Dp.
 #' @param suresouth A logical to return nucleotides in south with restrictions
@@ -17,12 +18,13 @@
 #'     other argument above could be applyed.
 #' @param verbose A logical to print details of the process.
 #'
-#' @return The same data.frame for the nucleotides matching the desired 
+#' @return An integer vector with the nucleotides (ntID) matching the desired 
 #'     puckering state.
 #'
 #' @examples
 #'     ntinfo <- pipeNucData("1bau")
-#'     north <- cleanByPucker(ntinfo, surenorth=TRUE)
+#'     north_ntID <- cleanByPucker(ntinfo, surenorth=TRUE)
+#'     north <- ntinfo[ntinfo$ntID %in% north_ntID,]
 #' 
 #' @author Diego Gallego
 #'
@@ -76,7 +78,8 @@ function(ntinfo, surenorth=FALSE, suresouth=FALSE,
                     paste(.puckerdata$pucker, collapse="; "), sep=""))
         }
 
-        range <- .puckerdata[.puckerdata$pucker == pucker, c("from", "to")]
+        range <- as.integer(.puckerdata[.puckerdata$pucker == pucker, 
+                            c("from", "to")])
     }
     
     ## Check the range is correct and use it to subset -----------------------

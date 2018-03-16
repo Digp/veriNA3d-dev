@@ -9,21 +9,20 @@
 #'
 #' @param release A number indicating the list of interest.
 #' @param threshold A string that matches one of the lists in the BGSU RNA 
-#'   site ("1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A" or "all").
-#'   Note that "all" returns structures solved by all the possible techniques.
+#'     site ("1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all").
+#'     Note that "all" returns structures solved by any technique.
 #'
 #' @return A data frame with the list of Equivalence Classes and the 
-#'   Representant and Members of each Equivalence Class. Note that the output 
-#'   is formated according with Leontis&Zirbel nomenclature (AAAA|M|C), where 
-#'   "AAAA" is the PDB accession code, "M" is the model and "C" is the Chain 
-#'   to be used.
+#'     Representant and Members of each Equivalence Class. Note that the 
+#'     output is formated according with Leontis&Zirbel nomenclature 
+#'     (AAAA|M|C), where "AAAA" is the PDB accession code, "M" is the model
+#'     and "C" is the Chain to be used.
 #'
 #' @examples 
-#'  data <- getLeontisList(release=3.2, threshold="1.5A")
+#'     data <- getLeontisList(release=3.2, threshold="1.5A")
 #'
 #' @author Diego Gallego
 #'
-
 getLeontisList <- 
 function(release="current", threshold="all") {
 

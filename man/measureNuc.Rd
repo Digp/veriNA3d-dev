@@ -17,20 +17,20 @@ measureNuc(pdb, model = 1, chain = "all", v_shifted = TRUE,
 \item{chain}{A string with the desired chain id.}
 
 \item{v_shifted}{A logical. If TRUE, puckering angles (nu0 to nu4) are
-returned in the range of 0 to 360 degrees. Otherwise, from -180 to + 180.}
+returned in the range 0 to 360 degrees. Otherwise, -180 to +180.}
 
 \item{b_shifted}{A logical. If TRUE, backbone angles, chi and kappa are
-returned in the range of 0 to 360 degrees. Otherwise, from -180 to + 180.}
+returned in the range 0 to 360 degrees. Otherwise, -180 to +180.}
 
 \item{distances}{A data.frame indicating all the intra and inter-nucleotide
 atomic distances of interest. See details section. A default option is
-preconfigured to simplify the use of the function and can be seen typing
-'veriNA3d::.distances'.}
+preconfigured to simplify the use of the function and can be seen
+typing 'veriNA3d::.distances'.}
 
 \item{angles}{A data.frame indicating all the intra and inter-nucleotide
 angles of interest. See details section. A default option is
-preconfigured to simplify the use of the function and can be seen typing
-'veriNA3d::.angles'.}
+preconfigured to simplify the use of the function and can be seen
+typing 'veriNA3d::.angles'.}
 
 \item{torsionals}{A data.frame indicating all the intra and inter-
 nucleotide torsional angles of interest. See details section. A default
@@ -51,8 +51,8 @@ distance (See definition of Dp in MolProbity paper by Chen et al.
 2010).
 }
 \details{
-The format of 'distances', 'angles' and 'torsionals' follows a simple
-rule: First column should indicate the first atom, second column second
+The format of 'distances', 'angles' and 'torsionals' is:
+First column should indicate the first atom, second column second
 atom (and so on in the case of angles and torsional angles). An extra
 last column is optional and should contain the names to identify each
 measurement in the output. Plane atom names are interpreted as intra-
@@ -64,11 +64,11 @@ labels=c("interphosphate"),
 stringsAsFactors=FALSE)\cr
 }
 \examples{
-  distances <- data.frame(atomA=c("P"), atomB=c("post_P"), 
-                             labels=c("interphosphate"), 
-                             stringsAsFactors=FALSE)
-  measureNuc(cifAsPDB("1bna"), distances=distances, angles=NULL, 
-                     torsionals=NULL, Dp=NULL)
+    distances <- data.frame(atomA=c("P"), atomB=c("post_P"), 
+                            labels=c("interphosphate"), 
+                            stringsAsFactors=FALSE)
+    measureNuc(cifAsPDB("1bna"), distances=distances, angles=NULL, 
+                    torsionals=NULL, Dp=NULL)
 
 }
 \author{

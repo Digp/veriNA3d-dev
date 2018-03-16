@@ -10,7 +10,8 @@ trimByID(cif = NULL, ntID, ntinfo, prev = 2, post = 2, verbose = TRUE,
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
 or a pdb ID so that the function can download the data. If NULL, the
-function will extract the pdb ID from the ntinfo data frame (pdbID col).}
+function will extract the pdb ID from the ntinfo data frame
+(pdbID col).}
 
 \item{ntID}{An integer/string with the desired nucleotide ID for
 analysis.}
@@ -41,17 +42,17 @@ object or file allowing the user to select a number of 5' and 3' neighbors
 in sequence and non-conected residues in a cutoff radius.
 }
 \examples{
-   cif <- cifParser("1bau")
-   ntinfo <- pipeNucData(cif, torsionals=NULL, distances=NULL, angles=NULL)
+    cif <- cifParser("1bau")
+    ntinfo <- pipeNucData(cif, torsionals=NULL, distances=NULL, angles=NULL)
 
-   ## Obtain a smaller pdb of the 4th nucleotide +-2 neigbours and a 
-   ## sorrounding sphere of 5 Angstroms
-   pdb <- trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
-                             cutoff=5)
+    ## Obtain a smaller pdb of the 4th nucleotide +-2 neigbours and a 
+    ## sorrounding sphere of 5 Angstroms
+    pdb <- trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
+                            cutoff=5)
 
-   ## Same process saving the output in a file:
-   trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
-                             cutoff=5, file="output.pdb")
+    ## Same process saving the output in a file:
+    trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
+                            cutoff=5, file="output.pdb")
 
 }
 \author{

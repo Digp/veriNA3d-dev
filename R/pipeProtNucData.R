@@ -7,36 +7,38 @@
 #' pipeline [pipeNucData()].
 #'
 #' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
-#'   objects as provided by "read.pdb", "read.cif", "cifParser" ...
+#'     objects as provided by "read.pdb", "read.cif", "cifParser" ...
 #' @param model A vector with same length of pdbID containing the
-#'   desired model for each pdbID. If all models are desired, use "all".
-#'   If no models are specified, the first one will be used for each pdbID
+#'     desired model for each pdbID. If all models are desired, use "all".
+#'     If no models are specified, the first one will be used for each pdbID
 #' @param chain A vector with same length of pdbID containing the
-#'   desired chain for each pdbID. If no chain is specified, all chains will
-#'   be analysed by default. Non-nucleic acid chains will be ignored.
-#' @param ntinfo Optional. A data.frame obtained from [pipeNucData()] for the
-#'   same dataset (or bigger), but not smaller.
+#'     desired chain for each pdbID. If no chain is specified, all chains will
+#'     be analysed by default. Non-nucleic acid chains will be ignored.
+#' @param ntinfo Optional. A data.frame obtained from 
+#'     [pipeNucData()] 
+#'     for the same dataset (or bigger), but not smaller.
 #' @param path Directory in which the PDB/CIF files can be found (if NULL, the
-#'   function will download them). If you provide a "path", make sure the
-#'   file names are the PDB IDs followed by ".cif" or "pdb". The function
-#'   will find them using the strings in pdbID, so make sure you use the 
-#'   same case.
+#'     function will download them). If you provide a "path", make sure the
+#'     file names are the PDB IDs followed by ".cif" or "pdb". The function
+#'     will find them using the strings in pdbID, so make sure you use the 
+#'     same case.
 #' @param extension A string matching the files extension (e.g. ".pdb", 
-#'   ".cif", "pdb.gz", "cif.gz").
-#'   Only necessary if the PDB files are to be read from disk and a path is 
-#'   provided.
+#'     ".cif", "pdb.gz", "cif.gz").
+#'     Only necessary if the PDB files are to be read from disk and a path is
+#'     provided.
 #' @param cores Number of CPU cores to be used.
 #' @param cutoff A numeric with the maximum distance to return. To be passed 
-#'   to [findBindingSite()]
-#' @param ... Additional arguments to be passed to [findBindingSite()]
+#'     to [findBindingSite()]
+#' @param ... Additional arguments to be passed to 
+#'     [findBindingSite()]
 #'
-#' @return A data.frame with data about the atomic distances in the 
-#'   interacting sites of every structure in the input set.
+#' @return A data.frame with data about the atomic distances in the
+#'     interacting sites of every structure in the input set.
 #'
 #' @examples 
-#'  ## This is a toy example, see vignettes for more usages.
-#'  pdblist <- list("1nyb", "2ms1")
-#'  aantinfo <- pipeProtNucData(pdbID=pdblist)
+#'     ## This is a toy example, see vignettes for more usages.
+#'     pdblist <- list("1nyb", "2ms1")
+#'     aantinfo <- pipeProtNucData(pdbID=pdblist)
 #'
 #' @author Diego Gallego
 #'

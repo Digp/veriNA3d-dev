@@ -6,30 +6,30 @@
 #' ?queryFunctions).
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein 
-#'        Data Bank.
+#'     Data Bank.
 #' @param info A string with the desired query name.
 #' @param API A string that matches "ebi" or "mmb".
 #' @param string1 A string to configure the query. See example below.
 #' @param string2 A string to configure the query. See example below.
 #' @param reuse A logical. Set to TRUE if the same query is going to be send
-#'        repeatedly, so that the result is saved in RAM (ir provides faster 
-#'        user access and avoids unnecessary work in the servers).
+#'     repeatedly, so that the result is saved in RAM (ir provides faster 
+#'     user access and avoids unnecessary work in the servers).
 #' @param envir Environment to save&retrieve the data if reuse is TRUE.
 #' @param verbose A logical. TRUE to print details of the process.
 #'
 #' @return A vector or data.frame with the desired data.
 #'
 #' @examples
-#' ## Imagine you want to programmatically access the EBI API contents
-#' ## through "http://www.ebi.ac.uk/pdbe/api/topology/entry/1s72/chain/H".
-#' ## 'queryAPI' understands it with four intructions:
-#' ## 'API="ebi"' stands for the root of the website name ("http.../api/").
-#' ## 'string1' is the string from the root to the pdb ID.
-#' ## 'pdbID' is just the 4-character PDB code.
-#' ## 'string2' is the string after the pdb ID.
-#' ## Thus, the call would be:
-#' data <- queryAPI(pdbID="1s72", API="ebi", 
-#'                      string1="topology/entry/", string2="chain/H/")
+#'     ## Imagine you want to programmatically access the EBI API contents
+#'     ## through "http://www.ebi.ac.uk/pdbe/api/topology/entry/1s72/chain/H".
+#'     ## 'queryAPI' understands it with four intructions:
+#'     ## 'API="ebi"' stands for the root of the website name ("http.../api/").
+#'     ## 'string1' is the string from the root to the pdb ID.
+#'     ## 'pdbID' is just the 4-character PDB code.
+#'     ## 'string2' is the string after the pdb ID.
+#'     ## Thus, the call would be:
+#'     data <- queryAPI(pdbID="1s72", API="ebi", 
+#'                         string1="topology/entry/", string2="chain/H/")
 #'
 #' @author Diego Gallego
 #'

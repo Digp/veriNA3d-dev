@@ -19,8 +19,9 @@ If no models are specified, the first one will be used for each pdbID}
 desired chain for each pdbID. If no chain is specified, all chains will
 be analysed by default. Non-nucleic acid chains will be ignored.}
 
-\item{ntinfo}{Optional. A data.frame obtained from \code{\link[=pipeNucData]{pipeNucData()}} for the
-same dataset (or bigger), but not smaller.}
+\item{ntinfo}{Optional. A data.frame obtained from
+\code{\link[=pipeNucData]{pipeNucData()}}
+for the same dataset (or bigger), but not smaller.}
 
 \item{path}{Directory in which the PDB/CIF files can be found (if NULL, the
 function will download them). If you provide a "path", make sure the
@@ -38,7 +39,8 @@ provided.}
 \item{cutoff}{A numeric with the maximum distance to return. To be passed
 to \code{\link[=findBindingSite]{findBindingSite()}}}
 
-\item{...}{Additional arguments to be passed to \code{\link[=findBindingSite]{findBindingSite()}}}
+\item{...}{Additional arguments to be passed to
+\code{\link[=findBindingSite]{findBindingSite()}}}
 }
 \value{
 A data.frame with data about the atomic distances in the
@@ -52,9 +54,9 @@ indentifiers (ntID) by providing the output of the independent
 pipeline \code{\link[=pipeNucData]{pipeNucData()}}.
 }
 \examples{
- ## This is a toy example, see vignettes for more usages.
- pdblist <- list("1nyb", "2ms1")
- aantinfo <- pipeProtNucData(pdbID=pdblist)
+    ## This is a toy example, see vignettes for more usages.
+    pdblist <- list("1nyb", "2ms1")
+    aantinfo <- pipeProtNucData(pdbID=pdblist)
 
 }
 \author{

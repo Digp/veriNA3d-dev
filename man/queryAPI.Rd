@@ -38,16 +38,16 @@ wrapper called by most of the queryFunctions (for documentation see
 ?queryFunctions).
 }
 \examples{
-## Imagine you want to programmatically access the EBI API contents
-## through "http://www.ebi.ac.uk/pdbe/api/topology/entry/1s72/chain/H".
-## 'queryAPI' understands it with four intructions:
-## 'API="ebi"' stands for the root of the website name ("http.../api/").
-## 'string1' is the string from the root to the pdb ID.
-## 'pdbID' is just the 4-character PDB code.
-## 'string2' is the string after the pdb ID.
-## Thus, the call would be:
-data <- queryAPI(pdbID="1s72", API="ebi", 
-                     string1="topology/entry/", string2="chain/H/")
+    ## Imagine you want to programmatically access the EBI API contents
+    ## through "http://www.ebi.ac.uk/pdbe/api/topology/entry/1s72/chain/H".
+    ## 'queryAPI' understands it with four intructions:
+    ## 'API="ebi"' stands for the root of the website name ("http.../api/").
+    ## 'string1' is the string from the root to the pdb ID.
+    ## 'pdbID' is just the 4-character PDB code.
+    ## 'string2' is the string after the pdb ID.
+    ## Thus, the call would be:
+    data <- queryAPI(pdbID="1s72", API="ebi", 
+                        string1="topology/entry/", string2="chain/H/")
 
 }
 \author{

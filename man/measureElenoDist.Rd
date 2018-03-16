@@ -8,8 +8,9 @@ measureElenoDist(pdb, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,
   5), verbose = FALSE, detailedoutput = TRUE, data_of_interest = NULL)
 }
 \arguments{
-\item{pdb}{A pdb object obtained as from \code{\link[=cifAsPDB]{cifAsPDB()}} or read.pdb/read.cif
-(bio3d functions)}
+\item{pdb}{A pdb object obtained as from
+\code{\link[=cifAsPDB]{cifAsPDB()}}
+or read.pdb/read.cif (bio3d functions)}
 
 \item{model}{The model of interest to use in the calculations. The first
 model is always the default.}
@@ -51,21 +52,21 @@ numbers might be different in the PDB vs mmCIF formats and this may lead to
 errors.
 }
 \examples{
-   ## Dowload cif file and save coordinates data
-   cif <- cifParser("1enn")
-   coordinates <- cifAtom_site(cif)
+    ## Dowload cif file and save coordinates data
+    cif <- cifParser("1enn")
+    coordinates <- cifAtom_site(cif)
 
-   ## Find atom numbers for desired entities (e.g. water and DNA)
-   water_eleno <- coordinates[coordinates$label_atom_id == "O", "id"]
-   dna_eleno <- coordinates[coordinates$label_comp_id \%in\% 
-                                     c("DA", "DT", "DG", "DU"), "id"]
+    ## Find atom numbers for desired entities (e.g. water and DNA)
+    water_eleno <- coordinates[coordinates$label_atom_id == "O", "id"]
+    dna_eleno <- coordinates[coordinates$label_comp_id \%in\% 
+                                        c("DA", "DT", "DG", "DU"), "id"]
 
-   ## Find which DNA atoms are in 5 Angstroms distance from the water
-   data <- measureElenoDist(cif, refeleno=water_eleno, eleno=dna_eleno, 
-                             n=NULL, cutoff=5)
+    ## Find which DNA atoms are in 5 Angstroms distance from the water
+    data <- measureElenoDist(cif, refeleno=water_eleno, eleno=dna_eleno, 
+                                n=NULL, cutoff=5)
 
-   ## To see the data
-   head(data)
+    ## To see the data
+    head(data)
 
 }
 \author{

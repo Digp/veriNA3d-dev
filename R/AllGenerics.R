@@ -25,8 +25,8 @@
 #'     * {cifAtom_site} `Data.frame` with atomic coordinates
 #'
 #' @examples
-#' cif <- cifParser("1bau")
-#' coordinates <- cifAtom_site(cif)
+#'     cif <- cifParser("1bau")
+#'     coordinates <- cifAtom_site(cif)
 #'
 #' @author Diego Gallego
 #'
@@ -101,13 +101,13 @@ setGeneric("cifAtom_site",
 #' @rdname cifParser
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein
-#' Data Bank (or an existing file in disk).
+#'     Data Bank (or an existing file in disk).
 #' @param verbose A logical indicating whether to print details of the process.
 #'
 #' @return A S4 CIF object 
 #'
 #' @examples
-#' cif <- cifParser("1bau")
+#'     cif <- cifParser("1bau")
 #'
 #' @author Diego Gallego
 #'
@@ -126,16 +126,18 @@ setGeneric("cifParser",
 #' @rdname cifAsPDB
 #'
 #' @param cif A CIF object as obtained from cifParser. It can also accept
-#' a 4-character PDB ID.
+#'     a 4-character PDB ID.
 #' @param model A string with the model number (in case you are only
-#' interested in a particular model) If NULL, all models are read. This option
-#' will only be applied to the "atom" attribute of the output pdb object.
+#'     interested in a particular model) If NULL, all models are read. This
+#'     option will only be applied to the "atom" attribute of the output pdb
+#'     object.
 #' @param chain A string with the chain identifier (in case you are only
-#' interested in a particular chain). If NULL, all chains are read. This option
-#' will only be applied to the "atom" attribute of the output pdb object.
+#'     interested in a particular chain). If NULL, all chains are read. This
+#'     option will only be applied to the "atom" attribute of the output pdb 
+#'     object.
 #' @param alt A string or a vector of strings with the desired alternative
-#' records. This option will only be applied to the "atom" attribute of the 
-#' output pdb object.
+#'     records. This option will only be applied to the "atom" attribute of
+#'     the output pdb object.
 #'
 #' @return A pdb object compatible with bio3d (Grant et al. 2006) functions.
 #'
@@ -167,15 +169,15 @@ setGeneric("cifAsPDB",
 #'
 #' @param cif A CIF object as otained from cifParser. 
 #' @param pdb A pdb object with multiple models (obtained from cifAsPDB 
-#' or read.cif/read.pdb from bio3d package).
+#'     or read.cif/read.pdb from bio3d package).
 #' @param model A string with the desired model number.
 #' @param verbose A logical to print messages on screen.
 #' 
 #' @return A CIF/pdb object with the desired model coordinates.
 #' 
 #' @examples
-#' cif <- cifParser("1qfq")
-#' model3 <- selectModel(cif=cif, model=3)
+#'     cif <- cifParser("1qfq")
+#'     model3 <- selectModel(cif=cif, model=3)
 #'
 #' @author Diego Gallego
 #'
@@ -192,7 +194,8 @@ setGeneric("selectModel",
 #' Given a RNA structure it computes the "r" vetors between all bases, as 
 #' defined by Bottaro et al. 2014 (The role of nucleobase interactions in RNA
 #' structure and dynamics). This function is the basis to compute the epsilon
-#' RMSD (see the same paper for details and run it with [eRMSD()]).\cr
+#' RMSD (see the same paper for details and run it with 
+#' [eRMSD()]).\cr
 #' Furthermore, it also computes two more metrics:\cr 1. The `gamma angle`,
 #' as obtained between the x axis of the coordinate system for all the bases 
 #' projected on the referece base plane and the x axis of the latter. This is 
@@ -204,23 +207,23 @@ setGeneric("selectModel",
 #'
 #' @param cif A CIF object as otained from cifParser.
 #' @param pdb A pdb object as obtained from cifAsPDB or read.cif/read.pdb
-#' (from bio3d package).
+#'     (from bio3d package).
 #' @param outformat A string indicating the output format. This could be:
-#' "rvector", "vector_coord" or "cylindrical_coord".\cr "rvector": (r(x)/a, 
-#' r(y)/a, r(z)/b), being a=5 and b=3. \cr
-#' "vector_coord": (r(x), r(y), r(z)).\cr
-#' "cylindrical_coord": (rho, phy, z).\cr
-#' See reference paper for more details. This does not apply to the `gamma` 
-#' and `beta` angles.
+#'     "rvector", "vector_coord" or "cylindrical_coord".\cr "rvector": 
+#'     (r(x)/a, r(y)/a, r(z)/b), being a=5 and b=3. \cr
+#'     "vector_coord": (r(x), r(y), r(z)).\cr
+#'     "cylindrical_coord": (rho, phy, z).\cr
+#'     See reference paper for more details. This does not apply to the 
+#'     `gamma` and `beta` angles.
 #' @param simple_out A logical to simplify the output to a matrix.
 #'
 #' @return A list of data.frames for the values of each base or a single 
-#' matrix with all the data appended.
+#'     matrix with all the data appended.
 #'
 #' @examples
-#' cif <- cifParser("2d18")
-#' model1 <- selectModel(cif=cif, model=1)
-#' vectors <- rVector(cif=model1, simple_out=FALSE)
+#'     cif <- cifParser("2d18")
+#'     model1 <- selectModel(cif=cif, model=1)
+#'     vectors <- rVector(cif=model1, simple_out=FALSE)
 #'
 #' @author Diego Gallego & Leonardo Darre
 #'
@@ -237,30 +240,35 @@ setGeneric("rVector",
 #' Given two RNA with the same length, the functions calculates its epsilon
 #' RMSD, as defined by Bottaro et al. 2014 (The role of nucleobase 
 #' interactions in RNA structure and dynamics), reproducing baRNAba software.
-#' Methods allow as input CIF S4 objects (cifParser), pdb S3 objects 
-#' (cifAsPDB/read.pdb/read.cif) or matrices containing the "r" vectors of the
-#' desired structures.
+#' Methods allow as input CIF S4 objects 
+#' [cifParser()], 
+#' pdb S3 objects (cifAsPDB/read.pdb/read.cif) or matrices containing the 
+#' "r" vectors of the desired structures.
 #'
 #' @rdname eRMSD
 #'
-#' @param cif1 A CIF object as otained from cifParser.
-#' @param cif2 A CIF object as otained from cifParser.
+#' @param cif1 A CIF object as otained from 
+#'     [cifParser()].
+#' @param cif2 A CIF object as otained from 
+#'     [cifParser()].
 #' @param pdb1 A pdb object as obtained from cifAsPDB or read.cif/read.pdb
-#' (from bio3d package).
+#'     (from bio3d package).
 #' @param pdb2 A pdb object as obtained from cifAsPDB or read.cif/read.pdb
-#' (from bio3d package).
-#' @param rvectors1 A data.frame as obtained from [rVector()] using 
-#' simple_out=TRUE.
-#' @param rvectors2 A data.frame as obtained from [rVector()] using 
-#' simple_out=TRUE.
+#'     (from bio3d package).
+#' @param rvectors1 A data.frame as obtained from 
+#'     [rVector()] 
+#'     using simple_out=TRUE.
+#' @param rvectors2 A data.frame as obtained from 
+#'     [rVector()] 
+#'     using simple_out=TRUE.
 #'
 #' @return A numeric with the epsilon RMSD between the two structures
 #'
 #' @examples
-#' cif <- cifParser("2d18")
-#' model1 <- selectModel(cif=cif, model=1)
-#' model3 <- selectModel(cif=cif, model=3)
-#' eRMSD <- eRMSD(cif1=model1, cif2=model3)
+#'     cif <- cifParser("2d18")
+#'     model1 <- selectModel(cif=cif, model=1)
+#'     model3 <- selectModel(cif=cif, model=3)
+#'     eRMSD <- eRMSD(cif1=model1, cif2=model3)
 #'
 #' @author Diego Gallego
 #'
@@ -271,8 +279,8 @@ setGeneric("eRMSD",
             standardGeneric("eRMSD"))
 
 ##############################################################################
-
-##############################################################################
+## Internal functions
+## ===========================================================================
 
 ## Wrapper to choose between lapply and mclapply accordingly
 .xlapply <- 
@@ -305,4 +313,3 @@ function(FUN, ..., mc.cores=1) {
         mapply(FUN=FUN, ...=...)
     }
 }
-

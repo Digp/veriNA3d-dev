@@ -5,49 +5,50 @@
 #' numbers might be different in the PDB vs mmCIF formats and this may lead to
 #' errors. 
 #'
-#' @param pdb A pdb object obtained as from [cifAsPDB()] or read.pdb/read.cif
-#'    (bio3d functions)
+#' @param pdb A pdb object obtained as from 
+#'     [cifAsPDB()] 
+#'     or read.pdb/read.cif (bio3d functions)
 #' @param model The model of interest to use in the calculations. The first
-#'    model is always the default.
+#'     model is always the default.
 #' @param refeleno A vector of eleno (element number) to take as reference.
 #' @param eleno A vector of eleno to measure the distances.
 #' @param n An integer indicating how many closests atoms to return. The
-#'    default n=1 returns only the closest atom; n=2 would return the two
-#'    closest atoms and so on. If NULL, any number of atoms within the 
-#'    cutoff will be returned.
+#'     default n=1 returns only the closest atom; n=2 would return the two
+#'     closest atoms and so on. If NULL, any number of atoms within the 
+#'     cutoff will be returned.
 #' @param cutoff A numeric vector indicating the distance range to consider in
-#'    angstroms. Atoms further than the cutoff won't be returned.
+#'     angstroms. Atoms further than the cutoff won't be returned.
 #' @param verbose A logical indicating whether to print details of the process.
 #' @param detailedoutput A logical indicating whether to include additional 
-#'    information for each atom (see data_of_interest below). If FALSE, only
-#'    the eleno (element number) and distances are returned.
+#'     information for each atom (see data_of_interest below). If FALSE, only
+#'     the eleno (element number) and distances are returned.
 #' @param data_of_interest A vector of strings. Only used if detailedoutput is 
-#'    TRUE. The vector should only contain the strings between the following:
-#'    "type", "elety", "alt", "resid", "chain", "resno", "insert", "x", "y",
-#'    "z", "o", "b", "entid", "elesy", "charge", "asym_id", "seq_id", 
-#'    "comp_id", "atom_id", "model".
-#'    The selected fields will be returned for both atoms.
+#'     TRUE. The vector should only contain the strings between the following:
+#'     "type", "elety", "alt", "resid", "chain", "resno", "insert", "x", "y",
+#'     "z", "o", "b", "entid", "elesy", "charge", "asym_id", "seq_id", 
+#'     "comp_id", "atom_id", "model".
+#'     The selected fields will be returned for both atoms.
 #'
 #' @return A data.frame with the nearest atom neighbours information. Fields
-#'    suffixed with '_A' refer to the atoms used as reference. Fields 
-#'    suffixed with '_B' refer to the 'contacting'/closest atoms.
+#'     suffixed with '_A' refer to the atoms used as reference. Fields 
+#'     suffixed with '_B' refer to the 'contacting'/closest atoms.
 #'
 #' @examples 
-#'    ## Dowload cif file and save coordinates data
-#'    cif <- cifParser("1enn")
-#'    coordinates <- cifAtom_site(cif)
+#'     ## Dowload cif file and save coordinates data
+#'     cif <- cifParser("1enn")
+#'     coordinates <- cifAtom_site(cif)
 #'
-#'    ## Find atom numbers for desired entities (e.g. water and DNA)
-#'    water_eleno <- coordinates[coordinates$label_atom_id == "O", "id"]
-#'    dna_eleno <- coordinates[coordinates$label_comp_id %in% 
-#'                                      c("DA", "DT", "DG", "DU"), "id"]
+#'     ## Find atom numbers for desired entities (e.g. water and DNA)
+#'     water_eleno <- coordinates[coordinates$label_atom_id == "O", "id"]
+#'     dna_eleno <- coordinates[coordinates$label_comp_id %in% 
+#'                                         c("DA", "DT", "DG", "DU"), "id"]
 #'
-#'    ## Find which DNA atoms are in 5 Angstroms distance from the water
-#'    data <- measureElenoDist(cif, refeleno=water_eleno, eleno=dna_eleno, 
-#'                              n=NULL, cutoff=5)
+#'     ## Find which DNA atoms are in 5 Angstroms distance from the water
+#'     data <- measureElenoDist(cif, refeleno=water_eleno, eleno=dna_eleno, 
+#'                                 n=NULL, cutoff=5)
 #'
-#'    ## To see the data
-#'    head(data)
+#'     ## To see the data
+#'     head(data)
 #'
 #' @author Diego Gallego
 #'

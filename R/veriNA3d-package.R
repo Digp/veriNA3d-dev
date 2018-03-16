@@ -18,7 +18,8 @@
 #'
 #' @docType package
 #' @name veriNA3d
-#' @author Diego Gallego <diego.gallego@irbbarcelona.org>
+#' @author Diego Gallego 
+#'     <diego.gallego@irbbarcelona.org>
 #'
 #' @importFrom methods new
 #'

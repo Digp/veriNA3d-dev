@@ -36,7 +36,7 @@ The example below works with a small dataset and takes ~1 min.
 \examples{
     data <- getLeontisList(release=3.2, threshold="1.5A")
     alternative <- getAltRepres(data=data, 
-                                  type="nakedRNA")
+                                type="nakedRNA")
 
 }
 \author{

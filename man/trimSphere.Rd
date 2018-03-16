@@ -23,8 +23,8 @@ below).}
 provide sel (see below)..}
 
 \item{sel}{A "select" object as obtained from atom.select (bio3d). Note
-that if you are using this option, cif must be the same input object you
-used for the atom.select function.}
+that if you are using this option, cif must be the same input object
+you used for the atom.select function.}
 
 \item{cutoff}{A numeric indicating the radius in angstroms to select around
 the desired nucleotides. If 0 only the nucleotides are returned.}
@@ -49,25 +49,25 @@ function finds all the atoms in the given area and returns a pdb object
 that only includes the nearest atoms.
 }
 \examples{
-   ## Toy example:
-   cif <- cifParser("1s72")
+    ## Toy example:
+    cif <- cifParser("1s72")
 
-   ## Generate a smaller pdb with the atoms 55 to 58 of the RNA chain "9"
-   ## with a sorrounding sphere of 5 Angstroms:
-   smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
-     cutoff=5, verbose=FALSE)
+    ## Generate a smaller pdb with the atoms 55 to 58 of the RNA chain "9"
+    ## with a sorrounding sphere of 5 Angstroms:
+    smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
+                                cutoff=5, verbose=FALSE)
 
-   ## Same process saving the output in a file:
-   smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
-     cutoff=5, verbose=FALSE, file="output.pdb")
+    ## Same process saving the output in a file:
+    smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
+                                cutoff=5, verbose=FALSE, file="output.pdb")
 
-   ## Second example:
-   ## Obtain a PDB with just the interacting region between RNA and protein
-   pdb <- cifAsPDB("1nyb")
-   data <- findBindingSite(pdb, select="RNA", byres=TRUE)
-   sel <- bio3d::atom.select(pdb,
-                             eleno=append(data$eleno_A, data$eleno_B))
-   trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
+    ## Second example:
+    ## Obtain a PDB with just the interacting region between RNA and prot
+    pdb <- cifAsPDB("1nyb")
+    data <- findBindingSite(pdb, select="RNA", byres=TRUE)
+    sel <- bio3d::atom.select(pdb,
+                                eleno=append(data$eleno_A, data$eleno_B))
+    trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
 
 }
 \author{

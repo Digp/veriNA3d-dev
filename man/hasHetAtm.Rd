@@ -18,7 +18,8 @@ A logical. TRUE if the given hetAtms is present in the structure.
 Given a 4-character string (PDB ID) and a ligand/modbase ID, the function
 checks the presence of the ligand/modres in the given PDB ID. To check for
 the presence of sodium ions use hetAtms="Na" instead of NA. If you are
-interested on the whole list of heterogeneous atoms see \code{\link[=queryHetAtms]{queryHetAtms()}}.
+interested on the whole list of heterogeneous atoms see
+\code{\link[=queryHetAtms]{queryHetAtms()}}.
 }
 \examples{
 hasHetAtm("1s72", "MG") # Check if structure has Magnesium ion

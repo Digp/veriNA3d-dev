@@ -6,49 +6,48 @@
 #' 2010).
 #' 
 #' @param pdb A pdb object as obtained from cifAsPDB or read.cif/read.pdb 
-#'   (bio3d package).
+#'     (bio3d package).
 #' @param model A string with the desired model number.
 #' @param chain A string with the desired chain id.
 #' @param v_shifted A logical. If TRUE, puckering angles (nu0 to nu4) are
-#'   returned in the range of 0 to 360 degrees. Otherwise, from -180 to + 180.
+#'     returned in the range 0 to 360 degrees. Otherwise, -180 to +180.
 #' @param b_shifted A logical. If TRUE, backbone angles, chi and kappa are
-#'   returned in the range of 0 to 360 degrees. Otherwise, from -180 to + 180.
+#'     returned in the range 0 to 360 degrees. Otherwise, -180 to +180.
 #' @param distances A data.frame indicating all the intra and inter-nucleotide
-#'   atomic distances of interest. See details section. A default option is 
-#'   preconfigured to simplify the use of the function and can be seen typing 
-#'   'veriNA3d::.distances'.
+#'     atomic distances of interest. See details section. A default option is
+#'     preconfigured to simplify the use of the function and can be seen 
+#'     typing 'veriNA3d::.distances'.
 #' @param angles A data.frame indicating all the intra and inter-nucleotide
-#'   angles of interest. See details section. A default option is 
-#'   preconfigured to simplify the use of the function and can be seen typing 
-#'   'veriNA3d::.angles'.
+#'     angles of interest. See details section. A default option is 
+#'     preconfigured to simplify the use of the function and can be seen
+#'     typing 'veriNA3d::.angles'.
 #' @param torsionals A data.frame indicating all the intra and inter-
-#'   nucleotide torsional angles of interest. See details section. A default 
-#'   option is preconfigured to simplify the use of the function and can be 
-#'   seen typing 'veriNA3d::.torsionals'.
+#'     nucleotide torsional angles of interest. See details section. A default
+#'     option is preconfigured to simplify the use of the function and can be
+#'     seen typing 'veriNA3d::.torsionals'.
 #' @param pucker A logical indicating whether to compute the puckering.
 #' @param Dp A logical indicating whether to compute the Dp distance.
 #'
-#' @details
-#'   The format of 'distances', 'angles' and 'torsionals' follows a simple 
-#'   rule: First column should indicate the first atom, second column second
-#'   atom (and so on in the case of angles and torsional angles). An extra 
-#'   last column is optional and should contain the names to identify each
-#'   measurement in the output. Plane atom names are interpreted as intra-
-#'   nucleotide measurments. For inter-nucleotide measurments use the prefix 
-#'   "pre_" or "post_" before the atom name. In example, to compute all 
-#'   inter-phosphate distances, use as argument: \cr
-#'    distances=data.frame(atomA=c("P"), atomB=c("post_P"), 
-#'                              labels=c("interphosphate"), 
-#'                              stringsAsFactors=FALSE)\cr
+#' @details The format of 'distances', 'angles' and 'torsionals' is:
+#'     First column should indicate the first atom, second column second
+#'     atom (and so on in the case of angles and torsional angles). An extra 
+#'     last column is optional and should contain the names to identify each
+#'     measurement in the output. Plane atom names are interpreted as intra-
+#'     nucleotide measurments. For inter-nucleotide measurments use the prefix
+#'     "pre_" or "post_" before the atom name. In example, to compute all 
+#'     inter-phosphate distances, use as argument: \cr
+#'     distances=data.frame(atomA=c("P"), atomB=c("post_P"), 
+#'                             labels=c("interphosphate"), 
+#'                             stringsAsFactors=FALSE)\cr
 #'
 #' @return A data.frame with the measurements for every nucleotide.
 #'
 #' @examples
-#'   distances <- data.frame(atomA=c("P"), atomB=c("post_P"), 
-#'                              labels=c("interphosphate"), 
-#'                              stringsAsFactors=FALSE)
-#'   measureNuc(cifAsPDB("1bna"), distances=distances, angles=NULL, 
-#'                      torsionals=NULL, Dp=NULL)
+#'     distances <- data.frame(atomA=c("P"), atomB=c("post_P"), 
+#'                             labels=c("interphosphate"), 
+#'                             stringsAsFactors=FALSE)
+#'     measureNuc(cifAsPDB("1bna"), distances=distances, angles=NULL, 
+#'                     torsionals=NULL, Dp=NULL)
 #'
 #' @author Diego Gallego 
 #' 

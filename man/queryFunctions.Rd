@@ -57,11 +57,11 @@ queryTechnique(pdbID, ...)
 Data Bank.}
 
 \item{...}{For advanced usage, arguments to be passed to subfunction
-"queryAPI". Type ?queryAPI for documentation.}
+\code{\link[=queryAPI]{queryAPI()}}.}
 
 \item{chain}{A string with the chain identifier (in case you are only
-interested in a particular chain). If NULL, the info about all the chains
-is returned.}
+interested in a particular chain). If NULL, the info about all the
+chains is returned.}
 
 \item{subset}{Optional argument indicating "type", "length" or
 "description". If NULL, all the columns in the data.frame are returned.}
@@ -99,9 +99,9 @@ Strightforward way to access structural data by making queries through the
 EBI or MMB mirrors of the PDB.
 }
 \examples{
-     queryTechnique("4y4o")
-     queryAuthors("1s72")
-     queryNDBId("1bau")
+    queryTechnique("4y4o")
+    queryAuthors("1s72")
+    queryNDBId("1bau")
 
 }
 \author{

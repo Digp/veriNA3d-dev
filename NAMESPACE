@@ -5,13 +5,16 @@ importFrom("graphics", "abline", "axis", "barplot", "contour",
 importFrom("grDevices", "dev.off", "png", "rgb")
 importFrom("methods", "new")
 importFrom("stats", "complete.cases", "sd")
-importFrom("utils", "download.file", "read.table", "setTxtProgressBar", "txtProgressBar")
+importFrom("utils", "download.file", "read.table", "setTxtProgressBar", 
+            "txtProgressBar")
 importFrom(plot3D, persp3D)
 importFrom(MASS, kde2d, bandwidth.nrd)
 importFrom(jsonlite, fromJSON)
 importFrom(RColorBrewer, brewer.pal)
 importFrom(RANN, nn2)
-importFrom(circlize, circos.par, circos.initialize, circos.trackPlotRegion, circos.axis, circos.trackPoints, circos.trackHist, circos.clear)
+importFrom(circlize, circos.par, circos.initialize, 
+                circos.trackPlotRegion, circos.axis, circos.trackPoints, 
+                circos.trackHist, circos.clear)
 
 #exportPattern("^[[:alpha:]]+")
 exportClasses(CIF)
@@ -38,8 +41,6 @@ export(
     classifyRNA,
 
     cleanByPucker,
- 
-    cluster.select, 
 
     eRMSD, 
 
@@ -57,7 +58,7 @@ export(
     plotCategorical, 
     plotCircularDistribution, 
     plotEtaTheta, 
-    plot_et, 
+    plotEtaTheta3D, 
     plotSetOfDistributions, 
 
     queryAPI,
@@ -83,7 +84,6 @@ export(
     pipeProtNucData, 
 
     represAsDataFrame,
-    rvec_plot, 
     rVector, 
 
     selectModel, 

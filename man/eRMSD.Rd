@@ -16,9 +16,11 @@ eRMSD(cif1 = NULL, cif2 = NULL, pdb1 = NULL, pdb2 = NULL,
   rvectors2 = NULL)
 }
 \arguments{
-\item{cif1}{A CIF object as otained from cifParser.}
+\item{cif1}{A CIF object as otained from
+\code{\link[=cifParser]{cifParser()}}.}
 
-\item{cif2}{A CIF object as otained from cifParser.}
+\item{cif2}{A CIF object as otained from
+\code{\link[=cifParser]{cifParser()}}.}
 
 \item{pdb1}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb
 (from bio3d package).}
@@ -26,11 +28,13 @@ eRMSD(cif1 = NULL, cif2 = NULL, pdb1 = NULL, pdb2 = NULL,
 \item{pdb2}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb
 (from bio3d package).}
 
-\item{rvectors1}{A data.frame as obtained from \code{\link[=rVector]{rVector()}} using
-simple_out=TRUE.}
+\item{rvectors1}{A data.frame as obtained from
+\code{\link[=rVector]{rVector()}}
+using simple_out=TRUE.}
 
-\item{rvectors2}{A data.frame as obtained from \code{\link[=rVector]{rVector()}} using
-simple_out=TRUE.}
+\item{rvectors2}{A data.frame as obtained from
+\code{\link[=rVector]{rVector()}}
+using simple_out=TRUE.}
 }
 \value{
 A numeric with the epsilon RMSD between the two structures
@@ -39,15 +43,16 @@ A numeric with the epsilon RMSD between the two structures
 Given two RNA with the same length, the functions calculates its epsilon
 RMSD, as defined by Bottaro et al. 2014 (The role of nucleobase
 interactions in RNA structure and dynamics), reproducing baRNAba software.
-Methods allow as input CIF S4 objects (cifParser), pdb S3 objects
-(cifAsPDB/read.pdb/read.cif) or matrices containing the "r" vectors of the
-desired structures.
+Methods allow as input CIF S4 objects
+\code{\link[=cifParser]{cifParser()}},
+pdb S3 objects (cifAsPDB/read.pdb/read.cif) or matrices containing the
+"r" vectors of the desired structures.
 }
 \examples{
-cif <- cifParser("2d18")
-model1 <- selectModel(cif=cif, model=1)
-model3 <- selectModel(cif=cif, model=3)
-eRMSD <- eRMSD(cif1=model1, cif2=model3)
+    cif <- cifParser("2d18")
+    model1 <- selectModel(cif=cif, model=1)
+    model3 <- selectModel(cif=cif, model=3)
+    eRMSD <- eRMSD(cif1=model1, cif2=model3)
 
 }
 \author{

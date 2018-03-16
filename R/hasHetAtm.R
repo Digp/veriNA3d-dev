@@ -3,7 +3,8 @@
 #' Given a 4-character string (PDB ID) and a ligand/modbase ID, the function
 #' checks the presence of the ligand/modres in the given PDB ID. To check for
 #' the presence of sodium ions use hetAtms="Na" instead of NA. If you are
-#' interested on the whole list of heterogeneous atoms see [queryHetAtms()].
+#' interested on the whole list of heterogeneous atoms see 
+#' [queryHetAtms()].
 #'
 #' @param pdbID A 4-character string.
 #' @param hetAtms A string with the ligand/modbase ID.

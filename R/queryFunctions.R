@@ -4,44 +4,44 @@
 #' EBI or MMB mirrors of the PDB.
 #'
 #' @param pdbID A 4-character string that matches a structure in the Protein 
-#' Data Bank. 
+#'     Data Bank. 
 #' @param ... For advanced usage, arguments to be passed to subfunction 
-#' "queryAPI". Type ?queryAPI for documentation.
+#'     [queryAPI()].
 #' @param chain A string with the chain identifier (in case you are only
-#' interested in a particular chain). If NULL, the info about all the chains
-#' is returned.
+#'     interested in a particular chain). If NULL, the info about all the
+#'     chains is returned.
 #' @param subset Optional argument indicating "type", "length" or 
-#' "description". If NULL, all the columns in the data.frame are returned.
+#'     "description". If NULL, all the columns in the data.frame are returned.
 #' @param NAtoNa A logical. If TRUE, sodium ion (NA) is modified as "Na".
 #' @param onlymodres A logical. If TRUE, only the modified residues are 
-#' returned.
+#'     returned.
 #' 
 #' @return A character vector or data.frame with the desired information:
-#'      * {queryAuthors} List of authors.
-#'      * {queryChains} Data frame with list of chains and properties.
-#'      * {queryCompound} Author description of the entry.
-#'      * {queryCompType} Type of entry as defined in PDB (e.g. Prot-nuc).
-#'      * {queryDepdate} Deposition date.
-#'      * {queryEntities} Data frame with list of entities and properties.
-#'      * {queryFormats} Files available for the entry (e.g. to check if pdb 
-#'                       format is available for the structure).
-#'      * {queryHeader} Classification of the structure as it appears in the 
-#'                       header (PDB format) or in the
-#'                       "_struct_keywords.pdbx_keywords" field 
-#'                       (mmCIF format).
-#'      * {queryHetAtms} List of HETATM (modified residues and ligands).
-#'      * {queryModres} List of modified residues.
-#'      * {queryNDBId} NDB ID for Nucleic Acids.
-#'      * {queryOrgLigands} Retrieves just the organic ligands (not ions).
-#'      * {queryReldate} Release date.
-#'      * {queryResol} Resolution
-#'      * {queryRevdate} Revision date.
-#'      * {queryTechnique} Experimental technique
+#'     * {queryAuthors} List of authors.
+#'     * {queryChains} Data frame with list of chains and properties.
+#'     * {queryCompound} Author description of the entry.
+#'     * {queryCompType} Type of entry as defined in PDB (e.g. Prot-nuc).
+#'     * {queryDepdate} Deposition date.
+#'     * {queryEntities} Data frame with list of entities and properties.
+#'     * {queryFormats} Files available for the entry (e.g. to check if pdb 
+#'                     format is available for the structure).
+#'     * {queryHeader} Classification of the structure as it appears in the 
+#'                     header (PDB format) or in the
+#'                     "_struct_keywords.pdbx_keywords" field 
+#'                     (mmCIF format).
+#'     * {queryHetAtms} List of HETATM (modified residues and ligands).
+#'     * {queryModres} List of modified residues.
+#'     * {queryNDBId} NDB ID for Nucleic Acids.
+#'     * {queryOrgLigands} Retrieves just the organic ligands (not ions).
+#'     * {queryReldate} Release date.
+#'     * {queryResol} Resolution
+#'     * {queryRevdate} Revision date.
+#'     * {queryTechnique} Experimental technique
 #'
 #' @examples
-#'      queryTechnique("4y4o")
-#'      queryAuthors("1s72")
-#'      queryNDBId("1bau")
+#'     queryTechnique("4y4o")
+#'     queryAuthors("1s72")
+#'     queryNDBId("1bau")
 #'
 #' @author Diego Gallego
 #'

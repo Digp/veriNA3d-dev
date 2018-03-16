@@ -8,7 +8,8 @@ cleanByPucker(ntinfo, surenorth = FALSE, suresouth = FALSE,
   pucker = "C3'endo", range = NULL, verbose = TRUE)
 }
 \arguments{
-\item{ntinfo}{A data.frame. The output of \code{\link[=pipeNucData]{pipeNucData()}}.}
+\item{ntinfo}{A data.frame. The output of
+\code{\link[=pipeNucData]{pipeNucData()}}.}
 
 \item{surenorth}{A logical to return nucleotides in north with restrictions
 in delta and Dp.}
@@ -26,18 +27,19 @@ other argument above could be applyed.}
 \item{verbose}{A logical to print details of the process.}
 }
 \value{
-The same data.frame for the nucleotides matching the desired
+An integer vector with the nucleotides (ntID) matching the desired
 puckering state.
 }
 \description{
-Function to clean raw data after the pipeline \code{\link[=pipeNucData]{pipeNucData()}}. It takes a
-data.frame that should have the columns "pu_phase", "delta" and "Dp", and
-returns the same data.frame for the nucleotides matching the desired
-puckering state.
+Function to clean raw data after the pipeline
+\code{\link[=pipeNucData]{pipeNucData()}}.
+It takes a data.frame that should have the columns "pu_phase", "delta" and
+"Dp", and returns the nucleotides matching the desired puckering state.
 }
 \examples{
     ntinfo <- pipeNucData("1bau")
-    north <- cleanByPucker(ntinfo, surenorth=TRUE)
+    north_ntID <- cleanByPucker(ntinfo, surenorth=TRUE)
+    north <- ntinfo[ntinfo$ntID \%in\% north_ntID,]
 
 }
 \author{

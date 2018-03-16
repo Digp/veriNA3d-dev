@@ -29,5 +29,6 @@ The explore functions ...
 }
 
 \author{
-Diego Gallego \href{mailto:diego.gallego@irbbarcelona.org}{diego.gallego@irbbarcelona.org}
+Diego Gallego
+\href{mailto:diego.gallego@irbbarcelona.org}{diego.gallego@irbbarcelona.org}
 }

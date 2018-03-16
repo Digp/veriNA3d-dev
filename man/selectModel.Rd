@@ -36,8 +36,8 @@ The cifAsPDB and selectModel functions can cope with these structures
 (e.g. 1JTW).
 }
 \examples{
-cif <- cifParser("1qfq")
-model3 <- selectModel(cif=cif, model=3)
+    cif <- cifParser("1qfq")
+    model3 <- selectModel(cif=cif, model=3)
 
 }
 \author{

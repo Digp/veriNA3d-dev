@@ -23,12 +23,12 @@ rVector(cif, pdb, outformat = "rvector", simple_out = TRUE)
 (from bio3d package).}
 
 \item{outformat}{A string indicating the output format. This could be:
-"rvector", "vector_coord" or "cylindrical_coord".\cr "rvector": (r(x)/a,
-r(y)/a, r(z)/b), being a=5 and b=3. \cr
+"rvector", "vector_coord" or "cylindrical_coord".\cr "rvector":
+(r(x)/a, r(y)/a, r(z)/b), being a=5 and b=3. \cr
 "vector_coord": (r(x), r(y), r(z)).\cr
 "cylindrical_coord": (rho, phy, z).\cr
-See reference paper for more details. This does not apply to the \code{gamma}
-and \code{beta} angles.}
+See reference paper for more details. This does not apply to the
+\code{gamma} and \code{beta} angles.}
 
 \item{simple_out}{A logical to simplify the output to a matrix.}
 }
@@ -40,7 +40,8 @@ matrix with all the data appended.
 Given a RNA structure it computes the "r" vetors between all bases, as
 defined by Bottaro et al. 2014 (The role of nucleobase interactions in RNA
 structure and dynamics). This function is the basis to compute the epsilon
-RMSD (see the same paper for details and run it with \code{\link[=eRMSD]{eRMSD()}}).\cr
+RMSD (see the same paper for details and run it with
+\code{\link[=eRMSD]{eRMSD()}}).\cr
 Furthermore, it also computes two more metrics:\cr 1. The \code{gamma angle},
 as obtained between the x axis of the coordinate system for all the bases
 projected on the referece base plane and the x axis of the latter. This is
@@ -49,9 +50,9 @@ base plane axis (z).\cr 2. The \code{beta angle}, as obtained between the base
 planes normal to account for the degree of coplanarity between bases.
 }
 \examples{
-cif <- cifParser("2d18")
-model1 <- selectModel(cif=cif, model=1)
-vectors <- rVector(cif=model1, simple_out=FALSE)
+    cif <- cifParser("2d18")
+    model1 <- selectModel(cif=cif, model=1)
+    vectors <- rVector(cif=model1, simple_out=FALSE)
 
 }
 \author{

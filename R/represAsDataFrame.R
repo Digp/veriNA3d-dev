@@ -8,9 +8,12 @@
 #' Col 2: PDB ID.\cr
 #' Col 3: Model.\cr
 #' Col 4: Chain.\cr
-#' Columns 2 to 4 can be the direct input of [pipeNucData()]
+#' Columns 2 to 4 can be the direct input of 
+#' [pipeNucData()]
 #' 
-#' @param nrlist The output of getLeontisList or getAltRepres.
+#' @param nrlist The output of 
+#'     [getLeontisList()] or 
+#'     [getAltRepres()].
 #'
 #' @return A data frame with the data of the representative structures
 #' 

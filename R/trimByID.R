@@ -6,35 +6,36 @@
 #' in sequence and non-conected residues in a cutoff radius.
 #'
 #' @param cif A cif/pdb object obtained from cifParser/read.pdb respectively
-#'    or a pdb ID so that the function can download the data. If NULL, the 
-#'    function will extract the pdb ID from the ntinfo data frame (pdbID col).
+#'     or a pdb ID so that the function can download the data. If NULL, the 
+#'     function will extract the pdb ID from the ntinfo data frame 
+#'     (pdbID col).
 #' @param ntID An integer/string with the desired nucleotide ID for
-#'    analysis.
+#'     analysis.
 #' @param ntinfo a data.frame with the data. It should contain at least the
-#'    columns "pdbID", "chain", "model", "resno", "insert" and "ntID" (as the
-#'    output of pipeNucData function).
+#'     columns "pdbID", "chain", "model", "resno", "insert" and "ntID" (as the
+#'     output of pipeNucData function).
 #' @param prev Number of desired 5' neigbours to be returned.
 #' @param post Number of desired 3' neigbours to be returned.
 #' @param verbose A logical to print details of the process.
 #' @param file A string to save the output in a pdb formated file. If NULL the
-#'    fucntions just returns the pdb object.
+#'     fucntions just returns the pdb object.
 #' @param ... Arguments to be passed to trimSphere (type ?trimSphere for 
-#'    details)
+#'     details)
 #' 
 #' @return A smaller pdb object or a pdb file. 
 #'
 #' @examples 
-#'    cif <- cifParser("1bau")
-#'    ntinfo <- pipeNucData(cif, torsionals=NULL, distances=NULL, angles=NULL)
+#'     cif <- cifParser("1bau")
+#'     ntinfo <- pipeNucData(cif, torsionals=NULL, distances=NULL, angles=NULL)
 #'
-#'    ## Obtain a smaller pdb of the 4th nucleotide +-2 neigbours and a 
-#'    ## sorrounding sphere of 5 Angstroms
-#'    pdb <- trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
-#'                              cutoff=5)
+#'     ## Obtain a smaller pdb of the 4th nucleotide +-2 neigbours and a 
+#'     ## sorrounding sphere of 5 Angstroms
+#'     pdb <- trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
+#'                             cutoff=5)
 #'
-#'    ## Same process saving the output in a file:
-#'    trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
-#'                              cutoff=5, file="output.pdb")
+#'     ## Same process saving the output in a file:
+#'     trimByID(cif=cif, ntinfo=ntinfo, ntID=4, prev=2, post=2, 
+#'                             cutoff=5, file="output.pdb")
 #'
 #' @author Diego Gallego
 #'

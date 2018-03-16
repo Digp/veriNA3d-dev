@@ -48,7 +48,7 @@ categorical data.
 \examples{
     ## To see all the types of trinucleotides in the dataset:
     ntinfo <- pipeNucData("1bau")
-    plotCategorical(ntinfo=ntinfo, categories="localenv")
+    plotCategorical(ntinfo=ntinfo, field="localenv")
 
 }
 \author{

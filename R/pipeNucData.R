@@ -4,36 +4,36 @@
 #' Nucleotides are labeled with a unique identifier (column ntID).
 #'
 #' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
-#'   objects as provided by "read.pdb", "read.cif", "cifParser" ...
+#'     objects as provided by "read.pdb", "read.cif", "cifParser" ...
 #' @param model A vector with same length of pdbID containing the
-#'   desired model for each pdbID. If all models are desired, use "all".
-#'   If no models are specified, the first one will be used for each pdbID
+#'     desired model for each pdbID. If all models are desired, use "all".
+#'     If no models are specified, the first one will be used for each pdbID.
 #' @param chain A vector with same length of pdbID containing the
-#'   desired chain for each pdbID. If no chain is specified, all chains will
-#'   be analysed by default. Non-nucleic acid chains will be ignored.
+#'     desired chain for each pdbID. If no chain is specified, all chains will
+#'     be analysed by default. Non-nucleic acid chains will be ignored.
 #' @param range A numeric vector with two values to indicate the desired
-#'   length range for the Nucleic Acid chains. If a chain falls outside the
-#'   range, it is not analysed.
+#'     length range for the Nucleic Acid chains. If a chain falls outside the
+#'     range, it is not analysed.
 #' @param path Directory in which the PDB/CIF files can be found (if NULL, the
-#'   function will download them). If you provide a "path", make sure the
-#'   file names are the PDB IDs followed by ".cif" or "pdb". The function
-#'   will find them using the strings in pdbID, so make sure you use the 
-#'   same case.
+#'     function will download them). If you provide a "path", make sure the
+#'     file names are the PDB IDs followed by ".cif" or "pdb". The function
+#'     will find them using the strings in pdbID, so make sure you use the 
+#'     same case.
 #' @param extension A string matching the files extension (e.g. ".pdb", 
-#'   ".cif", "pdb.gz", "cif.gz").
-#'   Only necessary if the PDB files are to be read from disk and a path is 
-#'   provided.
+#'     ".cif", "pdb.gz", "cif.gz").
+#'     Only necessary if the PDB files are to be read from disk and a path is
+#'     provided.
 #' @param cores Number of CPU cores to be used.
 #' @param ... Arguments to be passed to [measureNuc()]
 #'
 #' @return A data.frame with data about every nucleotide in the input set
 #'
 #' @examples 
-#'  ## This is a toy example, see vignettes for real-world usages.
-#'  pdblist <- list("1bau", "2rn1")
-#'  model <- list("1", "2")
-#'  chain <- list("all", "all")
-#'  ntinfo <- pipeNucData(pdbID=pdblist, model=model, chain=chain)
+#'     ## This is a toy example, see vignettes for real-world usages.
+#'     pdblist <- list("1bau", "2rn1")
+#'     model <- list("1", "2")
+#'     chain <- list("all", "all")
+#'     ntinfo <- pipeNucData(pdbID=pdblist, model=model, chain=chain)
 #'
 #' @author Diego Gallego
 #'

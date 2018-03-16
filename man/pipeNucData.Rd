@@ -13,7 +13,7 @@ objects as provided by "read.pdb", "read.cif", "cifParser" ...}
 
 \item{model}{A vector with same length of pdbID containing the
 desired model for each pdbID. If all models are desired, use "all".
-If no models are specified, the first one will be used for each pdbID}
+If no models are specified, the first one will be used for each pdbID.}
 
 \item{chain}{A vector with same length of pdbID containing the
 desired chain for each pdbID. If no chain is specified, all chains will
@@ -46,11 +46,11 @@ Pipeline to generate a data.frame with the desired info for a list of PDB.
 Nucleotides are labeled with a unique identifier (column ntID).
 }
 \examples{
- ## This is a toy example, see vignettes for real-world usages.
- pdblist <- list("1bau", "2rn1")
- model <- list("1", "2")
- chain <- list("all", "all")
- ntinfo <- pipeNucData(pdbID=pdblist, model=model, chain=chain)
+    ## This is a toy example, see vignettes for real-world usages.
+    pdblist <- list("1bau", "2rn1")
+    model <- list("1", "2")
+    chain <- list("all", "all")
+    ntinfo <- pipeNucData(pdbID=pdblist, model=model, chain=chain)
 
 }
 \author{
