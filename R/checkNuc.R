@@ -48,6 +48,9 @@ function(pdb, model=1, chain="all", id=NULL) {
     ## Make sure the pdb object has the necessary format ---------------------
     pdb$atom$insert[is.na(pdb$atom$insert)] <- "?"
     pdb$atom$elety <- gsub("\"", "", pdb$atom$elety)
+    if (any(is.na(pdb$atom$b))) {
+        pdb$atom$b[which(is.na(pdb$atom$b))] <- 0
+    }
 
     ## Find all combinations of models and chains to be computed -------------
     combinations <- expand.grid(model, chain, stringsAsFactors=FALSE)
