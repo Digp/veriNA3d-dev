@@ -8,16 +8,16 @@
 #' @param ntID A vector of integers with the desired nucleotides of 
 #'     analysis. If NULL all the nucleotides in the data.frame will be used
 #' @param angles The column names with the desired data
-#' @param cex To be passed to the par() function
+#' @param cex To be passed to the `par`.
 #' @param cols Number of columns in the ouput picture.
 #' @param file A string with the name of the output file. If NULL, the
 #'     plot will be printed to screen.
-#' @param width The width of the plot (passed to the png() function)
-#' @param height The height of the plot (passed to the png() function)
-#' @param bg The background color of the plot (passed to the png() function)
-#' @param units The unit to measure height and width (passed to the png() 
-#'     function)
-#' @param res Resolution (passed to the png() function)
+#' @param width The width of the plot to be passed to `png`.
+#' @param height The height of the plot to be passed to `png`.
+#' @param bg The background color of the plot to be passed to `png`.
+#' @param units The unit to measure height and width to be passed 
+#'     to `png`.
+#' @param res Resolution to be passed to `png`.
 #'
 #' @return A series of circular plots with the distributions of the desired
 #'     angles, which can be directly saved  to a ".png" file.
