@@ -290,8 +290,7 @@ function(pdb, model, chain, range, ..., name) {
 
     ## Check and measure the chain and make common data.frame ----------------
     ntinfo1 <- checkNuc(pdb, model=model, chain=chain, id=name)
-    ntinfo2 <- measureNuc(pdb, model=model, chain=chain,
-        ..., pucker=TRUE, Dp=TRUE)
+    ntinfo2 <- measureNuc(pdb, model=model, chain=chain, ...)
 
     ntinfo <- cbind(ntinfo1, ntinfo2[, 
         which(!names(ntinfo2) %in% names(ntinfo1))])
