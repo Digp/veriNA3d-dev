@@ -198,7 +198,7 @@ function(pdbID, model, chain, read, ...,
 
     ## Save pdb ID if possible -----------------------------------------------
     if (read == "read.list") {
-        name <- as.character(pdbID$call)
+        name <- as.character(pdbID$call)[[1]]
     } else if (read == "read.list.cif") {
         name <- as.character(cifEntry(pdbID))
     } else {
