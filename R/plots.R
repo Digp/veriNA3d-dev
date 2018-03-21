@@ -89,7 +89,7 @@ function(data, clockwise=FALSE, start.degree=0, main=NULL) {
 
     ## Prepare data to and labels to fit arguments ---------------------------
     if (!clockwise) {
-        data <- abs(data-360)
+        data <- abs(data - 360)
         labels <- append("", seq(from=330, to=0, by=-30))
     } else {
         labels <- append(seq(from=0, to=330, by=30), "")
