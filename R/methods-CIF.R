@@ -202,8 +202,8 @@ function(cif, verbose=FALSE, check=".isCIF") {
     ## Check if input cif argument is a PDB ID -------------------------------
     if (length(class(cif) == 1) && class(cif) == "character") {
 
-        ## If the input is a PDB ID, the data is downloaded from internet ----
-        if (nchar(cif) == 4){
+        ## If the input is a PDB ID or a file, cifParser is called -----------
+        if (nchar(cif) == 4 || file.exists(cif)){
             if(verbose)
                 print(cif)
 
