@@ -246,7 +246,7 @@ function(data, totalfields) {
 ## ============================================================================
 ## cifAsPDB subfunction
 .cifAsPDB <-
-function(cif, model=NULL, chain=NULL, alt=c("A")) {
+function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
     ## Coordinates are saved apart -------------------------------------------
     table <- cifAtom_site(cif)
 
@@ -289,8 +289,11 @@ function(cif, model=NULL, chain=NULL, alt=c("A")) {
         altind <- unique(sort(c(which(atom$alt == "."),
                             which(atom$alt %in% alt))))
         atom <- atom[altind, ]
-        print(paste("PDB has alt records, taking ", paste(alt, collapse=","),
+        if (verbose) {
+            print(paste("PDB has alt records, taking ", 
+                        paste(alt, collapse=","),
                         " only", sep=""))
+        }
     }
 
     ## Return a particular chain if specified in arguments -------------------

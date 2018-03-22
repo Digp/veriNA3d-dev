@@ -138,6 +138,7 @@ setGeneric("cifParser",
 #' @param alt A string or a vector of strings with the desired alternative
 #'     records. This option will only be applied to the "atom" attribute of
 #'     the output pdb object.
+#' @param verbose A logical indicating whether to print details of the process.
 #'
 #' @return A pdb object compatible with bio3d (Grant et al. 2006) functions.
 #'
@@ -148,7 +149,7 @@ setGeneric("cifParser",
 #' @author Diego Gallego
 #'
 setGeneric("cifAsPDB",
-            function(cif, model=NULL, chain=NULL, alt=c("A"))
+            function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE)
             standardGeneric("cifAsPDB"))
 
 ##############################################################################

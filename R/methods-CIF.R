@@ -232,17 +232,22 @@ function(cif, verbose=FALSE, check=".isCIF") {
 #' @rdname cifAsPDB
 setMethod("cifAsPDB",
     signature(cif="CIF"),
-    definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
-        return(.cifAsPDB(cif, model=model, chain=chain, alt=alt))
+    definition=function(cif, model=NULL, chain=NULL, 
+                        alt=c("A"), verbose=FALSE) {
+
+        return(.cifAsPDB(cif, model=model, chain=chain, 
+                            alt=alt, verbose=verbose))
     })
 
 #' @rdname cifAsPDB
 setMethod("cifAsPDB",
     signature(cif="character"),
-    definition=function(cif, model=NULL, chain=NULL, alt=c("A")) {
+    definition=function(cif, model=NULL, chain=NULL, 
+                        alt=c("A"), verbose=FALSE) {
         ## Make sure it is a CIF ---------------------------------------------
         cif <- .cifMakeSure(cif)
-        return(.cifAsPDB(cif, model=model, chain=chain, alt=alt))
+        return(.cifAsPDB(cif, model=model, chain=chain,
+                            alt=alt, verbose=verbose))
     })
 
 ## End of section cifAsPDB method
