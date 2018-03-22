@@ -202,7 +202,7 @@ function(pdbID, model, chain, read, ...,
     } else if (read == "read.list.cif") {
         name <- as.character(cifEntry(pdbID))
     } else {
-        name <- pdbID[[1]]
+        name <- pdbID
     }
 
     ## Corner case. PATCH
@@ -219,13 +219,13 @@ function(pdbID, model, chain, read, ...,
         temp_PDB <- pdbID
     } else if (read == "read.list.cif") {
         temp_PDB <- cifAsPDB(pdbID)
-    } else if (read == "read.pdb") {
+    } else if (read %in% c("read.pdb", "read.pdb.gz")) {
         temp_PDB <- suppressWarnings(read.pdb(
-                    paste(path, name, extension, sep=""), 
-                    multi=multi, 
-                    rm.alt=rm.alt, 
-                    verbose=FALSE))
-    } else if (read == "read.cif") {
+                                        paste(path, name, extension, sep=""), 
+                                        multi=multi, 
+                                        rm.alt=rm.alt, 
+                                        verbose=FALSE))
+    } else if (read %in% c("read.cif", "read.cif.gz")) {
         temp_PDB <- cifAsPDB(paste(path, name, extension, sep=""), alt=ALT)
     } else if (read == "download.RAM") {
         temp_PDB <- cifAsPDB(name, alt=ALT)
