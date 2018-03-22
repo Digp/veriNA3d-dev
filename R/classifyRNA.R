@@ -30,28 +30,34 @@
 #'
 
 classifyRNA <-
-function(pdbID, length = 3, ...) {
+function(pdbID, length=3, ...) {
 
-    check <- corner_cases(pdbID)
+    check <- .corner_cases(pdbID)
     if (check[[1]]) return(check[[2]])
-    ## Download info about entities, chains and length
+    ## Download info about entities, chains and length -----------------------
     MM <- queryEntities(pdbID, ...=...)
 
-    ## Check corner case in which there's a DNA-RNA hybrid
+    ## Solve corner cases (e.g. 2ICY) ----------------------------------------
+    if (any(is.na(MM$molecule_type))) {
+        ind <- which(is.na(MM$molecule_type))
+        MM <- MM[-ind, ]
+    }
+
+    ## Check corner case in which there's a DNA-RNA hybrid -------------------
     if (any(MM$molecule_type == 
         "polydeoxyribonucleotide/polyribonucleotide hybrid")) {
 
         return("DNARNA")
     }
 
-    ## If the PDB entry does not contain RNA it is classified as "NoRNA"
+    ## If the PDB entry does not contain RNA it is classified as "NoRNA" -----
     if (!any(MM$molecule_type == "polyribonucleotide"))
         return("NoRNA")
 
-    ## Index for RNA in the data.frame    
+    ## Index for RNA in the data.frame ---------------------------------------
     RNA_ind <- which(MM$molecule_type == "polyribonucleotide")
 
-    ## RNA that does not surpass a threshold is also classified as "NoRNA"
+    ## RNA that does not surpass a threshold is also classified as "NoRNA" ---
     if (all(MM[RNA_ind, "length"] < length)) 
         return("NoRNA")
 
@@ -66,39 +72,43 @@ function(pdbID, length = 3, ...) {
     ## Logical, is there a protein with D aminoacids?
     DPro <- any(MM[Other, "molecule_type"] == "polypeptide(D)")
 
-    ## Logical, are there organic ligands? 
+    ## Logical, are there organic ligands? -----------------------------------
     ## Ions do not categorize a structure as ligandRNA since they are always
     ## in buffers
     ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
 
 
-    ## If there are proteins, the PDB entry is classified as "protRNA"
+    ## If there are proteins, the PDB entry is classified as "protRNA" -------
     if (Pro) 
         return("protRNA")
                 
-    ## If there are D proteins, the PDB entry is classified as "DprotRNA"
+    ## If there are D proteins, the PDB entry is classified as "DprotRNA" ----
     if (DPro) 
         return("DprotRNA")
                 
-    ## If there are DNA molecules, the PDB entry is classified as "DNARNA"
+    ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
     if (DNA) 
         return("DNARNA")
 
-    ## If there are DNA molecules, the PDB entry is classified as "DNARNA"
+    ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
     if (PNA) 
         return("PNARNA")
 
-    ## If there are ligands, the PDB entry is classified as "ligandRNA"
+    ## If there are ligands, the PDB entry is classified as "ligandRNA" ------
     if (ligands) 
         return("ligandRNA")
 
     ## If the only molecule is RNA, then the PDB entry is classified as 
-    ## "nakedRNA"
+    ## "nakedRNA" ------------------------------------------------------------
     return("nakedRNA")
 }
+##############################################################################
+## Subfunctions
+## ===========================================================================
+
 ## Wrong or incomplete data in the API might generate a wrong classification,
 ## here I fix the detected ones
-corner_cases <-
+.corner_cases <-
 function(pdbID) {
     if (pdbID %in% c("2P7E",
                 "3CR1")) {
