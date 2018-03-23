@@ -259,8 +259,9 @@ function(pdbID, model, chain, read, ...,
     ## Return output for every chain and model as given by input -------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length) > 0)]
     if (length(ntinfo) == 0) {
-        print(paste("Nothing to analyse in ", name, "|", model, "|", chain, 
-                    " according with input parameters", sep=""))
+        cat("\r", rep(" ", 80),
+                "Nothing to analyse in ", name, "|", model, "|", chain, 
+                    " according with input parameters", sep="")
         return()
     } else {
         ntinfo <- do.call(rbind, ntinfo)
