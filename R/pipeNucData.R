@@ -237,7 +237,7 @@ function(pdbID, model, chain, read, ...,
     }
     ## Save the different chain ids ------------------------------------------
     if (chain == "all") {
-        chain <- unique(temp_PDB$atom$chain)
+        chain <- as.character(unique(temp_PDB$atom$chain))
     }
     ## Fins all the necessary combinations of models and chains --------------
     .combinations <- expand.grid(model, chain, stringsAsFactors=FALSE )
