@@ -284,7 +284,7 @@ function(pdb, model, chain, range, ..., name) {
     total <- length(reslist)
 
     ## Check that the given chain is the desired length range ----------------
-    if (total < range[1] | total > range[2]) {
+    if (total == 0 | total < range[1] | total > range[2]) {
         return()
     }
 

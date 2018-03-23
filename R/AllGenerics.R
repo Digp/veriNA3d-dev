@@ -288,8 +288,9 @@ setGeneric("eRMSD",
 function(X, FUN, ..., mc.cores=1) {
 
     if (mc.cores > detectCores()) {
-        warning("The machine does not have ", mc.cores, " cores. Using 1.")
-        mc.cores <- 1
+        warning("The machine does not have ", mc.cores, " cores. Using ", 
+                    (detectCores() - 1), ".")
+        mc.cores <- detectCores() - 1
     }
 
     if (mc.cores > 1) {
@@ -304,8 +305,9 @@ function(X, FUN, ..., mc.cores=1) {
 function(FUN, ..., mc.cores=1) {
     
     if (mc.cores > detectCores()) {
-        warning("The machine does not have ", mc.cores, " cores. Using 1.")
-        mc.cores <- 1
+        warning("The machine does not have ", mc.cores, " cores. Using ", 
+                    (detectCores() - 1), ".")
+        mc.cores <- detectCores() - 1
     }
 
     if (mc.cores > 1) {
