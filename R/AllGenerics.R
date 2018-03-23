@@ -294,7 +294,8 @@ function(X, FUN, ..., mc.cores=1) {
     }
 
     if (mc.cores > 1) {
-        mclapply(X=X, FUN=FUN, ...=..., mc.cores=mc.cores)
+        mclapply(X=X, FUN=FUN, ...=..., 
+                    mc.cores=mc.cores, mc.preschedule=FALSE)
     } else {
         lapply(X=X, FUN=FUN, ...=...)
     }
@@ -311,7 +312,8 @@ function(FUN, ..., mc.cores=1) {
     }
 
     if (mc.cores > 1) {
-        mcmapply(FUN=FUN, ...=..., mc.cores=mc.cores)
+        mcmapply(FUN=FUN, ...=..., 
+                    mc.cores=mc.cores, mc.preschedule=FALSE)
     } else {
         mapply(FUN=FUN, ...=...)
     }
