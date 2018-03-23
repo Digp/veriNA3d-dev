@@ -66,7 +66,7 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
 
     ## Print progress bar ----------------------------------------------------
     total <- length(pdbID)
-    pbar <- txtProgressBar(min = 0, max = total, style = 3)
+    pbar <- txtProgressBar(min=0, max=total, style=3)
 
     ## Iterate over the list of entries to obtain the desired information ---- 
     ntinfo <- .xmapply(FUN=.manage_PDB,
@@ -259,9 +259,6 @@ function(pdbID, model, chain, read, ...,
     ## Return output for every chain and model as given by input -------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length) > 0)]
     if (length(ntinfo) == 0) {
-        cat("\r", rep(" ", 80),
-                "Nothing to analyse in ", name, "|", model, "|", chain, 
-                    " according with input parameters", sep="")
         return()
     } else {
         ntinfo <- do.call(rbind, ntinfo)
@@ -286,6 +283,8 @@ function(pdb, model, chain, range, ..., name) {
 
     ## Check that the given chain is the desired length range ----------------
     if (total == 0 | total < range[1] | total > range[2]) {
+        cat("\r", rep(" ", 80), "Nothing to analyse in ", 
+                name, "|", model, "|", chain, sep="")
         return()
     }
 

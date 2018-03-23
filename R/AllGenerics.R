@@ -285,7 +285,7 @@ setGeneric("eRMSD",
 
 ## Wrapper to choose between lapply and mclapply accordingly
 .xlapply <- 
-function(X, FUN, ..., mc.cores=1) {
+function(X, FUN, ..., mc.cores=1, mc.preschedule=FALSE) {
 
     if (mc.cores > detectCores()) {
         warning("The machine does not have ", mc.cores, " cores. Using ", 
@@ -295,7 +295,7 @@ function(X, FUN, ..., mc.cores=1) {
 
     if (mc.cores > 1) {
         mclapply(X=X, FUN=FUN, ...=..., 
-                    mc.cores=mc.cores, mc.preschedule=FALSE)
+                    mc.cores=mc.cores, mc.preschedule=mc.preschedule)
     } else {
         lapply(X=X, FUN=FUN, ...=...)
     }
@@ -303,7 +303,7 @@ function(X, FUN, ..., mc.cores=1) {
 
 ## Wrapper to choose between lapply and mclapply accordingly
 .xmapply <- 
-function(FUN, ..., mc.cores=1) {
+function(FUN, ..., mc.cores=1, mc.preschedule=FALSE) {
     
     if (mc.cores > detectCores()) {
         warning("The machine does not have ", mc.cores, " cores. Using ", 
@@ -313,7 +313,7 @@ function(FUN, ..., mc.cores=1) {
 
     if (mc.cores > 1) {
         mcmapply(FUN=FUN, ...=..., 
-                    mc.cores=mc.cores, mc.preschedule=FALSE)
+                    mc.cores=mc.cores, mc.preschedule=mc.preschedule)
     } else {
         mapply(FUN=FUN, ...=...)
     }

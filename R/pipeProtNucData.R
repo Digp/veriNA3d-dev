@@ -84,7 +84,7 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
 
     ## Print progress bar ----------------------------------------------------
     total <- length(pdbID)
-    pbar <- txtProgressBar(min = 0, max = total, style = 3)
+    pbar <- txtProgressBar(min=0, max=total, style=3)
 
     ## Iterate over the list of entries to obtain the desired information ---- 
     interactionsdata <- .xmapply(FUN=.manage_PDB,

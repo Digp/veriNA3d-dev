@@ -33,7 +33,7 @@ function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, ...) {
 
     ## Print progress bar ----------------------------------------------------
     total <- length(listpdb)
-    pbar <- txtProgressBar(min = 0, max = total, style = 3)
+    pbar <- txtProgressBar(min=0, max=total, style=3)
 
     ## Apply function over the list ------------------------------------------
     output_list <- .xlapply(seq_along(listpdb),
@@ -44,11 +44,11 @@ function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, ...) {
 
             tryCatch({
                 return(FUNCTION(listpdb[i], ...))
-            }, error = function(e) {
+            }, error=function(e) {
                 return(NA)
             })
         }, FUNCTION=FUNCTION, listpdb=listpdb, pbar=pbar,
-            ...=..., mc.cores=cores)
+            ...=..., mc.cores=cores, mc.preschedule=TRUE)
     cat("\n")
 
     ## Any query might receive NA with a certain frequency, even when it 
@@ -59,7 +59,7 @@ function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, ...) {
         for (i in torepeat) {
             tryCatch({
                 output_list[[i]] <- FUNCTION(listpdb[i])
-            }, error = function(e) {
+            }, error=function(e) {
                 output_list[[i]] <- NA
             })
         }
