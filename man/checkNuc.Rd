@@ -4,7 +4,7 @@
 \alias{checkNuc}
 \title{Check nucleotides}
 \usage{
-checkNuc(pdb, model = 1, chain = "all", id = NULL)
+checkNuc(pdb, model = 1, chain = "all", id = NULL, refatm = "C4'")
 }
 \arguments{
 \item{pdb}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb
@@ -15,6 +15,11 @@ checkNuc(pdb, model = 1, chain = "all", id = NULL)
 \item{chain}{A string with the desired chain id.}
 
 \item{id}{A string with the ID of the input pdb structure.}
+
+\item{refatm}{A string with the atom to use to identify the nucelotides.
+Important to analyse models with just (in example) phosphate atoms,
+in which refatm should be set to "P" (it was thought when analysing
+the structure with PDB code: 1Y1Y).}
 }
 \value{
 A data.frame with the data for every nucleotide.

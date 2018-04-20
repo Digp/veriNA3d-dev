@@ -27,6 +27,10 @@
 #'     seen typing 'veriNA3d::.torsionals'.
 #' @param pucker A logical indicating whether to compute the puckering.
 #' @param Dp A logical indicating whether to compute the Dp distance.
+#' @param refatm A string with the atom to use to identify the nucelotides.
+#'     Important to analyse models with just (in example) phosphate atoms,
+#'     in which refatm should be set to "P" (it was thought when analysing
+#'     the structure with PDB code: 1Y1Y).
 #'
 #' @details The format of 'distances', 'angles' and 'torsionals' is:
 #'     First column should indicate the first atom, second column second

@@ -8,6 +8,10 @@
 #' @param model A string with the desired model number.
 #' @param chain A string with the desired chain id.
 #' @param id A string with the ID of the input pdb structure.
+#' @param refatm A string with the atom to use to identify the nucelotides.
+#'     Important to analyse models with just (in example) phosphate atoms,
+#'     in which refatm should be set to "P" (it was thought when analysing
+#'     the structure with PDB code: 1Y1Y).
 #'
 #' @return A data.frame with the data for every nucleotide.
 #'

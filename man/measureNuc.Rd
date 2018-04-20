@@ -6,7 +6,7 @@
 \usage{
 measureNuc(pdb, model = 1, chain = "all", v_shifted = TRUE,
   b_shifted = TRUE, distances = "default", angles = "default",
-  torsionals = "default", pucker = TRUE, Dp = TRUE)
+  torsionals = "default", pucker = TRUE, Dp = TRUE, refatm = "C4'")
 }
 \arguments{
 \item{pdb}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb
@@ -40,6 +40,11 @@ seen typing 'veriNA3d::.torsionals'.}
 \item{pucker}{A logical indicating whether to compute the puckering.}
 
 \item{Dp}{A logical indicating whether to compute the Dp distance.}
+
+\item{refatm}{A string with the atom to use to identify the nucelotides.
+Important to analyse models with just (in example) phosphate atoms,
+in which refatm should be set to "P" (it was thought when analysing
+the structure with PDB code: 1Y1Y).}
 }
 \value{
 A data.frame with the measurements for every nucleotide.

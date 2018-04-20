@@ -4,7 +4,7 @@
 \alias{applyToPDB}
 \title{Applies a function over a list of PDB ID entries.}
 \usage{
-applyToPDB(FUNCTION, listpdb = NULL, verbose = TRUE, as.df = TRUE, ...)
+applyToPDB(FUNCTION, listpdb = NULL, as.df = TRUE, cores = 1, ...)
 }
 \arguments{
 \item{FUNCTION}{A function of interest.}
@@ -12,10 +12,10 @@ applyToPDB(FUNCTION, listpdb = NULL, verbose = TRUE, as.df = TRUE, ...)
 \item{listpdb}{A list/vector containing the PDB IDs of interest. If NULL,
 the complete list of PDB entries is downloaded and used.}
 
-\item{verbose}{A logical to print details of the loop process.}
-
 \item{as.df}{A logical that stands for "as.data.frame". If TRUE, the output
 will be returned in the form of a data.frame, otherwise a list.}
+
+\item{cores}{Number of CPU cores to be used.}
 
 \item{...}{optional arguments to FUNCTION.}
 }
@@ -29,7 +29,7 @@ See supported functions in ?queryFunctions.
 }
 \examples{
     listpdb <- c("1s72", "1bau", "1rna")
-    applyToPDB(queryTechnique, listpdb, verbose=FALSE)
+    applyToPDB(queryTechnique, listpdb)
 
 }
 \author{

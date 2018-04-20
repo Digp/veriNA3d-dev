@@ -7,12 +7,13 @@
 \alias{cifAsPDB,character-method}
 \title{Coerce CIF S4 object to pdb S3 object as found in bio3d package}
 \usage{
-cifAsPDB(cif, model = NULL, chain = NULL, alt = c("A"))
+cifAsPDB(cif, model = NULL, chain = NULL, alt = c("A"), verbose = FALSE)
 
-\S4method{cifAsPDB}{CIF}(cif, model = NULL, chain = NULL, alt = c("A"))
+\S4method{cifAsPDB}{CIF}(cif, model = NULL, chain = NULL, alt = c("A"),
+  verbose = FALSE)
 
 \S4method{cifAsPDB}{character}(cif, model = NULL, chain = NULL,
-  alt = c("A"))
+  alt = c("A"), verbose = FALSE)
 }
 \arguments{
 \item{cif}{A CIF object as obtained from cifParser. It can also accept
@@ -31,6 +32,8 @@ object.}
 \item{alt}{A string or a vector of strings with the desired alternative
 records. This option will only be applied to the "atom" attribute of
 the output pdb object.}
+
+\item{verbose}{A logical indicating whether to print details of the process.}
 }
 \value{
 A pdb object compatible with bio3d (Grant et al. 2006) functions.

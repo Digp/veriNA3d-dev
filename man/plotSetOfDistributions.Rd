@@ -18,23 +18,23 @@ analysis. If NULL all the nucleotides in the data.frame will be used}
 
 \item{angles}{The column names with the desired data}
 
-\item{cex}{To be passed to the par() function}
+\item{cex}{To be passed to the \code{par}.}
 
 \item{cols}{Number of columns in the ouput picture.}
 
 \item{file}{A string with the name of the output file. If NULL, the
 plot will be printed to screen.}
 
-\item{width}{The width of the plot (passed to the png() function)}
+\item{width}{The width of the plot to be passed to \code{png}.}
 
-\item{height}{The height of the plot (passed to the png() function)}
+\item{height}{The height of the plot to be passed to \code{png}.}
 
-\item{bg}{The background color of the plot (passed to the png() function)}
+\item{bg}{The background color of the plot to be passed to \code{png}.}
 
-\item{units}{The unit to measure height and width (passed to the png()
-function)}
+\item{units}{The unit to measure height and width to be passed
+to \code{png}.}
 
-\item{res}{Resolution (passed to the png() function)}
+\item{res}{Resolution to be passed to \code{png}.}
 }
 \value{
 A series of circular plots with the distributions of the desired
