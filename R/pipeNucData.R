@@ -205,15 +205,7 @@ function(pdbID, model, chain, read, ...,
         name <- pdbID
     }
 
-    ## Corner case. PATCH
-    #if (name == "3OK4") {
-    #    rm.alt=FALSE
-    #    ALT=c("A", "B", "C", "D", "E")
-    #} else {
-    #    rm.alt=TRUE
-    #    ALT="A"
-    #}
-    ## In principle is solved because now I check alt records elsewhere
+    ## To cope with ALT records later set variables accordingly --------------
     ALT <- NULL
     rm.alt <- FALSE
 
@@ -314,6 +306,10 @@ function(pdb, model, chain, range, ..., name) {
     }
 
     ## Final check for ALT records, in case of doubt use A -------------------
+    if (any(is.na(pdb_ch$atom$alt))) {
+        ind <- which(is.na(pdb_ch$atom$alt))
+        pdb_ch$atom$alt[ind] <- "."
+    }
     if (any(unique(pdb_ch$atom$alt) != ".")) {
         alt <- unique(pdb_ch$atom$alt)
         ind <- which(alt != ".")
