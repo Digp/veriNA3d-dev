@@ -19,12 +19,7 @@
 #' @author Diego Gallego
 #'
 checkNuc <-
-function(pdb, model=1, chain="all", id=NULL) {
-
-    ## Check that the input has a nucleic acid -------------------------------
-    if (!any(.is.nucleic(pdb))) {
-        stop("Does the input pdb object contain a nucleic acid?")
-    }
+function(pdb, model=1, chain="all", id=NULL, refatm="C4'") {
 
     ## Save desired model if necessary ---------------------------------------
     if (model == "all") {
@@ -34,6 +29,12 @@ function(pdb, model=1, chain="all", id=NULL) {
     ## Save desired chain if necessary ---------------------------------------
     if (chain == "all") {
         chain <- as.character(unique(pdb$atom$chain))
+    }
+
+    ## Check that the input has a nucleic acid -------------------------------
+    resid <- unique(pdb$atom$resid[pdb$atom$chain %in% chain])
+    if (!any(resid %in% .nucleotides)) {
+        stop("Does the input pdb object contain a nucleic acid?")
     }
 
     ## Save id ---------------------------------------------------------------
@@ -61,7 +62,8 @@ function(pdb, model=1, chain="all", id=NULL) {
                         model=combinations[, "model"],
                         chain=combinations[, "chain"],
                         MoreArgs=list(pdb=pdb,
-                                        id=id),
+                                        id=id,
+                                        refatm=refatm),
                         SIMPLIFY=FALSE)
 
     ## Give format to the output ---------------------------------------------
@@ -94,7 +96,7 @@ function(pdb, model=1, chain="all", id=NULL) {
 ## combinations.
 
 .check.nt <-
-function(pdb, model, chain, id=NULL) {
+function(pdb, model, chain, id=NULL, refatm) {
 
     ## Selection of Model of interest ----------------------------------------
     pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
@@ -114,9 +116,9 @@ function(pdb, model, chain, id=NULL) {
     ## reslist contains the number of each nucleotide
     ## inslist contains the insertion code, necessary to differentiate some
     ## nucleotides that appear with the same number
-    ridlist <- pdb$atom$resid[which(pdb$atom$elety == c("C4'"))]
-    reslist <- pdb$atom$resno[which(pdb$atom$elety == c("C4'"))]
-    inslist <- pdb$atom$insert[which(pdb$atom$elety == c("C4'"))]
+    ridlist <- pdb$atom$resid[which(pdb$atom$elety == c(refatm))]
+    reslist <- pdb$atom$resno[which(pdb$atom$elety == c(refatm))]
+    inslist <- pdb$atom$insert[which(pdb$atom$elety == c(refatm))]
 
     total <- length(reslist)
     indices <- seq_len(total)

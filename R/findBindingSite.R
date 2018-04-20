@@ -143,9 +143,10 @@ function(pdb, cutoff=5, select="Nuc", nchain=NULL,
 ##############################################################################
 ## Internal objects 
 ## ===========================================================================
-.nucleotides <- c("A", "G", "C", "U", "DA", "DG", "DC", "DT")
-.Rnucleotides <- c("A", "G", "C", "U")
-.Dnucleotides <- c("DA", "DG", "DC", "DT")
+.nucleotides <- c("A", "G", "C", "U", "T", "I", 
+                    "DA", "DG", "DC", "DT", "DU", "DI")
+.Rnucleotides <- c("A", "G", "C", "U", "T", "I")
+.Dnucleotides <- c("DA", "DG", "DC", "DT", "DU", "DI")
 .aa <- c("GLY", "ALA", "VAL", "LEU", "ILE", "PHE", "TRP", "MET", "CYS",
             "PRO", "THR", "SER", "TYR", "GLN", "ASN",
             "ASP", "GLU", "HIS", "LYS", "ARG")

@@ -54,12 +54,7 @@
 measureNuc <-
 function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE, 
             distances="default", angles="default", torsionals="default", 
-            pucker=TRUE, Dp=TRUE) {
-
-    ## Check that the input has a nucleic acid -------------------------------
-    if (!any(.is.nucleic(pdb))) {
-        stop("Does the input pdb object contain a nucleic acid?")
-    }
+            pucker=TRUE, Dp=TRUE, refatm="C4'") {
 
     ## Save desired model if necessary ---------------------------------------
     if (model == "all") {
@@ -68,6 +63,12 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     ## Save desired chain if necessary ---------------------------------------
     if (chain == "all") {
         chain <- as.character(unique(pdb$atom$chain))
+    }
+
+    ## Check that the input has a nucleic acid -------------------------------
+    resid <- unique(pdb$atom$resid[pdb$atom$chain %in% chain])
+    if (!any(resid %in% .nucleotides)) {
+        stop("Does the input pdb object contain a nucleic acid?")
     }
 
     ## Make sure input is correct --------------------------------------------
@@ -133,7 +134,8 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
                                         angles=angles,
                                         torsionals=torsionals,
                                         pucker=pucker,
-                                        Dp=Dp),
+                                        Dp=Dp,
+                                        refatm=refatm),
                         SIMPLIFY=FALSE)
 
     ## Give format to the output ---------------------------------------------
@@ -322,7 +324,7 @@ colnames(.torsionals) <- c("atomA", "atomB", "atomC", "atomD", "labels")
 
 .measure <-
 function(pdb, model, chain, v_shifted, b_shifted,
-            distances, angles, torsionals, pucker, Dp) {
+            distances, angles, torsionals, pucker, Dp, refatm) {
 
     ## Selection of Model of interest ----------------------------------------
     pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
@@ -342,9 +344,9 @@ function(pdb, model, chain, v_shifted, b_shifted,
     ## reslist contains the number of each nucleotide
     ## inslist contains the insertion code, necessary to differentiate some
     ## nucleotides that appear with the same number
-    ridlist <- pdb$atom$resid[which(pdb$atom$elety == c("C4'"))]
-    reslist <- pdb$atom$resno[which(pdb$atom$elety == c("C4'"))]
-    inslist <- pdb$atom$insert[which(pdb$atom$elety == c("C4'"))]
+    ridlist <- pdb$atom$resid[which(pdb$atom$elety == c(refatm))]
+    reslist <- pdb$atom$resno[which(pdb$atom$elety == c(refatm))]
+    inslist <- pdb$atom$insert[which(pdb$atom$elety == c(refatm))]
 
     total <- length(reslist)
     indices <- seq_len(total)

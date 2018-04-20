@@ -277,9 +277,26 @@ function(pdb, model, chain, range, ..., name) {
     ## pdb contains the PDB object ONLY with the selected model and chain ----
     pdb_ch <- trim(pdb, selection)
 
+    ## Check that input contains a Nucleic Acid ------------------------------
+    resid <- unique(pdb_ch$atom$resid)
+    if (!any(resid %in% .nucleotides)) {
+        cat("\r", rep(" ", 80), "Nothing to analyse in ",
+                name, "|", model, "|", chain, sep="")
+        return()
+    }
+
     ## Obtain number of (R/D)NA residues -------------------------------------
-    reslist <- pdb_ch$atom$resno[which(pdb_ch$atom$elety == c("C4'"))]
+    refatm <- "C4'"
+    reslist <- pdb_ch$atom$resno[which(pdb_ch$atom$elety == refatm)]
     total <- length(reslist)
+
+    ## When reached this point, if the model does only contain the backbone
+    ## phosphates, it's necessary to change the reference atom
+    if (total == 0) {
+        refatm <- "P"
+        reslist <- pdb_ch$atom$resno[which(pdb_ch$atom$elety == refatm)]
+        total <- length(reslist)
+    }
 
     ## Check that the given chain is the desired length range ----------------
     if (total == 0 | total < range[1] | total > range[2]) {
@@ -289,8 +306,8 @@ function(pdb, model, chain, range, ..., name) {
     }
 
     ## Check and measure the chain and make common data.frame ----------------
-    ntinfo1 <- checkNuc(pdb, model=model, chain=chain, id=name)
-    ntinfo2 <- measureNuc(pdb, model=model, chain=chain, ...)
+    ntinfo1 <- checkNuc(pdb, model=model, chain=chain, id=name, refatm=refatm)
+    ntinfo2 <- measureNuc(pdb, model=model, chain=chain, refatm=refatm, ...)
 
     ntinfo <- cbind(ntinfo1, ntinfo2[, 
         which(!names(ntinfo2) %in% names(ntinfo1))])
