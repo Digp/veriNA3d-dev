@@ -285,14 +285,16 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
     }
 
     ## Check for alternative (alt) records -----------------------------------
-    if (sum(atom$alt != ".") > 0) {
-        altind <- unique(sort(c(which(atom$alt == "."),
-                            which(atom$alt %in% alt))))
-        atom <- atom[altind, ]
-        if (verbose) {
-            print(paste("PDB has alt records, taking ", 
-                        paste(alt, collapse=","),
-                        " only", sep=""))
+    if (!is.null(alt)) {
+        if (sum(atom$alt != ".") > 0) {
+            altind <- unique(sort(c(which(atom$alt == "."),
+                                which(atom$alt %in% alt))))
+            atom <- atom[altind, ]
+            if (verbose) {
+                print(paste("PDB has alt records, taking ", 
+                            paste(alt, collapse=","),
+                            " only", sep=""))
+            }
         }
     }
 
@@ -331,7 +333,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
             warning(paste(
                     cifEntry(cif),
                     " has models with different number of atoms!",
-                    " Use select.model() to make sure you use the",
+                    " Use selectModel() to make sure you use the",
                     " desired one.",
                     sep=""))
             model <- lapply(model,

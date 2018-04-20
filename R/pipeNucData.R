@@ -206,13 +206,16 @@ function(pdbID, model, chain, read, ...,
     }
 
     ## Corner case. PATCH
-    if (name == "3OK4") {
-        rm.alt=FALSE
-        ALT=c("A", "B", "C", "D", "E")
-    } else {
-        rm.alt=TRUE
-        ALT="A"
-    }
+    #if (name == "3OK4") {
+    #    rm.alt=FALSE
+    #    ALT=c("A", "B", "C", "D", "E")
+    #} else {
+    #    rm.alt=TRUE
+    #    ALT="A"
+    #}
+    ## In principle is solved because now I check alt records elsewhere
+    ALT <- NULL
+    rm.alt <- FALSE
 
     ## Save the atom coordinates in the form of pdb object -------------------
     if (read == "read.list") {
@@ -271,6 +274,9 @@ function(pdbID, model, chain, read, ...,
 .make_chain_ntinfo <-
 function(pdb, model, chain, range, ..., name) {
 
+    ## Selection of Model of interest ----------------------------------------
+    pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
+
     ## Select chain of interest ----------------------------------------------
     selection <- atom.select(pdb, chain=chain)
 
@@ -280,8 +286,9 @@ function(pdb, model, chain, range, ..., name) {
     ## Check that input contains a Nucleic Acid ------------------------------
     resid <- unique(pdb_ch$atom$resid)
     if (!any(resid %in% .nucleotides)) {
-        cat("\r", rep(" ", 80), "Nothing to analyse in ",
-                name, "|", model, "|", chain, sep="")
+        string <- paste("Nothing to analyse in ", 
+                    name, "|", model, "|", chain, sep="")
+        cat("\r|", string, " ")
         return()
     }
 
@@ -300,14 +307,35 @@ function(pdb, model, chain, range, ..., name) {
 
     ## Check that the given chain is the desired length range ----------------
     if (total == 0 | total < range[1] | total > range[2]) {
-        cat("\r", rep(" ", 80), "Nothing to analyse in ", 
-                name, "|", model, "|", chain, sep="")
+        string <- paste("Nothing to analyse in ", 
+                    name, "|", model, "|", chain, sep="")
+        cat("\r|", string, " ")
         return()
     }
 
+    ## Final check for ALT records, in case of doubt use A -------------------
+    if (any(unique(pdb_ch$atom$alt) != ".")) {
+        alt <- unique(pdb_ch$atom$alt)
+        ind <- which(alt != ".")
+        ## Find ALT strings and save to a vector
+        validalt <- alt[ind]
+        if (length(validalt) > 1) {
+            ## If possible use A, otherwise just the first one
+            if (any(validalt == "A")) {
+                ALT <- c(".", "A")
+            } else {
+                ALT <- c(".", validalt[1])
+            }
+            ## Select the atoms using element numbers
+            eleno <- pdb_ch$atom$eleno[pdb_ch$atom$alt %in% ALT]
+            selection <- atom.select(pdb_ch, eleno=eleno)
+            pdb_ch <- trim(pdb_ch, selection)
+        }
+    }
+
     ## Check and measure the chain and make common data.frame ----------------
-    ntinfo1 <- checkNuc(pdb, model=model, chain=chain, id=name, refatm=refatm)
-    ntinfo2 <- measureNuc(pdb, model=model, chain=chain, refatm=refatm, ...)
+    ntinfo1 <- checkNuc(pdb, id=name, refatm=refatm)
+    ntinfo2 <- measureNuc(pdb, refatm=refatm, ...)
 
     ntinfo <- cbind(ntinfo1, ntinfo2[, 
         which(!names(ntinfo2) %in% names(ntinfo1))])

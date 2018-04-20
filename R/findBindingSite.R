@@ -19,7 +19,7 @@
 #' @param byres A logical to indicate if the output should be referred to the 
 #'     residues rather than atoms.
 #' @param verbose A logical to print details of the process.
-#' @param ... Arguments to select model and/or alt records.
+#' @param ... Arguments to selectModel and/or alt records.
 #'
 #' @return A data.frame with the atomic distances in the interacting site.
 #'

@@ -31,7 +31,7 @@ residues rather than atoms.}
 
 \item{verbose}{A logical to print details of the process.}
 
-\item{...}{Arguments to select model and/or alt records.}
+\item{...}{Arguments to selectModel and/or alt records.}
 }
 \value{
 A data.frame with the atomic distances in the interacting site.
