@@ -162,8 +162,8 @@ function(pdbID, path=NULL, extension=NULL, verbose=TRUE) {
         if (verbose) {
             print(paste(
                 "The PDB IDs: ", 
-                paste(pdbID[inds], collapse="; "), 
-                " are going to be downloaded (no temp files generated)", 
+                substr(paste(pdbID[inds], collapse="; "), 1, 40), 
+                "... are going to be downloaded (no temp files generated)", 
                 sep=""))
         }
 
@@ -280,7 +280,7 @@ function(pdb, model, chain, range, ..., name) {
     if (!any(resid %in% .nucleotides)) {
         string <- paste("Nothing to analyse in ", 
                     name, "|", model, "|", chain, sep="")
-        cat("\r|", string, " ")
+        cat("\r |", string, " ")
         return()
     }
 
@@ -301,7 +301,7 @@ function(pdb, model, chain, range, ..., name) {
     if (total == 0 | total < range[1] | total > range[2]) {
         string <- paste("Nothing to analyse in ", 
                     name, "|", model, "|", chain, sep="")
-        cat("\r|", string, " ")
+        cat("\r |", string, " ")
         return()
     }
 
