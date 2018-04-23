@@ -6,7 +6,8 @@
 \usage{
 measureNuc(pdb, model = 1, chain = "all", v_shifted = TRUE,
   b_shifted = TRUE, distances = "default", angles = "default",
-  torsionals = "default", pucker = TRUE, Dp = TRUE, refatm = "C4'")
+  torsionals = "default", pucker = TRUE, Dp = TRUE, refatm = "C4'",
+  force = FALSE)
 }
 \arguments{
 \item{pdb}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb
@@ -45,6 +46,10 @@ seen typing 'veriNA3d::.torsionals'.}
 Important to analyse models with just (in example) phosphate atoms,
 in which refatm should be set to "P" (it was thought when analysing
 the structure with PDB code: 1Y1Y).}
+
+\item{force}{A logical to force the analysis. Useful when the function
+does not recognise a nucleic acid in the structure (e.g. because all
+bases are non-canonical: 1PBL, 1XV6, 1DV4 ...)}
 }
 \value{
 A data.frame with the measurements for every nucleotide.

@@ -12,6 +12,9 @@
 #'     Important to analyse models with just (in example) phosphate atoms,
 #'     in which refatm should be set to "P" (it was thought when analysing
 #'     the structure with PDB code: 1Y1Y).
+#' @param force A logical to force the analysis. Useful when the function 
+#'     does not recognise a nucleic acid in the structure (e.g. because all
+#'     bases are non-canonical: 1PBL, 1XV6, 1DV4 ...)
 #'
 #' @return A data.frame with the data for every nucleotide.
 #'
@@ -23,7 +26,7 @@
 #' @author Diego Gallego
 #'
 checkNuc <-
-function(pdb, model=1, chain="all", id=NULL, refatm="C4'") {
+function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
 
     ## Save desired model if necessary ---------------------------------------
     if (model == "all") {
@@ -35,10 +38,12 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'") {
         chain <- as.character(unique(pdb$atom$chain))
     }
 
-    ## Check that the input has a nucleic acid -------------------------------
-    resid <- unique(pdb$atom$resid[pdb$atom$chain %in% chain])
-    if (!any(resid %in% .nucleotides)) {
-        stop("Does the input pdb object contain a nucleic acid?")
+    if (!force) {
+        ## Check that the input has a nucleic acid ---------------------------
+        resid <- unique(pdb$atom$resid[pdb$atom$chain %in% chain])
+        if (!any(resid %in% .nucleotides)) {
+            stop("Does the input pdb object contain a nucleic acid?")
+        }
     }
 
     ## Save id ---------------------------------------------------------------
@@ -67,7 +72,8 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'") {
                         chain=combinations[, "chain"],
                         MoreArgs=list(pdb=pdb,
                                         id=id,
-                                        refatm=refatm),
+                                        refatm=refatm,
+                                        force=force),
                         SIMPLIFY=FALSE)
 
     ## Give format to the output ---------------------------------------------
@@ -100,7 +106,7 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'") {
 ## combinations.
 
 .check.nt <-
-function(pdb, model, chain, id=NULL, refatm) {
+function(pdb, model, chain, id=NULL, refatm, force) {
 
     ## Selection of Model of interest ----------------------------------------
     pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
@@ -112,7 +118,7 @@ function(pdb, model, chain, id=NULL, refatm) {
     pdb <- trim(pdb, selection)
 
     ## Make sure the chain selected is a nucleic acid ------------------------
-    if (!any(.is.nucleic(pdb))) {
+    if (!any(.is.nucleic(pdb)) && !force) {
         return()
     }
 
@@ -125,6 +131,9 @@ function(pdb, model, chain, id=NULL, refatm) {
     inslist <- pdb$atom$insert[which(pdb$atom$elety == c(refatm))]
 
     total <- length(reslist)
+    if (total == 0) {
+        return()
+    }
     indices <- seq_len(total)
 
     ## Call to do the maths for the given chain ------------------------------

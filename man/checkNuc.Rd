@@ -4,7 +4,8 @@
 \alias{checkNuc}
 \title{Check nucleotides}
 \usage{
-checkNuc(pdb, model = 1, chain = "all", id = NULL, refatm = "C4'")
+checkNuc(pdb, model = 1, chain = "all", id = NULL, refatm = "C4'",
+  force = FALSE)
 }
 \arguments{
 \item{pdb}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb
@@ -20,6 +21,10 @@ checkNuc(pdb, model = 1, chain = "all", id = NULL, refatm = "C4'")
 Important to analyse models with just (in example) phosphate atoms,
 in which refatm should be set to "P" (it was thought when analysing
 the structure with PDB code: 1Y1Y).}
+
+\item{force}{A logical to force the analysis. Useful when the function
+does not recognise a nucleic acid in the structure (e.g. because all
+bases are non-canonical: 1PBL, 1XV6, 1DV4 ...)}
 }
 \value{
 A data.frame with the data for every nucleotide.
