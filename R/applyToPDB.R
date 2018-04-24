@@ -67,6 +67,12 @@ function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, ...) {
 
     ## Give format to the output ---------------------------------------------
     if (as.df) {
+        if (any(unlist(lapply(output_list, is.null)))) {
+            inds <- which(unlist(lapply(output_list, is.null)))
+            for (j in inds) {
+                output_list[[j]] <- ""
+            }
+        }
         output <- as.data.frame(
                     matrix(c(listpdb, unlist(output_list)),
                             byrow=FALSE,
