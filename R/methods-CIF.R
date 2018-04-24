@@ -95,16 +95,16 @@ setMethod("cifParser",
             pdb <- readLines(pdbID)
 
         } else if (nchar(pdbID) == 4) { # Otherwise download by pdb ID
-            if (verbose)
-                cat("Downloading file from Internet\n")
-            ## For development tests I rather use the internal call
-            #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
-            URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
-                            pdbID, ".cif.gz", sep ="")
-
             tmpdir <- tempdir()
             destfile <- paste(tmpdir, "/", pdbID, ".cif.gz", sep="")
             if (!file.exists(destfile)) {
+                if (verbose)
+                    cat("Downloading file from Internet\n")
+                ## For development tests I rather use the internal call
+                #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
+                URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
+                                pdbID, ".cif.gz", sep ="")
+
                 .launchquery(URL, 
                                 FUN=download.file,
                                 destfile=destfile,
