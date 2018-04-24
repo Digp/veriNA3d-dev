@@ -163,7 +163,7 @@ function(pdbID, path=NULL, extension=NULL, verbose=TRUE) {
             print(paste(
                 "The PDB IDs: ", 
                 substr(paste(pdbID[inds], collapse="; "), 1, 40), 
-                "... are going to be downloaded (no temp files generated)", 
+                "... are going to be downloaded", 
                 sep=""))
         }
 
