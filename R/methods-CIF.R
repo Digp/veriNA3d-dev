@@ -100,8 +100,19 @@ setMethod("cifParser",
             ## For development tests I rather use the internal call
             #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
             URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
-                            pdbID, ".cif", sep ="")
-            pdb <- .launchquery(URL, FUN=readLines, N.TRIES=1)
+                            pdbID, ".cif.gz", sep ="")
+
+            tmpdir <- tempdir()
+            destfile <- paste(tmpdir, "/", pdbID, ".cif.gz", sep="")
+            if (!file.exists(destfile)) {
+                .launchquery(URL, 
+                                FUN=download.file,
+                                destfile=destfile,
+                                method="auto", 
+                                quiet=!verbose)
+            }
+            #pdb <- .launchquery(URL, FUN=readLines, N.TRIES=1)
+            pdb <- readLines(destfile)
 
         } else { # Otherwise it is just an error
             stop("Please, provide a valid pdbID or file")
