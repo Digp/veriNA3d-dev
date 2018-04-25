@@ -27,6 +27,7 @@
 #'     Only necessary if the PDB files are to be read from disk and a path is
 #'     provided.
 #' @param cores Number of CPU cores to be used.
+#' @param progressbar A logical to print in screen a progress bar.
 #' @param cutoff A numeric with the maximum distance to return. To be passed 
 #'     to [findBindingSite()]
 #' @param ... Additional arguments to be passed to 
@@ -44,7 +45,8 @@
 #'
 pipeProtNucData <-
 function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
-            path=NULL, extension=NULL, cores=1, cutoff=15, ...) {
+            path=NULL, extension=NULL, cores=1, 
+            progressbar=TRUE, cutoff=15, ...) {
 
     ## Make sure the input pdbID is a list -----------------------------------
     if (class(pdbID) == "CIF")
@@ -67,7 +69,7 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
     }
 
     ## Determine whether to read CIF/pdb objects from file, internet or input
-    read <- .whereToRead(pdbID=pdbID, path=path, 
+    read <- .whereToRead(pdbID=pdbID, path=path,
                             extension=extension, verbose=FALSE)
 
     ## Make sure that all pdbID are actually prot-nuc complexes --------------
@@ -84,7 +86,11 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
 
     ## Print progress bar ----------------------------------------------------
     total <- length(pdbID)
-    pbar <- txtProgressBar(min=0, max=total, style=3)
+    if (progressbar) {
+        pbar <- txtProgressBar(min=0, max=total, style=3)
+    } else {
+        pbar <- NULL
+    }
 
     ## Iterate over the list of entries to obtain the desired information ---- 
     interactionsdata <- .xmapply(FUN=.manage_PDB,
@@ -100,16 +106,14 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
                                                     path=path,
                                                     extension=extension,
                                                     pbar=pbar,
+                                                    progressbar=progressbar,
                                                     cutoff=cutoff),
                                     SIMPLIFY=FALSE)
 
     ## Print new line after progress bar -------------------------------------
-    cat("\n")
-
-    
-    
-    #system.time(info <- lapply(1:nrow(df), FUN=.getinfocontacts, df=df,
-    #   interactionsdata=interactionsdata, ntinfo=ntinfo))
+    if (progressbar) {
+        cat("\n")
+    }
 
     ## Return output for every chain and model as given by input -------------
     interactionsdata <- interactionsdata[

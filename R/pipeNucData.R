@@ -24,6 +24,7 @@
 #'     Only necessary if the PDB files are to be read from disk and a path is
 #'     provided.
 #' @param cores Number of CPU cores to be used.
+#' @param progressbar A logical to print in screen a progress bar.
 #' @param ... Arguments to be passed to [measureNuc()]
 #'
 #' @return A data.frame with data about every nucleotide in the input set
@@ -39,7 +40,7 @@
 #'
 pipeNucData <-
 function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
-            path=NULL, extension=NULL, cores=1, ...) {
+            path=NULL, extension=NULL, cores=1, progressbar=TRUE, ...) {
 
     ## Make sure the input pdbID is a list -----------------------------------
     if (.isCIF(pdbID))
@@ -62,11 +63,16 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
     }
 
     ## Determine whether to read CIF/pdb objects from file, internet or input
-    read <- .whereToRead(pdbID=pdbID, path=path, extension=extension)
+    read <- .whereToRead(pdbID=pdbID, path=path, extension=extension,
+                            verbose=progressbar)
 
     ## Print progress bar ----------------------------------------------------
     total <- length(pdbID)
-    pbar <- txtProgressBar(min=0, max=total, style=3)
+    if (progressbar) {
+        pbar <- txtProgressBar(min=0, max=total, style=3)
+    } else {
+        pbar <- NULL
+    }
 
     ## Iterate over the list of entries to obtain the desired information ---- 
     ntinfo <- .xmapply(FUN=.manage_PDB,
@@ -81,11 +87,14 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
                                         range=range,
                                         path=path,
                                         extension=extension,
+                                        progressbar=progressbar,
                                         pbar=pbar), 
                         SIMPLIFY=FALSE)
 
     ## Print new line after progress bar -------------------------------------
-    cat("\n")
+    if (progressbar) {
+        cat("\n")
+    }
 
     ## Prepare output format -------------------------------------------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
@@ -187,7 +196,7 @@ function(pdbID, path=NULL, extension=NULL, verbose=TRUE) {
 ## possible model&chain combinations.
 .manage_PDB <-
 function(pdbID, model, chain, read, ..., 
-            path=NULL, extension=NULL, index, pbar, FUN) {
+            path=NULL, extension=NULL, index, pbar, FUN, progressbar=TRUE) {
 
     ## Find if the given pdb is multi model ----------------------------------
     if (length(model) == 1 && model == 1) {
@@ -249,7 +258,9 @@ function(pdbID, model, chain, read, ...,
                         SIMPLIFY=FALSE)
 
     ## Print progress bar
-    setTxtProgressBar(pbar, index)
+    if (progressbar) {
+        setTxtProgressBar(pbar, index)
+    }
 
     ## Return output for every chain and model as given by input -------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length) > 0)]

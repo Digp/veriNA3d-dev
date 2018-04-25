@@ -9,6 +9,7 @@
 #' @param as.df A logical that stands for "as.data.frame". If TRUE, the output
 #'     will be returned in the form of a data.frame, otherwise a list.
 #' @param cores Number of CPU cores to be used.
+#' @param progressbar A logical to print in screen a progress bar.
 #' @param ... optional arguments to FUNCTION.
 #'
 #' @return A data.frame with the PDB IDs (first colunm) and the output of the
@@ -22,7 +23,7 @@
 #'
 
 applyToPDB <-
-function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, ...) {
+function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, progressbar=TRUE, ...) {
 
     ## Match function --------------------------------------------------------
     FUNCTION <- match.fun(FUNCTION)
@@ -33,23 +34,33 @@ function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, ...) {
 
     ## Print progress bar ----------------------------------------------------
     total <- length(listpdb)
-    pbar <- txtProgressBar(min=0, max=total, style=3)
+    if (progressbar) {
+        pbar <- txtProgressBar(min=0, max=total, style=3)
+    } else {
+        pbar <- NULL
+    }
 
     ## Apply function over the list ------------------------------------------
     output_list <- .xlapply(seq_along(listpdb),
-        FUN=function(i, FUNCTION, listpdb, pbar, ...) {
+        FUN=function(i, FUNCTION, listpdb, pbar, progressbar, ...) {
 
+            if (progressbar) {
                 ## Print progress bar
                 setTxtProgressBar(pbar, i)
+            }
 
             tryCatch({
                 return(FUNCTION(listpdb[i], ...))
             }, error=function(e) {
                 return(NA)
             })
-        }, FUNCTION=FUNCTION, listpdb=listpdb, pbar=pbar,
-            ...=..., mc.cores=cores, mc.preschedule=TRUE)
-    cat("\n")
+        }, FUNCTION=FUNCTION, listpdb=listpdb, pbar=pbar, 
+            progressbar=progressbar, ...=..., 
+            mc.cores=cores, mc.preschedule=TRUE)
+
+    if (progressbar) {
+        cat("\n")
+    }
 
     ## Any query might receive NA with a certain frequency, even when it 
     ## shoudn't, thus the NA in the list are double-checked ------------------
