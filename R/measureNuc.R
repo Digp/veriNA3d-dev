@@ -132,7 +132,7 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     names(combinations) <- c("model", "chain")
 
     ## Time to measure -------------------------------------------------------
-    ntinfo <- mapply(FUN=.measure,
+    ntinfo <- mapply(FUN=.measureNuc,
                         model=combinations[, "model"],
                         chain=combinations[, "chain"],
                         MoreArgs=list(pdb=pdb,
@@ -149,22 +149,8 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
 
     ## Give format to the output ---------------------------------------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
-    colnames <- names(ntinfo[[1]])
-    ntinfo <- as.data.frame(matrix(
-                                unlist(lapply(ntinfo, function(x) {
-                                    return(c(t(x)))
-                                    })),
-                                ncol=length(colnames), byrow=TRUE),
-                            stringsAsFactors=FALSE)
-
-    names(ntinfo) <- colnames
-    ntinfo <- cbind(seq_len(nrow(ntinfo)), ntinfo)
-    names(ntinfo)[1] <- "ntID"
-    class(ntinfo$resno) <- "numeric"
-
-    for (i in seq(7, ncol(ntinfo), 1)) {
-        suppressWarnings(class(ntinfo[, i]) <- "numeric")
-    }
+    ntinfo <- do.call(rbind, ntinfo)
+    ntinfo <- cbind(ntID=seq_len(nrow(ntinfo)), ntinfo)
     return(ntinfo)
 }
 
@@ -331,18 +317,22 @@ colnames(.torsionals) <- c("atomA", "atomB", "atomC", "atomD", "labels")
 ## Intermediate wrapper that generates all the possible combinations of
 ## models and chains and calls the function to really make the measurments
 
-.measure <-
-function(pdb, model, chain, v_shifted, b_shifted,
-            distances, angles, torsionals, pucker, Dp, refatm, force) {
+.measureNuc <-
+function(pdb, model, chain, v_shifted=TRUE, b_shifted=TRUE,
+            distances=.distances, angles=.angles, 
+            torsionals=.torsionals, pucker=TRUE, 
+            Dp=TRUE, refatm="C4'", force=FALSE, select=TRUE) {
 
-    ## Selection of Model of interest ----------------------------------------
-    pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
+    if (select) {
+        ## Selection of Model of interest ------------------------------------
+        pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
 
-    ## Selection of Chain of interest ----------------------------------------
-    selection <- atom.select(pdb, chain=chain)
+        ## Selection of Chain of interest ------------------------------------
+        selection <- atom.select(pdb, chain=chain)
 
-    ## pdb contains the PDB object ONLY with the selected model and chain ----
-    pdb <- trim(pdb, selection)
+        ## pdb contains the PDB object ONLY with the selected model and chain
+        pdb <- trim(pdb, selection)
+    }
 
     ## Make sure the chain selected is a nucleic acid ------------------------
     if (!any(.is.nucleic(pdb)) && !force) {
@@ -382,19 +372,14 @@ function(pdb, model, chain, v_shifted, b_shifted,
                         pucker=pucker)
 
     ## Prepare the output ----------------------------------------------------
-    colnames <- names(ntinfo[[1]])
-    ntinfo <- as.data.frame(matrix(unlist(ntinfo), 
-                                    ncol=length(colnames), byrow=TRUE), 
-                            stringsAsFactors=FALSE)
-
-    ntinfo <- cbind(rep(model, total), 
-                    rep(chain, total), 
-                    ridlist, 
-                    reslist, 
-                    inslist, 
-                    ntinfo)
-
-    names(ntinfo) <- c("model", "chain", "resid", "resno", "insert", colnames)
+    ntinfo <- do.call(rbind, ntinfo)
+    ntinfo <- cbind(model=rep(model, total),
+                    chain=as.character(rep(chain, total)),
+                    resid=as.character(ridlist), 
+                    resno=as.character(reslist),
+                    insert=as.character(inslist),
+                    ntinfo, 
+                    stringsAsFactors=FALSE)
     return(ntinfo)
 }
 
@@ -767,7 +752,7 @@ function(index, reslist, inslist, ridlist, pdb,
         output <- append(output, unlist(list(Dp=Rich_distance)))
     }
 
-    return(output)
+    return(data.frame(output, row.names=NULL))
 }
 
 ## ============================================================================

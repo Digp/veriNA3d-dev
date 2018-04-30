@@ -63,7 +63,7 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
     names(combinations) <- c("model", "chain")
 
     ## Call funciton to manage combinations of models and chians -------------
-    ntinfo <- mapply(FUN=.check.nt,
+    ntinfo <- mapply(FUN=.checkNuc,
                         model=combinations[, "model"],
                         chain=combinations[, "chain"],
                         MoreArgs=list(pdb=pdb,
@@ -85,7 +85,7 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
 ## Intermediate wrapper that generates all the possible model&chain 
 ## combinations.
 
-.check.nt <-
+.checkNuc <-
 function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
 
     if (select) {
@@ -125,7 +125,7 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
                         ridlist=ridlist,
                         inslist=inslist,
 
-                        PDB=pdb)
+                        PDB="pdb")
 
     ## Coerce list to data.frame ---------------------------------------------
     ntinfo <- do.call(rbind, ntinfo)
@@ -169,9 +169,18 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
     resid  <- ridlist[index]
     number <- reslist[index]
     insert <- inslist[index]
-    nt <- PDB$atom[PDB$atom$resid == resid & 
-                    PDB$atom$resno == number &
-                    PDB$atom$insert == insert, ]
+
+    pre_nt <- get(PDB, envir=parent.frame(n=2))$atom[
+                    get(PDB, envir=parent.frame(n=2))$atom$resid == 
+                                ridlist[index - 1] &
+                    get(PDB, envir=parent.frame(n=2))$atom$resno ==
+                                reslist[index - 1] &
+                    get(PDB, envir=parent.frame(n=2))$atom$insert == 
+                                inslist[index - 1], ]
+    nt <- get(PDB, envir=parent.frame(n=2))$atom[
+                    get(PDB, envir=parent.frame(n=2))$atom$resid == resid & 
+                    get(PDB, envir=parent.frame(n=2))$atom$resno == number &
+                    get(PDB, envir=parent.frame(n=2))$atom$insert == insert, ]
 
     ## Is the b factor of the phosphate or C4' atoms bigger than 60? ---------
     if (any(nt[nt$elety %in% c("P", "C4'"), "b"] > 60)) {
@@ -183,9 +192,9 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
     ## Check if backbone, sugar and base atoms exist -------------------------
     existence <- unlist(lapply(.atoms, 
                                 FUN=function(x) {
-                                    if (nrow(PDB$atom[PDB$atom$resno == number
-                                            & PDB$atom$insert == insert
-                                            & PDB$atom$elety == x, ]) == 1) {
+                                    if (nrow(nt[nt$resno == number
+                                            & nt$insert == insert
+                                            & nt$elety == x, ]) == 1) {
                                         return(TRUE)
                                     } else {
                                         return(FALSE)
@@ -261,11 +270,11 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
 
     ## Is the puckering measurable? ------------------------------------------
     if (all(existence[.atoms %in% c("C1'", "C2'", "C3'", "C4'", "O4'")]) &&
-        all(distances[(atomA == "C4'"&atomB == "C3'")|
-                        (atomA == "C3'"&atomB == "C2'")|
-                        (atomA == "C2'"&atomB == "C1'")|
-                        (atomA == "C1'"&atomB == "O4'")|
-                        (atomA == "O4'"&atomB == "C4'")] < 2, na.rm=TRUE)) {
+        all(distances[(atomA == "C4'" & atomB == "C3'")|
+                        (atomA == "C3'" & atomB == "C2'")|
+                        (atomA == "C2'" & atomB == "C1'")|
+                        (atomA == "C1'" & atomB == "O4'")|
+                        (atomA == "O4'" & atomB == "C4'")] < 2, na.rm=TRUE)) {
         puc_valid <- TRUE
     } else {
         puc_valid <- FALSE
@@ -345,10 +354,7 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
     } else if (index == length(reslist)) {
         first <- FALSE
         last <- TRUE
-        previousO3p <- PDB$atom[PDB$atom$resid == ridlist[index - 1] &
-                                PDB$atom$resno == reslist[index - 1] &
-                                PDB$atom$insert == inslist[index - 1] &
-                                PDB$atom$elety == "O3'", c("x", "y", "z")]
+        previousO3p <- pre_nt[pre_nt$elety == "O3'", c("x", "y", "z")]
 
         ## Given that the previous nucleotide had the O3' atom and the current 
         ## nucleotide has the P atom, the distance between nucleotides is 
@@ -369,9 +375,17 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
             inds <- seq(1, 6, 1)
             if (sum(!is.na(distances[inds]) & distances[inds] < 2) == 6) {
                 Break <- FALSE
-                if (nrow(PDB$atom[PDB$atom$resno == reslist[index] + 1 &
-                                    PDB$atom$insert == inslist[index] &
-                                    PDB$atom$elety == "P", ]) == 1) {
+
+
+                post_nt <- get(PDB, envir=parent.frame(n=2))$atom[
+                            get(PDB, envir=parent.frame(n=2))$atom$resno == 
+                                            number + 1 &
+                            get(PDB, envir=parent.frame(n=2))$atom$insert ==
+                                            insert, ]
+
+                if (nrow(post_nt) > 0 &&
+                    nrow(post_nt$elety == "P") == 1) {
+
                     lastP <- TRUE
                 }
             } else {
@@ -406,10 +420,7 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
     } else {
         first <- FALSE
         last <- FALSE
-        previousO3p <- PDB$atom[PDB$atom$resid == ridlist[index - 1] &
-                                PDB$atom$resno == reslist[index - 1] &
-                                PDB$atom$insert == inslist[index - 1] &
-                                PDB$atom$elety == "O3'", c("x", "y", "z")]
+        previousO3p <- pre_nt[pre_nt$elety == "O3'", c("x", "y", "z")]
 
         ## Given that the previous nucleotide had the O3' atom and the current
         ## nucleotide has the P atom, the distance between nucleotides is 
@@ -467,17 +478,17 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
             HO2p=existence[17],
             lastP=lastP,
             big_b=big_b,
-            preO3p_P=distances[1],
-            P_O5p=distances[2],
-            O5p_C5p=distances[3],
-            C5p_C4p=distances[4],
-            C4p_C3p=distances[5],
-            C3p_O3p=distances[6],
-            C3p_C2p=distances[7],
-            C2p_C1p=distances[8],
-            C1p_O4p=distances[9],
-            O4p_C4p=distances[10],
-            C1p_Nbase=distances[11],
+            dist.preO3p_P=distances[1],
+            dist.P_O5p=distances[2],
+            dist.O5p_C5p=distances[3],
+            dist.C5p_C4p=distances[4],
+            dist.C4p_C3p=distances[5],
+            dist.C3p_O3p=distances[6],
+            dist.C3p_C2p=distances[7],
+            dist.C2p_C1p=distances[8],
+            dist.C1p_O4p=distances[9],
+            dist.O4p_C4p=distances[10],
+            dist.C1p_Nbase=distances[11],
             Break=Break,
             puc_valid=puc_valid,
             chi_valid=chi_valid,

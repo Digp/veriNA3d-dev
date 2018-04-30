@@ -104,7 +104,8 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
     } else {
         ## Coerce list to data.frame
         ntinfo <- do.call(rbind, ntinfo)
-        ntinfo$ntID <- seq_len(nrow(ntinfo))
+        ntinfo <- cbind(ntID=seq_len(nrow(ntinfo)), ntinfo)
+#        ntinfo$ntID <- seq_len(nrow(ntinfo))
         return(ntinfo)
     }
 }
@@ -235,6 +236,9 @@ function(pdbID, model, chain, read, ...,
         temp_PDB <- cifAsPDB(name, alt=ALT)
     }
 
+    ## Make sure the pdb object has the necessary format ---------------------
+    temp_PDB <- .perfect_input_format(temp_PDB)
+
     ## Save the different model numbers --------------------------------------
     if (model == "all" | model == 0) {
         model <- seq_len(nrow(temp_PDB$xyz))
@@ -346,8 +350,10 @@ function(pdb, model, chain, range, ..., name) {
     }
 
     ## Check and measure the chain and make common data.frame ----------------
-    ntinfo1 <- checkNuc(pdb, id=name, refatm=refatm)
-    ntinfo2 <- measureNuc(pdb, refatm=refatm, ...)
+    ntinfo1 <- .checkNuc(pdb_ch, model=model, chain=chain, id=name, 
+                            refatm=refatm, select=FALSE, ...)
+    ntinfo2 <- .measureNuc(pdb_ch, model=model, chain=chain, 
+                            refatm=refatm, select=FALSE, ...)
 
     ntinfo <- cbind(ntinfo1, ntinfo2[, 
         which(!names(ntinfo2) %in% names(ntinfo1))])
