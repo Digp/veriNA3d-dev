@@ -56,7 +56,6 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
     }
 
     ## Make sure the pdb object has the necessary format ---------------------
-    pdb$atom$insert[is.na(pdb$atom$insert)] <- "?"
     pdb$atom$elety <- gsub("\"", "", pdb$atom$elety)
     if (any(is.na(pdb$atom$b))) {
         pdb$atom$b[which(is.na(pdb$atom$b))] <- 0
@@ -77,7 +76,7 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
                         SIMPLIFY=FALSE)
 
     ## Give format to the output ---------------------------------------------
-    ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]
+    ntinfo <- ntinfo[which(lapply(ntinfo, length) > 0)]
     colnames <- names(ntinfo[[1]])
     ntinfo <- as.data.frame(matrix(
                                 unlist(lapply(ntinfo, function(x) { 
@@ -106,16 +105,18 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
 ## combinations.
 
 .check.nt <-
-function(pdb, model, chain, id=NULL, refatm, force) {
+function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
 
-    ## Selection of Model of interest ----------------------------------------
-    pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
+    if (select) {
+        ## Selection of Model of interest ------------------------------------
+        pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
 
-    ## Selection of Chain of interest ----------------------------------------
-    selection <- atom.select(pdb, chain=chain)
+        ## Selection of Chain of interest ------------------------------------
+        selection <- atom.select(pdb, chain=chain)
 
-    ## pdb contains the PDB object ONLY with the selected model and chain ----
-    pdb <- trim(pdb, selection)
+        ## pdb contains the PDB object ONLY with the selected model and chain 
+        pdb <- trim(pdb, selection)
+    }
 
     ## Make sure the chain selected is a nucleic acid ------------------------
     if (!any(.is.nucleic(pdb)) && !force) {
@@ -218,10 +219,10 @@ function(pdb, model, chain, id=NULL, refatm, force) {
 
     ## Check if backbone, sugar and base atoms exist -------------------------
     existence <- unlist(lapply(.atoms, 
-                                FUN=function(..x) {
+                                FUN=function(x) {
                                     if (nrow(PDB$atom[PDB$atom$resno == number
-                                            &PDB$atom$insert == insert
-                                            &PDB$atom$elety == ..x, ]) == 1) {
+                                            & PDB$atom$insert == insert
+                                            & PDB$atom$elety == x, ]) == 1) {
                                         return(TRUE)
                                     } else {
                                         return(FALSE)

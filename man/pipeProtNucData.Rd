@@ -5,7 +5,8 @@
 \title{Obtain nucleotide-protein interactions from a data set of structures}
 \usage{
 pipeProtNucData(pdbID, model = NULL, chain = NULL, ntinfo = NULL,
-  path = NULL, extension = NULL, cores = 1, cutoff = 15, ...)
+  path = NULL, extension = NULL, cores = 1, progressbar = TRUE,
+  cutoff = 15, ...)
 }
 \arguments{
 \item{pdbID}{A list/vector containing the desired PDB IDs or a list of pdb
@@ -35,6 +36,8 @@ Only necessary if the PDB files are to be read from disk and a path is
 provided.}
 
 \item{cores}{Number of CPU cores to be used.}
+
+\item{progressbar}{A logical to print in screen a progress bar.}
 
 \item{cutoff}{A numeric with the maximum distance to return. To be passed
 to \code{\link[=findBindingSite]{findBindingSite()}}}

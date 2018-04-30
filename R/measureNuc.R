@@ -125,7 +125,6 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     }
 
     ## Make sure the pdb object has the necessary format ---------------------
-    pdb$atom$elety <- gsub("\"", "", pdb$atom$elety)
     pdb$atom$insert[is.na(pdb$atom$insert)] <- "?"
 
     ## Find all combinations of models and chains to be computed -------------

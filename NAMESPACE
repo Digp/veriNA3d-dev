@@ -55,6 +55,9 @@ export(
     measureElenoDist,
     measureNuc, 
 
+    pipeNucData,
+    pipeProtNucData, 
+
     plotCategorical, 
     plotCircularDistribution, 
     plotEtaTheta, 
@@ -79,9 +82,6 @@ export(
     queryResol,
     queryRevdate,
     queryTechnique,
-
-    pipeNucData,
-    pipeProtNucData, 
 
     represAsDataFrame,
     rVector, 

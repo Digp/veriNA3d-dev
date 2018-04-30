@@ -262,8 +262,13 @@ function(pdbID, model, chain, read, ...,
         setTxtProgressBar(pbar, index)
     }
 
-    ## Return output for every chain and model as given by input -------------
+    ## Remove empty entries of the list --------------------------------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length) > 0)]
+
+    ## Free up memory --------------------------------------------------------
+    gc()
+
+    ## Return output for every chain and model as given by input -------------
     if (length(ntinfo) == 0) {
         return()
     } else {
@@ -290,8 +295,8 @@ function(pdb, model, chain, range, ..., name) {
     resid <- unique(pdb_ch$atom$resid)
     if (!any(resid %in% .nucleotides)) {
         string <- paste("Nothing to analyse in ", 
-                    name, "|", model, "|", chain, sep="")
-        cat("\r | ", string, "")
+                    name, "|", model, "|", chain, " ", sep="")
+        cat("\r   |", string)
         return()
     }
 
@@ -311,8 +316,8 @@ function(pdb, model, chain, range, ..., name) {
     ## Check that the given chain is the desired length range ----------------
     if (total == 0 | total < range[1] | total > range[2]) {
         string <- paste("Nothing to analyse in ", 
-                    name, "|", model, "|", chain, sep="")
-        cat("\r | ", string, "")
+                    name, "|", model, "|", chain, " ", sep="")
+        cat("\r   |", string)
         return()
     }
 

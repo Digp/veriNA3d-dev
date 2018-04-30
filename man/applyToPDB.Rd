@@ -4,7 +4,8 @@
 \alias{applyToPDB}
 \title{Applies a function over a list of PDB ID entries.}
 \usage{
-applyToPDB(FUNCTION, listpdb = NULL, as.df = TRUE, cores = 1, ...)
+applyToPDB(FUNCTION, listpdb = NULL, as.df = TRUE, cores = 1,
+  progressbar = TRUE, ...)
 }
 \arguments{
 \item{FUNCTION}{A function of interest.}
@@ -16,6 +17,8 @@ the complete list of PDB entries is downloaded and used.}
 will be returned in the form of a data.frame, otherwise a list.}
 
 \item{cores}{Number of CPU cores to be used.}
+
+\item{progressbar}{A logical to print in screen a progress bar.}
 
 \item{...}{optional arguments to FUNCTION.}
 }

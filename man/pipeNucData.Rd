@@ -5,7 +5,7 @@
 \title{Obtain nucleotide details from a data set of RNA structures}
 \usage{
 pipeNucData(pdbID, model = NULL, chain = NULL, range = c(3, 1e+05),
-  path = NULL, extension = NULL, cores = 1, ...)
+  path = NULL, extension = NULL, cores = 1, progressbar = TRUE, ...)
 }
 \arguments{
 \item{pdbID}{A list/vector containing the desired PDB IDs or a list of pdb
@@ -35,6 +35,8 @@ Only necessary if the PDB files are to be read from disk and a path is
 provided.}
 
 \item{cores}{Number of CPU cores to be used.}
+
+\item{progressbar}{A logical to print in screen a progress bar.}
 
 \item{...}{Arguments to be passed to \code{\link[=measureNuc]{measureNuc()}}}
 }
