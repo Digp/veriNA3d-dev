@@ -125,7 +125,7 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     }
 
     ## Make sure the pdb object has the necessary format ---------------------
-    pdb$atom$insert[is.na(pdb$atom$insert)] <- "?"
+    pdb <- .perfect_input_format(pdb)
 
     ## Find all combinations of models and chains to be computed -------------
     combinations <- expand.grid(model, chain, stringsAsFactors=FALSE)

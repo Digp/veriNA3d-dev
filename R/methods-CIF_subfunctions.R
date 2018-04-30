@@ -285,7 +285,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
     }
 
     ## Make sure no extra quotes sorround the elety atom names ---------------
-    atom$elety <- gsub("\"", "", pdb$atom$elety)
+    atom$elety <- gsub("\"", "", atom$elety)
 
     ## Check for alternative (alt) records -----------------------------------
     if (!is.null(alt)) {

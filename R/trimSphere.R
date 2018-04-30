@@ -189,10 +189,18 @@ function(pdb) {
         pdb$atom$insert[pdb$atom$insert == " "] <- "?"
     }
 
-    pdb$atom$chain[which(is.na(pdb$atom$chain))] <- "?"
+    if (any(is.na(pdb$atom$chain))) {
+        pdb$atom$chain[which(is.na(pdb$atom$chain))] <- "?"
+    }
+
     if (any(is.na(pdb$atom$alt))) {
         pdb$atom$alt[is.na(pdb$atom$alt)] <- "."
     }
+
+    if (any(is.na(pdb$atom$b))) {
+        pdb$atom$b[which(is.na(pdb$atom$b))] <- 0
+    }
+
     row.names(pdb$atom) <- pdb$atom$eleno
     return(pdb)
 }

@@ -56,10 +56,7 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
     }
 
     ## Make sure the pdb object has the necessary format ---------------------
-    pdb$atom$elety <- gsub("\"", "", pdb$atom$elety)
-    if (any(is.na(pdb$atom$b))) {
-        pdb$atom$b[which(is.na(pdb$atom$b))] <- 0
-    }
+    pdb <- .perfect_input_format(pdb)
 
     ## Find all combinations of models and chains to be computed -------------
     combinations <- expand.grid(model, chain, stringsAsFactors=FALSE)
@@ -77,24 +74,8 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
 
     ## Give format to the output ---------------------------------------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length) > 0)]
-    colnames <- names(ntinfo[[1]])
-    ntinfo <- as.data.frame(matrix(
-                                unlist(lapply(ntinfo, function(x) { 
-                                                            return(c(t(x))) 
-                                                        })), 
-                            ncol=length(colnames), byrow=TRUE), 
-                        stringsAsFactors=FALSE)
-    names(ntinfo) <- colnames
-    for (fi in .fields) {
-        class(ntinfo[, fi]) <- "logical"
-    }
-    for (fi in grep("dist", names(ntinfo))) {
-        suppressWarnings(class(ntinfo[, fi]) <- "numeric")
-    }
-    ntinfo <- cbind(seq_len(nrow(ntinfo)), ntinfo)
-    names(ntinfo)[1] <- "ntID"
-    class(ntinfo$resno) <- "integer"
-    class(ntinfo$ntindex) <- "integer"
+    ntinfo <- do.call(rbind, ntinfo)
+    ntinfo <- cbind(ntID=seq_len(nrow(ntinfo)), ntinfo)
     return(ntinfo)
 }
 
@@ -146,56 +127,38 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
 
                         PDB=pdb)
 
-    ## Save number of columns ------------------------------------------------
-    ncol <- sum(unlist(lapply(seq_along(ntinfo[[1]]), 
-                                FUN=function(x) {
-                                    length(ntinfo[[1]][[x]])
-                                })))
-
     ## Coerce list to data.frame ---------------------------------------------
-    ntinfo <- as.data.frame(matrix(unlist(ntinfo), ncol=ncol, byrow=TRUE), 
-                            stringsAsFactors=FALSE)
-    ntinfo <- cbind(rep(id, total), 
-                    rep(model, total),
-                    as.character(rep(chain, total)), 
-                    as.character(reslist), 
-                    as.character(inslist), 
-                    ntinfo[, 1],
-                    as.character(ridlist), 
-                    indices, 
-                    ntinfo[, 2:ncol], 
+    ntinfo <- do.call(rbind, ntinfo)
+
+    ntinfo <- cbind(pdbID=rep(id, total), 
+                    model=rep(model, total),
+                    chain=as.character(rep(chain, total)), 
+                    resno=as.character(reslist), 
+                    insert=as.character(inslist), 
+                    base_type=ntinfo[, 1],
+                    resid=as.character(ridlist), 
+                    ntindex=indices, 
+                    ntinfo[, -1], 
                     stringsAsFactors=FALSE)
 
-    ## Give names to the data.frame fields -----------------------------------
-    names(ntinfo) <- c("pdbID", "model", "chain", "resno", "insert",
-                        "base_type", "resid", "ntindex", "localenv", "first", 
-                        "last", "P", "O5p", "C5p", "C4p", "C3p", "O3p", "C2p", 
-                        "C1p", "O4p", "N1", "N9", "C2", "C4", "C6", "H2p", 
-                        "O2p", "HO2p", "lastP", "big_b", "dist.pre_O3p.P",
-                        "dist.P.O5p", "dist.O5p.C5p", "dist.C5p.C4p",
-                        "dist.C4p.C3p", "dist.C3p.O3p", "dist.C3p.C2p",
-                        "dist.C2p.C1p", "dist.C1p.O4p", "dist.O4p.C4p",
-                        "dist.C1p.Nbase", "Break", "puc_valid", "chi_valid",
-                        "kappa_valid", "base_exists")
-
     ## Make last calls to check for every nt whether eta/theta can be measured
-    eta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), 
-                                            FUN=.check_etatheta,
-                                            ntinfo=ntinfo, angle="eta")))
-    theta <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), 
-                                            FUN=.check_etatheta,
-                                            ntinfo=ntinfo, angle="theta")))
+    eta <- unlist(lapply(seq_len(nrow(ntinfo)), 
+                            FUN=.check_etatheta,
+                            ntinfo=ntinfo, angle="eta"))
+    theta <- unlist(lapply(seq_len(nrow(ntinfo)), 
+                            FUN=.check_etatheta,
+                            ntinfo=ntinfo, angle="theta"))
 
     ## and if they can be used for trinucleotide eRMSD comparisons -----------
-    eRMSD_valid <- as.character(unlist(lapply(seq_len(nrow(ntinfo)), 
-                                                FUN=.is_valid_eRMSD,
-                                                ntinfo=ntinfo)))
+    eRMSD_valid <- unlist(lapply(seq_len(nrow(ntinfo)), 
+                                    FUN=.is_valid_eRMSD,
+                                    ntinfo=ntinfo))
 
     ## Prepare the output ----------------------------------------------------
-    ntinfo <- cbind(ntinfo, eta, theta, eRMSD_valid)
-    names(ntinfo)[(ncol(ntinfo)-2):ncol(ntinfo)] <- c("eta_valid",
-                                                        "theta_valid",
-                                                        "eRMSD_valid")
+    ntinfo <- cbind(ntinfo, 
+                    eta_valid=eta, 
+                    theta_valid=theta, 
+                    eRMSD_valid=eRMSD_valid)
     return(ntinfo)
 }
 
@@ -480,9 +443,51 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
         lastP <- FALSE
 
     ## End function returning all checked data
-    return(list(base_type, Environment, first, last, existence, lastP, big_b,
-                distances, Break, puc_valid, chi_valid, kappa_valid, 
-                base_exist))
+    return(data.frame(
+            base_type=as.character(base_type),
+            Environment=as.character(Environment),
+            first=first,
+            last=last,
+            P=existence[1],
+            O5p=existence[2],
+            C5p=existence[3],
+            C4p=existence[4],
+            C3p=existence[5],
+            O3p=existence[6],
+            C2p=existence[7],
+            C1p=existence[8],
+            O4p=existence[9],
+            N1=existence[10],
+            N9=existence[11],
+            C2=existence[12],
+            C4=existence[13],
+            C6=existence[14],
+            H2p=existence[15],
+            O2p=existence[16],
+            HO2p=existence[17],
+            lastP=lastP,
+            big_b=big_b,
+            preO3p_P=distances[1],
+            P_O5p=distances[2],
+            O5p_C5p=distances[3],
+            C5p_C4p=distances[4],
+            C4p_C3p=distances[5],
+            C3p_O3p=distances[6],
+            C3p_C2p=distances[7],
+            C2p_C1p=distances[8],
+            C1p_O4p=distances[9],
+            O4p_C4p=distances[10],
+            C1p_Nbase=distances[11],
+            Break=Break,
+            puc_valid=puc_valid,
+            chi_valid=chi_valid,
+            kappa_valid=kappa_valid,
+            base_exists=base_exist,
+            row.names=NULL))
+
+#list(base_type, Environment, first, last, existence, lastP, big_b,
+#                distances, Break, puc_valid, chi_valid, kappa_valid, 
+#                base_exist))
 }
 
 ## ============================================================================
