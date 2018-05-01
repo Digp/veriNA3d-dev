@@ -761,10 +761,14 @@ function(index, reslist, inslist, ridlist, pdb,
     resno <- get(resno, envir=parent.frame(n=2))
     insert <- get(insert, envir=parent.frame(n=2))
     assign(out_object,
-    value=atom.select(pdb, eleno=pdb$atom[which(pdb$atom$resno == resno&
-    pdb$atom$insert == insert&
-    pdb$atom$elety == elety), "eleno"], verbose=FALSE),
-    envir=parent.frame(n=2))
+            value=atom.select(pdb, 
+                                eleno=pdb$atom[which(
+                                                pdb$atom$resno == resno &
+                                                pdb$atom$insert == insert &
+                                                pdb$atom$elety == elety), 
+                                                "eleno"], 
+                                verbose=FALSE),
+            envir=parent.frame(n=2))
 }
 
 .torsions_many <- function(out_object, selection, pdb) {
