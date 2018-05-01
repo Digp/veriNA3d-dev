@@ -319,7 +319,7 @@ colnames(.torsionals) <- c("atomA", "atomB", "atomC", "atomD", "labels")
 
 .measureNuc <-
 function(pdb, model, chain, v_shifted=TRUE, b_shifted=TRUE,
-            distances=.distances, angles=.angles, 
+            distances=.distances[c(6, 11, 12), ], angles=.angles, 
             torsionals=.torsionals, pucker=TRUE, 
             Dp=TRUE, refatm="C4'", force=FALSE, select=TRUE) {
 

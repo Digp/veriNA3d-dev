@@ -384,9 +384,13 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
                                             insert, ]
 
                 if (nrow(post_nt) > 0 &&
-                    nrow(post_nt$elety == "P") == 1) {
+                    any(post_nt$elety == "P")) {
 
-                    lastP <- TRUE
+                    ## Check if connected
+                    a <- nt[nt$elety == "O3'", c("x", "y", "z")]
+                    b <- post_nt[post_nt$elety == "P", c("x", "y", "z")]
+                    if (sum((a - b)^2) < 2)
+                        lastP <- TRUE
                 }
             } else {
                 Break <- TRUE
@@ -456,7 +460,7 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
     ## End function returning all checked data
     return(data.frame(
             base_type=as.character(base_type),
-            Environment=as.character(Environment),
+            localenv=as.character(Environment),
             first=first,
             last=last,
             P=existence[1],
@@ -478,17 +482,17 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
             HO2p=existence[17],
             lastP=lastP,
             big_b=big_b,
-            dist.preO3p_P=distances[1],
-            dist.P_O5p=distances[2],
-            dist.O5p_C5p=distances[3],
-            dist.C5p_C4p=distances[4],
-            dist.C4p_C3p=distances[5],
-            dist.C3p_O3p=distances[6],
-            dist.C3p_C2p=distances[7],
-            dist.C2p_C1p=distances[8],
-            dist.C1p_O4p=distances[9],
-            dist.O4p_C4p=distances[10],
-            dist.C1p_Nbase=distances[11],
+            dist.pre_O3p.P=distances[1],
+            dist.P.O5p=distances[2],
+            dist.O5p.C5p=distances[3],
+            dist.C5p.C4p=distances[4],
+            dist.C4p.C3p=distances[5],
+            dist.C3p.O3p=distances[6],
+            dist.C3p.C2p=distances[7],
+            dist.C2p.C1p=distances[8],
+            dist.C1p.O4p=distances[9],
+            dist.O4p.C4p=distances[10],
+            dist.C1p.Nbase=distances[11],
             Break=Break,
             puc_valid=puc_valid,
             chi_valid=chi_valid,
