@@ -57,7 +57,7 @@ function(pdb, model=NULL, refeleno, eleno, n=1, cutoff=c(0, 5), verbose=FALSE,
             detailedoutput=TRUE, data_of_interest=NULL) {
 
     ## Make sure the object is a S3 pdb object -------------------------------
-    if (class(pdb) == "CIF") {
+    if (any(class(pdb) == "CIF")) {
         alt <- unique(cifAtom_site(pdb)$label_alt_id)
         pdb <- cifAsPDB(pdb, alt=alt)
     }
