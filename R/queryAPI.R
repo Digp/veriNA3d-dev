@@ -40,7 +40,7 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
             reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE) {
 
     ## Check that the input pdbID is 4 character string ----------------------
-    if (nchar(pdbID) != 4) {
+    if (nchar(pdbID) > 4) {
         stop("Please provide a correct PDB ID")
     }
 
@@ -69,7 +69,10 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
     }
 
     ## Generate string with the website name
-    URL <- paste(webroot, string1, pdbID, "/", string2, sep="")
+    URL <- paste(webroot, string1, pdbID, sep="")
+    if (string2 != "") {
+        URL <- paste(URL, "/", string2, sep="")
+    }
     if (verbose)
         print(paste("Querying: ", URL, sep=""))
 
