@@ -19,19 +19,31 @@
 
 hasHetAtm <-
 function(pdbID, hetAtms) {
+    ## Make sure input is correct
+    if (length(hetAtms) == 0) {
+        stop("Introduce hetAtms")
+    }
+    ## If there's a NA (Sodium ion) in input, change it by a "Na" string
+    if (any(hetAtms == "NA" || is.na(hetAtms))) { 
+        ind <- which(hetAtms == "NA" || is.na(hetAtms))
+        hetAtms[i] <- Na
+    }
+
+    ## Query to find heteroatoms
     lig <- queryHetAtms(pdbID, NAtoNa=TRUE)
 
-    if ((hetAtms == "NA" || is.na(hetAtms) || hetAtms == "Na") && 
-        any(lig == "Na")) {
-
-        out <- which(is.na(lig))
+    if (length(lig) == 0) {
+        ## If the structure has no heteroatoms, return as many FALSE as needed
+        out <- rep(FALSE, length(hetAtms))
     } else {
-        out <- grep(lig, pattern=paste("^", hetAtms, "$", sep=""))
+        ## Iterate over list of hetAtms and save logical TRUE/FALSE
+        out <- c()
+        for (i in seq_along(hetAtms)) {
+            out[i] <- grepl(lig, pattern=paste("^", hetAtms[i], "$", sep=""))
+        }
     }
 
-    if (length(out) > 0) {
-        return(TRUE) 
-    } else {
-        return(FALSE)
-    }
+    ## Add names to the output vector
+    names(out) <- hetAtms
+    return(out)
 }
