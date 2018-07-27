@@ -78,12 +78,23 @@ function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, progressbar=TRUE, ...) {
 
     ## Give format to the output ---------------------------------------------
     if (as.df) {
+        ## If a list entry has more than one element, concatenate them
+        if (any(unlist(lapply(output_list, length)) != 1)) {
+            inds <- which(unlist(lapply(output_list, length)) != 1)
+            for (j in inds) {
+                output_list[[j]] <- paste(output_list[[j]], collapse="|")
+            }
+        }
+
+        ## If a list entry is NULL, replace by empty string
         if (any(unlist(lapply(output_list, is.null)))) {
             inds <- which(unlist(lapply(output_list, is.null)))
             for (j in inds) {
                 output_list[[j]] <- ""
             }
         }
+
+        ## Create data.frame
         output <- as.data.frame(
                     matrix(c(listpdb, unlist(output_list)),
                             byrow=FALSE,
