@@ -28,7 +28,12 @@
 #'
 #' @author Diego Gallego
 #'
+#' @name classifyNA
+NULL
+##############################################################################
 
+#' @export
+#' @rdname classifyNA
 classifyRNA <-
 function(pdbID, length=3, ...) {
 
@@ -102,6 +107,76 @@ function(pdbID, length=3, ...) {
     ## "nakedRNA" ------------------------------------------------------------
     return("nakedRNA")
 }
+##############################################################################
+#' @export
+#' @rdname classifyNA
+classifyDNA <-
+function(pdbID, ...) {
+
+    ## Download info about entities, chains and length -----------------------
+    MM <- queryEntities(pdbID, ...=...)
+
+    ## Solve corner cases (e.g. 2ICY) ----------------------------------------
+    if (any(is.na(MM$molecule_type))) {
+        ind <- which(is.na(MM$molecule_type))
+        MM <- MM[-ind, ]
+    }
+
+    ## Check corner case in which there's a DNA-RNA hybrid -------------------
+    if (any(MM$molecule_type ==
+        "polydeoxyribonucleotide/polyribonucleotide hybrid")) {
+
+        return("DNARNA")
+    }
+
+    ## If the PDB entry does not contain RNA it is classified as "NoRNA" -----
+    if (!any(MM$molecule_type == "polydeoxyribonucleotide"))
+        return("NoDNA")
+
+    ## Index for RNA in the data.frame ---------------------------------------
+    DNA_ind <- which(MM$molecule_type == "polydeoxyribonucleotide")
+
+
+    Other <- which(MM$molecule_type != "polydeoxyribonucleotide")
+    ## Logical, is there DNA?
+    RNA <- any(MM[Other, "molecule_type"] == "polyribonucleotide")
+    ## Logical, is there PNA?
+    PNA <- any(MM[Other, "molecule_type"] == "peptide nucleic acid")
+    ## Logical, is there a protein?
+    Pro <- any(MM[Other, "molecule_type"] == "polypeptide(L)")
+    ## Logical, is there a protein with D aminoacids?
+    DPro <- any(MM[Other, "molecule_type"] == "polypeptide(D)")
+
+    ## Logical, are there organic ligands? -----------------------------------
+    ## Ions do not categorize a structure as ligandRNA since they are always
+    ## in buffers
+    ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
+
+    ## If there are proteins, the PDB entry is classified as "protRNA" -------
+    if (Pro)
+        return("protDNA")
+
+    ## If there are D proteins, the PDB entry is classified as "DprotRNA" ----
+    if (DPro)
+        return("DprotDNA")
+
+    ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
+    if (RNA)
+        return("DNARNA")
+
+    ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
+    if (PNA)
+        return("PNADNA")
+
+    ## If there are ligands, the PDB entry is classified as "ligandRNA" ------
+    if (ligands)
+        return("ligandDNA")
+
+    ## If the only molecule is RNA, then the PDB entry is classified as 
+    ## "nakedRNA" ------------------------------------------------------------
+    return("nakedDNA")
+}
+
 ##############################################################################
 ## Subfunctions
 ## ===========================================================================

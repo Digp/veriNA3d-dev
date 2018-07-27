@@ -38,6 +38,7 @@ export(
     cifStruct,
     cifStruct_asym,
     cifStruct_keywords,
+    classifyDNA,
     classifyRNA,
 
     cleanByPucker,
