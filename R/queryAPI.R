@@ -97,9 +97,19 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
 
     ## Query to MMB API ------------------------------------------------------
     if (API %in% c("mmb", "mmb_internal")) {
-        text <- .launchquery(URL, FUN=..launchquery, JSON=FALSE)
+        text <- tryCatch({
+                    suppressWarnings(
+                        .launchquery(URL, FUN=..launchquery, JSON=FALSE))
+                    }, error = function(e) {
+                        NULL
+                    })
+        #.launchquery(URL, FUN=..launchquery, JSON=FALSE)
         if (process) {
-            output <- .process_mmb_call(text, info, pdbID)
+            tryCatch({
+                output <- .process_mmb_call(text, info, pdbID)
+            }, error = function(e) {
+                NULL
+            })
         } else {
             output <- text
         }
@@ -115,7 +125,11 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
                     })
 #        text <- .launchquery(URL, FUN=..launchquery, JSON=TRUE)
         if (process) {
-            output <- .process_ebi_call(text, info)
+            tryCatch({
+                output <- .process_ebi_call(text, info)
+            }, error = function(e) {
+                NULL
+            })
         } else {
             output <- text
         }
