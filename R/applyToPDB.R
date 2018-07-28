@@ -69,7 +69,7 @@ function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, progressbar=TRUE, ...) {
 
         for (i in torepeat) {
             tryCatch({
-                output_list[[i]] <- FUNCTION(listpdb[i], ...)
+                output_list[[i]] <- FUNCTION(listpdb[i], reuse=FALSE, ...)
             }, error=function(e) {
                 output_list[[i]] <- NA
             })
