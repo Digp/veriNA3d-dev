@@ -105,11 +105,11 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
                     })
         #.launchquery(URL, FUN=..launchquery, JSON=FALSE)
         if (process) {
-            tryCatch({
-                output <- .process_mmb_call(text, info, pdbID)
-            }, error = function(e) {
-                NULL
-            })
+            output <- tryCatch({
+                            .process_mmb_call(text, info, pdbID)
+                        }, error = function(e) {
+                            NULL
+                        })
         } else {
             output <- text
         }
@@ -125,11 +125,11 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
                     })
 #        text <- .launchquery(URL, FUN=..launchquery, JSON=TRUE)
         if (process) {
-            tryCatch({
-                output <- .process_ebi_call(text, info)
-            }, error = function(e) {
-                NULL
-            })
+            output <- tryCatch({
+                            .process_ebi_call(text, info)
+                        }, error = function(e) {
+                            NULL
+                        })
         } else {
             output <- text
         }
