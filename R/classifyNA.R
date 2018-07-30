@@ -113,6 +113,8 @@ function(pdbID, length=3, ...) {
 classifyDNA <-
 function(pdbID, ...) {
 
+    check <- .corner_cases(pdbID)
+    if (check[[1]]) return("NoDNA")
     ## Download info about entities, chains and length -----------------------
     MM <- queryEntities(pdbID, ...=...)
 
