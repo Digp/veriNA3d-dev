@@ -39,7 +39,7 @@ function(pdbID, hetAtms) {
         ## Iterate over list of hetAtms and save logical TRUE/FALSE
         out <- c()
         for (i in seq_along(hetAtms)) {
-            out[i] <- grepl(lig, pattern=paste("^", hetAtms[i], "$", sep=""))
+            out[i] <- any(grepl(lig, pattern=paste("^", hetAtms[i], "$", sep="")))
         }
     }
 
