@@ -82,7 +82,6 @@ function(data, technique=NULL, resol=NULL, type=NULL,
 ###############################################################################
 ## Subfunctions
 ## ============================================================================
-
 .get_alternative_representant <-
 function(index, data, #eqclass, members,
             technique, resol, type,
@@ -122,7 +121,7 @@ function(index, data, #eqclass, members,
             members[i] <- gsub(pdbID, x=members[i], 
                                 replacement=toupper(status$superceded_by))
             pdbID <- toupper(status$superceded_by)
-            if (is.na(pdbID)) {
+            if (pdbID == "NA" | is.na(pdbID)) {
                 next()
             }
         }
