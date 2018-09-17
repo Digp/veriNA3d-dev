@@ -122,6 +122,9 @@ function(index, data, #eqclass, members,
             members[i] <- gsub(pdbID, x=members[i], 
                                 replacement=toupper(status$superceded_by))
             pdbID <- toupper(status$superceded_by)
+            if (is.na(pdbID)) {
+                next()
+            }
         }
 
         if (verbose) 
