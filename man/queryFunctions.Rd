@@ -17,6 +17,7 @@
 \alias{queryReldate}
 \alias{queryResol}
 \alias{queryRevdate}
+\alias{queryStatus}
 \alias{queryTechnique}
 \title{General functions to query PDB (Protein Data Bank) data}
 \usage{
@@ -49,6 +50,8 @@ queryReldate(pdbID, ...)
 queryResol(pdbID, ...)
 
 queryRevdate(pdbID, ...)
+
+queryStatus(pdbID, ...)
 
 queryTechnique(pdbID, ...)
 }
@@ -92,6 +95,7 @@ header (PDB format) or in the
 * {queryReldate} Release date.
 * {queryResol} Resolution
 * {queryRevdate} Revision date.
+* {queryStatus} PDB status.
 * {queryTechnique} Experimental technique
 }
 \description{

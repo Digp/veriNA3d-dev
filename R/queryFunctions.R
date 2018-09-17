@@ -36,6 +36,7 @@
 #'     * {queryReldate} Release date.
 #'     * {queryResol} Resolution
 #'     * {queryRevdate} Revision date.
+#'     * {queryStatus} PDB status.
 #'     * {queryTechnique} Experimental technique
 #'
 #' @examples
@@ -220,6 +221,15 @@ function(pdbID, ...) {
 queryRevdate <-
 function(pdbID, ...) {
     info <- "revDate"
+    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+}
+##############################################################################
+
+#' @export
+#' @rdname queryFunctions
+queryStatus <- 
+function(pdbID, ...) {
+    info <- "status"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
 ##############################################################################

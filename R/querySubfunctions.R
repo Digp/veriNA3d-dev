@@ -119,6 +119,9 @@ function(info) {
     } else if (info == "modres") {
         return("pdb/entry/modified_AA_or_NA/")
 
+    } else if (info == "status") {
+        return("pdb/entry/status/")
+
     } else {
         stop("Query not supported")
     }
@@ -184,6 +187,8 @@ function(text, info) {
     } else if (info == "entities") {
         text <- text[[1]][order(text[[1]]$entity_id),]
         return(text)
+    } else if (info == "status") {
+        return(text[[1]])
     } else if (info == "modres") {
         return(text[[1]])
     }    

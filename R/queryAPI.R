@@ -145,6 +145,6 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
 
     return(output)
 }
-onlyebiqueries <- c("relDate", "revDate", "entities", "modres")
+onlyebiqueries <- c("relDate", "revDate", "entities", "modres", "status")
 onlymmbqueries <- c("header", "compType", "NDBId", "hetAtms",
                         "chains/header")

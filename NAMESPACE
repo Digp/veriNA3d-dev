@@ -82,6 +82,7 @@ export(
     queryReldate,
     queryResol,
     queryRevdate,
+    queryStatus,
     queryTechnique,
 
     represAsDataFrame,

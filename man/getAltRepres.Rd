@@ -5,13 +5,13 @@
 \title{Get Alternative Representants}
 \usage{
 getAltRepres(data, technique = NULL, resol = NULL, type = NULL,
-  verbose = FALSE)
+  progressbar = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{data}{The output of getLeontisList.}
 
 \item{technique}{One or more techniques of interest (For correct use, see
-example below). For the list of techniques, see "bio3dRNA:::.allowedtechs".}
+example below). For the list of techniques, see "veriNA3d:::.allowedtechs".}
 
 \item{resol}{A positive real number to specify a desired resolution.}
 
