@@ -142,7 +142,15 @@ function(index, data, #eqclass, members,
                                 #verbose=verbose,
                                 envir=parent.frame(n=1)))
             if (is.na(Resol)) {
-                Resol <- 250 #Arbitrary value
+                if (Tech == "" && 
+                    queryTechnique(pdbID, reuse=TRUE, 
+                                    envir=parent.frame(n=1) %in% 
+                                        c("SOLUTION NMR", "SOLID-STATE NMR")) {
+
+                    Resol <- 0
+                } else {
+                    Resol <- 250 #Arbitrary value
+                }
             }
         }
 
