@@ -145,8 +145,8 @@ function(index, data, #eqclass, members,
                 if ((Tech == "" && 
                                     queryTechnique(pdbID, reuse=TRUE, 
                                     envir=parent.frame(n=1)) %in% 
-                                    c("SOLUTION NMR", "SOLID-STATE NMR")) ||
-                    Tech %in% c("SOLUTION NMR", "SOLID-STATE NMR")) {
+                                    .nmrtechs) ||
+                    Tech %in% .nmrtechs) {
 
                     Resol <- 0
                 } else {
@@ -194,3 +194,5 @@ function(index, data, #eqclass, members,
     "NEUTRON DIFFRACTION",      #NEUTRON DIFFRACTION
     "INFRARED SPECTROSCOPY")    #INFRARED SPECTROSCOPY
 
+.nmrtechs <- c(
+                "SOLUTION NMR", "SOLID-STATE NMR", "Solution NMR", "Solid-state NMR")
