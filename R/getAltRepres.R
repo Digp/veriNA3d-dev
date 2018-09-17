@@ -142,10 +142,11 @@ function(index, data, #eqclass, members,
                                 #verbose=verbose,
                                 envir=parent.frame(n=1)))
             if (is.na(Resol)) {
-                if (Tech == "" && 
-                    queryTechnique(pdbID, reuse=TRUE, 
-                                    envir=parent.frame(n=1) %in% 
-                                        c("SOLUTION NMR", "SOLID-STATE NMR")) {
+                if ((Tech == "" && 
+                                    queryTechnique(pdbID, reuse=TRUE, 
+                                    envir=parent.frame(n=1)) %in% 
+                                    c("SOLUTION NMR", "SOLID-STATE NMR")) ||
+                    Tech %in% c("SOLUTION NMR", "SOLID-STATE NMR")) {
 
                     Resol <- 0
                 } else {
