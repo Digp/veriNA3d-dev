@@ -132,7 +132,6 @@ function(pdb, model, chain, ..., name, ntinfo=NULL) {
 
     residues <- unique(pdb$atom[pdb$atom$chain == chain, "resid"])
     if (any(residues %in% .nucleotides)) {
-
         ## Check and measure the chain and make common data.frame ------------
         aantinfo <- findBindingSite(pdb=pdb,
                                             model=model,
@@ -152,6 +151,12 @@ function(pdb, model, chain, ..., name, ntinfo=NULL) {
                                             which(ntinfo_res == x)
                                         }, ntinfo_res=ntinfo_res)
     
+            ## Not all contacts are going to be with a nucleotide
+            if (any(lapply(nt_id, length) == 0)) {
+                ind <- which(lapply(nt_id, length) == 0)
+                nt_id[ind] <- ""
+            }
+
             ntID <- ntinfo[unlist(nt_id), "ntID"]
             
             aantinfo <- cbind(ntID=ntID, 
