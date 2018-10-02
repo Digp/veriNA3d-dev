@@ -5,7 +5,7 @@
 VeriNA3d is an R package for the analysis of Nucleic Acid structural data. The software was developed on top of bio3d with a higher level of abstraction. In addition of single-structure analyses, veriNA3d also implements pipelines to handle whole datasets of mmCIF/PDB structures. As far as we know, no similar software has been previously distributed, thus it aims to fill a gap in the data mining pipelines of PDB structural data analyses.
 
 ## Installation
-===============
+---------------
 
 Instructions for Unix systems
 
@@ -21,6 +21,7 @@ Instructions for Unix systems
     `R CMD INSTALL veriNA3d_0.99.0.tar.gz`
 
 ## Usage
+--------
 
 The functions can be divided in three blocks according with the data pipeline:
 
@@ -170,6 +171,7 @@ plotSetOfDistributions,
 rvec\_plot
 
 ## Developers
+-------------
 
 Diego Gallego
 
@@ -179,6 +181,7 @@ Leonardo Darré (Former Developer)
 Molecular Modeling and Bioinformatics Group.
 
 ## License
+----------
 
 GPL-3 (See LICENSE)
 </content>
