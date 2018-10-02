@@ -5,6 +5,7 @@
 VeriNA3d is an R package for the analysis of Nucleic Acid structural data. The software was developed on top of bio3d with a higher level of abstraction. In addition of single-structure analyses, veriNA3d also implements pipelines to handle whole datasets of mmCIF/PDB structures. As far as we know, no similar software has been previously distributed, thus it aims to fill a gap in the data mining pipelines of PDB structural data analyses.
 
 ## Installation
+===============
 
 Instructions for Unix systems
 
@@ -28,76 +29,123 @@ The functions can be divided in three blocks according with the data pipeline:
 **The pipeline functions to get structural data from Nucleic Acids and their interactions with proteins**
 
 pipeNucData
+
 pipeProtNucData
 
 **To launch queries to PDB database through EBI and MMB APIs (most based on a PDB ID):**
 
 queryEntryList
 
+
 queryAuthors
+
 queryChains
+
 queryCompound
+
 queryCompType
+
 queryDepdate
+
 queryEntities
+
 queryFormats
+
 queryHeader
+
 queryHetAtms
+
 queryModres
+
 queryNDBId
+
 queryOrgLigands
+
 queryReldate
+
 queryResol
+
 queryRevdate
+
 queryTechnique
 
+
 applyToPDB
+
 hasHetAtm
+
 queryAPI
 
 **To read and access mmCIF data**
 
 cifParser
+
 cifAsPDB 
 
+
 cifAtom\_site
+
 cifAtom\_sites
+
 cifAtom\_type
+
 cifAudit\_author
+
 cifAudit\_conform
+
 cifChem\_comp
+
 cifDatabase\_2
+
 cifEntity
+
 cifEntry 
+
 cifExptl
+
 cifPdbx\_database\_status
+
 cifStruct
+
 cifStruct\_asym
+
 cifStruct\_keywords
 
 
 **To use the mmCIF data**
 
 selectModel
+
 findBindingSite
 
 measureEntityDist
+
 measureElenoDist
+
 trim\_sphere
+
 trimByID
 
 checkNuc
+
 measureNuc
 
 **To work with NA**
 
 getAltRepres
+
 getLeontisList
+
 represAsDataFrame
+
 classifyRNA
+
 classifyDNA
+
 rVector
+
 eRMSD
+
 dssr
 
 ### CLEAN:
@@ -110,10 +158,15 @@ cleanByPucker
 
 **Plots**
 plotCategorical, 
+
 plotCircularDistribution, 
+
 plotEtaTheta, 
+
 plot\_et, 
+
 plotSetOfDistributions, 
+
 rvec\_plot
 
 ## Developers
