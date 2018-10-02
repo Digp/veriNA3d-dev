@@ -87,6 +87,7 @@ function(i, pdb, hash_inds) {
 ## Special parser for non-"loop_" sections
 ## If the first line is not "_loop", the section is a table with two columns
 .clean_raw_section <- function(data) {
+
     ## in some cases, different lines contain the info of a row,
     ## "cornercase" contains their indices, if any
     cornercase <- grep("^_", data, invert=TRUE)
@@ -247,24 +248,15 @@ function(data, totalfields) {
 ## cifAsPDB subfunction
 .cifAsPDB <-
 function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
-    ## Coordinates are saved apart -------------------------------------------
-    table <- cifAtom_site(cif)
-
-    ## In case there are Sodium ions ("NA"), replace them by "Na" string 
-    na.ind <- which(is.na(table), arr.ind=TRUE)
-    if (nrow(na.ind) > 0) {
-        for (i in seq_len(nrow(na.ind))) {
-            table[na.ind[i, 1], na.ind[i, 2]] <- "Na"
-        }
-    }
 
     ## Manage mmCIF version --------------------------------------------------
     ## mmCIF files newer than 4.073 have just 21 columns
-    totalcol <- ncol(table)
+    totalcol <- ncol(cifAtom_site(cif))
     if (totalcol == 21) {
         ## Order columns as in pdb objects (bio3d S3)
-        atom <- cbind(table[, c(1, 2, 4, 5, 6, 19, 17, 10, 11, 12, 13, 14,
-                                15, 8, 3, 16, 7, 9, 18, 20, 21)])
+        atom <- cbind(cifAtom_site(cif)[, c(1, 2, 4, 5, 6, 19, 17, 10, 11, 12,
+                                            13, 14, 15, 8, 3, 16, 7, 9, 18, 20,
+                                            21)])
         names(atom) <- c(   "type", "eleno", "elety", "alt", "resid",
                             "chain", "resno", "insert", "x", "y", "z",
                             "o", "b", "entid", "elesy", "charge",
@@ -274,15 +266,20 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
     ## Older mmCIF have 26 columns
     } else {
         ## Order columns as in pdb objects (bio3d S3)
-        atom <- cbind(table[, c(1, 2, 4, 5, 6, 24, 22, 10, 11, 12, 13, 14,
-                                    15, 8, 3, 21, 7, 9, 16, 17, 18, 19, 20,
-                                    23, 25, 26)])
+        atom <- cbind(cifAtom_site(cif)[, c(1, 2, 4, 5, 6, 24, 22, 10, 11, 12,
+                                            13, 14, 15, 8, 3, 21, 7, 9, 16, 17,
+                                            18, 19, 20, 23, 25, 26)])
         names(atom) <- c("type", "eleno", "elety", "alt", "resid", "chain",
                         "resno", "insert", "x", "y", "z", "o", "b", "entid",
                         "elesy", "charge", "asym_id", "seq_id", "x_esd",
                         "y_esd", "z_esd", "o_esd", "b_esd", "comp_id",
                         "atom_id", "model")
     }
+
+    ## In case there are Sodium ions ("NA"), replace them by "Na" string 
+    nain <- which(is.na(atom$elety))
+    if (length(nain) > 0) 
+        atom[nain, c("elety", "elesy", "resid", "comp_id", "atom_id")] <- "Na"
 
     ## Make sure no extra quotes sorround the elety atom names ---------------
     atom$elety <- gsub("\"", "", atom$elety)
@@ -295,8 +292,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
             atom <- atom[altind, ]
             if (verbose) {
                 print(paste("PDB has alt records, taking ", 
-                            paste(alt, collapse=","),
-                            " only", sep=""))
+                            paste(alt, collapse=","), sep=""))
             }
         }
     }
@@ -328,7 +324,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
                                             ))),
                                     byrow=TRUE,
                                     nrow=length(model)))
-        flag <- FALSE
+            flag <- FALSE
 
         ## else: corner case for structures containing models with
         ## different number of atoms.
@@ -359,23 +355,19 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
         atom <- atom[atom$model == atom$model[1], ]
     }
 
-    ## Generate ouput pdb object ---------------------------------------------
-    pdb <- list(atom=atom)
-    pdb[[2]] <- xyz.models
-    pdb[[3]] <- ""
-    pdb[[4]] <- model
-    pdb[[5]] <- flag
-    pdb[[6]] <- as.character(cifEntry(cif))
+    ## Ensure missing values are set as NA -----------------------------------
+    atom$alt[atom$alt == "."] <- NA
+    atom$seq_id[atom$seq_id == "."] <- NA
+    atom$insert[atom$insert == "?"] <- NA
+    atom$charge[atom$charge == "?"] <- NA
 
-    names(pdb) <- c("atom", "xyz", "calpha", "model", "flag", "call")
+    ## Generate ouput pdb object ---------------------------------------------
+    pdb <- list(atom=atom, xyz=xyz.models, 
+                calpha=(atom$elety == "CA" & 
+                        atom$resid %in% bio3d::aa.table$aa3),
+                model=model, flag=flag, call=as.character(cifEntry(cif)))
     class(pdb) <- c("pdb")
 
-    pdb$atom[pdb$atom == ""]  <- NA
-    pdb$atom[pdb$atom == "?"] <- NA
-    pdb$atom[pdb$atom == "."] <- NA
-
-    ca.inds <- atom.select.pdb(pdb, string="calpha", verbose=FALSE)
-    pdb$calpha <- seq(1, nrow(atom)) %in% ca.inds$atom
     return(pdb)
 }
 ## ============================================================================

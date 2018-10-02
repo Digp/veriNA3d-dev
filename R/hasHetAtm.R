@@ -26,7 +26,7 @@ function(pdbID, hetAtms) {
     ## If there's a NA (Sodium ion) in input, change it by a "Na" string
     if (any(hetAtms == "NA" || is.na(hetAtms))) { 
         ind <- which(hetAtms == "NA" || is.na(hetAtms))
-        hetAtms[i] <- Na
+        hetAtms[ind] <- "Na"
     }
 
     ## Query to find heteroatoms
