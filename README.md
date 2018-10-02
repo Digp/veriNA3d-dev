@@ -181,12 +181,9 @@ Leonardo Darré (Former Developer)
 
 &nbsp;
 
-Molecular Modeling and Bioinformatics Group.
+*Molecular Modeling and Bioinformatics Group.*
 
 ## License
 ----------
 
 GPL-3 (See LICENSE)
-</content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
