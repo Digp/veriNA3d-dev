@@ -158,6 +158,7 @@ cleanByPucker
 ### EXPLORE & SAVE:
 
 **Plots**
+
 plotCategorical, 
 
 plotCircularDistribution, 
@@ -176,6 +177,7 @@ rvec\_plot
 Diego Gallego
 
 Leonardo Darré (Former Developer)
+
 
 
 Molecular Modeling and Bioinformatics Group.
