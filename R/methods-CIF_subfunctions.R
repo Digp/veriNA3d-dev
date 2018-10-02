@@ -22,6 +22,10 @@ cifAttr <- c(   "entry",
 ## Parse just a section between hashes
 .cifParser <-
 function(i, pdb, hash_inds) {
+    ## Corner case
+    if (length(i) == 0)
+        return("")
+
     ## Save indices for the beggining and end of the the section
     first <- hash_inds[i] + 1
     last  <- hash_inds[i + 1] - 1
