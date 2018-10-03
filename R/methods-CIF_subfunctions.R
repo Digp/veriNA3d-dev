@@ -249,36 +249,29 @@ function(data, totalfields) {
 ## ============================================================================
 
 ## ============================================================================
+.colNames <- data.frame(pdb=c(   "type", "eleno", "elety", "alt", "resid",
+                            "chain", "resno", "insert", "x", "y", "z",
+                            "o", "b", "entid", "elesy", "charge",
+                            "asym_id", "seq_id", "comp_id", "atom_id",
+                            "model"), 
+                        mmCIF=c( "group_PDB", "id", "label_atom_id", 
+                                "label_alt_id", "label_comp_id", 
+                                "auth_asym_id", "auth_seq_id", 
+                                "pdbx_PDB_ins_code", "Cartn_x", "Cartn_y", 
+                                "Cartn_z", "occupancy", "B_iso_or_equiv", 
+                                "label_entity_id", "type_symbol", 
+                                "pdbx_formal_charge", "label_asym_id", 
+                                "label_seq_id", "auth_comp_id", 
+                                "auth_atom_id", "pdbx_PDB_model_num"), 
+                        stringsAsFactors=FALSE)
+
 ## cifAsPDB subfunction
 .cifAsPDB <-
 function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
 
-    ## Manage mmCIF version --------------------------------------------------
-    ## mmCIF files newer than 4.073 have just 21 columns
-    totalcol <- ncol(cifAtom_site(cif))
-    if (totalcol == 21) {
-        ## Order columns as in pdb objects (bio3d S3)
-        atom <- cbind(cifAtom_site(cif)[, c(1, 2, 4, 5, 6, 19, 17, 10, 11, 12,
-                                            13, 14, 15, 8, 3, 16, 7, 9, 18, 20,
-                                            21)])
-        names(atom) <- c(   "type", "eleno", "elety", "alt", "resid",
-                            "chain", "resno", "insert", "x", "y", "z",
-                            "o", "b", "entid", "elesy", "charge",
-                            "asym_id", "seq_id", "comp_id", "atom_id",
-                            "model")
-
-    ## Older mmCIF have 26 columns
-    } else {
-        ## Order columns as in pdb objects (bio3d S3)
-        atom <- cbind(cifAtom_site(cif)[, c(1, 2, 4, 5, 6, 24, 22, 10, 11, 12,
-                                            13, 14, 15, 8, 3, 21, 7, 9, 16, 17,
-                                            18, 19, 20, 23, 25, 26)])
-        names(atom) <- c("type", "eleno", "elety", "alt", "resid", "chain",
-                        "resno", "insert", "x", "y", "z", "o", "b", "entid",
-                        "elesy", "charge", "asym_id", "seq_id", "x_esd",
-                        "y_esd", "z_esd", "o_esd", "b_esd", "comp_id",
-                        "atom_id", "model")
-    }
+    ## Take coordinates with columns ordered as pdb objects (bio3d S3)
+    atom <- cifAtom_site(cif)[, .colNames[,2 ]]
+    names(atom) <- .colNames[, 1]
 
     ## In case there are Sodium ions ("NA"), replace them by "Na" string 
     nain <- which(is.na(atom$elety))
