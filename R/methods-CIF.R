@@ -101,8 +101,8 @@ setMethod("cifParser",
                 if (verbose)
                     cat("Downloading file from Internet\n")
                 ## For development tests I rather use the internal call
-                #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
-                URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
+                URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
+                #URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
                                 pdbID, ".cif.gz", sep ="")
 
                 .launchquery(URL, 
