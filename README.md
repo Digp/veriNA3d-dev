@@ -10,15 +10,15 @@ VeriNA3d is an R package for the analysis of Nucleic Acid structural data. The s
 Instructions for Unix systems
 
 1- Make sure you have all the dependencies already installed in R. If not the case, open R and run:
-    `install.packages(c("bio3d", "circlize", "parallel", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN"))`
+&nbsp;
+
+    install.packages(c("bio3d", "circlize", "parallel", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN"))
 
 2- Download veriNA3d from GitLab. In a terminal run:
 &nbsp;
 
     wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip
     unzip veriNA3d_0.99.0.zip
-&nbsp;
-
     mv veriNA3d-master* veriNA3d_0.99.0
 
 3- Build and install it:
