@@ -12,17 +12,15 @@ Instructions for Unix systems
 1- Make sure you have all the dependencies already installed in R. If not the case, open R and run:
     `install.packages(c("bio3d", "circlize", "parallel", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN"))`
 
-2- Download veriNA3d from "mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master"
-    Open a terminal and run:
-    `wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip
-    unzip veriNA3d_0.99.0.zip 
-    mv veriNA3d-master* veriNA3d_0.99.0
-    `
+2- Download veriNA3d from GitLab. In a terminal run:
+    `wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip`
+    `unzip veriNA3d_0.99.0.zip`
+    `mv veriNA3d-master* veriNA3d_0.99.0`
 
 3- Build and install it:
     In the same directory run:
-    `R CMD build veriNA3d_0.99.0
-    R CMD INSTALL veriNA3d_0.99.0.tar.gz --no-lock`
+    `R CMD build veriNA3d_0.99.0`
+    `R CMD INSTALL veriNA3d_0.99.0.tar.gz --no-lock`
 
 ## Usage
 --------
@@ -37,7 +35,7 @@ pipeNucData
 
 pipeProtNucData
 
-**To launch queries to PDB database through EBI and MMB APIs (most based on a PDB ID):**
+**Functions to launch queries about PDB data (using the EBI and MMB APIs):**
 
 queryEntryList
 
@@ -71,6 +69,8 @@ queryReldate
 queryResol
 
 queryRevdate
+
+queryStatus
 
 queryTechnique
 
@@ -115,7 +115,6 @@ cifStruct
 cifStruct\_asym
 
 cifStruct\_keywords
-
 
 **To use the mmCIF data**
 
