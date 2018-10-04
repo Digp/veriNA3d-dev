@@ -13,9 +13,9 @@ Instructions for Unix systems
     `install.packages(c("bio3d", "circlize", "parallel", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN"))`
 
 2- Download veriNA3d from GitLab. In a terminal run:
-    `wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip`
 &nbsp;
 
+    `wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip`
     `unzip veriNA3d_0.99.0.zip`
 &nbsp;
 
