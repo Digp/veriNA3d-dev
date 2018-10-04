@@ -128,16 +128,13 @@ setGeneric("cifParser",
 #' @param cif A CIF object as obtained from cifParser. It can also accept
 #'     a 4-character PDB ID.
 #' @param model A string with the model number (in case you are only
-#'     interested in a particular model) If NULL, all models are read. This
-#'     option will only be applied to the "atom" attribute of the output pdb
-#'     object.
+#'     interested in a particular model) If NULL, all models are parsed and
+#'     can be selected afterwards using `selectModel`. By default, the 
+#'     "atom" attribute of the output will contain only the first model. 
 #' @param chain A string with the chain identifier (in case you are only
-#'     interested in a particular chain). If NULL, all chains are read. This
-#'     option will only be applied to the "atom" attribute of the output pdb 
-#'     object.
+#'     interested in a particular chain). If NULL, all chains are included.
 #' @param alt A string or a vector of strings with the desired alternative
-#'     records. This option will only be applied to the "atom" attribute of
-#'     the output pdb object.
+#'     records. 
 #' @param verbose A logical indicating whether to print details of the process.
 #'
 #' @return A pdb object compatible with bio3d (Grant et al. 2006) functions.

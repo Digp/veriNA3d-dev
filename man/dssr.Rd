@@ -30,8 +30,8 @@ structure and parse the result.
 }
 \references{
 \preformatted{Lu, X.J. et al. (2015). "DSSR: an integrated software tool for 
-dissecting the spatial structure of RNA." \emph{Nucleic Acids Res}. 
-\bold{43(21)},
+dissecting the spatial structure of RNA." Nucleic Acids Res. 
+43(21), e142
 }
 }
 \author{
