@@ -14,12 +14,18 @@ Instructions for Unix systems
 
 2- Download veriNA3d from GitLab. In a terminal run:
     `wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip`
+&nbsp;
+
     `unzip veriNA3d_0.99.0.zip`
+&nbsp;
+
     `mv veriNA3d-master* veriNA3d_0.99.0`
 
 3- Build and install it:
     In the same directory run:
     `R CMD build veriNA3d_0.99.0`
+&nbsp;
+
     `R CMD INSTALL veriNA3d_0.99.0.tar.gz --no-lock`
 
 ## Usage
