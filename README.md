@@ -99,7 +99,7 @@ _queryAPI_: Subfunction of all the previous, which can be used to make alternati
 
 &nbsp;
 
-####**Classify PDB structures** (PDB ID as input)
+#### **Classify PDB structures** (PDB ID as input)
 
 _classifyRNA_: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
 
@@ -108,7 +108,7 @@ _classifyDNA_: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "D
 
 &nbsp;
 
-####**Input mmCIF data**
+#### **Input mmCIF data**
 
 _cifParser_: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
@@ -117,7 +117,7 @@ _cifAsPDB_: Wrapper of cifParser that generates a bio3d compatible pdb S3 object
 
 &nbsp;
 
-####**CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
+#### **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
 _cifAtom\_site_: The coordinates
 
@@ -150,7 +150,7 @@ _cifStruct\_keywords_
 
 &nbsp;
 
-####**Structure analysis**
+#### **Structure analysis**
 
 _selectModel_: Selects the model of interest
 
