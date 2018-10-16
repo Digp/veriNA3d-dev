@@ -1,10 +1,9 @@
 <snippet>
   <content>
-# veriNA3d
+# R PACKAGE: veriNA3d
 
 VeriNA3d is an R package for the analysis of Nucleic Acid structural data. The software was developed on top of bio3d (Grant et al, 2006) with a higher level of abstraction. In addition of single-structure analyses, veriNA3d also implements pipelines to handle whole datasets of mmCIF/PDB structures. As far as we know, no similar software has been previously distributed, thus it aims to fill a gap in the data mining pipelines of PDB structural data analyses.
 
----------------
 ## Installation
 ---------------
 
@@ -33,148 +32,148 @@ Instructions for Unix systems
 ## Documentation
 ----------------
 
-### Dataset level
+###### Dataset level
 
-getLeontisList: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012)
+__getLeontisList__: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012)
 
-getAltRepres: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class
+__getAltRepres__: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class
 
-represAsDataFrame: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class
+__represAsDataFrame__: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class
 
-pipeNucData: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide
+__pipeNucData__: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide
 
-pipeProtNucData: From a list of protein-RNA structures computes and returns the interaction sites distances and atoms
+__pipeProtNucData__: From a list of protein-RNA structures computes and returns the interaction sites distances and atoms
 
-applyToPDB: Applies a desired function to a list of PDB IDs
+__applyToPDB__: Applies a desired function to a list of PDB IDs
 
-queryEntryList: Returns the whole list of PDB IDs in the database
+__queryEntryList__: Returns the whole list of PDB IDs in the database
 
-cleanByPucker: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
+__cleanByPucker__: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
 
 
-### Single-structure level
+###### Single-structure level
 
 **Functions to query PDB data using the EBI and/or MMB API** (All of them take a PDB ID as input)
 
-queryAuthors: List of authors
+__queryAuthors__: List of authors
 
-queryReldate: Release date
+__queryReldate__: Release date
 
-queryDepdate: Deposition date
+__queryDepdate__: Deposition date
 
-queryRevdate: Revision date
+__queryRevdate__: Revision date
 
-queryCompound: PDB structure title
+__queryCompound__: PDB structure title
 
-queryCompType: Compound type (e.g. Nuc or Prot-nuc)
+__queryCompType__: Compound type (e.g. Nuc or Prot-nuc)
 
-queryChains: Chain information
+__queryChains__: Chain information
 
-queryEntities: Entitity information
+__queryEntities__: Entitity information
 
-queryFormats: File formats for the given ID
+__queryFormats__: File formats for the given ID
 
-queryHeader: PDB Header
+__queryHeader__: PDB Header
 
-queryHetAtms: HETATM entities in structure (includes modified residues, ions and ligands)
+__queryHetAtms__: HETATM entities in structure (includes modified residues, ions and ligands)
 
-hasHetAtm: Checks wether a a given structure contains a particular HETATM entity
+__hasHetAtm__: Checks wether a a given structure contains a particular HETATM entity
 
-queryModres: Modified residues
+__queryModres__: Modified residues
 
-queryOrgLigands: Ligands in structure (substracting ions)
+__queryOrgLigands__: Ligands in structure (substracting ions)
 
-queryResol: Resolution (if applicable)
+__queryResol__: Resolution (if applicable)
 
-queryTechnique: Experimental Technique
+__queryTechnique__: Experimental Technique
 
-queryStatus: Released/Obsolete and related status information
+__queryStatus__: Released/Obsolete and related status information
 
-queryNDBId: Cross-reference NDB ID
+__queryNDBId__: Cross-reference NDB ID
 
-queryAPI: Subfunction of all the previous, which can be used to make alternative queries
+__queryAPI__: Subfunction of all the previous, which can be used to make alternative queries
 
 **Classify PDB structures** (PDB ID as input)
 
-classifyRNA: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
+__classifyRNA__: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
 
-classifyDNA: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
+__classifyDNA__: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
 
 **Input mmCIF data**
 
-cifParser: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
+__cifParser__: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
-cifAsPDB: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
+__cifAsPDB__: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
 
 **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
-cifAtom\_site: The coordinates
+__cifAtom\_site__: The coordinates
 
-cifAtom\_sites
+__cifAtom\_sites__
 
-cifAtom\_type
+__cifAtom\_type__
 
-cifAudit\_author
+__cifAudit\_author__
 
-cifAudit\_conform
+__cifAudit\_conform__
 
-cifChem\_comp
+__cifChem\_comp__
 
-cifDatabase\_2
+__cifDatabase\_2__
 
-cifEntity
+__cifEntity__
 
-cifEntry
+__cifEntry__
 
-cifExptl
+__cifExptl__
 
-cifPdbx\_database\_status
+__cifPdbx\_database\_status__
 
-cifStruct
+__cifStruct__
 
-cifStruct\_asym
+__cifStruct\_asym__
 
-cifStruct\_keywords
+__cifStruct\_keywords__
 
 **Structure analysis**
 
-selectModel: Selects the model of interest
+__selectModel__: Selects the model of interest
 
-findBindingSite: Same as pipeProtNucData for a single structure
+__findBindingSite__: Same as pipeProtNucData for a single structure
 
-measureEntityDist: Measures distances between given entities
+__measureEntityDist__: Measures distances between given entities
 
-measureElenoDist: Measures distances between gicen atoms
+__measureElenoDist__: Measures distances between gicen atoms
 
-trimSphere: Trim a pdb object and a surrounding sphere of atoms
+__trimSphere__: Trim a pdb object and a surrounding sphere of atoms
 
-trimByID: Same as trimSphere using the IDs and output of pipeNucData
+__trimByID__: Same as trimSphere using the IDs and output of pipeNucData
 
-checkNuc: Checks the integrity of all the nucleotides in a given NA structure
+__checkNuc__: Checks the integrity of all the nucleotides in a given NA structure
 
-measureNuc: Measures a defult/desired set of distances, angles and torsional angles for a given NA strucutre
+__measureNuc__: Measures a defult/desired set of distances, angles and torsional angles for a given NA strucutre
 
-rVector: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014)
+__rVector__: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014)
 
-eRMSD: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014)
+__eRMSD__: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014)
 
-dssr: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
+__dssr__: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
 
-### Exploratory analysis
+###### Exploratory analysis
 
-plotCategorical
+__plotCategorical__
 
-plotCircularDistribution
+__plotCircularDistribution__
 
-plotEtaTheta
+__plotEtaTheta__
 
-plot\_et
+__plot\_et__
 
-plotSetOfDistributions
+__plotSetOfDistributions__
 
-rvec\_plot
+__rvec\_plot__
 
--------------
+
 ## Developers
 -------------
 
@@ -187,7 +186,7 @@ Leonardo Darré (Former Developer)
 
 *Molecular Modeling and Bioinformatics Group.*
 
-----------
+
 ## License
 ----------
 
