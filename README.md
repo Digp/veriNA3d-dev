@@ -92,21 +92,27 @@ _queryStatus_: Released/Obsolete and related status information
 _queryNDBId_: Cross-reference NDB ID
 
 _queryAPI_: Subfunction of all the previous, which can be used to make alternative queries
+&nbsp;
 
+&nbsp;
 
 **Classify PDB structures** (PDB ID as input)
 
 _classifyRNA_: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
 
 _classifyDNA_: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
+&nbsp;
 
+&nbsp;
 
 **Input mmCIF data**
 
 _cifParser_: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
 _cifAsPDB_: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
+&nbsp;
 
+&nbsp;
 
 **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
@@ -137,6 +143,9 @@ _cifStruct_
 _cifStruct\_asym_
 
 _cifStruct\_keywords_
+&nbsp;
+
+&nbsp;
 
 **Structure analysis**
 
