@@ -56,7 +56,7 @@ _cleanByPucker_: From the output of pipeNucData subsets a desired subset of nucl
 
 ### Single-structure level
 
-####Functions to query PDB data using the EBI and/or MMB API (All of them take a PDB ID as input)
+#### **Functions to query PDB data using the EBI and/or MMB API** (All of them take a PDB ID as input)
 
 _queryAuthors_: List of authors
 
