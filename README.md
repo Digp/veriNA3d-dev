@@ -28,7 +28,7 @@ Instructions for Unix systems
     R CMD build veriNA3d_0.99.0
     R CMD INSTALL veriNA3d_0.99.0.tar.gz --no-lock
 
-----------------
+
 ## Documentation
 ----------------
 
