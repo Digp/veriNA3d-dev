@@ -36,19 +36,19 @@ Instructions for Unix systems
 
 `getLeontisList`: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012)
 
-_getAltRepres_: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class
+`getAltRepres`: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class
 
-_represAsDataFrame_: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class
+`represAsDataFrame`: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class
 
-_pipeNucData_: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide
+`pipeNucData`: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide
 
-_pipeProtNucData_: From a list of protein-RNA structures computes and returns the interaction sites distances and atoms
+`pipeProtNucData`: From a list of protein-RNA structures computes and returns the interaction sites distances and atoms
 
-_applyToPDB_: Applies a desired function to a list of PDB IDs
+`applyToPDB`: Applies a desired function to a list of PDB IDs
 
-_queryEntryList_: Returns the whole list of PDB IDs in the database
+`queryEntryList`: Returns the whole list of PDB IDs in the database
 
-_cleanByPucker_: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
+`cleanByPucker`: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
 &nbsp;
 
 &nbsp;
@@ -58,130 +58,130 @@ _cleanByPucker_: From the output of pipeNucData subsets a desired subset of nucl
 
 #### **Functions to query PDB data using the EBI and/or MMB API** (All of them take a PDB ID as input)
 
-_queryAuthors_: List of authors
+`queryAuthors`: List of authors
 
-_queryReldate_: Release date
+`queryReldate`: Release date
 
-_queryDepdate_: Deposition date
+`queryDepdate`: Deposition date
 
-_queryRevdate_: Revision date
+`queryRevdate`: Revision date
 
-_queryCompound_: PDB structure title
+`queryCompound`: PDB structure title
 
-_queryCompType_: Compound type (e.g. Nuc or Prot-nuc)
+`queryCompType`: Compound type (e.g. Nuc or Prot-nuc)
 
-_queryChains_: Chain information
+`queryChains`: Chain information
 
-_queryEntities_: Entitity information
+`queryEntities`: Entitity information
 
-_queryFormats_: File formats for the given ID
+`queryFormats`: File formats for the given ID
 
-_queryHeader_: PDB Header
+`queryHeader`: PDB Header
 
-_queryHetAtms_: HETATM entities in structure (includes modified residues, ions and ligands)
+`queryHetAtms`: HETATM entities in structure (includes modified residues, ions and ligands)
 
-_hasHetAtm_: Checks wether a a given structure contains a particular HETATM entity
+`hasHetAtm`: Checks wether a a given structure contains a particular HETATM entity
 
-_queryModres_: Modified residues
+`queryModres`: Modified residues
 
-_queryOrgLigands_: Ligands in structure (substracting ions)
+`queryOrgLigands`: Ligands in structure (substracting ions)
 
-_queryResol_: Resolution (if applicable)
+`queryResol`: Resolution (if applicable)
 
-_queryTechnique_: Experimental Technique
+`queryTechnique`: Experimental Technique
 
-_queryStatus_: Released/Obsolete and related status information
+`queryStatus`: Released/Obsolete and related status information
 
-_queryNDBId_: Cross-reference NDB ID
+`queryNDBId`: Cross-reference NDB ID
 
-_queryAPI_: Subfunction of all the previous, which can be used to make alternative queries
+`queryAPI`: Subfunction of all the previous, which can be used to make alternative queries
 &nbsp;
 
 #### **Classify PDB structures** (PDB ID as input)
 
-_classifyRNA_: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
+`classifyRNA`: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
 
-_classifyDNA_: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
+`classifyDNA`: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
 &nbsp;
 
 #### **Input mmCIF data**
 
-_cifParser_: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
+`cifParser`: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
-_cifAsPDB_: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
+`cifAsPDB`: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
 &nbsp;
 
 #### **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
-_cifAtom\_site_: The coordinates
+`cifAtom\_site`: The coordinates
 
-_cifAtom\_sites_
+`cifAtom\_sites`
 
-_cifAtom\_type_
+`cifAtom\_type`
 
-_cifAudit\_author_
+`cifAudit\_author`
 
-_cifAudit\_conform_
+`cifAudit\_conform`
 
-_cifChem\_comp_
+`cifChem\_comp`
 
-_cifDatabase\_2_
+`cifDatabase\_2`
 
-_cifEntity_
+`cifEntity`
 
-_cifEntry_
+`cifEntry`
 
-_cifExptl_
+`cifExptl`
 
-_cifPdbx\_database\_status_
+`cifPdbx\_database\_status`
 
-_cifStruct_
+`cifStruct`
 
-_cifStruct\_asym_
+`cifStruct\_asym`
 
-_cifStruct\_keywords_
+`cifStruct\_keywords`
 &nbsp;
 
 #### **Structure analysis**
 
-_selectModel_: Selects the model of interest
+`selectModel`: Selects the model of interest
 
-_findBindingSite_: Same as pipeProtNucData for a single structure
+`findBindingSite`: Same as pipeProtNucData for a single structure
 
-_measureEntityDist_: Measures distances between given entities
+`measureEntityDist`: Measures distances between given entities
 
-_measureElenoDist_: Measures distances between gicen atoms
+`measureElenoDist`: Measures distances between gicen atoms
 
-_trimSphere_: Trim a pdb object and a surrounding sphere of atoms
+`trimSphere`: Trim a pdb object and a surrounding sphere of atoms
 
-_trimByID_: Same as trimSphere using the IDs and output of pipeNucData
+`trimByID`: Same as trimSphere using the IDs and output of pipeNucData
 
-_checkNuc_: Checks the integrity of all the nucleotides in a given NA structure
+`checkNuc`: Checks the integrity of all the nucleotides in a given NA structure
 
-_measureNuc_: Measures a defult/desired set of distances, angles and torsional angles for a given NA strucutre
+`measureNuc`: Measures a defult/desired set of distances, angles and torsional angles for a given NA strucutre
 
-_rVector_: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014)
+`rVector`: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014)
 
-_eRMSD_: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014)
+`eRMSD`: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014)
 
-_dssr_: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
+`dssr`: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
 &nbsp;
 
 &nbsp;
 
 ### Exploratory analysis
 
-_plotCategorical_
+`plotCategorical`
 
-_plotCircularDistribution_
+`plotCircularDistribution`
 
-_plotEtaTheta_
+`plotEtaTheta`
 
-_plot\_et_
+`plot\_et`
 
-_plotSetOfDistributions_
+`plotSetOfDistributions`
 
-_rvec\_plot_
+`rvec\_plot`
 
 
 ## Developers
