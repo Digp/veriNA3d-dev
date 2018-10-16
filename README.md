@@ -49,11 +49,14 @@ _applyToPDB_: Applies a desired function to a list of PDB IDs
 _queryEntryList_: Returns the whole list of PDB IDs in the database
 
 _cleanByPucker_: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
+&nbsp;
+
+&nbsp;
 
 
 ### Single-structure level
 
-**Functions to query PDB data using the EBI and/or MMB API** (All of them take a PDB ID as input)
+####**Functions to query PDB data using the EBI and/or MMB API** (All of them take a PDB ID as input)
 
 _queryAuthors_: List of authors
 
@@ -96,7 +99,7 @@ _queryAPI_: Subfunction of all the previous, which can be used to make alternati
 
 &nbsp;
 
-**Classify PDB structures** (PDB ID as input)
+####**Classify PDB structures** (PDB ID as input)
 
 _classifyRNA_: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
 
@@ -105,7 +108,7 @@ _classifyDNA_: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "D
 
 &nbsp;
 
-**Input mmCIF data**
+####**Input mmCIF data**
 
 _cifParser_: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
@@ -114,7 +117,7 @@ _cifAsPDB_: Wrapper of cifParser that generates a bio3d compatible pdb S3 object
 
 &nbsp;
 
-**CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
+####**CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
 _cifAtom\_site_: The coordinates
 
@@ -147,7 +150,7 @@ _cifStruct\_keywords_
 
 &nbsp;
 
-**Structure analysis**
+####**Structure analysis**
 
 _selectModel_: Selects the model of interest
 
@@ -170,7 +173,9 @@ _rVector_: Computes the rVectors between all nucleobases of a structure (source:
 _eRMSD_: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014)
 
 _dssr_: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
+&nbsp;
 
+&nbsp;
 
 ### Exploratory analysis
 
