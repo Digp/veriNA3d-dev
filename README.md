@@ -113,19 +113,19 @@ Instructions for Unix systems
 
 #### **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
-`cifAtom\_site`: The coordinates
+`cifAtom_site`: The coordinates
 
-`cifAtom\_sites`
+`cifAtom_sites`
 
-`cifAtom\_type`
+`cifAtom_type`
 
-`cifAudit\_author`
+`cifAudit_author`
 
-`cifAudit\_conform`
+`cifAudit_conform`
 
-`cifChem\_comp`
+`cifChem_comp`
 
-`cifDatabase\_2`
+`cifDatabase_2`
 
 `cifEntity`
 
@@ -133,13 +133,13 @@ Instructions for Unix systems
 
 `cifExptl`
 
-`cifPdbx\_database\_status`
+`cifPdbx_database_status`
 
 `cifStruct`
 
-`cifStruct\_asym`
+`cifStruct_asym`
 
-`cifStruct\_keywords`
+`cifStruct_keywords`
 &nbsp;
 
 #### **Structure analysis**
@@ -177,11 +177,11 @@ Instructions for Unix systems
 
 `plotEtaTheta`
 
-`plot\_et`
+`plot_et`
 
 `plotSetOfDistributions`
 
-`rvec\_plot`
+`rvec_plot`
 
 
 ## Developers
