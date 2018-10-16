@@ -93,17 +93,20 @@ _queryNDBId_: Cross-reference NDB ID
 
 _queryAPI_: Subfunction of all the previous, which can be used to make alternative queries
 
+
 **Classify PDB structures** (PDB ID as input)
 
 _classifyRNA_: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
 
 _classifyDNA_: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
 
+
 **Input mmCIF data**
 
 _cifParser_: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
 _cifAsPDB_: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
+
 
 **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
@@ -159,7 +162,8 @@ _eRMSD_: Compares structures with the same number of residues using the rVectors
 
 _dssr_: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
 
-###### Exploratory analysis
+
+### Exploratory analysis
 
 _plotCategorical_
 
