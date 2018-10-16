@@ -2,8 +2,9 @@
   <content>
 # veriNA3d
 
-VeriNA3d is an R package for the analysis of Nucleic Acid structural data. The software was developed on top of bio3d with a higher level of abstraction. In addition of single-structure analyses, veriNA3d also implements pipelines to handle whole datasets of mmCIF/PDB structures. As far as we know, no similar software has been previously distributed, thus it aims to fill a gap in the data mining pipelines of PDB structural data analyses.
+VeriNA3d is an R package for the analysis of Nucleic Acid structural data. The software was developed on top of bio3d (Grant et al, 2006) with a higher level of abstraction. In addition of single-structure analyses, veriNA3d also implements pipelines to handle whole datasets of mmCIF/PDB structures. As far as we know, no similar software has been previously distributed, thus it aims to fill a gap in the data mining pipelines of PDB structural data analyses.
 
+---------------
 ## Installation
 ---------------
 
@@ -28,73 +29,86 @@ Instructions for Unix systems
     R CMD build veriNA3d_0.99.0
     R CMD INSTALL veriNA3d_0.99.0.tar.gz --no-lock
 
-## Usage
---------
+----------------
+## Documentation
+----------------
 
-The functions can be divided in three blocks according with the data pipeline:
+### Dataset level
 
-### GET & QUERY:
+getLeontisList: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012)
 
-**The pipeline functions to get structural data from Nucleic Acids and their interactions with proteins**
+getAltRepres: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class
 
-pipeNucData
+represAsDataFrame: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class
 
-pipeProtNucData
+pipeNucData: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide
 
-**Functions to launch queries about PDB data (using the EBI and MMB APIs):**
+pipeProtNucData: From a list of protein-RNA structures computes and returns the interaction sites distances and atoms
 
-queryEntryList
+applyToPDB: Applies a desired function to a list of PDB IDs
 
+queryEntryList: Returns the whole list of PDB IDs in the database
 
-queryAuthors
-
-queryChains
-
-queryCompound
-
-queryCompType
-
-queryDepdate
-
-queryEntities
-
-queryFormats
-
-queryHeader
-
-queryHetAtms
-
-queryModres
-
-queryNDBId
-
-queryOrgLigands
-
-queryReldate
-
-queryResol
-
-queryRevdate
-
-queryStatus
-
-queryTechnique
+cleanByPucker: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
 
 
-applyToPDB
+### Single-structure level
 
-hasHetAtm
+**Functions to query PDB data using the EBI and/or MMB API** (All of them take a PDB ID as input)
 
-queryAPI
+queryAuthors: List of authors
 
-**To read and access mmCIF data**
+queryReldate: Release date
 
-cifParser
+queryDepdate: Deposition date
 
-cifAsPDB 
+queryRevdate: Revision date
 
+queryCompound: PDB structure title
 
-cifAtom\_site
+queryCompType: Compound type (e.g. Nuc or Prot-nuc)
+
+queryChains: Chain information
+
+queryEntities: Entitity information
+
+queryFormats: File formats for the given ID
+
+queryHeader: PDB Header
+
+queryHetAtms: HETATM entities in structure (includes modified residues, ions and ligands)
+
+hasHetAtm: Checks wether a a given structure contains a particular HETATM entity
+
+queryModres: Modified residues
+
+queryOrgLigands: Ligands in structure (substracting ions)
+
+queryResol: Resolution (if applicable)
+
+queryTechnique: Experimental Technique
+
+queryStatus: Released/Obsolete and related status information
+
+queryNDBId: Cross-reference NDB ID
+
+queryAPI: Subfunction of all the previous, which can be used to make alternative queries
+
+**Classify PDB structures** (PDB ID as input)
+
+classifyRNA: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
+
+classifyDNA: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
+
+**Input mmCIF data**
+
+cifParser: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
+
+cifAsPDB: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
+
+**CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
+
+cifAtom\_site: The coordinates
 
 cifAtom\_sites
 
@@ -110,7 +124,7 @@ cifDatabase\_2
 
 cifEntity
 
-cifEntry 
+cifEntry
 
 cifExptl
 
@@ -122,64 +136,45 @@ cifStruct\_asym
 
 cifStruct\_keywords
 
-**To use the mmCIF data**
+**Structure analysis**
 
-selectModel
+selectModel: Selects the model of interest
 
-findBindingSite
+findBindingSite: Same as pipeProtNucData for a single structure
 
-measureEntityDist
+measureEntityDist: Measures distances between given entities
 
-measureElenoDist
+measureElenoDist: Measures distances between gicen atoms
 
-trim\_sphere
+trimSphere: Trim a pdb object and a surrounding sphere of atoms
 
-trimByID
+trimByID: Same as trimSphere using the IDs and output of pipeNucData
 
-checkNuc
+checkNuc: Checks the integrity of all the nucleotides in a given NA structure
 
-measureNuc
+measureNuc: Measures a defult/desired set of distances, angles and torsional angles for a given NA strucutre
 
-**To work with NA**
+rVector: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014)
 
-getAltRepres
+eRMSD: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014)
 
-getLeontisList
+dssr: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
 
-represAsDataFrame
+### Exploratory analysis
 
-classifyRNA
+plotCategorical
 
-classifyDNA
+plotCircularDistribution
 
-rVector
+plotEtaTheta
 
-eRMSD
+plot\_et
 
-dssr
-
-### CLEAN:
-
-**From raw to tidy data (based on pipeNucData)**
-
-cleanByPucker
-
-### EXPLORE & SAVE:
-
-**Plots**
-
-plotCategorical, 
-
-plotCircularDistribution, 
-
-plotEtaTheta, 
-
-plot\_et, 
-
-plotSetOfDistributions, 
+plotSetOfDistributions
 
 rvec\_plot
 
+-------------
 ## Developers
 -------------
 
@@ -192,6 +187,7 @@ Leonardo Darré (Former Developer)
 
 *Molecular Modeling and Bioinformatics Group.*
 
+----------
 ## License
 ----------
 
