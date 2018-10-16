@@ -34,7 +34,7 @@ Instructions for Unix systems
 
 ### Dataset level
 
-_getLeontisList_: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012)
+`getLeontisList`: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012)
 
 _getAltRepres_: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class
 
