@@ -80,7 +80,7 @@ Instructions for Unix systems
 
 `queryHetAtms`: HETATM entities in structure (includes modified residues, ions and ligands)
 
-`hasHetAtm`: Checks wether a a given structure contains a particular HETATM entity
+`hasHetAtm`: Checks wether a a given structure contains a particular HETATM entity. It makes use of queryHetAtms
 
 `queryModres`: Modified residues
 
@@ -113,7 +113,7 @@ Instructions for Unix systems
 
 #### **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
 
-`cifAtom_site`: The coordinates
+`cifAtom_site`: Access the coordinates of a CIF object (read by cifParser). The resulting object is not compatible with bio3d functions, see cifAsPDB for that.
 
 `cifAtom_sites`
 
