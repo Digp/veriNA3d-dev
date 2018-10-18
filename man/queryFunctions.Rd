@@ -13,6 +13,7 @@
 \alias{queryHetAtms}
 \alias{queryModres}
 \alias{queryNDBId}
+\alias{queryLigands}
 \alias{queryOrgLigands}
 \alias{queryReldate}
 \alias{queryResol}
@@ -42,6 +43,8 @@ queryHetAtms(pdbID, NAtoNa = TRUE, ...)
 queryModres(pdbID, onlymodres = FALSE, ...)
 
 queryNDBId(pdbID, ...)
+
+queryLigands(pdbID, onlyligands = FALSE, NAtoNA = TRUE, ...)
 
 queryOrgLigands(pdbID, ...)
 

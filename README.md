@@ -84,6 +84,8 @@ Instructions for Unix systems
 
 `queryModres`: Modified residues
 
+`queryLigands`: Ligands in structure
+
 `queryOrgLigands`: Ligands in structure (substracting ions)
 
 `queryResol`: Resolution (if applicable)

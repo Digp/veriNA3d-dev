@@ -32,6 +32,7 @@
 #'     * {queryHetAtms} List of HETATM (modified residues and ligands).
 #'     * {queryModres} List of modified residues.
 #'     * {queryNDBId} NDB ID for Nucleic Acids.
+#'     * {queryLigands} Retrieves ligands.
 #'     * {queryOrgLigands} Retrieves just the organic ligands (not ions).
 #'     * {queryReldate} Release date.
 #'     * {queryResol} Resolution
@@ -167,11 +168,17 @@ function(pdbID, ...) {
 #' @export
 #' @rdname queryFunctions
 queryLigands <-
-function(pdbID, onlyligands=FALSE, ...) {
+function(pdbID, onlyligands=FALSE, NAtoNA=TRUE, ...) {
     string1 <- "pdb/entry/ligand_monomers/"
     string2 <- ""
-    out <- queryAPI(pdbID="1s72", API="ebi", 
+    out <- queryAPI(pdbID=pdbID, API="ebi", 
                     string1=string1, string2=string2)[[1]]
+
+    if (any(is.na(out$chem_comp_id) | out$chem_comp_id == "NA")) {
+        ind <- which(is.na(out$chem_comp_id) | out$chem_comp_id == "NA")
+        out$chem_comp_id[ind] <- "Na"
+    }
+
     if (onlyligands) {
         return(unique(out$chem_comp_id))
     } else {
@@ -184,30 +191,24 @@ function(pdbID, onlyligands=FALSE, ...) {
 #' @rdname queryFunctions
 queryOrgLigands <-
 function(pdbID, ...) {
-    ## Query info about all hetAtms (ligands + modified residues) ------------
-    hetAtms <- queryHetAtms(pdbID, NAtoNa=TRUE, ...=...)
+    ## Query info about all ligands (includes ions) --------------------------
+    ligands <- queryLigands(pdbID, onlyligands=TRUE, NAtoNa=TRUE, ...=...)
 
     ## Check if there are ligands --------------------------------------------
-    if (is.null(hetAtms)) return(NULL)
+    if (is.null(ligands)) return(NULL)
 
-    ## Query info about modified bases (which are also hetAtms) --------------
-    mod_res <- queryModres(pdbID, onlymodres=TRUE, ...=...)
-
-    ## If all hetAtms are in the list of ions and modified residues, there's
-    ## no organic ligand at all ----------------------------------------------
-    if (sum(hetAtms %in% .ions) + 
-        sum(hetAtms %in% mod_res) == length(hetAtms)) {
+    ## If all ligands are in the list of ions, there are no organic ligands --
+    if (sum(ligands %in% .ions) == length(ligands)) {
         return(NULL)
     }
 
     ## If reached this point, return the organic ligands ---------------------
-    indices <- union(which(hetAtms %in% mod_res),
-                which(hetAtms %in% .ions))
+    indices <- which(ligands %in% .ions)
 
     if (length(indices) == 0) {
-        orgligands <- hetAtms
+        orgligands <- ligands
     } else {
-        orgligands <- hetAtms[-indices]
+        orgligands <- ligands[-indices]
     }
 
     return(orgligands)
