@@ -114,11 +114,20 @@ thresholds <-
 
 ## ============================================================================
 ## Get Leontis List last release number and date
-.getLastRelease <-
+.getLastReslease <-
+function() {
+    ## Find last release -----------------------------------------------------
+    URL <- "http://mmb.irbbarcelona.org/api/RNANRList/info"
+    info <- .launchquery(URL=URL, FUN=..launchquery, JSON=T, N.TRIES=2L)
+
+    ## Save release info -----------------------------------------------------
+    return(list(info$Data$release, info$Data$date))
+}
+.getLastReleaseOLD <-
 function() {
     ## Find last release -----------------------------------------------------
     URL <- "http://rna.bgsu.edu/rna3dhub/nrlist/release/current"
-    text <- .launchquery(URL=URL, FUN=readLines, N.TRIES=2, n=200)
+    text <- .launchquery(URL=URL, FUN=readLines, N.TRIES=2L, n=200)
     info <- text[grep("<small>Release", text)]
     
     info <- strsplit(info, "</small>")[[1]]

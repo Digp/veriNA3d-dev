@@ -17,7 +17,7 @@ function(url="http://mmb.irbbarcelona.org/www/") {
 ## ===========================================================================
 ## Send query function and handle errors, adapted from bioconductor template
 .launchquery <-
-function(URL, FUN, ..., N.TRIES=5L, SLEEP=0.05) {
+function(URL, FUN, ..., N.TRIES=3L, SLEEP=0.05) {
     ## Match function
     FUN <- match.fun(FUN)
     N.TRIES <- as.integer(N.TRIES)
@@ -51,9 +51,9 @@ function(URL, JSON=FALSE) {
     if (JSON) {
         text <- fromJSON(con)
     } else {
+        ## Make sure the connection is closed even if an error occurs
+        on.exit(close.connection(con))
         text <- scan(con, "character", quiet=TRUE)
-        ## Close connection manually, since scan does not do it
-        close.connection(con)
     }
     return(text)
 }

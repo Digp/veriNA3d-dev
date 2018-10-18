@@ -62,6 +62,7 @@ function(data, technique=NULL, resol=NULL, type=NULL,
         pbar <- NULL
     }
 
+    data(fastquery)
     ## Do the real work ------------------------------------------------------
     data$Representative <- invisible(mapply(
                                     FUN=.get_alternative_representant,
@@ -72,7 +73,8 @@ function(data, technique=NULL, resol=NULL, type=NULL,
                                                     type=type,
                                                     progressbar=progressbar,
                                                     pbar=pbar,
-                                                    verbose=verbose)))
+                                                    verbose=verbose,
+                                                    fastquery=fastquery)))
     if (progressbar)
         cat("\n")
 
@@ -85,7 +87,7 @@ function(data, technique=NULL, resol=NULL, type=NULL,
 .get_alternative_representant <-
 function(index, data, #eqclass, members,
             technique, resol, type,
-            verbose, pbar, progressbar) {
+            verbose, pbar, progressbar, fastquery) {
 
     eqclass <- data[index, 1]
     members <- data[index, 3]
@@ -105,6 +107,7 @@ function(index, data, #eqclass, members,
     if (is.null(type)) { 
         Type <- ""; type <- "" 
     }
+    ## If the script does not find a proper representative, will return NA ---
     out <- NA
 
     for (i in seq_along(Members)) {
@@ -118,7 +121,7 @@ function(index, data, #eqclass, members,
                 cat(paste(pdbID, " superceded by ", 
                     status$superceded_by, "... ", sep=""))
             }
-            members[i] <- gsub(pdbID, x=members[i], 
+            members[i] <- gsub(pdbID, x=members[i],
                                 replacement=toupper(status$superceded_by))
             pdbID <- toupper(status$superceded_by)
             if (pdbID == "NA" | is.na(pdbID)) {
@@ -129,27 +132,53 @@ function(index, data, #eqclass, members,
         if (verbose) 
             cat(paste(pdbID, " ... ", sep=""))
 
+        ## Optimization with presaved data -----------------------------------
+        if (pdbID %in% fastquery$pdbID) {
+            fast <- TRUE
+            fast_ind <- which(fastquery$pdbID == pdbID)
+        }
+
         ## If interested in any technique, query technique and cache result --
         if (technique != "") {
-            Tech <- queryTechnique(pdbID, reuse=TRUE, 
-                    #verbose=verbose,
-                    envir=parent.frame(n=1))
+            if (fast) {
+                Tech <- fastquery[fast_ind, "Technique"]
+            } else {
+                Tech <- queryTechnique(pdbID, reuse=TRUE, 
+                                        #verbose=verbose,
+                                        envir=parent.frame(n=1))
+            }
         }
 
         ## If necessary check resol and cache result -------------------------
         if (resol != " ") {
-            Resol <- as.numeric(queryResol(pdbID, reuse=TRUE, API="mmb", 
-                                #verbose=verbose,
-                                envir=parent.frame(n=1)))
-            if (is.na(Resol)) {
-                if ((Tech == "" && 
-                                    queryTechnique(pdbID, reuse=TRUE, 
-                                    envir=parent.frame(n=1)) %in% 
-                                    .nmrtechs) ||
-                    Tech %in% .nmrtechs) {
+            if (fast) {
+                Resol <- suppressWarnings(as.numeric(
+                                fastquery[fast_ind, "Resol"]))
+            } else {
+                Resol <- as.numeric(queryResol(pdbID, reuse=TRUE,
+                                                #verbose=verbose,
+                                                envir=parent.frame(n=1)))
+            }
 
+            ## If Resol is NA, check whether the query actually made sense
+            if (is.na(Resol)) {
+                ## Make sure to know the experimental technique
+                if (Tech == "") {
+                    if (fast) {
+                        Tech <- fastquery[fast_ind, "Technique"]
+                    } else {
+                        Tech <- queryTechnique(pdbID, reuse=TRUE,
+                                                #verbose=verbose,
+                                                envir=parent.frame(n=1))
+                    }
+                }
+                ## If the technique is NMR, set resol to 0, so that any NMR 
+                ## structure is accepted
+                if (Tech %in% .nmrtechs) {
                     Resol <- 0
                 } else {
+                ## If the technique is not NMR and we don't have data about 
+                ## the resolution, avoid using that structure
                     Resol <- 250 #Arbitrary value
                 }
             }
@@ -158,7 +187,7 @@ function(index, data, #eqclass, members,
         ## If a particular type of RNA is specified, query and cache ---------
         if (type != "") {
             Type <- classifyRNA(pdbID, reuse=TRUE, 
-                    #verbose=verbose, 
+                    verbose=verbose, 
                     envir=parent.frame(n=1))
         }
 
@@ -175,10 +204,14 @@ function(index, data, #eqclass, members,
 
     if (verbose) 
         cat("\n")
-        ## If the script does not find a proper representative, return NA ----
     return(out)
 }
-## ============================================================================
+############################################################################## 
+## Subfunctions
+## ===========================================================================
+## None
+
+## ===========================================================================
 ## Internal objects
 
 .allowedtechs <- c(

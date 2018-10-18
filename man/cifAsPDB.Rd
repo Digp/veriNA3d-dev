@@ -20,18 +20,15 @@ cifAsPDB(cif, model = NULL, chain = NULL, alt = c("A"), verbose = FALSE)
 a 4-character PDB ID.}
 
 \item{model}{A string with the model number (in case you are only
-interested in a particular model) If NULL, all models are read. This
-option will only be applied to the "atom" attribute of the output pdb
-object.}
+interested in a particular model) If NULL, all models are parsed and
+can be selected afterwards using \code{selectModel}. By default, the
+"atom" attribute of the output will contain only the first model.}
 
 \item{chain}{A string with the chain identifier (in case you are only
-interested in a particular chain). If NULL, all chains are read. This
-option will only be applied to the "atom" attribute of the output pdb
-object.}
+interested in a particular chain). If NULL, all chains are included.}
 
 \item{alt}{A string or a vector of strings with the desired alternative
-records. This option will only be applied to the "atom" attribute of
-the output pdb object.}
+records.}
 
 \item{verbose}{A logical indicating whether to print details of the process.}
 }

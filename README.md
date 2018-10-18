@@ -156,9 +156,9 @@ Instructions for Unix systems
 
 `trimByID`: Same as trimSphere using the IDs and output of pipeNucData
 
-`checkNuc`: Checks the integrity of all the nucleotides in a given NA structure
+`checkNuc`: Checks the integrity of all the nucleotides in a given Nucleic Acid structure
 
-`measureNuc`: Measures a defult/desired set of distances, angles and torsional angles for a given NA strucutre
+`measureNuc`: Measures a defult/desired set of distances, angles and torsional angles for a given Nucleic Acid strucutre
 
 `rVector`: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014)
 

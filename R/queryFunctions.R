@@ -251,4 +251,4 @@ function(pdbID, ...) {
     "BR", "CA", "CAC", "CD", "CL", "CO", "CS", "CU", "F", "FE2", "FLC",
     "HG", "IOD", "IR3", "IRI", "IUM", "K", "LU", "MG", "MLI", "MMC", "MN",
     "Na", "NH4", "NI", "NO3", "OS", "PB", "PO4", "PT", "PT4", "RB", "RHD",
-    "RU", "SE4", "SO4", "SR", "TB", "TL", "UNX", "VO4", "ZN")
+    "RU", "SE4", "SF4", "SO4", "SR", "TB", "TL", "UNX", "VO4", "ZN")

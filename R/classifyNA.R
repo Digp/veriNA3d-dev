@@ -37,8 +37,16 @@ NULL
 classifyRNA <-
 function(pdbID, length=3, ...) {
 
+    ## Check if the desired data is already presaved in the package ----------
+    fast <- .fast_check(pdbID, "RNAclass")
+    if (fast[[1]]) 
+        return(fast[[2]])
+
+    ## Check for some cornen cases manually annotated ------------------------
     check <- .corner_cases(pdbID)
-    if (check[[1]]) return(check[[2]])
+    if (check[[1]]) 
+        return(check[[2]])
+
     ## Download info about entities, chains and length -----------------------
     MM <- queryEntities(pdbID, ...=...)
 
@@ -113,8 +121,15 @@ function(pdbID, length=3, ...) {
 classifyDNA <-
 function(pdbID, ...) {
 
+    ## Check if the desired data is already presaved in the package ----------
+    fast <- .fast_check(pdbID, "DNAclass")
+    if (fast[[1]])
+        return(fast[[2]])
+
+    ## Check for some cornen cases manually annotated ------------------------
     check <- .corner_cases(pdbID)
-    if (check[[1]]) return("NoDNA")
+    if (check[[1]]) 
+        return("NoDNA")
     ## Download info about entities, chains and length -----------------------
     MM <- queryEntities(pdbID, ...=...)
 
@@ -150,7 +165,7 @@ function(pdbID, ...) {
     DPro <- any(MM[Other, "molecule_type"] == "polypeptide(D)")
 
     ## Logical, are there organic ligands? -----------------------------------
-    ## Ions do not categorize a structure as ligandRNA since they are always
+    ## Ions do not categorize a structure as ligandDNA since they are always
     ## in buffers
     ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
 
@@ -187,6 +202,7 @@ function(pdbID, ...) {
 ## here I fix the detected ones
 .corner_cases <-
 function(pdbID) {
+    pdbID <- toupper(pdbID)
     if (pdbID %in% c("2P7E",
                 "3CR1")) {
     return(list(TRUE, "nakedRNA"))
@@ -198,4 +214,21 @@ function(pdbID) {
     return(list(TRUE, "LNARNA"))
     }
     return(list(FALSE, ""))
+}
+
+.fast_check <-
+function(pdbID, info, verbose=FALSE) {
+    data(fastquery)
+    pdbID <- toupper(pdbID)
+    if (!info %in% names(fastquery)) {
+        return(list(FALSE, ""))
+    }
+    if (pdbID %in% fastquery$pdbID) {
+        if (verbose)
+            print(paste("Presaved data for ", pdbID, " ", info, sep=""))
+        ind <- which(fastquery$pdbID == pdbID)
+        return(list(TRUE, fastquery[ind, info]))
+    } else {
+        return(list(FALSE, ""))
+    }
 }
