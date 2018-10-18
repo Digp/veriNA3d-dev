@@ -166,6 +166,22 @@ function(pdbID, ...) {
 
 #' @export
 #' @rdname queryFunctions
+queryLigands <-
+function(pdbID, onlyligands=FALSE, ...) {
+    string1 <- "pdb/entry/ligand_monomers/"
+    string2 <- ""
+    out <- queryAPI(pdbID="1s72", API="ebi", 
+                    string1=string1, string2=string2)[[1]]
+    if (onlyligands) {
+        return(unique(out$chem_comp_id))
+    } else {
+        return(out)
+    }
+}
+##############################################################################
+
+#' @export
+#' @rdname queryFunctions
 queryOrgLigands <-
 function(pdbID, ...) {
     ## Query info about all hetAtms (ligands + modified residues) ------------

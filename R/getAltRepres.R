@@ -136,6 +136,8 @@ function(index, data, #eqclass, members,
         if (pdbID %in% fastquery$pdbID) {
             fast <- TRUE
             fast_ind <- which(fastquery$pdbID == pdbID)
+        } else {
+            fast <- FALSE
         }
 
         ## If interested in any technique, query technique and cache result --
