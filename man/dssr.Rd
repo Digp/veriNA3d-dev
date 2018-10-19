@@ -4,8 +4,8 @@
 \alias{dssr}
 \title{Dissecting the Spatial Structure of RNA with DSSR}
 \usage{
-dssr(pdbID, exefile = "x3dna-dssr", dssrargs = c("--nmr", "--torsion360",
-  "--more"), verbose = FALSE)
+dssr(pdbID, exefile = "x3dna-dssr", dssrargs = c("--nmr",
+  "--torsion360", "--more"), verbose = FALSE)
 }
 \arguments{
 \item{pdbID}{A 4 character string corresponding to a PDB ID or a "pdb"

@@ -12,7 +12,8 @@ rVector(cif, pdb, outformat = "rvector", simple_out = TRUE)
 
 \S4method{rVector}{CIF}(cif, outformat = "rvector", simple_out = TRUE)
 
-\S4method{rVector}{character}(cif, outformat = "rvector", simple_out = TRUE)
+\S4method{rVector}{character}(cif, outformat = "rvector",
+  simple_out = TRUE)
 
 \S4method{rVector}{ANY}(pdb, outformat = "rvector", simple_out = TRUE)
 }

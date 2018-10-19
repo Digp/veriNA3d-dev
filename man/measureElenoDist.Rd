@@ -4,8 +4,9 @@
 \alias{measureElenoDist}
 \title{Computes distances between the atoms of interest in a mmCIF structure}
 \usage{
-measureElenoDist(pdb, model = NULL, refeleno, eleno, n = 1, cutoff = c(0,
-  5), verbose = FALSE, detailedoutput = TRUE, data_of_interest = NULL)
+measureElenoDist(pdb, model = NULL, refeleno, eleno, n = 1,
+  cutoff = c(0, 5), verbose = FALSE, detailedoutput = TRUE,
+  data_of_interest = NULL)
 }
 \arguments{
 \item{pdb}{A pdb object obtained as from

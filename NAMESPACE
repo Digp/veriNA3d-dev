@@ -5,25 +5,25 @@ importFrom("graphics", "abline", "axis", "barplot", "contour",
 importFrom("grDevices", "dev.off", "png", "rgb")
 importFrom("methods", "new")
 importFrom("stats", "complete.cases", "sd")
-importFrom("utils", "download.file", "read.table", "setTxtProgressBar", 
+importFrom("utils", "download.file", "read.table", "setTxtProgressBar",
             "txtProgressBar")
 importFrom(plot3D, persp3D)
 importFrom(MASS, kde2d, bandwidth.nrd)
 importFrom(jsonlite, fromJSON)
 importFrom(RColorBrewer, brewer.pal)
 importFrom(RANN, nn2)
-importFrom(circlize, circos.par, circos.initialize, 
-                circos.trackPlotRegion, circos.axis, circos.trackPoints, 
+importFrom(circlize, circos.par, circos.initialize,
+                circos.trackPlotRegion, circos.axis, circos.trackPoints,
                 circos.trackHist, circos.clear)
 
 #exportPattern("^[[:alpha:]]+")
 exportClasses(CIF)
-export( 
-    applyToPDB, 
+export(
+    applyToPDB,
 
-    checkNuc, 
+    checkNuc,
     cifAsPDB,
-    cifAtom_site, 
+    cifAtom_site,
     cifAtom_sites,
     cifAtom_type,
     cifAudit_author,
@@ -45,31 +45,31 @@ export(
 
     dssr,
 
-    eRMSD, 
+    eRMSD,
 
     findBindingSite,
 
-    getAltRepres, 
+    getAltRepres,
     getLeontisList,
 
-    hasHetAtm, 
+    hasHetAtm,
 
     measureEntityDist,
     measureElenoDist,
-    measureNuc, 
+    measureNuc,
 
     pipeNucData,
-    pipeProtNucData, 
+    pipeProtNucData,
 
-    plotCategorical, 
-    plotCircularDistribution, 
-    plotEtaTheta, 
-    plotEtaTheta3D, 
-    plotSetOfDistributions, 
+    plotCategorical,
+    plotCircularDistribution,
+    plotEtaTheta,
+    plotEtaTheta3D,
+    plotSetOfDistributions,
 
     queryAPI,
     queryAuthors,
-    queryChains, 
+    queryChains,
     queryCompound,
     queryCompType,
     queryDepdate,
@@ -78,7 +78,6 @@ export(
     queryFormats,
     queryHeader,
     queryHetAtms,
-    queryLigands,
     queryModres,
     queryNDBId,
     queryOrgLigands,
@@ -89,9 +88,9 @@ export(
     queryTechnique,
 
     represAsDataFrame,
-    rVector, 
+    rVector,
 
-    selectModel, 
+    selectModel,
 
     trimByID,
     trimSphere

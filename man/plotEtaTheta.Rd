@@ -2,7 +2,6 @@
 % Please edit documentation in R/plots.R
 \name{plotEtaTheta}
 \alias{plotEtaTheta}
-\alias{plotEtaTheta}
 \alias{plotEtaTheta3D}
 \title{Plot eta-theta}
 \usage{
@@ -13,9 +12,9 @@ plotEtaTheta(ntinfo, ntID = NULL, dens = NULL, bandwidths = NULL,
   height = 15, bg = "white", units = "cm", res = 200)
 
 plotEtaTheta3D(ntinfo, ntID = NULL, dens = NULL, bandwidths = NULL,
-  eta = "eta", theta = "theta", defaultview = NULL, thetaplot, phiplot,
-  cleanerview = FALSE, file = NULL, width = 15, height = 15,
-  bg = "white", units = "cm", res = 600)
+  eta = "eta", theta = "theta", defaultview = NULL, thetaplot,
+  phiplot, cleanerview = FALSE, file = NULL, width = 15,
+  height = 15, bg = "white", units = "cm", res = 600)
 }
 \arguments{
 \item{ntinfo}{A data.frame with the input data. It should contain the

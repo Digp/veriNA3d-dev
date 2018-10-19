@@ -94,6 +94,7 @@ header (PDB format) or in the
 * {queryHetAtms} List of HETATM (modified residues and ligands).
 * {queryModres} List of modified residues.
 * {queryNDBId} NDB ID for Nucleic Acids.
+* {queryLigands} Retrieves ligands.
 * {queryOrgLigands} Retrieves just the organic ligands (not ions).
 * {queryReldate} Release date.
 * {queryResol} Resolution

@@ -4,11 +4,11 @@
 \alias{getAltRepres}
 \title{Get Alternative Representants}
 \usage{
-getAltRepres(data, technique = NULL, resol = NULL, type = NULL,
-  progressbar = FALSE, verbose = FALSE)
+getAltRepres(rnalist, technique = NULL, resol = NULL, type = NULL,
+  progressbar = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{data}{The output of getLeontisList.}
+\item{rnalist}{The output of getLeontisList.}
 
 \item{technique}{One or more techniques of interest (For correct use, see
 example below). For the list of techniques, see "veriNA3d:::.allowedtechs".}
@@ -34,8 +34,8 @@ doing lots of queries under the hood. Set verbose to TRUE to see evolution.
 The example below works with a small dataset and takes ~1 min.
 }
 \examples{
-    data <- getLeontisList(release=3.2, threshold="1.5A")
-    alternative <- getAltRepres(data=data, 
+    rnalist <- getLeontisList(release=3.2, threshold="1.5A")
+    alternative <- getAltRepres(rnalist=rnalist, 
                                 type="nakedRNA")
 
 }

@@ -7,10 +7,11 @@
 \alias{cifAsPDB,character-method}
 \title{Coerce CIF S4 object to pdb S3 object as found in bio3d package}
 \usage{
-cifAsPDB(cif, model = NULL, chain = NULL, alt = c("A"), verbose = FALSE)
-
-\S4method{cifAsPDB}{CIF}(cif, model = NULL, chain = NULL, alt = c("A"),
+cifAsPDB(cif, model = NULL, chain = NULL, alt = c("A"),
   verbose = FALSE)
+
+\S4method{cifAsPDB}{CIF}(cif, model = NULL, chain = NULL,
+  alt = c("A"), verbose = FALSE)
 
 \S4method{cifAsPDB}{character}(cif, model = NULL, chain = NULL,
   alt = c("A"), verbose = FALSE)

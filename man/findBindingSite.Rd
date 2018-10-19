@@ -5,7 +5,8 @@
 \title{Function to get data about the atoms in interacting site.}
 \usage{
 findBindingSite(pdb, cutoff = 5, select = "Nuc", nchain = NULL,
-  pchain = NULL, hydrogens = FALSE, byres = FALSE, verbose = FALSE, ...)
+  pchain = NULL, hydrogens = FALSE, byres = FALSE, verbose = FALSE,
+  ...)
 }
 \arguments{
 \item{pdb}{A cif/pdb object obtained from cifParser/read.pdb respectively

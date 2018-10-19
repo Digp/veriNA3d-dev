@@ -8,7 +8,7 @@
 #' doing lots of queries under the hood. Set verbose to TRUE to see evolution.
 #' The example below works with a small dataset and takes ~1 min.
 #'
-#' @param data The output of getLeontisList.
+#' @param rnalist The output of getLeontisList.
 #' @param technique One or more techniques of interest (For correct use, see 
 #'  example below). For the list of techniques, see "veriNA3d:::.allowedtechs".
 #' @param resol A positive real number to specify a desired resolution.
@@ -20,16 +20,16 @@
 #'  the selected Representants according with the specified conditions. 
 #'
 #' @examples 
-#'     data <- getLeontisList(release=3.2, threshold="1.5A")
-#'     alternative <- getAltRepres(data=data, 
+#'     rnalist <- getLeontisList(release=3.2, threshold="1.5A")
+#'     alternative <- getAltRepres(rnalist=rnalist, 
 #'                                 type="nakedRNA")
 #'
 #' @author Diego Gallego
 #'
 
 getAltRepres <-
-function(data, technique=NULL, resol=NULL, type=NULL, 
-            progressbar=FALSE, verbose=FALSE) {
+function(rnalist, technique=NULL, resol=NULL, type=NULL, 
+            progressbar=TRUE, verbose=FALSE) {
     ## Make sure the inputs make sense ---------------------------------------
     if (is.null(c(technique, resol, type))) {
         stop("Which features should the alternative representants have?")
@@ -55,19 +55,21 @@ function(data, technique=NULL, resol=NULL, type=NULL,
     }
 
     ## Print progress bar ----------------------------------------------------
-    total <- nrow(data)
+    total <- nrow(rnalist)
     if (progressbar) {
         pbar <- txtProgressBar(min=0, max=total, style=3)
+        verbose <- FALSE
     } else {
         pbar <- NULL
     }
 
-    data(fastquery)
+    data(fastquery, envir=environment())
+    #data(fastquery)
     ## Do the real work ------------------------------------------------------
-    data$Representative <- invisible(mapply(
+    rnalist$Representative <- invisible(mapply(
                                     FUN=.get_alternative_representant,
-                                        seq_len(nrow(data)),
-                                        MoreArgs=list(data=data,
+                                        seq_len(nrow(rnalist)),
+                                        MoreArgs=list(data=rnalist,
                                                     technique=technique,
                                                     resol=resol, 
                                                     type=type,
@@ -78,7 +80,7 @@ function(data, technique=NULL, resol=NULL, type=NULL,
     if (progressbar)
         cat("\n")
 
-    return(data[, 2:1])
+    return(rnalist[, 2:1])
 }
 
 ###############################################################################
@@ -230,4 +232,5 @@ function(index, data, #eqclass, members,
     "INFRARED SPECTROSCOPY")    #INFRARED SPECTROSCOPY
 
 .nmrtechs <- c(
-                "SOLUTION NMR", "SOLID-STATE NMR", "Solution NMR", "Solid-state NMR")
+                "SOLUTION NMR", "SOLID-STATE NMR", 
+                "Solution NMR", "Solid-state NMR")

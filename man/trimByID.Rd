@@ -4,8 +4,8 @@
 \alias{trimByID}
 \title{Calls trimSphere to generate smaller pdb files}
 \usage{
-trimByID(cif = NULL, ntID, ntinfo, prev = 2, post = 2, verbose = TRUE,
-  file = NULL, ...)
+trimByID(cif = NULL, ntID, ntinfo, prev = 2, post = 2,
+  verbose = TRUE, file = NULL, ...)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
