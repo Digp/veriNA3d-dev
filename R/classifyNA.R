@@ -38,11 +38,13 @@ classifyRNA <-
 function(pdbID, length=3, ...) {
 
     ## Check if the desired data is already presaved in the package ----------
-    fast <- .fast_check(pdbID, "RNAclass")
-    if (fast[[1]]) 
-        return(fast[[2]])
+    if (length == 3) {
+        fast <- .fast_check(pdbID, "RNAclass")
+        if (fast[[1]]) 
+            return(fast[[2]])
+    }
 
-    ## Check for some cornen cases manually annotated ------------------------
+    ## Check for some corner cases manually annotated ------------------------
     check <- .corner_cases(pdbID)
     if (check[[1]]) 
         return(check[[2]])

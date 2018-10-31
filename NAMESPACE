@@ -80,6 +80,7 @@ export(
     queryHetAtms,
     queryModres,
     queryNDBId,
+    queryObsoleteList,
     queryOrgLigands,
     queryReldate,
     queryResol,

@@ -48,6 +48,8 @@ Instructions for Unix systems
 
 `queryEntryList`: Returns the whole list of PDB IDs in the database
 
+`queryObsoleteList`: Returns the list of Obsolete PDB IDs in the database
+
 `cleanByPucker`: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
 &nbsp;
 

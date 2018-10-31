@@ -4,9 +4,6 @@
 #' output, the family members of each equivalence class are checked for
 #' desired features. The first member that matches all the desired features
 #' is returned.
-#' Note: The function might seem slow (really slow sometimes), but it is 
-#' doing lots of queries under the hood. Set verbose to TRUE to see evolution.
-#' The example below works with a small dataset and takes ~1 min.
 #'
 #' @param rnalist The output of getLeontisList.
 #' @param technique One or more techniques of interest (For correct use, see 
@@ -54,17 +51,22 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL,
         stop("'resol' must be a positive value")
     }
 
+    ## Get necessary presaved data to speed up the process -------------------
+    data(fastquery, envir=environment())
+    obsolete <- queryObsoleteList()
+
     ## Print progress bar ----------------------------------------------------
     total <- nrow(rnalist)
     if (progressbar) {
-        pbar <- txtProgressBar(min=0, max=total, style=3)
+        if (verbose)
+            print("Set progressbar to FALSE to get the verbose option")
+
         verbose <- FALSE
+        pbar <- txtProgressBar(min=0, max=total, style=3)
     } else {
         pbar <- NULL
     }
 
-    data(fastquery, envir=environment())
-    #data(fastquery)
     ## Do the real work ------------------------------------------------------
     rnalist$Representative <- invisible(mapply(
                                     FUN=.get_alternative_representant,
@@ -76,7 +78,8 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL,
                                                     progressbar=progressbar,
                                                     pbar=pbar,
                                                     verbose=verbose,
-                                                    fastquery=fastquery)))
+                                                    fastquery=fastquery,
+                                                    obsolete=obsolete)))
     if (progressbar)
         cat("\n")
 
@@ -89,7 +92,7 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL,
 .get_alternative_representant <-
 function(index, data, #eqclass, members,
             technique, resol, type,
-            verbose, pbar, progressbar, fastquery) {
+            verbose, pbar, progressbar, fastquery, obsolete) {
 
     eqclass <- data[index, 1]
     members <- data[index, 3]
@@ -117,8 +120,8 @@ function(index, data, #eqclass, members,
         pdbID <- substr(Members[i], 1, 4)
 
         ## Check status
-        status <- queryStatus(pdbID)
-        if (status$status_code == "OBS") {
+        if (pdbID %in% obsolete) {
+            status <- queryStatus(pdbID)
             if (verbose) {
                 cat(paste(pdbID, " superceded by ", 
                     status$superceded_by, "... ", sep=""))
