@@ -5,7 +5,7 @@
 \title{Get Alternative Representants}
 \usage{
 getAltRepres(rnalist, technique = NULL, resol = NULL, type = NULL,
-  progressbar = TRUE, verbose = FALSE)
+  length = 3, progressbar = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{rnalist}{The output of getLeontisList.}
@@ -16,7 +16,9 @@ example below). For the list of techniques, see "veriNA3d:::.allowedtechs".}
 \item{resol}{A positive real number to specify a desired resolution.}
 
 \item{type}{A string indicating the type of desired RNA, according with
-the RNAclassifier function.}
+the {classifyRNA} function.}
+
+\item{length}{To be passed to {classifyRNA}.}
 
 \item{verbose}{A logical to print details of the process.}
 }
@@ -29,9 +31,6 @@ This function is closely related with getLeontisList(). From its
 output, the family members of each equivalence class are checked for
 desired features. The first member that matches all the desired features
 is returned.
-Note: The function might seem slow (really slow sometimes), but it is
-doing lots of queries under the hood. Set verbose to TRUE to see evolution.
-The example below works with a small dataset and takes ~1 min.
 }
 \examples{
     rnalist <- getLeontisList(release=3.2, threshold="1.5A")

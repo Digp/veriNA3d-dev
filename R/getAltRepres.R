@@ -10,7 +10,8 @@
 #'  example below). For the list of techniques, see "veriNA3d:::.allowedtechs".
 #' @param resol A positive real number to specify a desired resolution.
 #' @param type A string indicating the type of desired RNA, according with 
-#'  the RNAclassifier function.
+#'  the {classifyRNA} function.
+#' @param length To be passed to {classifyRNA}.
 #' @param verbose A logical to print details of the process.
 #'
 #' @return A data.frame with info about all the "Equivalence Classes" and
@@ -25,7 +26,7 @@
 #'
 
 getAltRepres <-
-function(rnalist, technique=NULL, resol=NULL, type=NULL, 
+function(rnalist, technique=NULL, resol=NULL, type=NULL, length=3, 
             progressbar=TRUE, verbose=FALSE) {
     ## Make sure the inputs make sense ---------------------------------------
     if (is.null(c(technique, resol, type))) {
@@ -75,6 +76,7 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL,
                                                     technique=technique,
                                                     resol=resol, 
                                                     type=type,
+                                                    length=length,
                                                     progressbar=progressbar,
                                                     pbar=pbar,
                                                     verbose=verbose,
@@ -91,7 +93,7 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL,
 ## ============================================================================
 .get_alternative_representant <-
 function(index, data, #eqclass, members,
-            technique, resol, type,
+            technique, resol, type, length,
             verbose, pbar, progressbar, fastquery, obsolete) {
 
     eqclass <- data[index, 1]
@@ -193,7 +195,7 @@ function(index, data, #eqclass, members,
 
         ## If a particular type of RNA is specified, query and cache ---------
         if (type != "") {
-            Type <- classifyRNA(pdbID, reuse=TRUE, 
+            Type <- classifyRNA(pdbID, reuse=TRUE, length=length, 
                     verbose=verbose, 
                     envir=parent.frame(n=1))
         }
