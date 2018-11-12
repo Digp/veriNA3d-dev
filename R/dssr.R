@@ -28,11 +28,11 @@ function(pdbID, exefile="x3dna-dssr",
     ## Check if the program is executable ------------------------------------
     os1 <- .Platform$OS.type
     status <- system(paste(exefile, "--version"),
-                     ignore.stderr=TRUE, ignore.stdout=TRUE)
+                        ignore.stderr=TRUE, ignore.stdout=TRUE)
 
     if (status != 0) {
-      stop(paste("x3dna-dssr execution failed\n",
-                 " Make sure '", exefile, "' is in your search path", sep=""))
+        stop(paste("x3dna-dssr execution failed\n",
+                    " Make sure '", exefile, "' is in your search path", sep=""))
     }
 
     ## Check if user provides file or pdb ID ---------------------------------
@@ -97,9 +97,10 @@ function(pdbID, exefile="x3dna-dssr",
     success <- FUN(cmd, ignore.stderr = !verbose, ignore.stdout = !verbose)
 
     ## Check whether the command was executed properly or not
-    if(success!=0)
-      stop(paste("An error occurred while running command\n '",
-                 cmd, "'", sep=""))
+    if(success!=0) {
+        stop(paste("An error occurred while running command\n '",
+                    cmd, "'", sep=""))
+    }
     
     ## Remove input file if necessary and leave things as they were before
     if (flag) {

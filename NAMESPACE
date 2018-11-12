@@ -41,6 +41,8 @@ export(
     classifyDNA,
     classifyRNA,
 
+    countEntities,
+
     cleanByPucker,
 
     dssr,

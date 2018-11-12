@@ -1,24 +1,28 @@
-#' Classify RNA structures
+#' Classify RNA or DNA structures
 #'
-#' From different queries to databases, the function classifies a structure in
-#' different groups:\cr
-#' - {NoRNA}: the structure does not contain RNA or it is shorter than a 
-#' threshold set by "length".\cr
-#' - {nakedRNA}: the only molecule(s) in the PDB ID is RNA.\cr
-#' - {protRNA}: the PDB contains a protein-RNA complex.\cr
-#' - {DprotRNA}: the PDB contains a protein-RNA complex and the protein has D 
-#' aminoacids.\cr
-#' - {DNARNA}: the PDB contains a DNA-RNA hybrid.\cr
-#' - {PNARNA}: the PDB contains a PNA-RNA hybrid.\cr
-#' - {ANARNA}: the PDB contains a ANA-RNA hybrid.\cr
-#' - {LNARNA}: the PDB contains a LNA-RNA hybrid.\cr
-#' - {ligandRNA}: the RNA is interacting with an organic ligand, ions are not 
-#' considered.\cr
+#' The functions classify a structure in the following groups:\cr
+#' - {NoRNA or NoDNA}: the structure does not contain RNA or it is shorter
+#' than a threshold set by "length".\cr
+#' - {nakedRNA or nakedDNA}: the only molecule(s) in the structure is RNA or
+#' DNA.\cr
+#' - {protRNA or protDNA}: the PDB contains a protein-nuc complex.\cr
+#' - {DprotRNA or DprotDNA}: the PDB contains a protein-nuc complex and the 
+#' protein has D aminoacids.\cr
+#' - {DNARNA}: the PDB contains DNA-RNA.\cr
+#' - {PNARNA or PNADNA}: the PDB contains PNA-RNA.\cr
+#' - {ANARNA}: the PDB contains ANA-RNA.\cr
+#' - {LNARNA}: the PDB contains LNA-RNA.\cr
+#' - {ligandRNA or ligandDNA}: the RNA/DNA is interacting with an organic 
+#' ligand, ions are not considered.\cr
+#'
+#' In `classifyRNA`, nucleic acid hybrids are considered RNA, while in
+#' in `classifyDNA` they are considered DNA (e.g. pdb ID 2HVR).
 #'
 #' @param pdbID A 4-character string that matches a structure ID in the
 #' Protein Data Bank.
 #' @param length A positive integer to use as a threshold to classify RNA in
 #' the NoRNA group.
+#' @param force A logical to force the query instead of getting presaved data.
 #' @param ... Arguments to be passed to query function (see ?queryFunctions).
 #'
 #' @return A string with the type of RNA.
@@ -35,10 +39,12 @@ NULL
 #' @export
 #' @rdname classifyNA
 classifyRNA <-
-function(pdbID, length=3, ...) {
+function(pdbID, length=3, force=FALSE, ...) {
+
+    pdbID <- toupper(pdbID)
 
     ## Check if the desired data is already presaved in the package ----------
-    if (length == 3) {
+    if (length == 3 & !force) {
         fast <- .fast_check(pdbID, "RNAclass")
         if (fast[[1]]) 
             return(fast[[2]])
@@ -49,68 +55,58 @@ function(pdbID, length=3, ...) {
     if (check[[1]]) 
         return(check[[2]])
 
-    ## Download info about entities, chains and length -----------------------
-    MM <- queryEntities(pdbID, ...=...)
-
-    ## Solve corner cases (e.g. 2ICY) ----------------------------------------
-    if (any(is.na(MM$molecule_type))) {
-        ind <- which(is.na(MM$molecule_type))
-        MM <- MM[-ind, ]
-    }
-
-    ## Check corner case in which there's a DNA-RNA hybrid -------------------
-    if (any(MM$molecule_type == 
-        "polydeoxyribonucleotide/polyribonucleotide hybrid")) {
-
-        return("DNARNA")
+    ## Get entity data -------------------------------------------------------
+    data(entities, envir=environment())
+    if (pdbID %in% entities$pdbID) {
+        ind <- which(entities$pdbID == pdbID)
+        MM <- entities[ind, 2:ncol(entities)]
+    } else {
+        MM <- countEntities(pdbID, ...=...)
     }
 
     ## If the PDB entry does not contain RNA it is classified as "NoRNA" -----
-    if (!any(MM$molecule_type == "polyribonucleotide"))
+    if (MM$RNA + MM$Hybrid == 0)
         return("NoRNA")
 
-    ## Index for RNA in the data.frame ---------------------------------------
-    RNA_ind <- which(MM$molecule_type == "polyribonucleotide")
-
-    ## RNA that does not surpass a threshold is also classified as "NoRNA" ---
-    if (all(MM[RNA_ind, "length"] < length)) 
-        return("NoRNA")
-
-
-    Other <- which(MM$molecule_type != "polyribonucleotide")
-    ## Logical, is there DNA?
-    DNA <- any(MM[Other, "molecule_type"] == "polydeoxyribonucleotide")
-    ## Logical, is there PNA?
-    PNA <- any(MM[Other, "molecule_type"] == "peptide nucleic acid")
-    ## Logical, is there a protein?
-    Pro <- any(MM[Other, "molecule_type"] == "polypeptide(L)")
-    ## Logical, is there a protein with D aminoacids?
-    DPro <- any(MM[Other, "molecule_type"] == "polypeptide(D)")
+    ## I a length >0 is provided, check that the RNA is longer than that -----
+    if (length > 0) {
+        MM2 <- queryEntities(pdbID, ...=...)
+        ## Index for RNA in the data.frame -----------------------------------
+        RNA_ind <- which(MM2$molecule_type %in% c("polyribonucleotide",
+                        "polydeoxyribonucleotide/polyribonucleotide hybrid"))
+    
+        ## RNA that does not surpass a threshold is also classified as "NoRNA"
+        if (all(MM2[RNA_ind, "length"] < length)) 
+            return("NoRNA")
+    }
 
     ## Logical, are there organic ligands? -----------------------------------
     ## Ions do not categorize a structure as ligandRNA since they are always
     ## in buffers
-    ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
-
+    if (MM$Ligands > 0) {
+        ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
+    } else {
+        ligands <- FALSE
+    }
 
     ## If there are proteins, the PDB entry is classified as "protRNA" -------
-    if (Pro) 
+    if (MM$Prot > 0)
         return("protRNA")
                 
     ## If there are D proteins, the PDB entry is classified as "DprotRNA" ----
-    if (DPro) 
+    if (MM$Dprot > 0)
         return("DprotRNA")
                 
     ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
-    if (DNA) 
+    if (MM$DNA > 0)
         return("DNARNA")
 
     ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
-    if (PNA) 
+    if (MM$PNA > 0)
         return("PNARNA")
 
     ## If there are ligands, the PDB entry is classified as "ligandRNA" ------
-    if (ligands) 
+    if (ligands)
         return("ligandRNA")
 
     ## If the only molecule is RNA, then the PDB entry is classified as 
@@ -121,77 +117,65 @@ function(pdbID, length=3, ...) {
 #' @export
 #' @rdname classifyNA
 classifyDNA <-
-function(pdbID, ...) {
+function(pdbID, force=FALSE, ...) {
+
+    pdbID <- toupper(pdbID)
 
     ## Check if the desired data is already presaved in the package ----------
-    fast <- .fast_check(pdbID, "DNAclass")
-    if (fast[[1]])
-        return(fast[[2]])
+    if (!force) {
+        fast <- .fast_check(pdbID, "DNAclass")
+        if (fast[[1]])
+            return(fast[[2]])
+    }
 
-    ## Check for some cornen cases manually annotated ------------------------
+    ## Check for some corner cases manually annotated ------------------------
     check <- .corner_cases(pdbID)
     if (check[[1]]) 
         return("NoDNA")
-    ## Download info about entities, chains and length -----------------------
-    MM <- queryEntities(pdbID, ...=...)
 
-    ## Solve corner cases (e.g. 2ICY) ----------------------------------------
-    if (any(is.na(MM$molecule_type))) {
-        ind <- which(is.na(MM$molecule_type))
-        MM <- MM[-ind, ]
-    }
-
-    ## Check corner case in which there's a DNA-RNA hybrid -------------------
-    if (any(MM$molecule_type ==
-        "polydeoxyribonucleotide/polyribonucleotide hybrid")) {
-
-        return("DNARNA")
+    ## Get entity data -------------------------------------------------------
+    data(entities, envir=environment())
+    if (pdbID %in% entities$pdbID) {
+        ind <- which(entities$pdbID == pdbID)
+        MM <- entities[ind, 2:ncol(entities)]
+    } else {
+        MM <- countEntities(pdbID, ...=...)
     }
 
     ## If the PDB entry does not contain RNA it is classified as "NoRNA" -----
-    if (!any(MM$molecule_type == "polydeoxyribonucleotide"))
+    if (MM$DNA + MM$Hybrid == 0)
         return("NoDNA")
-
-    ## Index for RNA in the data.frame ---------------------------------------
-    DNA_ind <- which(MM$molecule_type == "polydeoxyribonucleotide")
-
-
-    Other <- which(MM$molecule_type != "polydeoxyribonucleotide")
-    ## Logical, is there DNA?
-    RNA <- any(MM[Other, "molecule_type"] == "polyribonucleotide")
-    ## Logical, is there PNA?
-    PNA <- any(MM[Other, "molecule_type"] == "peptide nucleic acid")
-    ## Logical, is there a protein?
-    Pro <- any(MM[Other, "molecule_type"] == "polypeptide(L)")
-    ## Logical, is there a protein with D aminoacids?
-    DPro <- any(MM[Other, "molecule_type"] == "polypeptide(D)")
 
     ## Logical, are there organic ligands? -----------------------------------
     ## Ions do not categorize a structure as ligandDNA since they are always
     ## in buffers
-    ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
+    if (MM$Ligands > 0) {
+        ligands <- length(queryOrgLigands(pdbID, ...=...)) > 0
+    } else {
+        ligands <- FALSE
+    }
 
     ## If there are proteins, the PDB entry is classified as "protRNA" -------
-    if (Pro)
+    if (MM$Prot > 0)
         return("protDNA")
 
     ## If there are D proteins, the PDB entry is classified as "DprotRNA" ----
-    if (DPro)
+    if (MM$Dprot > 0)
         return("DprotDNA")
 
     ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
-    if (RNA)
+    if (MM$RNA > 0)
         return("DNARNA")
 
-    ## If there are DNA molecules, the PDB entry is classified as "DNARNA" ---
-    if (PNA)
+    ## If there are DNA molecules, the PDB entry is classified as "PNADNA" ---
+    if (MM$PNA > 0)
         return("PNADNA")
 
     ## If there are ligands, the PDB entry is classified as "ligandRNA" ------
     if (ligands)
         return("ligandDNA")
 
-    ## If the only molecule is RNA, then the PDB entry is classified as 
+    ## If the only molecule is DNA, then the PDB entry is classified as 
     ## "nakedRNA" ------------------------------------------------------------
     return("nakedDNA")
 }

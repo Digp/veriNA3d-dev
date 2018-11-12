@@ -76,6 +76,8 @@ Instructions for Unix systems
 
 `queryEntities`: Entitity information
 
+`countEntities`: In a given pdbID it counts the total number of each different kind of entity (RNA, DNA, Protein ...)
+
 `queryFormats`: File formats for the given ID
 
 `queryHeader`: PDB Header
