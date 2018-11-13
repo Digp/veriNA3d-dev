@@ -20,7 +20,8 @@
 #'
 #' @param pdbID A 4-character string that matches a structure ID in the
 #' Protein Data Bank.
-#' @param length A positive integer to use as a threshold to classify RNA in
+#' @param length A positive integer. Minimum numer of nucleotides to consider
+#' RNA as a polymer. An RNA shorter than this threshold is classified in
 #' the NoRNA group.
 #' @param force A logical to force the query instead of getting presaved data.
 #' @param ... Arguments to be passed to query function (see ?queryFunctions).
@@ -44,8 +45,12 @@ function(pdbID, length=3, force=FALSE, ...) {
     pdbID <- toupper(pdbID)
 
     ## Check if the desired data is already presaved in the package ----------
-    if (length == 3 & !force) {
-        fast <- .fast_check(pdbID, "RNAclass")
+    if (!force & (length <= 1 | length == 3)) {
+        if (length <= 1) {
+            fast <- .fast_check(pdbID, "RNAclassOver0")
+        } else {
+            fast <- .fast_check(pdbID, "RNAclassOver2")
+        }
         if (fast[[1]]) 
             return(fast[[2]])
     }
@@ -69,7 +74,7 @@ function(pdbID, length=3, force=FALSE, ...) {
         return("NoRNA")
 
     ## I a length >0 is provided, check that the RNA is longer than that -----
-    if (length > 0) {
+    if (length > 1) {
         MM2 <- queryEntities(pdbID, ...=...)
         ## Index for RNA in the data.frame -----------------------------------
         RNA_ind <- which(MM2$molecule_type %in% c("polyribonucleotide",
