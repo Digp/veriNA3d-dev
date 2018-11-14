@@ -4,18 +4,21 @@
 \alias{classifyNA}
 \alias{classifyRNA}
 \alias{classifyDNA}
-\title{Classify RNA structures}
+\title{Classify RNA or DNA structures}
 \usage{
-classifyRNA(pdbID, length = 3, ...)
+classifyRNA(pdbID, length = 3, force = FALSE, ...)
 
-classifyDNA(pdbID, ...)
+classifyDNA(pdbID, force = FALSE, ...)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure ID in the
 Protein Data Bank.}
 
-\item{length}{A positive integer to use as a threshold to classify RNA in
+\item{length}{A positive integer. Minimum numer of nucleotides to consider
+RNA as a polymer. An RNA shorter than this threshold is classified in
 the NoRNA group.}
+
+\item{force}{A logical to force the query instead of getting presaved data.}
 
 \item{...}{Arguments to be passed to query function (see ?queryFunctions).}
 }
@@ -23,22 +26,26 @@ the NoRNA group.}
 A string with the type of RNA.
 }
 \description{
-From different queries to databases, the function classifies a structure in
-different groups:\cr
+The functions classify a structure in the following groups:\cr
 \itemize{
-\item {NoRNA}: the structure does not contain RNA or it is shorter than a
-threshold set by "length".\cr
-\item {nakedRNA}: the only molecule(s) in the PDB ID is RNA.\cr
-\item {protRNA}: the PDB contains a protein-RNA complex.\cr
-\item {DprotRNA}: the PDB contains a protein-RNA complex and the protein has D
-aminoacids.\cr
-\item {DNARNA}: the PDB contains a DNA-RNA hybrid.\cr
-\item {PNARNA}: the PDB contains a PNA-RNA hybrid.\cr
-\item {ANARNA}: the PDB contains a ANA-RNA hybrid.\cr
-\item {LNARNA}: the PDB contains a LNA-RNA hybrid.\cr
-\item {ligandRNA}: the RNA is interacting with an organic ligand, ions are not
-considered.\cr
+\item {NoRNA or NoDNA}: the structure does not contain RNA or it is shorter
+than a threshold set by "length".\cr
+\item {nakedRNA or nakedDNA}: the only molecule(s) in the structure is RNA or
+DNA.\cr
+\item {protRNA or protDNA}: the PDB contains a protein-nuc complex.\cr
+\item {DprotRNA or DprotDNA}: the PDB contains a protein-nuc complex and the
+protein has D aminoacids.\cr
+\item {DNARNA}: the PDB contains DNA-RNA.\cr
+\item {PNARNA or PNADNA}: the PDB contains PNA-RNA.\cr
+\item {ANARNA}: the PDB contains ANA-RNA.\cr
+\item {LNARNA}: the PDB contains LNA-RNA.\cr
+\item {ligandRNA or ligandDNA}: the RNA/DNA is interacting with an organic
+ligand, ions are not considered.\cr
 }
+}
+\details{
+In \code{classifyRNA}, nucleic acid hybrids are considered RNA, while in
+in \code{classifyDNA} they are considered DNA (e.g. pdb ID 2HVR).
 }
 \examples{
 classifyRNA("1S72")

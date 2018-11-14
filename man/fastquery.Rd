@@ -4,7 +4,18 @@
 \name{fastquery}
 \alias{fastquery}
 \title{List of NA containing PDB IDs and related data}
-\format{An object of class data.frame}
+\format{An object of class data.frame:
+\describe{
+\item{pdbID}{PDB ID.}
+\item{Technique}{Experimental technique.}
+\item{Resol}{Resolution. For NMR structures it contains an empty string.}
+\item{DNAclass}{Output of classifyDNA function}
+\item{RNAclassOver0}{Output of classifyRNA with length=0 or length=1. If
+the structure has one or two nucleotides, it is
+also considered an RNA containing structure.}
+\item{RNAclassOver2}{Output of classifyRNA with length=3. RNA molecules
+shorter than 3 are classified as NoRNA.}
+}}
 \usage{
 data(fastquery)
 }

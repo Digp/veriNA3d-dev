@@ -61,12 +61,18 @@ function(pdbID, length=3, force=FALSE, ...) {
         return(check[[2]])
 
     ## Get entity data -------------------------------------------------------
-    data(entities, envir=environment())
-    if (pdbID %in% entities$pdbID) {
-        ind <- which(entities$pdbID == pdbID)
-        MM <- entities[ind, 2:ncol(entities)]
-    } else {
+    if (!force) {
+        data(entities, envir=environment())
+        if (pdbID %in% entities$pdbID) {
+            ind <- which(entities$pdbID == pdbID)
+            MM <- entities[ind, 2:ncol(entities)]
+        } else {
+            MM <- countEntities(pdbID, ...=...)
+            MM <- as.data.frame(rbind(MM))
+        }
+    } else { 
         MM <- countEntities(pdbID, ...=...)
+        MM <- as.data.frame(rbind(MM))
     }
 
     ## If the PDB entry does not contain RNA it is classified as "NoRNA" -----
@@ -139,12 +145,18 @@ function(pdbID, force=FALSE, ...) {
         return("NoDNA")
 
     ## Get entity data -------------------------------------------------------
-    data(entities, envir=environment())
-    if (pdbID %in% entities$pdbID) {
-        ind <- which(entities$pdbID == pdbID)
-        MM <- entities[ind, 2:ncol(entities)]
-    } else {
+    if (!force) {
+        data(entities, envir=environment())
+        if (pdbID %in% entities$pdbID) {
+            ind <- which(entities$pdbID == pdbID)
+            MM <- entities[ind, 2:ncol(entities)]
+        } else {
+            MM <- countEntities(pdbID, ...=...)
+            MM <- as.data.frame(rbind(MM))
+        }
+    } else { 
         MM <- countEntities(pdbID, ...=...)
+        MM <- as.data.frame(rbind(MM))
     }
 
     ## If the PDB entry does not contain RNA it is classified as "NoRNA" -----

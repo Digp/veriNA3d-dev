@@ -58,7 +58,7 @@ Instructions for Unix systems
 
 ### Single-structure level
 
-#### **Functions to query PDB data using the EBI and/or MMB API** (All of them take a PDB ID as input)
+#### **Functions to query PDB data using the PDBe (EMBL-EBI) REST API or a mirror API from the MMB Lab** (All of them take a PDB ID as input)
 
 `queryAuthors`: List of authors
 
@@ -114,7 +114,7 @@ Instructions for Unix systems
 
 `cifParser`: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
-`cifAsPDB`: Wrapper of cifParser that generates a bio3d compatible pdb S3 object.
+`cifAsPDB`: Wrapper of cifParser that generates a pdb object (bio3d compatible S3 object).
 &nbsp;
 
 #### **CIF accessors** (Find descriptions in mmCIF dicctionary: http://mmcif.wwpdb.org/)
