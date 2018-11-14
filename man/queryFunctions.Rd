@@ -50,13 +50,13 @@ queryOrgLigands(pdbID, ...)
 
 queryReldate(pdbID, ...)
 
-queryResol(pdbID, ...)
+queryResol(pdbID, force = FALSE, ...)
 
 queryRevdate(pdbID, ...)
 
 queryStatus(pdbID, ...)
 
-queryTechnique(pdbID, ...)
+queryTechnique(pdbID, force = FALSE, ...)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure in the Protein
@@ -76,6 +76,9 @@ chains is returned.}
 
 \item{onlymodres}{A logical. If TRUE, only the modified residues are
 returned.}
+
+\item{force}{A logical to force the query to the API (TRUE) or allow
+checking presaved data.}
 }
 \value{
 A character vector or data.frame with the desired information:

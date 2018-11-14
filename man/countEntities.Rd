@@ -4,11 +4,13 @@
 \alias{countEntities}
 \title{Count entities}
 \usage{
-countEntities(pdbID, ...)
+countEntities(pdbID, force = FALSE, ...)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure ID in the
 Protein Data Bank.}
+
+\item{force}{A logical to force the query instead of getting presaved data.}
 
 \item{...}{Arguments to be passed to query function (see ?queryFunctions).}
 }

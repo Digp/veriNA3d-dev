@@ -10,6 +10,8 @@
 #' @param chain A string with the chain identifier (in case you are only
 #'     interested in a particular chain). If NULL, the info about all the
 #'     chains is returned.
+#' @param force A logical to force the query to the API (TRUE) or allow 
+#'     checking presaved data.
 #' @param subset Optional argument indicating "type", "length" or 
 #'     "description". If NULL, all the columns in the data.frame are returned.
 #' @param NAtoNa A logical. If TRUE, sodium ion (NA) is modified as "Na".
@@ -227,7 +229,14 @@ function(pdbID, ...) {
 #' @export
 #' @rdname queryFunctions 
 queryResol <- 
-function(pdbID, ...) {
+function(pdbID, force=FALSE, ...) {
+    ## Check if presaved
+    if (!force) {
+        fast <- .fast_check(pdbID, "Resol")
+        if (fast[[1]])
+            return(fast[[2]])
+    }
+
     info <- "resol"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }
@@ -254,7 +263,14 @@ function(pdbID, ...) {
 #' @export
 #' @rdname queryFunctions
 queryTechnique <- 
-function(pdbID, ...) {
+function(pdbID, force=FALSE, ...) {
+    ## Check if presaved
+    if (!force) {
+        fast <- .fast_check(pdbID, "Technique")
+        if (fast[[1]])
+            return(fast[[2]])
+    }
+
     info <- "expType"
     return(queryAPI(pdbID=pdbID, info=info, ...=...))
 }

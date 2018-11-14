@@ -6,6 +6,8 @@
 #'
 #' @param pdbID A 4-character string that matches a structure ID in the
 #' Protein Data Bank.
+#' @param force A logical to force the query instead of getting presaved data.
+#'
 #' @param ... Arguments to be passed to query function (see ?queryFunctions).
 #'
 #' @return A list with the number of instances of each entity.
@@ -16,7 +18,20 @@
 #' @author Diego Gallego
 #'
 countEntities <- 
-function(pdbID, ...) {
+function(pdbID, force=FALSE, ...) {
+
+    ## Check if presaved data is available or force the query
+    pdbID <- toupper(pdbID)
+    if (!force) {
+        data(entities, envir=environment())
+        if (pdbID %in% entities$pdbID) {
+            ind <- which(entities$pdbID == pdbID)
+            MM <- as.integer(entities[ind, 2:ncol(entities)])
+            names(MM) <- c("RNA", "DNA", "Hybrid", "PNA", "Prot", "Dprot", 
+                            "Ligands", "Water", "Other")
+            return(MM)
+        }
+    }
 
     ## Download info about entities, chains and length -----------------------
     Ent <- queryEntities(pdbID, ...=...)
@@ -35,7 +50,8 @@ function(pdbID, ...) {
     Hybrid <- sum(MM$molecule_type == 
                     "polydeoxyribonucleotide/polyribonucleotide hybrid")
     PNA <- sum(MM$molecule_type == "peptide nucleic acid")
-    Prot <- sum(MM$molecule_type == "polypeptide(L)")
+    Prot <- sum(MM$molecule_type %in% c("polypeptide(L)", 
+                                        "cyclic-pseudo-peptide"))
     Dprot <- sum(MM$molecule_type == "polypeptide(D)")
 
     Ligands <- sum(MM$molecule_type == "Bound")
