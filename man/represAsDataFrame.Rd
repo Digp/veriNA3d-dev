@@ -18,11 +18,13 @@ A data frame with the data of the representative structures
 Takes the output of getLeontisList or getAltRepres, which
 represent molecules with the format "XXXX|M|C+XXXX|M|C" (XXXX: PDB ID;
 M: Model; C: Chain) and returns a data.frame with a more friendly
-structure:\cr
-Col 1: Equivalence Class.\cr
-Col 2: PDB ID.\cr
-Col 3: Model.\cr
-Col 4: Chain.\cr
+structure:
+\itemize{
+\item Col 1: Equivalence Class.
+\item Col 2: PDB ID.
+\item Col 3: Model.
+\item Col 4: Chain.
+}
 Columns 2 to 4 can be the direct input of
 \code{\link[=pipeNucData]{pipeNucData()}}
 }

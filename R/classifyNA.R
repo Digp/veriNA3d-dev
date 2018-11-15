@@ -13,7 +13,7 @@
 #' - {ANARNA}: the PDB contains ANA-RNA.\cr
 #' - {LNARNA}: the PDB contains LNA-RNA.\cr
 #' - {ligandRNA or ligandDNA}: the RNA/DNA is interacting with an organic 
-#' ligand, ions are not considered.\cr
+#' ligand. Ions are not considered as ligands in this class.\cr
 #'
 #' In `classifyRNA`, nucleic acid hybrids are considered RNA, while in
 #' in `classifyDNA` they are considered DNA (e.g. pdb ID 2HVR).

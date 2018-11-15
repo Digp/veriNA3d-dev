@@ -4,12 +4,17 @@
 \alias{dssr}
 \title{Dissecting the Spatial Structure of RNA with DSSR}
 \usage{
-dssr(pdbID, exefile = "x3dna-dssr", dssrargs = c("--nmr",
-  "--torsion360", "--more"), verbose = FALSE)
+dssr(pdb, exefile = "x3dna-dssr", dssrargs = c("--nmr", "--torsion360",
+  "--more"), verbose = FALSE)
 }
 \arguments{
-\item{pdbID}{A 4 character string corresponding to a PDB ID or a "pdb"
-object as provided by \code{\link[=cifAsPDB]{cifAsPDB()}} or \code{\link[bio3d:read.pdb]{bio3d::read.pdb()}}.}
+\item{pdb}{It can be:
+\itemize{
+\item A 4 character string corresponding to a PDB ID
+\item A pdb/mmcif file
+\item A pdb object as provided by \code{\link[=cifAsPDB]{cifAsPDB()}} or
+\code{\link[bio3d:read.pdb]{bio3d::read.pdb()}}.
+}}
 
 \item{exefile}{A string with the program name}
 
@@ -18,7 +23,7 @@ object as provided by \code{\link[=cifAsPDB]{cifAsPDB()}} or \code{\link[bio3d:r
 \item{verbose}{A logical indicating whether to print details of the process.}
 }
 \value{
-A list structured as the json output of DSSR
+A list with the json output of DSSR
 }
 \description{
 Wrapper function to execute DSSR (see reference below) on a DNA or RNA

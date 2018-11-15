@@ -3,13 +3,19 @@
 #' Wrapper function to execute DSSR (see reference below) on a DNA or RNA 
 #' structure and parse the result.
 #'
-#' @param pdbID A 4 character string corresponding to a PDB ID or a "pdb"
-#'     object as provided by [cifAsPDB()] or [bio3d::read.pdb()].
+#' @param pdb It can be: 
+#'    \itemize{
+#'        \item A 4 character string corresponding to a PDB ID
+#'        \item A pdb/mmcif file
+#'        \item A pdb object as provided by [cifAsPDB()] or 
+#'            [bio3d::read.pdb()].
+#'    }
+#'
 #' @param exefile A string with the program name
 #' @param dssrargs A vector of strings with the desired arguments to feed DSSR
 #' @param verbose A logical indicating whether to print details of the process.
 #'
-#' @return A list structured as the json output of DSSR
+#' @return A list with the json output of DSSR
 #'
 #' @examples
 #'     dssr_1bau <- dssr("1bau")
@@ -22,7 +28,7 @@
 #'     43(21), e142
 #'
 dssr <- 
-function(pdbID, exefile="x3dna-dssr",
+function(pdb, exefile="x3dna-dssr",
             dssrargs=c("--nmr", "--torsion360", "--more"), verbose=FALSE) {
 
     ## Check if the program is executable ------------------------------------
@@ -38,32 +44,32 @@ function(pdbID, exefile="x3dna-dssr",
     }
 
     ## Check if user provides file or pdb ID ---------------------------------
-    if (length(class(pdbID)) == 1 && class(pdbID) == "character") {
+    if (length(class(pdb)) == 1 && class(pdb) == "character") {
 
-        ## When file exists, infile is defined as input pdbID
-        if (file.exists(pdbID)) {
-            infile <- pdbID
+        ## When file exists, infile is defined as input pdb
+        if (file.exists(pdb)) {
+            infile <- pdb
             flag <- FALSE
 
         ## Otherwise, download structure if possible
-        } else if (nchar(pdbID) == 4) {
+        } else if (nchar(pdb) == 4) {
             format <- "cif"
 
             infile <- tempfile()
             flag <- TRUE
             url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/" ##
             #url <- "mmb.irbbarcelona.org/api/pdb/" ## To use our API
-            download.file(paste(url, pdbID, ".", format, sep=""), 
+            download.file(paste(url, pdb, ".", format, sep=""), 
                             destfile=infile)
 
         ## If the string is not a file or ID, stop
         } else {
-            stop("Provide a valid pdbID")
+            stop("Provide a valid pdb")
         }
 
     } else {
         ## Write file from pdb object
-        if ("pdb" %in% class(pdbID)) {
+        if ("pdb" %in% class(pdb)) {
             infile <- tempfile()
             flag <- TRUE
             tryCatch(
@@ -75,12 +81,12 @@ function(pdbID, exefile="x3dna-dssr",
 
         ## If the input is not a S3 bio3d pdb object
         } else {
-            stop("Provide a valid pdbID")
+            stop("Provide a valid pdb")
         }
     }
 
     ## Create output file name
-    outfile <- tempfile()
+    outfile <- tempfile(fileext=".json")
     ## Generate command instruction
     ## --auxfile=no avoids the generation of additional files
     ## --json ensures an easy parsing of the json formated data
