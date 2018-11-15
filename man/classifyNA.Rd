@@ -40,7 +40,7 @@ protein has D aminoacids.\cr
 \item {ANARNA}: the PDB contains ANA-RNA.\cr
 \item {LNARNA}: the PDB contains LNA-RNA.\cr
 \item {ligandRNA or ligandDNA}: the RNA/DNA is interacting with an organic
-ligand, ions are not considered.\cr
+ligand. Ions are not considered as ligands in this class.\cr
 }
 }
 \details{

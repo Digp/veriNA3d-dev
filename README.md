@@ -12,7 +12,7 @@ Instructions for Unix systems
 1- Make sure you have all the dependencies already installed in R. If not the case, open R and run:
 &nbsp;
 
-    install.packages(c("bio3d", "circlize", "parallel", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN"))
+    install.packages(c("bio3d", "circlize", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN"))
 
 2- Download veriNA3d from GitLab. In a terminal run:
 &nbsp;
