@@ -22,7 +22,7 @@
 #'     43(21), e142
 #'
 dssr <- 
-function(pdbID, exefile="x3dna-dssr", 
+function(pdbID, exefile="x3dna-dssr",
             dssrargs=c("--nmr", "--torsion360", "--more"), verbose=FALSE) {
 
     ## Check if the program is executable ------------------------------------
@@ -32,7 +32,9 @@ function(pdbID, exefile="x3dna-dssr",
 
     if (status != 0) {
         stop(paste("x3dna-dssr execution failed\n",
-                    " Make sure '", exefile, "' is in your search path", sep=""))
+                    " Make sure '", exefile, "' is in your search path.",
+                    "Alternatively, fill the 'exefile' argument with the",
+                    " whole path to the executable", sep=""))
     }
 
     ## Check if user provides file or pdb ID ---------------------------------
@@ -43,23 +45,21 @@ function(pdbID, exefile="x3dna-dssr",
             infile <- pdbID
             flag <- FALSE
 
-        ## Download structure if possible
+        ## Otherwise, download structure if possible
         } else if (nchar(pdbID) == 4) {
             format <- "cif"
 
-        } else if (nchar(pdbID) == 8) {
-            format <- substr(pdbID, 6, 8)
-            pdbID <- substr(pdbID, 1, 4)
+            infile <- tempfile()
+            flag <- TRUE
+            url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/" ##
+            #url <- "mmb.irbbarcelona.org/api/pdb/" ## To use our API
+            download.file(paste(url, pdbID, ".", format, sep=""), 
+                            destfile=infile)
 
         ## If the string is not a file or ID, stop
         } else {
             stop("Provide a valid pdbID")
         }
-
-        infile <- tempfile()
-        flag <- TRUE
-        url <- "mmb.irbbarcelona.org/api/pdb/" ## Use our API
-        download.file(paste(url, pdbID, ".", format, sep=""), destfile=infile)
 
     } else {
         ## Write file from pdb object
