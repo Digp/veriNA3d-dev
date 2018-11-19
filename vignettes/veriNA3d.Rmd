@@ -1,0 +1,51 @@
+---
+title: "Use cases of veriNA3d"
+author:
+  - name: Diego Gallego Perez
+    affiliation:
+    - University of Barcelona - Dept. Biochemistry and Molecular Biomedicine
+    - Institute for Research in Biomedicine - (IRB Barcelona), Barcelona 
+        Institute of Science and Technology
+date: "`r Sys.Date()`"
+output: BiocStyle::pdf_document
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+
+knitr::opts_chunk$set(
+    collapse   = TRUE,
+    comment    = "#>",
+    message    = FALSE,
+    warning    = FALSE,
+    fig.width  = 6,
+    fig.height = 2,
+    fig.wide   = TRUE
+)
+
+```
+# Introduction
+
+AAA
+
+# Main use case: Manage Nucleic Acid datasets
+
+Get Leontis list, change representative structures and analyse them with one 
+of the pipelines
+
+# Use case: Querying the EMBL-EBI REST API
+
+Query EBI API and how to construct new queries!
+
+# Use case: eRMSD
+
+For two NMR models of RNA/DNA, compute the eRMSD
+
+# Use case: Generate substructures
+
+For a given structure (CIF or PDB), generate a smaller PDB with the region of 
+interest and surroundings
