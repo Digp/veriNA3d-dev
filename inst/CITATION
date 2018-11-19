@@ -1,0 +1,12 @@
+citHeader("To cite package 'veriNA3d' in publications use:")
+
+     citEntry(entry="Article",
+              title = "Not available yet",
+              author = personList(as.person("Diego Gallego"), as.person("Leonardo Darré"), 
+                                    as.person("Pablo D. Dans"), as.person("Modesto Orozco")),
+                                                        journal = "", year = "",
+                                                        volume = "", pages = "", doi = "",
+
+                                                        textVersion = ""
+                )
+
