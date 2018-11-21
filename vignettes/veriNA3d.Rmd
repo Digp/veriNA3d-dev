@@ -34,7 +34,7 @@ The R language provides an excellent interface for statistical analysis, which
 is also interesting from the point of view of structural data. This gap was 
 filled in 2006 by the R package bio3d [@Grant2006]. It was presented as a 
 suite of tools to handle PDB formated structures, and trajectories. 
-It integrates a variety of tools to analyse these data, from 
+It integrates a variety of functions to analyse these data, from 
 sequence to 3D structure (RMSD, NMA, PCA... see their reference for details), 
 and later on a parser for mmCIF files also.
 
@@ -45,15 +45,15 @@ The only common tool integrated in both packages is a parser for mmCIF files
 Nucleic Acids. It integrates a higher level of abstraction than bio3d since it
 also allows the analysis of datasets, in addition to analysis of single
 structures. The functions in the package could be divided in the following 
-blocks (list detailed in the README file):
+blocks (complete list in README file):
 
 * Dataset level: Functions to get and analyse lists of pdb IDs. This includes
-the representative lists of RNA by [@Leontis2012] and analytical tools.
+the representative lists of RNA by [@Leontis2012] and analytical functions.
 
 * Structure level: Functions to get data, parse mmCIF files and analyse these
 data.
 
-* Plots: A minimum sample of plots to be done after the previous analysis. 
+* Plots: Some examples of plots to be done after the previous analysis. 
 
 
 # mmCIF files and the S4 CIF attributes
@@ -104,3 +104,5 @@ For two NMR models of RNA/DNA, compute the eRMSD
 For a given structure (CIF or PDB), generate a smaller PDB with the region of 
 interest and surroundings
 
+
+# References
