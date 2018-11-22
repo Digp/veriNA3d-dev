@@ -25,7 +25,7 @@ Instructions for Unix systems
     In the same directory run:
 &nbsp;
 
-    R CMD build veriNA3d_0.99.0
+    R CMD build veriNA3d_0.99.0 --no-build-vignettes
     R CMD INSTALL veriNA3d_0.99.0.tar.gz --no-lock
 
 4- Remove unncessary files:
