@@ -16,10 +16,8 @@ Instructions for Unix systems
 
 2- Download veriNA3d from GitLab ("http://mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master").
 The zip file contains two equivalent versions of the package:
-
     * veriNA3d\_R-3.5.tar.gz
     * veriNA3d\_R-3.4.tar.gz 
-
 The whole package has been developed and tested in R-3.5, which makes it the recommended option. Furthermore, using R-3.5 speeds up the cifParser function, which has a dramatic effect when working with large mmCIF files.
 
 3- Unzip the file and copy-paste the desired version of the package in your working directory.
