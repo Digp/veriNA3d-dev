@@ -12,25 +12,26 @@ Instructions for Unix systems
 1- Make sure you have all the dependencies already installed in R. If not the case, open R and run:
 &nbsp;
 
-    install.packages(c("bio3d", "circlize", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN"))
+    install.packages(c("bio3d", "circlize", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN", "knitr", "devtools"))
 
-2- Download veriNA3d from GitLab ("http://mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d/repository/archive.zip?ref=master").
-The zip file contains two equivalent versions of the package:
-
-`veriNA3d_R-3.5.tar.gz`
-
-`veriNA3d_R-3.4.tar.gz`
-
-The whole package has been developed and tested in R-3.5, which makes it the recommended option. Furthermore, using R-3.5 speeds up the cifParser function, which has a dramatic effect when working with large mmCIF files. The package has been also made available for R-3.4 since some unix users are experiencing problems when installing R-3.5.
-
-3- Unzip the file and copy-paste the desired version of the package in your working directory.
-
-4- Open R and run:
+2- Download veriNA3d from GitLab. In a terminal run:
 &nbsp;
 
-    install.packages("veriNA3d_R-3.5.tar.gz", repos = NULL, type="source")
+    wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d-dev/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip
+    unzip veriNA3d_0.99.0.zip
+    mv veriNA3d-master* veriNA3d_0.99.0
 
-5- If desired, remove the unnecessary .tar.gz files and the .zip file.
+3- Build and install it:
+    In the same directory run:
+&nbsp;
+
+    R CMD build veriNA3d_0.99.0 #--no-build-vignettes #Optional argument to skip the creation of the vignettes
+    R CMD INSTALL veriNA3d_0.99.0.tar.gz --no-lock
+
+4- Remove unncessary files:
+&nbsp;
+
+    rm -rf veriNA3d_0.99.0*
 
 
 ## Documentation
