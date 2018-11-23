@@ -21,7 +21,7 @@ The zip file contains two equivalent versions of the package:
 
 `veriNA3d_R-3.4.tar.gz`
 
-The whole package has been developed and tested in R-3.5, which makes it the recommended option. Furthermore, using R-3.5 speeds up the cifParser function, which has a dramatic effect when working with large mmCIF files.
+The whole package has been developed and tested in R-3.5, which makes it the recommended option. Furthermore, using R-3.5 speeds up the cifParser function, which has a dramatic effect when working with large mmCIF files. The package has been also made available for R-3.4 since some unix users are experiencing problems when installing R-3.5.
 
 3- Unzip the file and copy-paste the desired version of the package in your working directory.
 
