@@ -58,7 +58,7 @@ NULL
 queryAuthors <-
 function(pdbID, ...) {
     info <- "autsList"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -84,7 +84,7 @@ function(pdbID, chain=NULL, subset=NULL, ...) {
 queryCompound <-
 function(pdbID, ...) {
     info <- "compound"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -93,7 +93,7 @@ function(pdbID, ...) {
 queryCompType <-
 function(pdbID, ...) {
     info <- "compType"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -102,7 +102,7 @@ function(pdbID, ...) {
 queryDepdate <-
 function(pdbID, ...) {
     info <- "ascDate"
-    output <- queryAPI(pdbID=pdbID, info=info, ...=...)
+    output <- queryAPI(ID=pdbID, info=info, ...=...)
     output <- gsub(pattern="\\/", replacement="-", output, fixed=TRUE)
     return(output)
 }
@@ -113,7 +113,7 @@ function(pdbID, ...) {
 queryEntities <-
 function(pdbID, ...) {
     info <- "entities"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -122,7 +122,7 @@ function(pdbID, ...) {
 queryFormats <-
 function(pdbID, ...) {
     info <- "formats"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -131,7 +131,7 @@ function(pdbID, ...) {
 queryHeader <-
 function(pdbID, ...) {
     info <- "header"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -140,7 +140,7 @@ function(pdbID, ...) {
 queryHetAtms <-
 function(pdbID, NAtoNa=TRUE, ...) {
     info <- "hetAtms"
-    out <- queryAPI(pdbID=pdbID, info=info, ...=...)
+    out <- queryAPI(ID=pdbID, info=info, ...=...)
     if (is.null(out)) return(NULL)
     if (NAtoNa && any(is.na(out))) out[which(is.na(out))] <- "Na"
     return(out)
@@ -163,7 +163,7 @@ function(pdbID, onlymodres=FALSE, ...) {
 queryNDBId <-
 function(pdbID, ...) {
     info <- "NDBId"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -173,7 +173,7 @@ queryLigands <-
 function(pdbID, onlyligands=FALSE, NAtoNA=TRUE, ...) {
     string1 <- "pdb/entry/ligand_monomers/"
     string2 <- ""
-    out <- queryAPI(pdbID=pdbID, API="ebi", 
+    out <- queryAPI(ID=pdbID, API="ebi", 
                     string1=string1, string2=string2)[[1]]
 
     if (any(is.na(out$chem_comp_id) | out$chem_comp_id == "NA")) {
@@ -222,7 +222,7 @@ function(pdbID, ...) {
 queryReldate <-
 function(pdbID, ...) {
     info <- "relDate"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -238,7 +238,7 @@ function(pdbID, force=FALSE, ...) {
     }
 
     info <- "resol"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -247,7 +247,7 @@ function(pdbID, force=FALSE, ...) {
 queryRevdate <-
 function(pdbID, ...) {
     info <- "revDate"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -256,7 +256,7 @@ function(pdbID, ...) {
 queryStatus <- 
 function(pdbID, ...) {
     info <- "status"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 
@@ -272,7 +272,7 @@ function(pdbID, force=FALSE, ...) {
     }
 
     info <- "expType"
-    return(queryAPI(pdbID=pdbID, info=info, ...=...))
+    return(queryAPI(ID=pdbID, info=info, ...=...))
 }
 ##############################################################################
 ## Internal objects

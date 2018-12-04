@@ -5,8 +5,8 @@
 #' wrapper called by most of the queryFunctions (for documentation see
 #' ?queryFunctions).
 #'
-#' @param pdbID A 4-character string that matches a structure in the Protein 
-#'     Data Bank.
+#' @param ID A 4 character string that matches a structure in the Protein 
+#'     Data Bank, or a 3 character string matching a compound.
 #' @param info A string with the desired query name.
 #' @param API A string that matches "ebi" or "mmb".
 #' @param string1 A string to configure the query. See example below.
@@ -25,10 +25,10 @@
 #'     ## 'queryAPI' understands it with four intructions:
 #'     ## 'API="ebi"' stands for the root of the website name ("http.../api/").
 #'     ## 'string1' is the string from the root to the pdb ID.
-#'     ## 'pdbID' is just the 4-character PDB code.
+#'     ## 'ID' is just the PDB code.
 #'     ## 'string2' is the string after the pdb ID.
 #'     ## Thus, the call would be:
-#'     data <- queryAPI(pdbID="1s72", API="ebi", 
+#'     data <- queryAPI(ID="1s72", API="ebi", 
 #'                         string1="topology/entry/", string2="chain/H/")
 #'
 #' @author Diego Gallego
@@ -36,11 +36,11 @@
 
 ## Higher level common function to make API calls
 queryAPI <-
-function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
+function(ID, info=NULL, API="default", string1=NULL, string2=NULL,
             reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE) {
 
-    ## Check that the input pdbID is 4 character string ----------------------
-    if (nchar(pdbID) > 4) {
+    ## Check that the input ID is not over 4 character string ----------------
+    if (nchar(ID) > 4) {
         stop("Please provide a correct PDB ID")
     }
 
@@ -69,7 +69,7 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
     }
 
     ## Generate string with the website name
-    URL <- paste(webroot, string1, pdbID, sep="")
+    URL <- paste(webroot, string1, ID, sep="")
     if (string2 != "") {
         URL <- paste(URL, "/", string2, sep="")
     }
@@ -82,7 +82,7 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
         if (is.null(info)) {
             info <- URL
         }
-        infoname <- paste(".", toupper(pdbID), info, API, sep="")
+        infoname <- paste(".", toupper(ID), info, API, sep="")
 
         if (exists(infoname, envir=envir)) {
             if (verbose) 
@@ -106,7 +106,7 @@ function(pdbID, info=NULL, API="default", string1=NULL, string2=NULL,
         #.launchquery(URL, FUN=..launchquery, JSON=FALSE)
         if (process) {
             output <- tryCatch({
-                            .process_mmb_call(text, info, pdbID)
+                            .process_mmb_call(text, info, ID)
                         }, error = function(e) {
                             NULL
                         })
