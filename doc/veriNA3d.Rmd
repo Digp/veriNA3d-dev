@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 )
 
 ```
-# Introduction
+# Introduction: Structural Bioinformatics in R
 
 The R language provides an excellent interface for statistical analysis, which
 is also interesting from the point of view of structural data. This gap was 
@@ -36,10 +36,10 @@ filled in 2006 by the R package
 [bio3d](http://thegrantlab.org/bio3d/) [@Grant2006]. 
 It was presented as a 
 suite of tools to handle PDB formated structures, and trajectories. 
-It integrates a variety of functions to analyse these data, from 
-sequence to 3D structure (RMSD, NMA, PCA... see their 
+It integrates a variety of functions to analyse from 
+sequence to 3D structure data (RMSD, NMA, PCA... see their 
 [documentation](http://thegrantlab.org/bio3d/html/index.html) for details).
-As far as we know, bio3d represented the only structural package for R until 
+As far as we know, bio3d represented the only structural package for R until
 now.
 
 The R package presented in here, veriNA3d, does not replace bio3d at all.
@@ -49,7 +49,7 @@ The only common tool integrated in both packages is a parser for mmCIF files
 Nucleic Acids. It integrates a higher level of abstraction than bio3d since it
 also allows the analysis of datasets, in addition to analysis of single
 structures. The functions in the package could be divided in the following 
-blocks (complete list in README file):
+blocks:
 
 * Dataset level: Functions to get and analyse lists of pdb IDs. This includes
 access to the [representative lists of RNA](
@@ -65,7 +65,7 @@ The complete list of functions can be found in the README.md file within the
 package, also accessible on the gitlab 
 [main page](http://mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d).
 
-# Parsing mmCIF files and the R S4 Object "CIF".
+# Parsing mmCIF files
 
 ## Origin and standardization of mmCIF files
 
@@ -86,7 +86,7 @@ structures didn't populate the database at the time, most software has been
 developed for the PDB format.
 
 The PDB format was definetely frozen in 2014. However, it will still coexist
-with the standard mmCIF format as long as "old" software evolves to accept
+with the standard mmCIF format as long as all softwares evolve to accept
 mmCIFs. Following this trend, the bio3d R package integrated a read.cif 
 function in their version 2.3. At that time, we had already started the 
 development of our own cifParser function. Given that the mmCIF format is
@@ -96,11 +96,76 @@ fast alternative for users working with mmCIF files.
 
 ## The CIF object
 
-The R language supports different kinds of 
-[objects](http://adv-r.had.co.nz/OO-essentials.html),
-being the S3 and S4 the most common ones. The S3 objects 
-Later on, i
-also integrated a parser for mmCIF files.
+Parsing a particular file format often involves creating a new class of object.
+In R, the principal [objects](http://adv-r.had.co.nz/OO-essentials.html) are 
+called S3, S4 and RC. Our container for mmCIF data is an S4 object called 
+**CIF**, in contrast with the S3 object (called **pdb**) in bio3d - it is 
+worth noting that this difference does **not** affect the compatibility 
+between the two packages (see below for details).
+
+Since different mmCIF files usually have different sections of data 
+(in addition to the coordinates), we carried out an analisis that checked 
+which ones are always present in all mmCIF files (this included all mmCIF 
+files in the Protein Data Bank in March 2018), and reached a list of 14
+items:
+
+* Atom\_site
+* Atom\_sites
+* Atom\_type
+* Audit\_author
+* Audit\_conform
+* Chem\_comp
+* Database\_2
+* Entity
+* Entry
+* Exptl
+* Pdbx\_database\_status
+* Struct
+* Struct\_asym
+* Struct\_keywords 
+
+The detailed description of each these data sections can be found in the
+mmCIF [main site](http://mmcif.wwpdb.org/).
+
+The CIF object is created by the `cifParser` function and contains these 14
+sections of data, which can be accessed with the CIF accessors. To see the
+accessor functions run:
+
+```{r ?cif_accessors}
+library(veriNA3d)
+?cif_accessors
+```
+
+
+To read a mmCIF file and access the coordinates data, use:
+
+```{r cifParser(pdbID)}
+## To parse a local mmCIF file:
+# cif <- cifParser("your-file.cif")
+## To download from PDB directly:
+cif <- cifParser("1bau")
+cif
+## To see the coordinates:
+coords <- cifAtom_site(cif)
+head(coords)
+```
+
+
+## Bidirectional compatibility with bio3d
+
+Using the `cifPArser` will often be the first step to analyse a structure. 
+However, if the analisys requires any of the bio3d functions, then a 
+conversion should be done with the `cifAsPDB` function.
+
+```{r cifAsPDB(cif)}
+pdb <- cifAsPDB(cif)
+pdb
+```
+
+It takes a CIF object and generates an equivalent pdb object (as used by all 
+bio3d functions). In addition, all veriNA3d functions are prepared to accept 
+as input either the CIF or pdb objects. Therefore, the compatibility between
+the two packages is bidirectional.
 
 
 # Main use case: Manage Nucleic Acid datasets
@@ -120,6 +185,5 @@ For two NMR models of RNA/DNA, compute the eRMSD
 
 For a given structure (CIF or PDB), generate a smaller PDB with the region of 
 interest and surroundings
-
 
 # References

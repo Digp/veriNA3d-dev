@@ -11,3 +11,21 @@ knitr::opts_chunk$set(
 )
 
 
+## ----?cif_accessors--------------------------------------------------------
+library(veriNA3d)
+?cif_accessors
+
+## ----cifParser(pdbID)------------------------------------------------------
+## To parse a local mmCIF file:
+# cif <- cifParser("your-file.cif")
+## To download from PDB directly:
+cif <- cifParser("1bau")
+cif
+## To see the coordinates:
+coords <- cifAtom_site(cif)
+head(coords)
+
+## ----cifAsPDB(cif)---------------------------------------------------------
+pdb <- cifAsPDB(cif)
+pdb
+

@@ -120,7 +120,7 @@ setMethod("cifParser",
     
         ## Parse lines block -------------------------------------------------
         ## Find #, they indicate the beggining/end of each section
-        hash_inds <- grep("^#$", pdb, perl=T)
+        hash_inds <- grep("^#", pdb, perl=T)
         loop_inds <- which(pdb == "loop_")
 
         ## Define a list of indices for sections of interest
