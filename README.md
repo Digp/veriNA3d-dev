@@ -9,6 +9,13 @@ VeriNA3d is an R package for the analysis of Nucleic Acid structural data. The s
 
 Instructions for Unix systems
 
+0- Make sure you have the linux dependencies for devtools already preinstalled. In a terminal (debian/ubuntu) run:
+&nbsp;
+
+    sudo apt-get libcurl4-openssl-dev
+    sudo apt-get libssl-dev
+    sudo apt-get libgit2-dev
+
 1- Make sure you have all the dependencies already installed in R. If not the case, open R and run:
 &nbsp;
 
