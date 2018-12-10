@@ -1,27 +1,27 @@
 Package: veriNA3d
 Type: Package
-Title: Biological Structure Analysis
+Title: Biological Structure Analysis 
 Version: 0.99.0
 Date: 2017-03-14
 Author: Diego Gallego
 Maintainer: Diego Gallego <diego.gallego@irbbarcelona.org>
 Description: Structural bioinformatics is a hard field we work to make easier.
-    We provide tools to extract information from PDB structures, manage these
-    data and save the results in different kinds of plots. The package was
-    developed (and so the examples and vignettes) to do data mining with PDB
-    data focused on RNA, but most of its functionalities are extensible to the
+    We provide tools to extract information from PDB structures, manage these 
+    data and save the results in different kinds of plots. The package was 
+    developed (and so the examples and vignettes) to do data mining with PDB 
+    data focused on RNA, but most of its functionalities are extensible to the 
     analysis of any PDB structure.
 License: GPL-3
 Depends: R (>= 3.5)
 Imports: methods, graphics, grDevices, stats, utils,
-         bio3d, circlize, parallel, jsonlite,
+         bio3d, circlize, parallel, jsonlite, 
          plot3D, MASS, RColorBrewer, RANN
 Packaged: 2017-03-14 18:02:52 UTC; dgallego
 LazyData: true
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
-Suggests:
+Suggests: 
     knitr,
     rmarkdown
 VignetteBuilder: knitr

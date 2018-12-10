@@ -4,7 +4,7 @@
 \alias{queryFunctions}
 \alias{queryAuthors}
 \alias{queryChains}
-\alias{queryCompound}
+\alias{queryDescription}
 \alias{queryCompType}
 \alias{queryDepdate}
 \alias{queryEntities}
@@ -26,7 +26,7 @@ queryAuthors(pdbID, ...)
 
 queryChains(pdbID, chain = NULL, subset = NULL, ...)
 
-queryCompound(pdbID, ...)
+queryDescription(pdbID, ...)
 
 queryCompType(pdbID, ...)
 
@@ -84,7 +84,7 @@ checking presaved data.}
 A character vector or data.frame with the desired information:
 * {queryAuthors} List of authors.
 * {queryChains} Data frame with list of chains and properties.
-* {queryCompound} Author description of the entry.
+* {queryDescription} Author description of the entry.
 * {queryCompType} Type of entry as defined in PDB (e.g. Prot-nuc).
 * {queryDepdate} Deposition date.
 * {queryEntities} Data frame with list of entities and properties.

@@ -4,13 +4,13 @@
 \alias{queryAPI}
 \title{Launch queries to the MMB or EBI APIs}
 \usage{
-queryAPI(pdbID, info = NULL, API = "default", string1 = NULL,
+queryAPI(ID, info = NULL, API = "default", string1 = NULL,
   string2 = NULL, reuse = TRUE, envir = parent.frame(n = 2),
   verbose = FALSE)
 }
 \arguments{
-\item{pdbID}{A 4-character string that matches a structure in the Protein
-Data Bank.}
+\item{ID}{A 4 character string that matches a structure in the Protein
+Data Bank, or a 3 character string matching a compound.}
 
 \item{info}{A string with the desired query name.}
 
@@ -43,10 +43,10 @@ wrapper called by most of the queryFunctions (for documentation see
     ## 'queryAPI' understands it with four intructions:
     ## 'API="ebi"' stands for the root of the website name ("http.../api/").
     ## 'string1' is the string from the root to the pdb ID.
-    ## 'pdbID' is just the 4-character PDB code.
+    ## 'ID' is just the PDB code.
     ## 'string2' is the string after the pdb ID.
     ## Thus, the call would be:
-    data <- queryAPI(pdbID="1s72", API="ebi", 
+    data <- queryAPI(ID="1s72", API="ebi", 
                         string1="topology/entry/", string2="chain/H/")
 
 }
