@@ -29,6 +29,23 @@ head(coords)
 pdb <- cifAsPDB(cif)
 pdb
 
-## ----echo=FALSE, fig.fullwidth=TRUE----------------------------------------
-knitr::include_graphics('./PDBe_REST_API.png')
+## ----?queryFunctions-------------------------------------------------------
+?queryFunctions
+
+## ----"queryTechnique(pdbID, verbose=TRUE)"---------------------------------
+## Run a query for the first time, which will access the API
+tech <- queryTechnique("4KQX", verbose=TRUE)
+
+## Run the same query for the second time, which will get it from memory
+tech <- queryTechnique("4KQX", verbose=TRUE)
+
+## ----"Example1: queryAPI(ID, API, string1, string2)"-----------------------
+atpsummary <- queryAPI(ID="ATP", API="ebi", 
+                        string1="pdb/compound/summary/", string2="")
+str(atpsummary$ATP)
+
+## ----"Example2: queryAPI(ID, API, string1, string2)"-----------------------
+PISAsummary <- queryAPI(ID="3gcb", API="ebi", 
+                        string1="pisa/noofinterfaces/", string2="0")
+str(PISAsummary$"3gcb")
 

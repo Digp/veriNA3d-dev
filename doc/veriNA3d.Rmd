@@ -168,14 +168,6 @@ as input either the CIF or pdb objects. Therefore, the compatibility between
 the two packages is bidirectional.
 
 
-# Manage Nucleic Acid datasets
-
-Get Leontis list, change representative structures and analyse them with one 
-of the pipelines
-
-
-
-
 # Getting data from Application Programming Interfaces (API)
 
 Getting data is the first step of any pipeline, and parsing files is just one
@@ -191,6 +183,36 @@ to send queries to different APIs. Since sending queries to remote APIs
 requires Internet access, the full functionality of veriNA3d might depend
 on a good connection.
 
+To see all the query functions, run:
+
+```{r ?queryFunctions}
+?queryFunctions
+```
+
+IMPORTANT NOTE: 
+The APIs accessed by veriNA3d are free of use with no limit of queries
+per user. However, this could change if the users of the APIs use them 
+irresponsibly. Servers could eventually fall down if they receive more 
+*calls* than they can actually process. To avoid that, veriNA3d actually
+saves in memory the result of any query, and any time that you use the same
+query again, it will take the cached result. To see this effect, run this test:
+
+```{r "queryTechnique(pdbID, verbose=TRUE)"}
+## Run a query for the first time, which will access the API
+tech <- queryTechnique("4KQX", verbose=TRUE)
+
+## Run the same query for the second time, which will get it from memory
+tech <- queryTechnique("4KQX", verbose=TRUE)
+```
+
+However, this is only saved across the current session of R, and any script
+that uses the query functions will send them to the API every time it is run.
+VeriNA3d does not guarantee the correct service of the APIs and it does not
+monitor any of your processes. However, the API providers 
+can known which IP address is querying their services at any time. To avoid 
+overloading the servers, please make a responsible use (e.g. save locally the 
+data that you use frequently).
+
 ## Querying the EMBL-EBI REST API
 
 An invaluable resource for structural & computational biologists is the 
@@ -201,7 +223,7 @@ Around this technology, the package includes the following set of functions:
 * queryReldate: Release date
 * queryDepdate: Deposition date
 * queryRevdate: Revision date
-* queryCompound: PDB structure title
+* queryDescription: Author description
 * queryEntities: Entitity information
 * queryFormats: File formats for the given ID
 * queryModres: Modified residues
@@ -211,14 +233,71 @@ Around this technology, the package includes the following set of functions:
 * queryTechnique: Experimental Technique
 * queryStatus: Released/Obsolete and related status information
 
+The list of functions is **intendedly limited** in comparison with the dozens
+of *enpoints* of the REST API. Integrating them all would innecessarily
+increase the total amount of functions of the package. Moreover, the API
+might offer more and more *endpoints* with the time, and trying to keep them
+all would make the manteinance of this package more difficult. To allow the 
+users access to their desired endpoints, an alternative method is provided.
 
-queryAPI
+The core of all these (and other) query functions is `queryAPI`, which
+integrates all the error-handling and cache functionalities. With the 
+`queryAPI` function, any user can design their own queries, with a simple
+process. Herein a couple of examples.
 
+### Example 1
 
+This snapshot shows the REST API website and a *call* that is not implemented
+in veriNA3d:
 
-```{r echo=FALSE, fig.fullwidth=TRUE}
-knitr::include_graphics('./PDBe_REST_API.png')
+\begin{center}
+\includegraphics[width=6in]{PDBe_REST_API.png}
+\end{center}
+
+The link of this *endpoint* is:
+https://www.ebi.ac.uk/pdbe/api/pdb/compound/summary/ATP
+
+The `queryAPI` function can understand and send this query using the arguments
+'ID', 'API', 'string1', and 'string2' properly:
+
+```{r "Example1: queryAPI(ID, API, string1, string2)"}
+atpsummary <- queryAPI(ID="ATP", API="ebi", 
+                        string1="pdb/compound/summary/", string2="")
+str(atpsummary$ATP)
 ```
+
+* The common root in all the REST API *endpoints* is 
+"https://www.ebi.ac.uk/pdbe/api/", which is internally managed by the function
+by using *API="ebi"*.
+* The *string1="pdb/compound/summary/"* indicates everything that comes after
+the root and before the ID. 
+* The *ID="ATP"* obviously represents the desired structure, either a
+4 character string for a pdbID or <= 3 character string for compounds.
+* The *string2=""* is also a necessary argument that reflects that nothing
+comes after the ID.
+
+### Example 2
+
+This snapshot shows a second *call* not implemented in veriNA3d:
+
+\begin{center}
+\includegraphics[width=6in]{PDBe_REST_API2.png}
+\end{center}
+
+The link of this *endpoint* is: 
+https://www.ebi.ac.uk/pdbe/api/pisa/noofinterfaces/3gcb/0
+
+The proper call with `queryAPI` would be:
+
+```{r "Example2: queryAPI(ID, API, string1, string2)"}
+PISAsummary <- queryAPI(ID="3gcb", API="ebi", 
+                        string1="pisa/noofinterfaces/", string2="0")
+str(PISAsummary$"3gcb")
+```
+
+This second example shows a case in which the "string2" argument is necessary.
+If you are unsure about the real link that is actually being constructed,
+you can always use *verbose=TRUE* to see it printed.
 
 # Calculate the \(\epsilon\)RMSD
 
@@ -228,5 +307,13 @@ For two NMR models of RNA/DNA, compute the eRMSD
 
 For a given structure (CIF or pdb), generate a smaller PDB with the region of 
 interest and surroundings
+
+# Manage Nucleic Acid datasets
+
+Get Leontis list, change representative structures and analyse them with one 
+of the pipelines
+
+
+
 
 # References
