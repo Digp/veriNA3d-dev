@@ -168,12 +168,22 @@ as input either the CIF or pdb objects. Therefore, the compatibility between
 the two packages is bidirectional.
 
 
-# Manage Nucleic Acid datasets
+# Getting data from Application Programming Interfaces (API)
 
-Get Leontis list, change representative structures and analyse them with one 
-of the pipelines
+Getting data is the first step of any pipeline, and parsing files is just one
+of the many ways data can be accessed. Application Programming Interfaces (API)
+are an intermediate point of access to a remote database. APIs offer the
+users a series of *endpoints* or *calls*, which are just **links**. Thus, 
+instead of dealing directly with the database with SQL or other language, the
+user can just use the appropriate *call* to send a query to the API, and it 
+will return the desired data.
 
-# Querying the EMBL-EBI REST API
+In addition to parsing mmCIF files, veriNA3d also offers a series of functions
+to send queries to different APIs. Since sending queries to remote APIs 
+requires Internet access, the full functionality of veriNA3d might depend
+on a good connection.
+
+## Querying the EMBL-EBI REST API
 
 An invaluable resource for structural & computational biologists is the 
 [PDBe REST API](https://www.ebi.ac.uk/pdbe/pdbe-rest-api) [@Velankar2015].
@@ -185,7 +195,6 @@ Around this technology, the package includes the following set of functions:
 * queryRevdate: Revision date
 * queryCompound: PDB structure title
 * queryEntities: Entitity information
-* countEntities: In a given pdbID it counts the total number of each different kind of entity (RNA, DNA, Protein ...)
 * queryFormats: File formats for the given ID
 * queryModres: Modified residues
 * queryLigands: Ligands in structure
@@ -202,6 +211,14 @@ queryAPI
 ```{r echo=FALSE, fig.fullwidth=TRUE}
 knitr::include_graphics('./PDBe_REST_API.png')
 ```
+
+# Manage Nucleic Acid datasets
+
+Get Leontis list, change representative structures and analyse them with one 
+of the pipelines
+
+
+
 
 # Calculate the \(\epsilon\)RMSD
 

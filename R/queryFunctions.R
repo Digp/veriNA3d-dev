@@ -21,7 +21,7 @@
 #' @return A character vector or data.frame with the desired information:
 #'     * {queryAuthors} List of authors.
 #'     * {queryChains} Data frame with list of chains and properties.
-#'     * {queryCompound} Author description of the entry.
+#'     * {queryDescription} Author description of the entry.
 #'     * {queryCompType} Type of entry as defined in PDB (e.g. Prot-nuc).
 #'     * {queryDepdate} Deposition date.
 #'     * {queryEntities} Data frame with list of entities and properties.
@@ -81,7 +81,7 @@ function(pdbID, chain=NULL, subset=NULL, ...) {
 
 #' @export
 #' @rdname queryFunctions
-queryCompound <-
+queryDescription <-
 function(pdbID, ...) {
     info <- "compound"
     return(queryAPI(ID=pdbID, info=info, ...=...))

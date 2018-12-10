@@ -80,7 +80,7 @@ Instructions for Unix systems
 
 `queryRevdate`: Revision date
 
-`queryCompound`: PDB structure title
+`queryDescription`: Author description
 
 `queryCompType`: Compound type (e.g. Nuc or Prot-nuc)
 
