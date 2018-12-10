@@ -124,7 +124,7 @@ items:
 * Struct\_asym
 * Struct\_keywords 
 
-The detailed description of each these data sections can be found in the
+The detailed description of each data sections can be found in the
 mmCIF [main site](http://mmcif.wwpdb.org/).
 
 The CIF object is created by the `cifParser` function and contains these 14
@@ -168,22 +168,27 @@ as input either the CIF or pdb objects. Therefore, the compatibility between
 the two packages is bidirectional.
 
 
-# Main use case: Manage Nucleic Acid datasets
+# Manage Nucleic Acid datasets
 
 Get Leontis list, change representative structures and analyse them with one 
 of the pipelines
 
-# Use case: Querying the EMBL-EBI REST API
+# Querying the EMBL-EBI REST API
 
-Query EBI API and how to construct new queries!
+An invaluable resource for structural & computational biologists is the 
+[PDBe REST API](https://www.ebi.ac.uk/pdbe/pdbe-rest-api) [@Velankar2015]
 
-# Use case: eRMSD
+```{r echo=FALSE, fig.fullwidth=TRUE}
+knitr::include_graphics('./PDBe_REST_API.png')
+```
+
+# Calculate the \(\epsilon\)RMSD
 
 For two NMR models of RNA/DNA, compute the eRMSD
 
-# Use case: Generate substructures
+# Generate substructures
 
-For a given structure (CIF or PDB), generate a smaller PDB with the region of 
+For a given structure (CIF or pdb), generate a smaller PDB with the region of 
 interest and surroundings
 
 # References

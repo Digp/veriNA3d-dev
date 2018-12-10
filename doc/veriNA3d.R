@@ -29,3 +29,6 @@ head(coords)
 pdb <- cifAsPDB(cif)
 pdb
 
+## ----echo=FALSE, fig.fullwidth=TRUE----------------------------------------
+knitr::include_graphics('./PDBe_REST_API.png')
+
