@@ -114,7 +114,7 @@ thresholds <-
 
 ## ============================================================================
 ## Get Leontis List last release number and date
-.getLastReslease <-
+.getLastRelease <-
 function() {
     ## Find last release -----------------------------------------------------
     URL <- "http://mmb.irbbarcelona.org/api/RNANRList/info"

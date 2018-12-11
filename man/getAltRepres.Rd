@@ -20,6 +20,8 @@ the {classifyRNA} function.}
 
 \item{length}{To be passed to {classifyRNA}.}
 
+\item{progressbar}{A logical to print in screen a progress bar.}
+
 \item{verbose}{A logical to print details of the process.}
 }
 \value{

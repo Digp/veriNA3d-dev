@@ -44,7 +44,7 @@ queryModres(pdbID, onlymodres = FALSE, ...)
 
 queryNDBId(pdbID, ...)
 
-queryLigands(pdbID, onlyligands = FALSE, NAtoNA = TRUE, ...)
+queryLigands(pdbID, onlyligands = FALSE, NAtoNa = TRUE, ...)
 
 queryOrgLigands(pdbID, ...)
 
@@ -76,6 +76,9 @@ chains is returned.}
 
 \item{onlymodres}{A logical. If TRUE, only the modified residues are
 returned.}
+
+\item{onlyligands}{A logical. If TRUE, the function only returns the list
+of unique ligands.}
 
 \item{force}{A logical to force the query to the API (TRUE) or allow
 checking presaved data.}

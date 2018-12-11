@@ -5,8 +5,9 @@
 \title{Trim a pdb/cif object to obtain a nucleotide/s of interest and the
 surrounding area.}
 \usage{
-trimSphere(cif, model = NULL, ntindex, chain, sel = NULL, cutoff = 8,
-  cutres = FALSE, file = NULL, verbose = TRUE, ...)
+trimSphere(cif, model = NULL, ntindex = NULL, chain = NULL,
+  sel = NULL, cutoff = 8, cutres = FALSE, file = NULL,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
@@ -52,8 +53,8 @@ that only includes the nearest atoms.
     ## Toy example:
     cif <- cifParser("1s72")
 
-    ## Generate a smaller pdb with the atoms 55 to 58 of the RNA chain "9"
-    ## with a sorrounding sphere of 5 Angstroms:
+    ## Generate a smaller pdb with the residues 55 to 58 of the RNA chain
+    ## "9" with a sorrounding sphere of 5 Angstroms:
     smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
                                 cutoff=5, verbose=FALSE)
 

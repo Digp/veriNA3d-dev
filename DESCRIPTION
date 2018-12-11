@@ -11,7 +11,7 @@ Description: Structural bioinformatics is a hard field we work to make easier.
     developed (and so the examples and vignettes) to do data mining with PDB 
     data focused on RNA, but most of its functionalities are extensible to the 
     analysis of any PDB structure.
-License: GPL-3, see LICENCE file
+License: GPL-3
 Depends: R (>= 3.5)
 Imports: methods, graphics, grDevices, stats, utils,
          bio3d, circlize, parallel, jsonlite, 
