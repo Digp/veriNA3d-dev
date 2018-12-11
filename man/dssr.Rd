@@ -30,7 +30,8 @@ Wrapper function to execute DSSR (see reference below) on a DNA or RNA
 structure and parse the result.
 }
 \examples{
-    dssr_1bau <- dssr("1bau")
+    # Not run
+    # dssr_1bau <- dssr("1bau")
 
 }
 \references{

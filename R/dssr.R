@@ -18,7 +18,8 @@
 #' @return A list with the json output of DSSR
 #'
 #' @examples
-#'     dssr_1bau <- dssr("1bau")
+#'     # Not run
+#'     # dssr_1bau <- dssr("1bau")
 #'
 #' @author Diego Gallego
 #'
