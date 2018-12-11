@@ -33,8 +33,8 @@
 #'     ## Toy example:
 #'     cif <- cifParser("1s72")
 #'
-#'     ## Generate a smaller pdb with the atoms 55 to 58 of the RNA chain "9"
-#'     ## with a sorrounding sphere of 5 Angstroms:
+#'     ## Generate a smaller pdb with the residues 55 to 58 of the RNA chain
+#'     ## "9" with a sorrounding sphere of 5 Angstroms:
 #'     smallerpdb <- trimSphere(cif, ntindex=seq(55, 58, 1), chain="9", 
 #'                                 cutoff=5, verbose=FALSE)
 #'
@@ -53,7 +53,7 @@
 #' @author Diego Gallego
 #'
 trimSphere <-
-function(cif, model=NULL, ntindex, chain, sel=NULL, cutoff=8, 
+function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8, 
             cutres=FALSE, file=NULL, verbose=TRUE, ...) {
 
     ## Make sure the object is a S3 pdb object with the desired model --------
@@ -65,13 +65,26 @@ function(cif, model=NULL, ntindex, chain, sel=NULL, cutoff=8,
     ## Find eleno numbers ----------------------------------------------------
     data <- paste(cif$atom$resno, cif$atom$insert, cif$atom$chain, sep="|")
     if (is.null(sel)) {
-        inds <- which(cif$atom$elety == "C4'" & cif$atom$chain == chain) 
+        if (is.null(chain)) {
+            stop("Please, provide a sel or chain argument")
+        }
+        inds <- which(cif$atom$elety == "C4'" & cif$atom$chain == chain)
+        if (length(inds) == 0) {
+            inds <- which(cif$atom$elety == "CA" & cif$atom$chain == chain)
+        }
+        if (length(inds) == 0) {
+            inds <- which(cif$atom$chain == chain)
+        }
+        if (is.null(ntindex)) {
+            ntindex <- seq_along(inds)
+        }
         resno <- cif$atom$resno[inds][ntindex]
         insert <- cif$atom$insert[inds][ntindex]
         query <- paste(resno, insert, chain, sep="|")
         refeleno <- cif$atom$eleno[data %in% query]
     } else {
         refeleno <- cif$atom$eleno[sel$atom]
+        chain <- unique(cif$atom$chain[sel$atom])
     }
     eleno <- cif$atom$eleno
 
