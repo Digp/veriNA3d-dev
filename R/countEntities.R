@@ -23,7 +23,7 @@ function(pdbID, force=FALSE, ...) {
     ## Check if presaved data is available or force the query
     pdbID <- toupper(pdbID)
     if (!force) {
-        data(entities, envir=environment())
+        data("entities", envir=environment())
         if (pdbID %in% entities$pdbID) {
             ind <- which(entities$pdbID == pdbID)
             MM <- as.integer(entities[ind, 2:ncol(entities)])

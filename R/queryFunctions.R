@@ -15,6 +15,8 @@
 #' @param subset Optional argument indicating "type", "length" or 
 #'     "description". If NULL, all the columns in the data.frame are returned.
 #' @param NAtoNa A logical. If TRUE, sodium ion (NA) is modified as "Na".
+#' @param onlyligands A logical. If TRUE, the function only returns the list
+#'     of unique ligands.
 #' @param onlymodres A logical. If TRUE, only the modified residues are 
 #'     returned.
 #' 
@@ -170,15 +172,17 @@ function(pdbID, ...) {
 #' @export
 #' @rdname queryFunctions
 queryLigands <-
-function(pdbID, onlyligands=FALSE, NAtoNA=TRUE, ...) {
+function(pdbID, onlyligands=FALSE, NAtoNa=TRUE, ...) {
     string1 <- "pdb/entry/ligand_monomers/"
     string2 <- ""
     out <- queryAPI(ID=pdbID, API="ebi", 
                     string1=string1, string2=string2)[[1]]
 
-    if (any(is.na(out$chem_comp_id) | out$chem_comp_id == "NA")) {
-        ind <- which(is.na(out$chem_comp_id) | out$chem_comp_id == "NA")
-        out$chem_comp_id[ind] <- "Na"
+    if (NAtoNa) {
+        if (any(is.na(out$chem_comp_id) | out$chem_comp_id == "NA")) {
+            ind <- which(is.na(out$chem_comp_id) | out$chem_comp_id == "NA")
+            out$chem_comp_id[ind] <- "Na"
+        }
     }
 
     if (onlyligands) {

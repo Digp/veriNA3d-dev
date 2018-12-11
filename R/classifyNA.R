@@ -199,7 +199,7 @@ function(pdbID) {
 
 .fast_check <-
 function(pdbID, info, verbose=FALSE) {
-    data(fastquery, envir=environment())
+    data("fastquery", envir=environment())
     pdbID <- toupper(pdbID)
     if (!info %in% names(fastquery)) {
         return(list(FALSE, ""))

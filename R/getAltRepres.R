@@ -12,6 +12,7 @@
 #' @param type A string indicating the type of desired RNA, according with 
 #'  the {classifyRNA} function.
 #' @param length To be passed to {classifyRNA}.
+#' @param progressbar A logical to print in screen a progress bar.
 #' @param verbose A logical to print details of the process.
 #'
 #' @return A data.frame with info about all the "Equivalence Classes" and
@@ -53,7 +54,7 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL, length=3,
     }
 
     ## Get necessary presaved data to speed up the process -------------------
-    data(fastquery, envir=environment())
+    data("fastquery", envir=environment())
     obsolete <- queryObsoleteList()
 
     ## Print progress bar ----------------------------------------------------

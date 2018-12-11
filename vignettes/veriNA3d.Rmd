@@ -1,9 +1,10 @@
 ---
-title: "Use cases of veriNA3d"
+title: "VeriNA3d: introduction and use cases"
 author:
   - name: Diego Gallego Perez
     affiliation:
-    - University of Barcelona - Dept. Biochemistry and Molecular Biomedicine
+    - University of Barcelona - Department of Biochemistry and Molecular 
+        Biomedicine
     - Institute for Research in Biomedicine (IRB Barcelona), Barcelona 
         Institute of Science and Technology
     - Joint BSC-IRB Program in Computational Biology
@@ -11,7 +12,7 @@ date: "`r Sys.Date()`"
 output: BiocStyle::pdf_document
 bibliography: references.bib
 vignette: >
-  %\VignetteIndexEntry{}
+  %\VignetteIndexEntry{Introduction and use cases"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -66,6 +67,7 @@ The complete list of functions can be found in the README.md file within the
 package, also accessible on the gitlab 
 [main page](http://mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d).
 
+\newpage
 # Parsing mmCIF files
 
 ## Origin and standardization of mmCIF files
@@ -168,7 +170,7 @@ bio3d functions). In addition, all veriNA3d functions are prepared to accept
 as input either the CIF or pdb objects. Therefore, the compatibility between
 the two packages is bidirectional.
 
-
+\newpage
 # Getting data from Application Programming Interfaces (API)
 
 Getting data is the first step of any pipeline, and parsing files is just one
@@ -300,6 +302,7 @@ This second example shows a case in which the "string2" argument is necessary.
 If you are unsure about the real link that is actually being constructed,
 you can always use *verbose=TRUE* to see it printed.
 
+\newpage
 # The \(\epsilon\)RMSD to compare structures
 
 A new interesting metric to compare Nucleic Acid structures is the 
@@ -322,6 +325,7 @@ eRMSD <- eRMSD(cif1=model1, cif2=model3)
 eRMSD
 ```
 
+\newpage
 # Generate substructures
 
 In many cases you might be interested on a particular region of a structure
@@ -401,6 +405,7 @@ sel <- atom.select(pdb, eleno=eleno)
 trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
 ```
 
+\newpage
 # Manage Nucleic Acid datasets
 
 Get Leontis list, change representative structures and analyse them with one 
@@ -409,4 +414,5 @@ of the pipelines
 
 
 
+\newpage
 # References

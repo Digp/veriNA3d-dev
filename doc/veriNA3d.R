@@ -70,11 +70,11 @@ head(ent[, c("entity_id", "molecule_name", "in_chains")])
 
 ## Generate a smaller pdb with the 60S ribosomal protein L8
 chain <- "LA"
-protL8 <-trimSphere(cif, chain=chain, cutoff=0)
+protL8 <- trimSphere(cif, chain=chain, cutoff=0)
 protL8
 
 ## The same command with the argument file would save it directly:
-protL8 <-trimSphere(cif, chain=chain, cutoff=0, file="output.pdb")
+protL8 <- trimSphere(cif, chain=chain, cutoff=0, file="output.pdb")
 
 ## ----"trimsphere(structure, selection)"------------------------------------
 ## Load bio3d library

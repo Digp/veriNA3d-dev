@@ -168,7 +168,7 @@ Instructions for Unix systems
 
 `measureEntityDist`: Measures distances between given entities
 
-`measureElenoDist`: Measures distances between gicen atoms
+`measureElenoDist`: Measures distances between given atoms
 
 `trimSphere`: Trim a pdb object and a surrounding sphere of atoms
 
