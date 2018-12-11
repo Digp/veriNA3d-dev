@@ -54,6 +54,7 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL, length=3,
     }
 
     ## Get necessary presaved data to speed up the process -------------------
+    fastquery <- NULL
     data("fastquery", envir=environment())
     obsolete <- queryObsoleteList()
 

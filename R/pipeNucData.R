@@ -351,7 +351,7 @@ function(pdb, model, chain, range, ..., name) {
 
     ## Check and measure the chain and make common data.frame ----------------
     ntinfo1 <- .checkNuc(pdb_ch, model=model, chain=chain, id=name, 
-                            refatm=refatm, select=FALSE, ...)
+                            refatm=refatm, select=FALSE)
     ntinfo2 <- .measureNuc(pdb_ch, model=model, chain=chain, 
                             refatm=refatm, select=FALSE, ...)
 

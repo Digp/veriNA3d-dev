@@ -85,33 +85,6 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
     angles     <- .check_angles(angles)
     torsionals <- .check_torsionals(torsionals)
 
-    ## Check if pucker should be computed ------------------------------------
-    if (!is.null(pucker) && !is.na(pucker) && 
-            (pucker == TRUE | pucker == "default")) {
-
-        add_torsionals <- .torsionals[grep("nu", 
-                                .torsionals$labels, perl=TRUE),]
-
-        ## If torsionals were not going to be computed, now they are
-        if (is.null(torsionals)) {
-            torsionals <- add_torsionals
-
-        ## Check that puckering torsionals are included in the data.frame
-        } else {
-            pucker_tor <- apply(add_torsionals[, seq_len(5)], 1, 
-                function(x) paste(x, collapse= "."))
-            all_tor <- apply(torsionals[, seq_len(5)], 1, 
-                                function(x) paste(x, collapse= "."))
-            if (!all(pucker_tor %in% all_tor)) {
-                torsionals <- rbind(torsionals, add_torsionals)
-            }
-        }
-
-    ## Else do not compute puckering
-    } else {
-        pucker <- NULL
-    }
-
     ## Check if Dp dostance should be computed -------------------------------
     if (!is.null(Dp) && !is.na(Dp) && (Dp == TRUE | Dp == "default")) {
         Dp <- TRUE
@@ -332,6 +305,33 @@ function(pdb, model, chain, v_shifted=TRUE, b_shifted=TRUE,
 
         ## pdb contains the PDB object ONLY with the selected model and chain
         pdb <- trim(pdb, selection)
+    }
+
+    ## Check if pucker should be computed ------------------------------------
+    if (!is.null(pucker) && !is.na(pucker) && 
+            (pucker == TRUE | pucker == "default")) {
+
+        add_torsionals <- .torsionals[grep("nu", 
+                                .torsionals$labels, perl=TRUE),]
+
+        ## If torsionals were not going to be computed, now they are
+        if (is.null(torsionals)) {
+            torsionals <- add_torsionals
+
+        ## Check that puckering torsionals are included in the data.frame
+        } else {
+            pucker_tor <- apply(add_torsionals[, seq_len(5)], 1, 
+                function(x) paste(x, collapse= "."))
+            all_tor <- apply(torsionals[, seq_len(5)], 1, 
+                                function(x) paste(x, collapse= "."))
+            if (!all(pucker_tor %in% all_tor)) {
+                torsionals <- rbind(torsionals, add_torsionals)
+            }
+        }
+
+    ## Else do not compute puckering
+    } else {
+        pucker <- NULL
     }
 
     ## Make sure the chain selected is a nucleic acid ------------------------
