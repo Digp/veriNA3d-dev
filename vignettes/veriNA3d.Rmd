@@ -9,7 +9,7 @@ author:
         Institute of Science and Technology
     - Joint BSC-IRB Program in Computational Biology
 date: "`r Sys.Date()`"
-output: BiocStyle::pdf_document
+output: pdf_document
 bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{Introduction and use cases"}

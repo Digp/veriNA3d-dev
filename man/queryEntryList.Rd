@@ -14,7 +14,7 @@ Function to get the list of ALL PDB IDs in the Protein Data Bank at the
 moment.
 }
 \examples{
-pdblist <- queryEntryList()
+# pdblist <- queryEntryList()
 
 }
 \author{

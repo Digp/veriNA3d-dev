@@ -45,16 +45,16 @@ Given a data.frame with nucleotides data, it generates a series of circular
 plots for the desired angles. NA in the data are ignored.
 }
 \examples{
-    ntinfo <- pipeNucData("1bau")
-    C3endo_ntID <- cleanByPucker(ntinfo, pucker="C3'endo")
+    #ntinfo <- pipeNucData("1bau")
+    #C3endo_ntID <- cleanByPucker(ntinfo, pucker="C3'endo")
 
     ## Plot torsional angles for C3'endo nucleotides
-    plotSetOfDistributions(ntinfo=ntinfo, ntID=C3endo_ntID, 
-                            file="1bau_C3endo.png")
+    #plotSetOfDistributions(ntinfo=ntinfo, ntID=C3endo_ntID, 
+    #                        file="1bau_C3endo.png")
 
     ## Which is the same as doing:
-    C3endo <- ntinfo[ntinfo$ntID \%in\% C3endo_ntID,]
-    plotSetOfDistributions(ntinfo=C3endo, file="1bau_C3endo.png")
+    #C3endo <- ntinfo[ntinfo$ntID \%in\% C3endo_ntID,]
+    #plotSetOfDistributions(ntinfo=C3endo, file="1bau_C3endo.png")
 
 }
 \author{
