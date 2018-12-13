@@ -6,7 +6,7 @@
 #' @return A vector with all the PDB ID entries (updated weekly).
 #' 
 #' @examples 
-#' obsolete <- queryObsoleteList()
+#' # obsolete <- queryObsoleteList()
 #' 
 #' @author Diego Gallego
 #' 

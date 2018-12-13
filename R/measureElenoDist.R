@@ -79,9 +79,9 @@ function(pdb, model=NULL, refeleno, eleno, n=1, cutoff=c(0, 5), verbose=FALSE,
         row.names(B) <- B_eleno
 
     ## Make sure cutoff format is correct ------------------------------------
-    if (is.null(cutoff)) {
+    if (is.null(cutoff) || cutoff < 0) {
         cutoff <- c(0, 5)
-        warning(paste("If you don't select a cutoff, ",
+        warning(paste("If you don't select a positive cutoff, ",
                         "5A is set as default", sep=""))
     }
 
@@ -154,6 +154,16 @@ function(pdb, model=NULL, refeleno, eleno, n=1, cutoff=c(0, 5), verbose=FALSE,
             print(" ... done, the output is coming")
 
         out <- cbind(out, df_A, df_B)
+    }
+
+    ## For pair-wise distances, keep only one combination
+    ## If distance of atom 2 to 3 is included, 3 to 2 is not necessary
+    if (length(eleno) == length(refeleno) && all(eleno == refeleno)) {
+        ## Filter step
+        m <- t(combn(eleno, 2))
+        kk_m <- paste(m[,1], m[,2], sep="_")
+        pastedins <- paste(out$eleno_A, out$eleno_B, sep="_")
+        out <- out[which(pastedins %in% kk_m), ]
     }
     return(out)
 }

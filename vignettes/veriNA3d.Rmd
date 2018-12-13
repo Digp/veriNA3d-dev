@@ -9,7 +9,7 @@ author:
         Institute of Science and Technology
     - Joint BSC-IRB Program in Computational Biology
 date: "`r Sys.Date()`"
-output: pdf_document
+output: BiocStyle::pdf_document
 bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{Introduction and use cases"}
@@ -156,7 +156,7 @@ head(coords)
 
 ## Bidirectional compatibility with bio3d
 
-Using the `cifPArser` will often be the first step to analyse a structure. 
+Using the `cifParser` will often be the first step to analyse a structure. 
 However, if the analisys requires any of the bio3d functions, then a 
 conversion should be done with the `cifAsPDB` function.
 
@@ -403,6 +403,35 @@ sel <- atom.select(pdb, eleno=eleno)
 
 ## Get substructure
 trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
+```
+
+\newpage
+# Calculate phosphate pair-wise distances
+
+Atomic distances are calculated internally in the `trimSphere` function, a 
+resource that is also made available to the user through the functions
+`measureEntityDist` (returns all the distances between the atoms 
+of two entities) and `measureElenoDist` (returns all the distances between a
+set of atoms).
+
+Herein it is shown how to calculate the pair-wise distances between all the
+phosphate atoms of an RNA structure, which could be easily adapted for alpha
+carbons or other elements.
+
+```{r measureElenoDist(structure, refeleno, eleno, cutoff)}
+## Parse pdb
+pdb <- cifAsPDB("1nyb")
+
+## Select P atoms by element number (eleno)
+ind <- which(pdb$atom$elety == "P")
+eleno <- pdb$atom$eleno[ind]
+
+## Count number of phosphates
+total <- length(eleno)
+
+## Execute function to measure the distances
+P_distances <- measureElenoDist(pdb=pdb, refeleno=eleno, eleno=eleno, 
+                                n=total, cutoff=100)
 ```
 
 \newpage

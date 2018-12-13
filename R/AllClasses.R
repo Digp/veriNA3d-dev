@@ -49,7 +49,9 @@ setMethod(
         cat("\n-- mmCIF with ID: ", object@entry,
             " ------------------------------------------------------\n\n",
             sep="")
-        cat("Author description: ", object@struct[2], "\n")
+        description <- paste("Author description: ", object@struct[2], sep="")
+        description <- gsub('(.{1,80})(\\s|$)', '\\1\n', description)
+        cat(description, "\n")
         cat("mmCIF version:       ", object@audit_conform[2], "\n\n", sep="")
         cat("To extract coordinates and other data use accessor functions",
             "\n(type ?cif_accessors for details)", "\n\n", sep="")

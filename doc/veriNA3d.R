@@ -111,3 +111,18 @@ sel <- atom.select(pdb, eleno=eleno)
 ## Get substructure
 trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
 
+## ----measureElenoDist(structure, refeleno, eleno, cutoff)------------------
+## Parse pdb
+pdb <- cifAsPDB("1nyb")
+
+## Select P atoms by element number (eleno)
+ind <- which(pdb$atom$elety == "P")
+eleno <- pdb$atom$eleno[ind]
+
+## Count number of phosphates
+total <- length(eleno)
+
+## Execute function to measure the distances
+P_distances <- measureElenoDist(pdb=pdb, refeleno=eleno, eleno=eleno, 
+                                n=total, cutoff=100)
+
