@@ -6,7 +6,7 @@
 \usage{
 queryAPI(ID, info = NULL, API = "default", string1 = NULL,
   string2 = NULL, reuse = TRUE, envir = parent.frame(n = 2),
-  verbose = FALSE)
+  verbose = FALSE, noerrors = FALSE)
 }
 \arguments{
 \item{ID}{A 4 character string that matches a structure in the Protein
@@ -27,6 +27,8 @@ user access and avoids unnecessary work in the servers).}
 \item{envir}{Environment to save&retrieve the data if reuse is TRUE.}
 
 \item{verbose}{A logical. TRUE to print details of the process.}
+
+\item{noerrors}{A logical. TRUE to suppress errors.}
 }
 \value{
 A vector or data.frame with the desired data.

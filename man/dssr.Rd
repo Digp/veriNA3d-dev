@@ -36,7 +36,7 @@ structure and parse the result.
 }
 \references{
 \preformatted{Lu, X.J., H.J. Bussemaker, and W.K. Olson. 2015. “DSSR: An Integrated 
-Software Tool for Dissection the Spatial Structure of Rna.” Nucleic 
+Software Tool for Dissection the Spatial Structure of RNA.” Nucleic 
 Acids Research 43 (21): e142.
 }
 }

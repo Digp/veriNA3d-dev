@@ -438,10 +438,119 @@ P_distances <- measureElenoDist(pdb=pdb, refeleno=eleno, eleno=eleno,
 \newpage
 # Manage Nucleic Acid datasets
 
-Get Leontis list, change representative structures and analyse them with one 
-of the pipelines
-[@Wadley2007]
-small details matter
+VeriNA3d also provides a set of tools to work at a higher level of abstraction,
+which allow the user to manage datasets of structures at once. Such approaches
+are often found in the literature in a variety of studies, either
+with descriptive [@Murray2003, @Darre2016], validation [@Jain2015] or 
+modeling [@Wang2011, @Wang2015] purposes.
+However, as far as we know, no software with dataset analysis
+purposes has ever been freely distributed before.
+
+## Non-redundant lists of RNA
+
+VeriNA3d integrates
+the function `getLeontisList`, which returns the desired non-redundant list
+of RNA structures, as found in their 
+[website](http://rna.bgsu.edu/rna3dhub/nrlist/) [@Leontis2012]. 
+Here it is shown an example of how to make a non-redundant dataset of 
+protein-RNA complexes with resolutions better than 2 Angstroms.
+
+```{r getLeontisList(release, threshold)}
+## Get non-redundant list from Leontis website
+rnalist <- getLeontisList(release="3.47", threshold="2.0A")
+head(rnalist)
+```
+
+The previous object is a data-frame with three columns:
+* Equivalence class
+* Representative structure
+* Members of the Equivalence class
+
+Note that the output is formated according with Leontis&Zirbel nomenclature
+(AAAA|M|C), where "AAAA" is the PDB accession code, "M" is the model and "C" 
+is the Chain.
+
+The representative structures might not necessarily have the desired properties
+(e.g. being a protein-RNA complex). To get only representatives which are
+complexed with a protein, all the members of the class should be checked,
+which can be done with `getAltRepres`.
+
+```{r 'getAltRepres(rnalist, type="protRNA")'}
+## Set progressbar=TRUE to see the progress
+protrna <- getAltRepres(rnalist=rnalist, type="protRNA", progressbar=FALSE)
+head(protrna)
+```
+
+Many equivalence classes will lack a proper representative, so a NA value is
+returned. To get the definite list in a more friendly format and removing
+missing data, use `represAsDataFrame`.
+
+```{r represAsDataFrame(nrlist)}
+nrlist <- represAsDataFrame(protrna)
+head(nrlist)
+```
+
+## Queries
+
+When analysing a dataset, a particular piece of data might come useful, such
+as the file formats available or if a particular ligand is present or not in
+all the pdb files. A handy function to approach this need is `applyToPDB`.
+Here it's shown how to get the structures in the previous list that contain
+Mg ions:
+
+```{r applyToPDB(listpdb=nrlist, FUN=hasHetAtm, hetAtms="MG")}
+## Set progressbar=TRUE to see the progress
+nrlist_mg <- applyToPDB(FUN=hasHetAtm, listpdb=nrlist$pdb, 
+                        hetAtms="MG", progressbar=FALSE)
+nrlist <- cbind(nrlist, Mg=nrlist_mg[, 2])
+head(nrlist)
+
+## To see only the structures containing Mg use
+head(nrlist[nrlist$Mg == TRUE, ])
+```
+
+In the example, the argument hetAtms is passed to the hasHetAtm function. 
+
+## Reproducing eta-theta Ramachandran-like plots
+
+In 2007, Pyle group published a new metric to study the RNA backbone
+in a simplified way [@Wadley2007]. The parameters of study were two
+pseudo-torsional angles called eta and theta. When plotted, they resemble
+the Ramachandran plots for proteins. With veriNA3d, these plots can be
+esasily reproduced.
+
+For the sake of this example, their dataset was integrated in the package and
+can be accessed with the following command.
+
+```{r data(dataset_wadley2007)}
+data(dataset_wadley2007)
+head(dataset_wadley2007)
+```
+Then, the function `pipeNucData` can extract multiple structural parameters
+for all the dataset, to be then analysed afterwards.
+
+```{r pipeNucData(pdblist, chainlist, cores), eval=FALSE}
+## It takes ~3 min with 2 cores, but it depens on the Internet connection. 
+## Set progressbar=TRUE to see the progress
+ntinfo <- pipeNucData(dataset_wadley2007$pdb, 
+                        chain=dataset_wadley2007$chain, 
+                        progressbar=FALSE, cores=2)
+```
+
+In this case, `pipeNucData` is downloading each structure from internet, but
+you can also download them manually before execution, save them in a directory
+and provide it to the function. When reading files locally, the function is
+obviously faster. The file format can either be pdb or cif, being the cif files
+the recommended option (they can also be read when compressed in .gz). To make
+it work with local files, the extension should also be provided
+(e.g. ".cif.gz", ".cif" or ".pdb"). The following lines have not been executed:
+
+```{r pipeNucData(pdblist, chainlist, cores, path, extension), eval=FALSE}
+ntinfo <- pipeNucData(dataset_wadley2007$pdb,
+                        chain=dataset_wadley2007$chain,
+                        progressbar=FALSE, cores=2, 
+                        path="/your/path/to/the/dataset/", extension="cif.gz")
+```
 
 
 \newpage

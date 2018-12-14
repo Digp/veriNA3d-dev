@@ -126,3 +126,44 @@ total <- length(eleno)
 P_distances <- measureElenoDist(pdb=pdb, refeleno=eleno, eleno=eleno, 
                                 n=total, cutoff=100)
 
+## ----getLeontisList(release, threshold)------------------------------------
+## Get non-redundant list from Leontis website
+rnalist <- getLeontisList(release="3.47", threshold="2.0A")
+head(rnalist)
+
+## ----'getAltRepres(rnalist, type="protRNA")'-------------------------------
+## Set progressbar=TRUE to see the progress
+protrna <- getAltRepres(rnalist=rnalist, type="protRNA", progressbar=FALSE)
+head(protrna)
+
+## ----represAsDataFrame(nrlist)---------------------------------------------
+nrlist <- represAsDataFrame(protrna)
+head(nrlist)
+
+## ----applyToPDB(listpdb=nrlist, FUN=hasHetAtm, hetAtms="MG")---------------
+## Set progressbar=TRUE to see the progress
+nrlist_mg <- applyToPDB(FUN=hasHetAtm, listpdb=nrlist$pdb, 
+                        hetAtms="MG", progressbar=FALSE)
+nrlist <- cbind(nrlist, Mg=nrlist_mg[, 2])
+head(nrlist)
+
+## To see only the structures containing Mg use
+head(nrlist[nrlist$Mg == TRUE, ])
+
+## ----data(dataset_wadley2007)----------------------------------------------
+data(dataset_wadley2007)
+head(dataset_wadley2007)
+
+## ----pipeNucData(pdblist, chainlist, cores), eval=FALSE--------------------
+#  ## It takes ~3 min with 2 cores, but it depens on the Internet connection.
+#  ## Set progressbar=TRUE to see the progress
+#  ntinfo <- pipeNucData(dataset_wadley2007$pdb,
+#                          chain=dataset_wadley2007$chain,
+#                          progressbar=FALSE, cores=2)
+
+## ----pipeNucData(pdblist, chainlist, cores, path, extension), eval=FALSE----
+#  ntinfo <- pipeNucData(dataset_wadley2007$pdb,
+#                          chain=dataset_wadley2007$chain,
+#                          progressbar=FALSE, cores=2,
+#                          path="/your/path/to/the/dataset/", extension="cif.gz")
+

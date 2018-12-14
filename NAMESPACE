@@ -6,7 +6,7 @@ importFrom("grDevices", "dev.off", "png", "rgb")
 importFrom("methods", "new")
 importFrom("stats", "complete.cases", "sd")
 importFrom("utils", "download.file", "read.table", "setTxtProgressBar",
-            "txtProgressBar", "data")
+            "txtProgressBar", "data", "combn")
 importFrom(plot3D, persp3D)
 importFrom(MASS, kde2d, bandwidth.nrd)
 importFrom(jsonlite, fromJSON)

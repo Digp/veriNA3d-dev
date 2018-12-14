@@ -25,7 +25,7 @@
 #'
 #' @references 
 #'     Lu, X.J., H.J. Bussemaker, and W.K. Olson. 2015. “DSSR: An Integrated 
-#'     Software Tool for Dissection the Spatial Structure of Rna.” Nucleic 
+#'     Software Tool for Dissection the Spatial Structure of RNA.” Nucleic 
 #'     Acids Research 43 (21): e142.
 #'
 dssr <- 
@@ -59,9 +59,11 @@ function(pdb, exefile="x3dna-dssr",
             infile <- tempfile()
             flag <- TRUE
             url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/" ##
-            #url <- "mmb.irbbarcelona.org/api/pdb/" ## To use our API
-            download.file(paste(url, pdb, ".", format, sep=""), 
-                            destfile=infile)
+            .launchquery(paste(url, pdb, ".", format, sep=""),
+                                FUN=download.file,
+                                destfile=infile,
+                                method="auto",
+                                quiet=!verbose)
 
         ## If the string is not a file or ID, stop
         } else {

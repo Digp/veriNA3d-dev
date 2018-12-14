@@ -172,7 +172,7 @@ function(pdbID, path=NULL, extension=NULL, verbose=TRUE) {
         if (verbose) {
             print(paste(
                 "The PDB IDs: ", 
-                substr(paste((unique(pdbID[inds]), collapse="; "), 1, 40), 
+                substr(paste(unique(pdbID[inds]), collapse="; "), 1, 40), 
                 "... are going to be downloaded", 
                 sep=""))
         }

@@ -33,9 +33,9 @@ function(URL, FUN, ..., N.TRIES=3L, SLEEP=0.05) {
     }
 
     if (N.TRIES == 0L) {
-        stop("'query' failed:",
-                "\n  URL: ", URL,
-                "\n  error: ", conditionMessage(result))
+        stop(paste("query failed:",
+                "  URL: ", URL,
+                "  error: ", conditionMessage(result), sep=""))
     }
 
     return(result)

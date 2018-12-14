@@ -16,6 +16,7 @@
 #'     user access and avoids unnecessary work in the servers).
 #' @param envir Environment to save&retrieve the data if reuse is TRUE.
 #' @param verbose A logical. TRUE to print details of the process.
+#' @param noerrors A logical. TRUE to suppress errors.
 #'
 #' @return A vector or data.frame with the desired data.
 #'
@@ -37,7 +38,8 @@
 ## Higher level common function to make API calls
 queryAPI <-
 function(ID, info=NULL, API="default", string1=NULL, string2=NULL,
-            reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE) {
+            reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE,
+            noerrors=FALSE) {
 
     ## Check that the input ID is not over 4 character string ----------------
     if (nchar(ID) > 4) {
@@ -101,14 +103,22 @@ function(ID, info=NULL, API="default", string1=NULL, string2=NULL,
                     suppressWarnings(
                         .launchquery(URL, FUN=..launchquery, JSON=FALSE))
                     }, error = function(e) {
-                        NULL
+                        if (noerrors) {
+                            return(NULL)
+                        } else {
+                            stop(e)
+                        }
                     })
         #.launchquery(URL, FUN=..launchquery, JSON=FALSE)
         if (process) {
             output <- tryCatch({
                             .process_mmb_call(text, info, ID)
                         }, error = function(e) {
-                            NULL
+                            if (noerrors) {
+                                return(NULL)
+                            } else {
+                                stop(e)
+                            }
                         })
         } else {
             output <- text
@@ -121,14 +131,22 @@ function(ID, info=NULL, API="default", string1=NULL, string2=NULL,
                     suppressWarnings(
                         .launchquery(URL, FUN=..launchquery, JSON=TRUE))
                     }, error = function(e) {
-                        NULL
+                        if (noerrors) {
+                            return(NULL)
+                        } else {
+                            stop(e)
+                        }
                     })
 #        text <- .launchquery(URL, FUN=..launchquery, JSON=TRUE)
         if (process) {
             output <- tryCatch({
                             .process_ebi_call(text, info)
                         }, error = function(e) {
-                            NULL
+                            if (noerrors) {
+                                return(NULL)
+                            } else {
+                                stop(e)
+                            }
                         })
         } else {
             output <- text

@@ -31,7 +31,7 @@ lists). This function access their website and returns the desired list.
 
 }
 \references{
-\preformatted{Official site: http://rna.bgsu.edu/rna3dhub/nrlist/ \cr
+\preformatted{Official site: http://rna.bgsu.edu/rna3dhub/nrlist/
 Publication: Leontis, N.B., and C.L. Zirbel. 2012. “Nonredundant 3D 
 Structure Datasets for RNA Knowledge Extraction and Benchmarking.” 
 In RNA 3D Structure Analysis and Prediction, edited by N. Leontis and
