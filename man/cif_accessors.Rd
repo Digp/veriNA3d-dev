@@ -119,6 +119,10 @@ S4 method to access the contents of CIF objects.
     coordinates <- cifAtom_site(cif)
 
 }
+\references{
+Official site of mmCIF dictionary specifications
+http://mmcif.wwpdb.org/
+}
 \author{
 Diego Gallego
 }

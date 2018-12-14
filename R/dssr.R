@@ -24,9 +24,9 @@
 #' @author Diego Gallego
 #'
 #' @references 
-#'     Lu, X.J. et al. (2015). "DSSR: an integrated software tool for 
-#'     dissecting the spatial structure of RNA." Nucleic Acids Res. 
-#'     43(21), e142
+#'     Lu, X.J., H.J. Bussemaker, and W.K. Olson. 2015. “DSSR: An Integrated 
+#'     Software Tool for Dissection the Spatial Structure of Rna.” Nucleic 
+#'     Acids Research 43 (21): e142.
 #'
 dssr <- 
 function(pdb, exefile="x3dna-dssr",

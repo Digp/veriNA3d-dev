@@ -41,12 +41,8 @@ A numeric with the epsilon RMSD between the two structures
 }
 \description{
 Given two RNA with the same length, the functions calculates its epsilon
-RMSD, as defined by Bottaro et al. 2014 (The role of nucleobase
-interactions in RNA structure and dynamics), reproducing baRNAba software.
-Methods allow as input CIF S4 objects
-\code{\link[=cifParser]{cifParser()}},
-pdb S3 objects (cifAsPDB/read.pdb/read.cif) or matrices containing the
-"r" vectors of the desired structures.
+RMSD (Bottaro et al. 2014), reproducing BaRNAba software (Bottaro et al.
+2018).
 }
 \examples{
     cif <- cifParser("2d18")
@@ -54,6 +50,15 @@ pdb S3 objects (cifAsPDB/read.pdb/read.cif) or matrices containing the
     model3 <- selectModel(cif=cif, model=3)
     eRMSD <- eRMSD(cif1=model1, cif2=model3)
 
+}
+\references{
+\preformatted{Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
+Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
+42 (21): 13306–14.
+Bottaro, S., G. Bussi, G. Pinamonti, S. Reiber, W. Boomsma, and K. 
+Lindorff-Larsen. 2018. “Barnaba: Software for Analysis of Nucleic 
+Acids Structures and Trajectories.” RNA, Epub ahead of print
+}
 }
 \author{
 Diego Gallego

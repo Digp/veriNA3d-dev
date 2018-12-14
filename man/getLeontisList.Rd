@@ -21,16 +21,22 @@ output is formated according with Leontis&Zirbel nomenclature
 and "C" is the Chain to be used.
 }
 \description{
-According with Leontis & Zirbel, 2012 (Nonredundant 3D Structure Datasets
-for RNA Knowledge Extraction and Benchmarking), the PDB contains structures
-that are redundant. Their work resulted in the BGSU RNA Site
-(http://rna.bgsu.edu/rna3dhub/nrlist/) where one can find weekly releases
-of Representative Sets of RNA structures (formerly called non-redundant
+According with Leontis & Zirbel (references below), the PDB contains
+structures that are redundant. Their server provides weekly releases
+of Representative Sets of RNA structures (also called non-redundant
 lists). This function access their website and returns the desired list.
 }
 \examples{
     data <- getLeontisList(release=3.2, threshold="1.5A")
 
+}
+\references{
+\preformatted{Official site: http://rna.bgsu.edu/rna3dhub/nrlist/ \cr
+Publication: Leontis, N.B., and C.L. Zirbel. 2012. “Nonredundant 3D 
+Structure Datasets for RNA Knowledge Extraction and Benchmarking.” 
+In RNA 3D Structure Analysis and Prediction, edited by N. Leontis and
+E. Westhof, 27:281–98. Springer Berlin Heidelberg.
+}
 }
 \author{
 Diego Gallego

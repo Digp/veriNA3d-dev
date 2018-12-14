@@ -118,6 +118,12 @@ EBI or MMB mirrors of the PDB.
     queryNDBId("1bau")
 
 }
+\references{
+Official PDBe REST API site:
+http://www.ebi.ac.uk/pdbe/pdbe-rest-api\cr
+Official MMB API site:
+http://mmb.irbbarcelona.org/api/
+}
 \author{
 Diego Gallego
 }

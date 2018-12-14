@@ -59,7 +59,8 @@ http://rna.bgsu.edu/rna3dhub/nrlist/)
 by [@Leontis2012] and other analytical functions.
 
 * Structure level: Functions to get data, parse mmCIF files and analyse these
-data.
+data. This includes a wrapper of DSSR [@Lu2015] and a function to calculate
+the \(\epsilon\)RMSD [@Bottaro2014].
 
 * Plots: examples to show the results of the previous analysis.
 
@@ -156,7 +157,7 @@ head(coords)
 
 ## Bidirectional compatibility with bio3d
 
-Using the `cifPArser` will often be the first step to analyse a structure. 
+Using the `cifParser` will often be the first step to analyse a structure. 
 However, if the analisys requires any of the bio3d functions, then a 
 conversion should be done with the `cifAsPDB` function.
 
@@ -306,7 +307,7 @@ you can always use *verbose=TRUE* to see it printed.
 # The \(\epsilon\)RMSD to compare structures
 
 A new interesting metric to compare Nucleic Acid structures is the 
-\(\epsilon\)RMSD [@Bottaro2015], currently available in the BaRNAba python
+\(\epsilon\)RMSD [@Bottaro2014], currently available in the BaRNAba python
 package [@Bottaro2018]. The metric was implented in the `eRMSD` function
 and completely reproduces BaRNAba results for the structures tested.
 
@@ -439,7 +440,7 @@ P_distances <- measureElenoDist(pdb=pdb, refeleno=eleno, eleno=eleno,
 
 Get Leontis list, change representative structures and analyse them with one 
 of the pipelines
-
+[@Wadley2007]
 
 
 

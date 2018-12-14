@@ -29,6 +29,8 @@
 #'     coordinates <- cifAtom_site(cif)
 #'
 #' @author Diego Gallego
+#' @references Official site of mmCIF dictionary specifications
+#'     http://mmcif.wwpdb.org/
 #'
 #' @name cif_accessors
 NULL
@@ -189,11 +191,9 @@ setGeneric("selectModel",
 
 #' Compute the rVectors between the bases of a RNA structure
 #'
-#' Given a RNA structure it computes the "r" vetors between all bases, as 
-#' defined by Bottaro et al. 2014 (The role of nucleobase interactions in RNA
-#' structure and dynamics). This function is the basis to compute the epsilon
-#' RMSD (see the same paper for details and run it with 
-#' [eRMSD()]).\cr
+#' Given a RNA structure it computes the "r" vetors between all bases
+#' (Bottaro et al. 2014). This function is basic to compute the epsilon
+#' RMSD.\cr
 #' Furthermore, it also computes two more metrics:\cr 1. The `gamma angle`,
 #' as obtained between the x axis of the coordinate system for all the bases 
 #' projected on the referece base plane and the x axis of the latter. This is 
@@ -224,6 +224,10 @@ setGeneric("selectModel",
 #'     vectors <- rVector(cif=model1, simple_out=FALSE)
 #'
 #' @author Diego Gallego & Leonardo Darre
+#' @references
+#'     Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
+#'     Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
+#'     42 (21): 13306–14.
 #'
 setGeneric("rVector",
             function(cif, pdb, outformat="rvector", simple_out=TRUE)
@@ -236,12 +240,8 @@ setGeneric("rVector",
 #' Compute the epsilon RMSD between two RNA structures
 #'
 #' Given two RNA with the same length, the functions calculates its epsilon
-#' RMSD, as defined by Bottaro et al. 2014 (The role of nucleobase 
-#' interactions in RNA structure and dynamics), reproducing baRNAba software.
-#' Methods allow as input CIF S4 objects 
-#' [cifParser()], 
-#' pdb S3 objects (cifAsPDB/read.pdb/read.cif) or matrices containing the 
-#' "r" vectors of the desired structures.
+#' RMSD (Bottaro et al. 2014), reproducing BaRNAba software (Bottaro et al.
+#' 2018).
 #'
 #' @rdname eRMSD
 #'
@@ -269,6 +269,13 @@ setGeneric("rVector",
 #'     eRMSD <- eRMSD(cif1=model1, cif2=model3)
 #'
 #' @author Diego Gallego
+#' @references
+#'     Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
+#'     Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
+#'     42 (21): 13306–14.
+#'     Bottaro, S., G. Bussi, G. Pinamonti, S. Reiber, W. Boomsma, and K. 
+#'     Lindorff-Larsen. 2018. “Barnaba: Software for Analysis of Nucleic 
+#'     Acids Structures and Trajectories.” RNA, Epub ahead of print
 #'
 setGeneric("eRMSD",
             function(cif1=NULL, cif2=NULL,

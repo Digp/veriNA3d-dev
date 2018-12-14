@@ -50,8 +50,12 @@
 #'     queryNDBId("1bau")
 #'
 #' @author Diego Gallego
-#'
+#' @references Official PDBe REST API site:
+#'     http://www.ebi.ac.uk/pdbe/pdbe-rest-api\cr
+#'     Official MMB API site:
+#'     http://mmb.irbbarcelona.org/api/
 #' @name queryFunctions
+#'
 NULL
 ##############################################################################
 

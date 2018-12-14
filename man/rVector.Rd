@@ -38,11 +38,9 @@ A list of data.frames for the values of each base or a single
 matrix with all the data appended.
 }
 \description{
-Given a RNA structure it computes the "r" vetors between all bases, as
-defined by Bottaro et al. 2014 (The role of nucleobase interactions in RNA
-structure and dynamics). This function is the basis to compute the epsilon
-RMSD (see the same paper for details and run it with
-\code{\link[=eRMSD]{eRMSD()}}).\cr
+Given a RNA structure it computes the "r" vetors between all bases
+(Bottaro et al. 2014). This function is basic to compute the epsilon
+RMSD.\cr
 Furthermore, it also computes two more metrics:\cr 1. The \code{gamma angle},
 as obtained between the x axis of the coordinate system for all the bases
 projected on the referece base plane and the x axis of the latter. This is
@@ -55,6 +53,12 @@ planes normal to account for the degree of coplanarity between bases.
     model1 <- selectModel(cif=cif, model=1)
     vectors <- rVector(cif=model1, simple_out=FALSE)
 
+}
+\references{
+\preformatted{Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
+Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
+42 (21): 13306–14.
+}
 }
 \author{
 Diego Gallego & Leonardo Darre

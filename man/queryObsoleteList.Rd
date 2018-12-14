@@ -14,7 +14,7 @@ Function to get the list of Obsolete PDB IDs in the Protein Data Bank at
 the moment.
 }
 \examples{
-obsolete <- queryObsoleteList()
+# obsolete <- queryObsoleteList()
 
 }
 \author{
