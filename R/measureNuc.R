@@ -741,6 +741,16 @@ function(index, reslist, inslist, ridlist, pdb,
     }
     if (!(length(torsions_list) == 1 && is.null(torsions_list))) {
         output <- append(output, torsions_list)
+        if (all(c("alpha", "beta", "gamma", "delta", "epsilon", "zeta", 
+                    "chi", "eta", "theta") %in% names(torsions_list))) {
+            ind <- which(names(torsions_list) %in% c("alpha", "beta", "gamma", 
+                                                        "delta", "epsilon", 
+                                                        "zeta", "chi", "eta", 
+                                                        "theta"))
+            torsions <- unlist(torsions_list[ind])
+            is.helical <- .is.helical(torsions)
+            output <- append(output, list(is.helical=is.helical))
+        }
     }
 
     if (!is.null(pucker) && pucker == TRUE) {
@@ -838,8 +848,39 @@ function(tor) {
 
 ## ============================================================================
 ## Code addapted from bio3d
-".is.nucleic" <- function(pdb) {
+.is.nucleic <- function(pdb) {
     nuc.aa <- c("A",   "U",  "G",  "C",   "T",  "I",
                 "DA", "DU", "DG", "DC",  "DT", "DI")
     return(pdb$atom$resid %in% nuc.aa)
 }
+
+## ============================================================================
+## Function to find helical nucleotides
+.is.helical <- function(torsions) {
+    angles <- names(torsions)
+    for (i in seq_along(torsions)) {
+        if (is.na(torsions[i])) {
+            next()
+        }
+        if (!(torsions[i] < .helical_df[.helical_df$angle == angles[i], "max"]
+            & torsions[i] > .helical_df[.helical_df$angle == angles[i], "min"])
+            ) {
+
+            return(FALSE)
+        }
+    }
+    return(TRUE)
+}
+
+.helical_df <- 
+data.frame(
+    angle=c("alpha", "beta", "gamma", "delta", "epsilon", 
+            "zeta", "chi", "eta", "theta"),
+    mean=c(292.033, 172.424, 56.673, 81.644, 208.973, 
+            288.315, 199.776, 168.044, 216.321),
+    sd=c(11.782, 9.873, 10.195, 5.394, 10.522, 
+            9.311, 9.346, 7.067, 9.726),
+    max=c(327.377, 202.044, 87.258, 97.825, 240.538, 316.248, 
+            227.813, 189.244, 245.499),
+    min=c(256.688, 142.805, 26.089, 65.463, 177.408, 260.382, 
+            171.739, 146.844, 187.143), stringsAsFactors=F)
