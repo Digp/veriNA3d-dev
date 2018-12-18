@@ -95,24 +95,7 @@ setMethod("cifParser",
             pdb <- readLines(pdbID)
 
         } else if (nchar(pdbID) == 4) { # Otherwise download by pdb ID
-            tmpdir <- tempdir()
-            destfile <- paste(tmpdir, "/", pdbID, ".cif.gz", sep="")
-            if (!file.exists(destfile)) {
-                if (verbose)
-                    cat("Downloading file from Internet\n")
-                ## For development tests I rather use the internal call
-                URL <- paste("https://files.rcsb.org/download/",
-                #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
-                #URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
-                                pdbID, ".cif.gz", sep ="")
-
-                .launchquery(URL, 
-                                FUN=download.file,
-                                destfile=destfile,
-                                method="auto", 
-                                quiet=!verbose)
-            }
-            #pdb <- .launchquery(URL, FUN=readLines, N.TRIES=1)
+            destfile <- cifDownload(pdbID=pdbID, verbose=verbose)
             pdb <- readLines(destfile)
 
         } else { # Otherwise it is just an error
@@ -161,6 +144,47 @@ setMethod("cifParser",
     })
 
 ## End of section CIF S4 constructor
+##############################################################################
+
+##############################################################################
+cifDownload <- 
+function(pdbID, destfile=NULL, URL=NULL, verbose=FALSE) {
+    ## If file name is not provided, use temp directory and filename
+    if (is.null(destfile)) {
+        tmpdir <- tempdir()
+        destfile <- paste(tmpdir, "/", pdbID, ".cif.gz", sep="")
+    }
+
+    ## If file is already there but has size 0, remove it and download again
+    if (file.exists(destfile) && file.info(destfile)$size == 0) {
+        file.remove(destfile)
+    }
+
+    ## If file is not there, downlaod it
+    if (!file.exists(destfile)) {
+        if (verbose)
+            cat("Downloading file from Internet\n")
+
+        ## if URL is not provided, use the RCSB
+        if (is.null(URL)) {
+            URL <- paste("https://files.rcsb.org/download/",
+            #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
+            ## For development tests I rather use the internal call
+            #URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
+                            pdbID, ".cif.gz", sep ="")
+        } else {
+            URL <- paste(URL, pdbID, ".cif.gz", sep ="")
+        }
+
+        ## Use lanchquery internal function to have error-handling
+        .launchquery(URL, 
+                        FUN=download.file,
+                        destfile=destfile,
+                        method="auto", 
+                        quiet=!verbose)
+    }
+    return(destfile)
+}
 ##############################################################################
 
 ##############################################################################

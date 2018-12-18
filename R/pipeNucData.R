@@ -66,6 +66,14 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
     read <- .whereToRead(pdbID=pdbID, path=path, extension=extension,
                             verbose=progressbar)
 
+    ## Download files if necessary
+    if (any(read == "download.RAM")) {
+        down <- unique(unlist(pdbID[which(read == "download.RAM")]))
+        applyToPDB(listpdb=down, FUN=cifDownload, 
+                    cores=cores, progressbar=progressbar)
+        print(paste("Download completed, saved in: ", tempdir()))
+    }
+
     ## Print progress bar ----------------------------------------------------
     total <- length(pdbID)
     if (progressbar) {
@@ -92,9 +100,7 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
                         SIMPLIFY=FALSE)
 
     ## Print new line after progress bar -------------------------------------
-    if (progressbar) {
-        cat("\n")
-    }
+    cat("\n")
 
     ## Prepare output format -------------------------------------------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]

@@ -293,7 +293,7 @@ function(X, FUN, ..., mc.cores=1, mc.preschedule=FALSE) {
 
     if (mc.cores > detectCores()) {
         warning("The machine does not have ", mc.cores, " cores. Using ", 
-                    (detectCores() - 1), ".")
+                    max(1, detectCores() - 1), ".")
         mc.cores <- max(1, detectCores() - 1)
     }
 
@@ -311,7 +311,7 @@ function(FUN, ..., mc.cores=1, mc.preschedule=FALSE) {
     
     if (mc.cores > detectCores()) {
         warning("The machine does not have ", mc.cores, " cores. Using ", 
-                    (detectCores() - 1), ".")
+                    max(1, detectCores() - 1), ".")
         mc.cores <- max(1, detectCores() - 1)
     }
 

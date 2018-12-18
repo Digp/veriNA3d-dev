@@ -84,6 +84,14 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
         stop("You pdbID input is not a valid set of prot-nuc structures")
     }
 
+    ## Download files if necessary
+    if (any(read == "download.RAM")) {
+        down <- unique(unlist(pdbID[which(read == "download.RAM")]))
+        applyToPDB(listpdb=down, FUN=cifDownload,
+                    cores=cores, progressbar=progressbar)
+        print(paste("Download completed, saved in: ", tempdir()))
+    }
+
     ## Print progress bar ----------------------------------------------------
     total <- length(pdbID)
     if (progressbar) {
@@ -111,9 +119,7 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
                                     SIMPLIFY=FALSE)
 
     ## Print new line after progress bar -------------------------------------
-    if (progressbar) {
-        cat("\n")
-    }
+    cat("\n")
 
     ## Return output for every chain and model as given by input -------------
     interactionsdata <- interactionsdata[
