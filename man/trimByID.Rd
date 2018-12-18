@@ -30,7 +30,7 @@ output of pipeNucData function).}
 fucntions just returns the pdb object.}
 
 \item{...}{Arguments to be passed to trimSphere (type ?trimSphere for
-details)}
+details).}
 }
 \value{
 A smaller pdb object or a pdb file.

@@ -46,23 +46,23 @@ Instructions for Unix systems
 
 ### Dataset level
 
-`getLeontisList`: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012)
+`getLeontisList`: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012).
 
-`getAltRepres`: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class
+`getAltRepres`: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class.
 
-`represAsDataFrame`: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class
+`represAsDataFrame`: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class.
 
-`pipeNucData`: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide
+`pipeNucData`: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide.
 
-`pipeProtNucData`: From a list of protein-RNA structures computes and returns the interaction sites distances and atoms
+`pipeProtNucData`: From a list of protein-RNA structures computes and returns the interaction sites distances and atoms.
 
-`applyToPDB`: Applies a desired function to a list of PDB IDs
+`applyToPDB`: Applies a desired function to a list of PDB IDs.
 
-`queryEntryList`: Returns the whole list of PDB IDs in the database
+`queryEntryList`: Returns the whole list of PDB IDs in the database.
 
-`queryObsoleteList`: Returns the list of Obsolete PDB IDs in the database
+`queryObsoleteList`: Returns the list of Obsolete PDB IDs in the database.
 
-`cleanByPucker`: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation
+`cleanByPucker`: From the output of pipeNucData subsets a desired subset of nucleotides in a given puckering conformation.
 &nbsp;
 
 &nbsp;
@@ -72,57 +72,59 @@ Instructions for Unix systems
 
 #### **Functions to query PDB data using the PDBe (EMBL-EBI) REST API or a mirror API from the MMB Lab** (All of them take a PDB ID as input)
 
-`queryAuthors`: List of authors
+`queryAuthors`: List of authors.
 
-`queryReldate`: Release date
+`queryReldate`: Release date.
 
-`queryDepdate`: Deposition date
+`queryDepdate`: Deposition date.
 
-`queryRevdate`: Revision date
+`queryRevdate`: Revision date.
 
-`queryDescription`: Author description
+`queryDescription`: Author description.
 
-`queryCompType`: Compound type (e.g. Nuc or Prot-nuc)
+`queryCompType`: Compound type (e.g. Nuc or Prot-nuc).
 
-`queryChains`: Chain information
+`queryChains`: Chain information.
 
-`queryEntities`: Entitity information
+`queryEntities`: Entitity information.
 
-`countEntities`: In a given pdbID it counts the total number of each different kind of entity (RNA, DNA, Protein ...)
+`countEntities`: In a given pdbID it counts the total number of each different kind of entity (RNA, DNA, Protein ...).
 
-`queryFormats`: File formats for the given ID
+`queryFormats`: File formats for the given ID.
 
-`queryHeader`: PDB Header
+`queryHeader`: PDB Header.
 
-`queryHetAtms`: HETATM entities in structure (includes modified residues, ions and ligands)
+`queryHetAtms`: HETATM entities in structure (includes modified residues, ions and ligands).
 
-`hasHetAtm`: Checks wether a a given structure contains a particular HETATM entity. It makes use of queryHetAtms
+`hasHetAtm`: Checks wether a a given structure contains a particular HETATM entity. It makes use of queryHetAtms.
 
-`queryModres`: Modified residues
+`queryModres`: Modified residues.
 
-`queryLigands`: Ligands in structure
+`queryLigands`: Ligands in structure.
 
-`queryOrgLigands`: Ligands in structure (substracting ions)
+`queryOrgLigands`: Ligands in structure (substracting ions).
 
-`queryResol`: Resolution (if applicable)
+`queryResol`: Resolution (if applicable).
 
-`queryTechnique`: Experimental Technique
+`queryTechnique`: Experimental Technique.
 
-`queryStatus`: Released/Obsolete and related status information
+`queryStatus`: Released/Obsolete and related status information.
 
-`queryNDBId`: Cross-reference NDB ID
+`queryNDBId`: Cross-reference NDB ID.
 
-`queryAPI`: Subfunction of all the previous, which can be used to make alternative queries
+`queryAPI`: Subfunction of all the previous, which can be used to make alternative queries.
 &nbsp;
 
 #### **Classify PDB structures** (PDB ID as input)
 
-`classifyRNA`: Categorizes a structure in "nakedRNA", "protRNA", "ligandRNA", "DNARNA" or "NoRNA"
+`classifyRNA`: Categorizes a structure in different RNA groups.
 
-`classifyDNA`: Categorizes a structure in "nakedDNA", "protDNA", "ligandDNA", "DNARNA" or "NoDNA"
+`classifyDNA`: Categorizes a structure in different DNA groups.
 &nbsp;
 
 #### **Input mmCIF data**
+
+`cifDownload`: Downloads structure from Protein Data Bank.
 
 `cifParser`: Reads the 14th common sections of all mmCIF files in the PDB and generates a CIF S4 object.
 
@@ -162,25 +164,25 @@ Instructions for Unix systems
 
 #### **Structure analysis**
 
-`selectModel`: Selects the model of interest
+`selectModel`: Selects the model of interest.
 
-`findBindingSite`: Same as pipeProtNucData for a single structure
+`findBindingSite`: Same as pipeProtNucData for a single structure.
 
-`measureEntityDist`: Measures distances between given entities
+`measureEntityDist`: Measures distances between given entities.
 
-`measureElenoDist`: Measures distances between given atoms
+`measureElenoDist`: Measures distances between given atoms.
 
-`trimSphere`: Trim a pdb object and a surrounding sphere of atoms
+`trimSphere`: Trim a pdb object and a surrounding sphere of atoms.
 
-`trimByID`: Same as trimSphere using the IDs and output of pipeNucData
+`trimByID`: Same as trimSphere using the IDs and output of pipeNucData.
 
-`checkNuc`: Checks the integrity of all the nucleotides in a given Nucleic Acid structure
+`checkNuc`: Checks the integrity of all the nucleotides in a given Nucleic Acid structure.
 
-`measureNuc`: Measures a defult/desired set of distances, angles and torsional angles for a given Nucleic Acid strucutre
+`measureNuc`: Measures a defult/desired set of distances, angles and torsional angles for a given Nucleic Acid structure.
 
-`rVector`: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014)
+`rVector`: Computes the rVectors between all nucleobases of a structure (source: Bottaro et al, 2014).
 
-`eRMSD`: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014)
+`eRMSD`: Compares structures with the same number of residues using the rVectors (source: Bottaro et al, 2014).
 
 `dssr`: Wrapper of DSSR software (source: Lu et al, 2015), if installed.
 &nbsp;

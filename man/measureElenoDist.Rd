@@ -11,7 +11,7 @@ measureElenoDist(pdb, model = NULL, refeleno, eleno, n = 1,
 \arguments{
 \item{pdb}{A pdb object obtained as from
 \code{\link[=cifAsPDB]{cifAsPDB()}}
-or read.pdb/read.cif (bio3d functions)}
+or read.pdb/read.cif (bio3d functions).}
 
 \item{model}{The model of interest to use in the calculations. The first
 model is always the default.}

@@ -4,10 +4,10 @@
 #' plots for the desired angles. NA in the data are ignored.
 #'
 #' @param ntinfo A data.frame with the input data. It should contain the 
-#'     columns with the desired angles and a column labeled ntID
+#'     columns with the desired angles and a column labeled ntID.
 #' @param ntID A vector of integers with the desired nucleotides of 
-#'     analysis. If NULL all the nucleotides in the data.frame will be used
-#' @param angles The column names with the desired data
+#'     analysis. If NULL all the nucleotides in the data.frame will be used.
+#' @param angles The column names with the desired data.
 #' @param cex To be passed to the `par`.
 #' @param cols Number of columns in the ouput picture.
 #' @param file A string with the name of the output file. If NULL, the
@@ -74,7 +74,7 @@ function(ntinfo, ntID=NULL,
 #'     being ploted.
 #' @param main A string with the title of the plot.
 #'
-#' @return A circular plot with the input data
+#' @return A circular plot with the input data.
 #'
 #' @examples
 #'     ntinfo <- pipeNucData("1bau")
@@ -132,15 +132,15 @@ function(data, clockwise=FALSE, start.degree=0, main=NULL) {
 #' @param field The column name with the desired data.
 #' @param na.rm A logical to remove missing data.
 #' @param main A string with the title of the plot.
-#' @param cex To be passed to the par() function
+#' @param cex To be passed to the par() function.
 #' @param file A string with the name of the output file. If NULL, the
 #'     plot will be printed to screen.
-#' @param width The width of the plot (passed to the png() function)
-#' @param height The height of the plot (passed to the png() function)
-#' @param bg The background color of the plot (passed to the png() function)
+#' @param width The width of the plot (passed to the png() function).
+#' @param height The height of the plot (passed to the png() function).
+#' @param bg The background color of the plot (passed to the png() function).
 #' @param units The unit to measure height and width (passed to the png() 
-#'     function)
-#' @param res Resolution (passed to the png() function)
+#'     function).
+#' @param res Resolution (passed to the png() function).
 #'
 #' @return A barplot with the categorical data of interest, which can be
 #'     directly saved  to a ".png" file.
@@ -218,12 +218,12 @@ function(ntinfo, field, ntID=NULL, na.rm=FALSE,
 #'     cleaner plot.
 #' @param file A string with the name of the output file. If NULL, the
 #'     plot will be printed to screen.
-#' @param width The width of the plot (passed to the png() function)
-#' @param height The height of the plot (passed to the png() function)
-#' @param bg The background color of the plot (passed to the png() function)
+#' @param width The width of the plot (passed to the png() function).
+#' @param height The height of the plot (passed to the png() function).
+#' @param bg The background color of the plot (passed to the png() function).
 #' @param units The unit to measure height and width (passed to the png() 
-#'     function)
-#' @param res Resolution (passed to the png() function)
+#'     function).
+#' @param res Resolution (passed to the png() function).
 #'
 #' @return A plot in screen, which can be directly saved  to a ".png" file.
 #'     * {plotEtaTheta} A scatter plot with eta-theta values.
@@ -570,25 +570,25 @@ function(ntinfo, ntID) {
 # should be "ntID", and the other two specified by the arguments "x" and "y")
 # the function computes a 2D Kernel Density Estimation and returns a list of 
 # vectors containing the nucleotides ID (according with the ntID column) that 
-# clusterize in different regions of the 2D diagram
+# clusterize in different regions of the 2D diagram.
 #
 # @param ntID an obejct of class vector with the desired nucleotides of 
-#     analysis. If NULL all the nucleotides in the data.frame will be used
+#     analysis. If NULL all the nucleotides in the data.frame will be used.
 # @param ntinfo a data.frame with the input data. It should contain three 
 #     columns (additional columns will be ignored). One of them should be 
 #     "ntID" and the other two are optional and can be specified using the
-#     parameters "x" and "y"
-# @param x name of the column that will be used as "x" axis
-# @param y name of the column that will be used as "y" axis
+#     parameters "x" and "y".
+# @param x name of the column that will be used as "x" axis.
+# @param y name of the column that will be used as "y" axis.
 # @param SD_DENS height above the mean to be used to select the nucleotides
 # @param bandwidths object to be passed to the "kde2d" function (only used if
-#     "dens" is NULL)
-# @param dens optional object containing the output of "kde2d" or equivalent
+#     "dens" is NULL).
+# @param dens optional object containing the output of "kde2d" or equivalent.
 # @param lims The limits of the rectangle covered by the grid as c(xl, xu,
 #     yl, yu).
 #
 # @return a list of vectors containing the nucleotides ID (according with the 
-#     ntID column) that clusterize in different regions of the 2D diagram
+#     ntID column) that clusterize in different regions of the 2D diagram.
 #
 # @author Diego Gallego
 #

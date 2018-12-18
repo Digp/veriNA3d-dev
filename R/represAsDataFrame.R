@@ -11,13 +11,13 @@
 #'     \item Col 4: Chain.
 #' }
 #' Columns 2 to 4 can be the direct input of 
-#' [pipeNucData()]
+#' [pipeNucData()].
 #' 
 #' @param nrlist The output of 
 #'     [getLeontisList()] or 
 #'     [getAltRepres()].
 #'
-#' @return A data frame with the data of the representative structures
+#' @return A data frame with the data of the representative structures.
 #' 
 #' @examples 
 #'  data <- getLeontisList(release=3.2, threshold="1.5A")

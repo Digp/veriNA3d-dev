@@ -13,11 +13,11 @@
 #'   \item{chain:}{Chain}
 #' }
 #'
-#' @return data.frame with list of PDB IDs
+#' @return data.frame with list of PDB IDs.
 #' @references
 #'     Wadley, L.M., K.S. Keating, C.M Duarte, and A.M. Pyle. 2007.
 #'     “Evaluating and Learning from Rna Pseudotorsional Space: 
 #'     Quantitative Validation of a Reduced Representation for
-#'     RNA Structure.” Journal of Molecular Biology 372 (4): 942–57.
+#'     RNA Structure.” Journal of Molecular Biology 372 (4): 942–57
 #'
 "dataset_wadley2007"

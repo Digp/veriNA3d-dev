@@ -57,7 +57,7 @@ planes normal to account for the degree of coplanarity between bases.
 \references{
 \preformatted{Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
 Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
-42 (21): 13306–14.
+42 (21): 13306–14
 }
 }
 \author{

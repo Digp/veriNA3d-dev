@@ -25,7 +25,7 @@
 #'     Publication: Leontis, N.B., and C.L. Zirbel. 2012. “Nonredundant 3D 
 #'     Structure Datasets for RNA Knowledge Extraction and Benchmarking.” 
 #'     In RNA 3D Structure Analysis and Prediction, edited by N. Leontis and
-#'     E. Westhof, 27:281–98. Springer Berlin Heidelberg.
+#'     E. Westhof, 27:281–98. Springer Berlin Heidelberg
 #'
 getLeontisList <- 
 function(release="current", threshold="all") {

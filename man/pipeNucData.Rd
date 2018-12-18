@@ -39,10 +39,10 @@ provided.}
 
 \item{progressbar}{A logical to print in screen a progress bar.}
 
-\item{...}{Arguments to be passed to \code{\link[=measureNuc]{measureNuc()}}}
+\item{...}{Arguments to be passed to \code{\link[=measureNuc]{measureNuc()}}.}
 }
 \value{
-A data.frame with data about every nucleotide in the input set
+A data.frame with data about every nucleotide in the input set.
 }
 \description{
 Pipeline to generate a data.frame with the desired info for a list of PDB.

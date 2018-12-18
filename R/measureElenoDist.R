@@ -7,7 +7,7 @@
 #'
 #' @param pdb A pdb object obtained as from 
 #'     [cifAsPDB()] 
-#'     or read.pdb/read.cif (bio3d functions)
+#'     or read.pdb/read.cif (bio3d functions).
 #' @param model The model of interest to use in the calculations. The first
 #'     model is always the default.
 #' @param refeleno A vector of eleno (element number) to take as reference.

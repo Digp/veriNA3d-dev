@@ -12,7 +12,7 @@ represAsDataFrame(nrlist)
 \code{\link[=getAltRepres]{getAltRepres()}}.}
 }
 \value{
-A data frame with the data of the representative structures
+A data frame with the data of the representative structures.
 }
 \description{
 Takes the output of getLeontisList or getAltRepres, which
@@ -26,7 +26,7 @@ structure:
 \item Col 4: Chain.
 }
 Columns 2 to 4 can be the direct input of
-\code{\link[=pipeNucData]{pipeNucData()}}
+\code{\link[=pipeNucData]{pipeNucData()}}.
 }
 \examples{
  data <- getLeontisList(release=3.2, threshold="1.5A")

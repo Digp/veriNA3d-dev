@@ -19,7 +19,7 @@ being ploted.}
 \item{main}{A string with the title of the plot.}
 }
 \value{
-A circular plot with the input data
+A circular plot with the input data.
 }
 \description{
 For a vector of angular data (0 to 360), the function plots the

@@ -13,7 +13,7 @@
 #'     nucleotides in the given chain. Not necessary if you provide sel (see 
 #'     below).
 #' @param chain A string with the chain of interest. Not necessary if you 
-#'     provide sel (see below)..
+#'     provide sel (see below).
 #' @param sel A "select" object as obtained from atom.select (bio3d). Note 
 #'     that if you are using this option, cif must be the same input object
 #'     you used for the atom.select function.

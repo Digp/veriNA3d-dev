@@ -30,6 +30,7 @@ export(
     cifAudit_conform,
     cifChem_comp,
     cifDatabase_2,
+    cifDownload,
     cifEntity,
     cifEntry,
     cifExptl,

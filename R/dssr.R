@@ -5,17 +5,17 @@
 #'
 #' @param pdb It can be: 
 #'    \itemize{
-#'        \item A 4 character string corresponding to a PDB ID
-#'        \item A pdb/mmcif file
+#'        \item A 4 character string corresponding to a PDB ID.
+#'        \item A pdb/mmcif file.
 #'        \item A pdb object as provided by [cifAsPDB()] or 
 #'            [bio3d::read.pdb()].
 #'    }
 #'
-#' @param exefile A string with the program name
-#' @param dssrargs A vector of strings with the desired arguments to feed DSSR
+#' @param exefile A string with the program name.
+#' @param dssrargs A vector of strings with the desired arguments to feed DSSR.
 #' @param verbose A logical indicating whether to print details of the process.
 #'
-#' @return A list with the json output of DSSR
+#' @return A list with the json output of DSSR.
 #'
 #' @examples
 #'     # Not run
@@ -26,7 +26,7 @@
 #' @references 
 #'     Lu, X.J., H.J. Bussemaker, and W.K. Olson. 2015. “DSSR: An Integrated 
 #'     Software Tool for Dissection the Spatial Structure of RNA.” Nucleic 
-#'     Acids Research 43 (21): e142.
+#'     Acids Research 43 (21): e142
 #'
 dssr <- 
 function(pdb, exefile="x3dna-dssr",
@@ -54,16 +54,11 @@ function(pdb, exefile="x3dna-dssr",
 
         ## Otherwise, download structure if possible
         } else if (nchar(pdb) == 4) {
-            format <- "cif"
-
             infile <- tempfile()
             flag <- TRUE
-            url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/" ##
-            .launchquery(paste(url, pdb, ".", format, sep=""),
-                                FUN=download.file,
-                                destfile=infile,
-                                method="auto",
-                                quiet=!verbose)
+            url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/"
+            cifDownload(pdbID=pdb, destfile=infile, 
+                        extension=".cif", URL=url, verbose=verbose)
 
         ## If the string is not a file or ID, stop
         } else {

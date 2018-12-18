@@ -10,7 +10,7 @@
 #'     objects as provided by "read.pdb", "read.cif", "cifParser" ...
 #' @param model A vector with same length of pdbID containing the
 #'     desired model for each pdbID. If all models are desired, use "all".
-#'     If no models are specified, the first one will be used for each pdbID
+#'     If no models are specified, the first one will be used for each pdbID.
 #' @param chain A vector with same length of pdbID containing the
 #'     desired chain for each pdbID. If no chain is specified, all chains will
 #'     be analysed by default. Non-nucleic acid chains will be ignored.
@@ -29,9 +29,9 @@
 #' @param cores Number of CPU cores to be used.
 #' @param progressbar A logical to print in screen a progress bar.
 #' @param cutoff A numeric with the maximum distance to return. To be passed 
-#'     to [findBindingSite()]
+#'     to [findBindingSite()].
 #' @param ... Additional arguments to be passed to 
-#'     [findBindingSite()]
+#'     [findBindingSite()].
 #'
 #' @return A data.frame with data about the atomic distances in the
 #'     interacting sites of every structure in the input set.
@@ -87,7 +87,7 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
     ## Download files if necessary
     if (any(read == "download.RAM")) {
         down <- unique(unlist(pdbID[which(read == "download.RAM")]))
-        applyToPDB(listpdb=down, FUN=cifDownload,
+        applyToPDB(listpdb=down, FUNCTION=cifDownload,
                     cores=cores, progressbar=progressbar)
         print(paste("Download completed, saved in: ", tempdir()))
     }

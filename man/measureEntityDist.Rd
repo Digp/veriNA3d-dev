@@ -20,7 +20,7 @@ will be referred to the atoms/residues of this entity.}
 default "all" will select all of them except the refent.}
 
 \item{...}{Additional arguments to be passed to
-\code{\link[=measureElenoDist]{measureElenoDist()}}}
+\code{\link[=measureElenoDist]{measureElenoDist()}}.}
 }
 \value{
 A data.frame with the nearest atoms neighbour information.

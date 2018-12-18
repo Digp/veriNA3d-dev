@@ -13,7 +13,7 @@
 data(dataset_wadley2007)
 }
 \value{
-data.frame with list of PDB IDs
+data.frame with list of PDB IDs.
 }
 \description{
 Data.frame containing the list of PDB IDs of the structures used by
@@ -23,7 +23,7 @@ Wadley et al. in their eta-theta study about RNA.
 \preformatted{Wadley, L.M., K.S. Keating, C.M Duarte, and A.M. Pyle. 2007.
 “Evaluating and Learning from Rna Pseudotorsional Space: 
 Quantitative Validation of a Reduced Representation for
-RNA Structure.” Journal of Molecular Biology 372 (4): 942–57.
+RNA Structure.” Journal of Molecular Biology 372 (4): 942–57
 }
 }
 \keyword{datasets}

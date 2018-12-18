@@ -11,12 +11,12 @@ plotSetOfDistributions(ntinfo, ntID = NULL, angles = c("alpha", "beta",
 }
 \arguments{
 \item{ntinfo}{A data.frame with the input data. It should contain the
-columns with the desired angles and a column labeled ntID}
+columns with the desired angles and a column labeled ntID.}
 
 \item{ntID}{A vector of integers with the desired nucleotides of
-analysis. If NULL all the nucleotides in the data.frame will be used}
+analysis. If NULL all the nucleotides in the data.frame will be used.}
 
-\item{angles}{The column names with the desired data}
+\item{angles}{The column names with the desired data.}
 
 \item{cex}{To be passed to the \code{par}.}
 

@@ -11,7 +11,7 @@
 #'   \item{pdbID:}{PDB ID.}
 #'   \item{Technique:}{Experimental technique.}
 #'   \item{Resol:}{Resolution. For NMR structures it contains an empty string.}
-#'   \item{DNAclass:}{Output of classifyDNA function}
+#'   \item{DNAclass:}{Output of classifyDNA function.}
 #'   \item{RNAclassOver0:}{Output of classifyRNA with length=0 or length=1. If
 #'                           the structure has one or two nucleotides, it is 
 #'                           also considered an RNA containing structure.}
@@ -19,6 +19,6 @@
 #'                           shorter than 3 are classified as NoRNA.}
 #' }
 #'
-#' @return data.frame with a list and features of NA PDB IDs
+#' @return data.frame with a list and features of NA PDB IDs.
 #'
 "fastquery"

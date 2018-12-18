@@ -18,7 +18,7 @@ Imports: methods, graphics, grDevices, stats, utils,
          plot3D, MASS, RColorBrewer, RANN
 Packaged: 2017-03-14 18:02:52 UTC; dgallego
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 Suggests: 

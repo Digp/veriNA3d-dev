@@ -26,24 +26,38 @@ the NoRNA group.}
 A string with the type of RNA.
 }
 \description{
-The functions classify a structure in the following groups:\cr
+\code{classifyRNA} classifes a structure in the following groups:\cr
 \itemize{
-\item {NoRNA or NoDNA}: the structure does not contain RNA or it is shorter
+\item {NoRNA}: the structure does not contain RNA or it is shorter
 than a threshold set by "length".\cr
-\item {nakedRNA or nakedDNA}: the only molecule(s) in the structure is RNA or
-DNA.\cr
-\item {protRNA or protDNA}: the PDB contains a protein-nuc complex.\cr
-\item {DprotRNA or DprotDNA}: the PDB contains a protein-nuc complex and the
+\item {nakedRNA}: the only molecule(s) in the structure is RNA. It can
+include ionic ligands, but not organic ligands.\cr
+\item {protRNA}: the PDB contains a protein-RNA complex.\cr
+\item {DprotRNA}: the PDB contains a protein-RNA complex and the
 protein has D aminoacids.\cr
 \item {DNARNA}: the PDB contains DNA-RNA.\cr
-\item {PNARNA or PNADNA}: the PDB contains PNA-RNA.\cr
+\item {PNARNA}: the PDB contains PNA-RNA.\cr
 \item {ANARNA}: the PDB contains ANA-RNA.\cr
 \item {LNARNA}: the PDB contains LNA-RNA.\cr
-\item {ligandRNA or ligandDNA}: the RNA/DNA is interacting with an organic
+\item {ligandRNA}: the RNA is interacting with an organic
 ligand. Ions are not considered as ligands in this class.\cr
 }
 }
 \details{
+\code{classifyDNA} classifes a structure in the following groups:\cr
+\itemize{
+\item {NoDNA}: the structure does not contain DNA.\cr
+\item {nakedDNA}: the only molecule(s) in the structure is DNA. It can
+include ionic ligands, but not organic ligands.\cr
+\item {protDNA}: the PDB contains a protein-DNA complex.\cr
+\item {DprotDNA}: the PDB contains a protein-DNA complex and the
+protein has D aminoacids.\cr
+\item {DNARNA}: the PDB contains DNA-RNA.\cr
+\item {PNADNA}: the PDB contains PNA-DNA.\cr
+\item {ligandDNA}: the DNA is interacting with an organic
+ligand. Ions are not considered as ligands in this class.\cr
+}
+
 In \code{classifyRNA}, nucleic acid hybrids are considered RNA, while in
 in \code{classifyDNA} they are considered DNA (e.g. pdb ID 2HVR).
 }

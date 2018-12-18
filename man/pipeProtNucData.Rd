@@ -14,7 +14,7 @@ objects as provided by "read.pdb", "read.cif", "cifParser" ...}
 
 \item{model}{A vector with same length of pdbID containing the
 desired model for each pdbID. If all models are desired, use "all".
-If no models are specified, the first one will be used for each pdbID}
+If no models are specified, the first one will be used for each pdbID.}
 
 \item{chain}{A vector with same length of pdbID containing the
 desired chain for each pdbID. If no chain is specified, all chains will
@@ -40,10 +40,10 @@ provided.}
 \item{progressbar}{A logical to print in screen a progress bar.}
 
 \item{cutoff}{A numeric with the maximum distance to return. To be passed
-to \code{\link[=findBindingSite]{findBindingSite()}}}
+to \code{\link[=findBindingSite]{findBindingSite()}}.}
 
 \item{...}{Additional arguments to be passed to
-\code{\link[=findBindingSite]{findBindingSite()}}}
+\code{\link[=findBindingSite]{findBindingSite()}}.}
 }
 \value{
 A data.frame with data about the atomic distances in the

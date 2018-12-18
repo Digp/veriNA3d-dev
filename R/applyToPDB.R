@@ -3,9 +3,9 @@
 #' Given a function of interest, it is applied to all the PDB entries. 
 #' See supported functions in ?queryFunctions.
 #'
-#' @param FUNCTION A function of interest.
 #' @param listpdb A list/vector containing the PDB IDs of interest. If NULL,
 #'     the complete list of PDB entries is downloaded and used.
+#' @param FUNCTION A function of interest.
 #' @param as.df A logical that stands for "as.data.frame". If TRUE, the output
 #'     will be returned in the form of a data.frame, otherwise a list.
 #' @param cores Number of CPU cores to be used.
@@ -23,7 +23,7 @@
 #'
 
 applyToPDB <-
-function(FUNCTION, listpdb=NULL, as.df=TRUE, cores=1, progressbar=TRUE, ...) {
+function(listpdb=NULL, FUNCTION, as.df=TRUE, cores=1, progressbar=TRUE, ...) {
 
     ## Match function --------------------------------------------------------
     FUNCTION <- match.fun(FUNCTION)

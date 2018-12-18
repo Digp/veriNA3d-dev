@@ -49,7 +49,7 @@ the structure with PDB code: 1Y1Y).}
 
 \item{force}{A logical to force the analysis. Useful when the function
 does not recognise a nucleic acid in the structure (e.g. because all
-bases are non-canonical: 1PBL, 1XV6, 1DV4 ...)}
+bases are non-canonical: 1PBL, 1XV6, 1DV4, etc).}
 }
 \value{
 A data.frame with the measurements for every nucleotide.
@@ -71,7 +71,7 @@ nucleotide measurments. For inter-nucleotide measurments use the prefix
 inter-phosphate distances, use as argument: \cr
 distances=data.frame(atomA=c("P"), atomB=c("post_P"),
 labels=c("interphosphate"),
-stringsAsFactors=FALSE)\cr
+stringsAsFactors=FALSE).\cr
 }
 \examples{
     distances <- data.frame(atomA=c("P"), atomB=c("post_P"), 

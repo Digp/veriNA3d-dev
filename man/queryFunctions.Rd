@@ -103,10 +103,10 @@ header (PDB format) or in the
 * {queryLigands} Retrieves ligands.
 * {queryOrgLigands} Retrieves just the organic ligands (not ions).
 * {queryReldate} Release date.
-* {queryResol} Resolution
+* {queryResol} Resolution.
 * {queryRevdate} Revision date.
 * {queryStatus} PDB status.
-* {queryTechnique} Experimental technique
+* {queryTechnique} Experimental technique.
 }
 \description{
 Strightforward way to access structural data by making queries through the

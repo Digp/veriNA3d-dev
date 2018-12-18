@@ -10,20 +10,20 @@ dssr(pdb, exefile = "x3dna-dssr", dssrargs = c("--nmr", "--torsion360",
 \arguments{
 \item{pdb}{It can be:
 \itemize{
-\item A 4 character string corresponding to a PDB ID
-\item A pdb/mmcif file
+\item A 4 character string corresponding to a PDB ID.
+\item A pdb/mmcif file.
 \item A pdb object as provided by \code{\link[=cifAsPDB]{cifAsPDB()}} or
 \code{\link[bio3d:read.pdb]{bio3d::read.pdb()}}.
 }}
 
-\item{exefile}{A string with the program name}
+\item{exefile}{A string with the program name.}
 
-\item{dssrargs}{A vector of strings with the desired arguments to feed DSSR}
+\item{dssrargs}{A vector of strings with the desired arguments to feed DSSR.}
 
 \item{verbose}{A logical indicating whether to print details of the process.}
 }
 \value{
-A list with the json output of DSSR
+A list with the json output of DSSR.
 }
 \description{
 Wrapper function to execute DSSR (see reference below) on a DNA or RNA
@@ -37,7 +37,7 @@ structure and parse the result.
 \references{
 \preformatted{Lu, X.J., H.J. Bussemaker, and W.K. Olson. 2015. “DSSR: An Integrated 
 Software Tool for Dissection the Spatial Structure of RNA.” Nucleic 
-Acids Research 43 (21): e142.
+Acids Research 43 (21): e142
 }
 }
 \author{

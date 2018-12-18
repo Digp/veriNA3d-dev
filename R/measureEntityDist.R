@@ -17,7 +17,7 @@
 #' @param entities A character vector with the entities of interest. The 
 #'     default "all" will select all of them except the refent.
 #' @param ... Additional arguments to be passed to
-#'     [measureElenoDist()]
+#'     [measureElenoDist()].
 #'
 #' @return A data.frame with the nearest atoms neighbour information.
 #'

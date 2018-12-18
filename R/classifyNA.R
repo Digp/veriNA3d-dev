@@ -1,18 +1,30 @@
 #' Classify RNA or DNA structures
 #'
-#' The functions classify a structure in the following groups:\cr
-#' - {NoRNA or NoDNA}: the structure does not contain RNA or it is shorter
+#' `classifyRNA` classifes a structure in the following groups:\cr
+#' * {NoRNA}: the structure does not contain RNA or it is shorter
 #' than a threshold set by "length".\cr
-#' - {nakedRNA or nakedDNA}: the only molecule(s) in the structure is RNA or
-#' DNA.\cr
-#' - {protRNA or protDNA}: the PDB contains a protein-nuc complex.\cr
-#' - {DprotRNA or DprotDNA}: the PDB contains a protein-nuc complex and the 
+#' * {nakedRNA}: the only molecule(s) in the structure is RNA. It can
+#' include ionic ligands, but not organic ligands.\cr
+#' * {protRNA}: the PDB contains a protein-RNA complex.\cr
+#' * {DprotRNA}: the PDB contains a protein-RNA complex and the 
 #' protein has D aminoacids.\cr
-#' - {DNARNA}: the PDB contains DNA-RNA.\cr
-#' - {PNARNA or PNADNA}: the PDB contains PNA-RNA.\cr
-#' - {ANARNA}: the PDB contains ANA-RNA.\cr
-#' - {LNARNA}: the PDB contains LNA-RNA.\cr
-#' - {ligandRNA or ligandDNA}: the RNA/DNA is interacting with an organic 
+#' * {DNARNA}: the PDB contains DNA-RNA.\cr
+#' * {PNARNA}: the PDB contains PNA-RNA.\cr
+#' * {ANARNA}: the PDB contains ANA-RNA.\cr
+#' * {LNARNA}: the PDB contains LNA-RNA.\cr
+#' * {ligandRNA}: the RNA is interacting with an organic 
+#' ligand. Ions are not considered as ligands in this class.\cr
+#'
+#' `classifyDNA` classifes a structure in the following groups:\cr
+#' * {NoDNA}: the structure does not contain DNA.\cr
+#' * {nakedDNA}: the only molecule(s) in the structure is DNA. It can
+#' include ionic ligands, but not organic ligands.\cr
+#' * {protDNA}: the PDB contains a protein-DNA complex.\cr
+#' * {DprotDNA}: the PDB contains a protein-DNA complex and the 
+#' protein has D aminoacids.\cr
+#' * {DNARNA}: the PDB contains DNA-RNA.\cr
+#' * {PNADNA}: the PDB contains PNA-DNA.\cr
+#' * {ligandDNA}: the DNA is interacting with an organic 
 #' ligand. Ions are not considered as ligands in this class.\cr
 #'
 #' In `classifyRNA`, nucleic acid hybrids are considered RNA, while in

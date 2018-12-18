@@ -37,7 +37,7 @@ using simple_out=TRUE.}
 using simple_out=TRUE.}
 }
 \value{
-A numeric with the epsilon RMSD between the two structures
+A numeric with the epsilon RMSD between the two structures.
 }
 \description{
 Given two RNA with the same length, the functions calculates its epsilon
@@ -54,7 +54,7 @@ RMSD (Bottaro et al. 2014), reproducing BaRNAba software (Bottaro et al.
 \references{
 \preformatted{Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
 Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
-42 (21): 13306–14.
+42 (21): 13306–14
 Bottaro, S., G. Bussi, G. Pinamonti, S. Reiber, W. Boomsma, and K. 
 Lindorff-Larsen. 2018. “Barnaba: Software for Analysis of Nucleic 
 Acids Structures and Trajectories.” RNA, Epub ahead of print

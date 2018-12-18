@@ -17,7 +17,7 @@ Data Bank (or an existing file in disk).}
 \item{verbose}{A logical indicating whether to print details of the process.}
 }
 \value{
-A S4 CIF object
+A S4 CIF object.
 }
 \description{
 Given a file or PDB ID, the function parses the coordinates of the

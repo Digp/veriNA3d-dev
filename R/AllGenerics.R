@@ -5,24 +5,25 @@
 #'
 #' S4 method to access the contents of CIF objects.
 #'
-#' @param x a CIF object
+#' @param x a CIF object.
 #' @return
-#'     * {cifEntry} `Character` with the mmCIF PDB ID
-#'     * {cifAudit_conform} `Character` vector with dictionary version
-#'     * {cifDatabase_2} `Data.frame` with cross-references
-#'     * {cifPdbx_database_status} `Character` vector with deposition data
-#'     * {cifAudit_author} `Data.frame` with author names
-#'     * {cifEntity} `Data.frame` with molecules & ions in the structure
-#'     * {cifChem_comp} `Data.frame` with residues records in the structure
-#'     * {cifExptl} `Character` vector with experimental technique
+#'     * {cifEntry} `Character` with the mmCIF PDB ID.
+#'     * {cifAudit_conform} `Character` vector with dictionary version.
+#'     * {cifDatabase_2} `Data.frame` with cross-references.
+#'     * {cifPdbx_database_status} `Character` vector with deposition data.
+#'     * {cifAudit_author} `Data.frame` with author names.
+#'     * {cifEntity} `Data.frame` with molecules & ions in the structure.
+#'     * {cifChem_comp} `Data.frame` with residues records in the structure.
+#'     * {cifExptl} `Character` vector with experimental technique.
 #'     * {cifStruct} `Character` vector with author description of the 
-#'         structure
-#'     * {cifStruct_keywords} `Character` vector with author selected key words
-#'     * {cifStruct_asym} `Data.frame` with chain-entity equivalences
+#'         structure.
+#'     * {cifStruct_keywords} `Character` vector with author selected key 
+#'         words.
+#'     * {cifStruct_asym} `Data.frame` with chain-entity equivalences.
 #'     * {cifAtom_sites} `Character` vector with details about the 
-#'         crystallographic cell
-#'     * {cifAtom_type} `Data.frame` with about the atoms in structure
-#'     * {cifAtom_site} `Data.frame` with atomic coordinates
+#'         crystallographic cell.
+#'     * {cifAtom_type} `Data.frame` with about the atoms in structure.
+#'     * {cifAtom_site} `Data.frame` with atomic coordinates.
 #'
 #' @examples
 #'     cif <- cifParser("1bau")
@@ -106,7 +107,7 @@ setGeneric("cifAtom_site",
 #'     Data Bank (or an existing file in disk).
 #' @param verbose A logical indicating whether to print details of the process.
 #'
-#' @return A S4 CIF object 
+#' @return A S4 CIF object.
 #'
 #' @examples
 #'     cif <- cifParser("1bau")
@@ -123,7 +124,7 @@ setGeneric("cifParser",
 
 #' Coerce CIF S4 object to pdb S3 object as found in bio3d package
 #'
-#' Coerces CIF to pdb class
+#' Coerces CIF to pdb class.
 #'
 #' @rdname cifAsPDB
 #'
@@ -227,7 +228,7 @@ setGeneric("selectModel",
 #' @references
 #'     Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
 #'     Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
-#'     42 (21): 13306–14.
+#'     42 (21): 13306–14
 #'
 setGeneric("rVector",
             function(cif, pdb, outformat="rvector", simple_out=TRUE)
@@ -260,7 +261,7 @@ setGeneric("rVector",
 #'     [rVector()] 
 #'     using simple_out=TRUE.
 #'
-#' @return A numeric with the epsilon RMSD between the two structures
+#' @return A numeric with the epsilon RMSD between the two structures.
 #'
 #' @examples
 #'     cif <- cifParser("2d18")
@@ -272,7 +273,7 @@ setGeneric("rVector",
 #' @references
 #'     Bottaro, S., F. Di Palma, and G Bussi. 2014. “The Role of Nucleobase 
 #'     Interactions in RNA Structure and Dynamics.” Nucleic Acids Research 
-#'     42 (21): 13306–14.
+#'     42 (21): 13306–14
 #'     Bottaro, S., G. Bussi, G. Pinamonti, S. Reiber, W. Boomsma, and K. 
 #'     Lindorff-Larsen. 2018. “Barnaba: Software for Analysis of Nucleic 
 #'     Acids Structures and Trajectories.” RNA, Epub ahead of print

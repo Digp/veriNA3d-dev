@@ -4,14 +4,14 @@
 \alias{applyToPDB}
 \title{Applies a function over a list of PDB ID entries.}
 \usage{
-applyToPDB(FUNCTION, listpdb = NULL, as.df = TRUE, cores = 1,
+applyToPDB(listpdb = NULL, FUNCTION, as.df = TRUE, cores = 1,
   progressbar = TRUE, ...)
 }
 \arguments{
-\item{FUNCTION}{A function of interest.}
-
 \item{listpdb}{A list/vector containing the PDB IDs of interest. If NULL,
 the complete list of PDB entries is downloaded and used.}
+
+\item{FUNCTION}{A function of interest.}
 
 \item{as.df}{A logical that stands for "as.data.frame". If TRUE, the output
 will be returned in the form of a data.frame, otherwise a list.}

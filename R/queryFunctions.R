@@ -39,10 +39,10 @@
 #'     * {queryLigands} Retrieves ligands.
 #'     * {queryOrgLigands} Retrieves just the organic ligands (not ions).
 #'     * {queryReldate} Release date.
-#'     * {queryResol} Resolution
+#'     * {queryResol} Resolution.
 #'     * {queryRevdate} Revision date.
 #'     * {queryStatus} PDB status.
-#'     * {queryTechnique} Experimental technique
+#'     * {queryTechnique} Experimental technique.
 #'
 #' @examples
 #'     queryTechnique("4y4o")

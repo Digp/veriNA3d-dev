@@ -90,25 +90,26 @@ cifAtom_site(x)
 \S4method{cifAtom_site}{CIF}(x)
 }
 \arguments{
-\item{x}{a CIF object}
+\item{x}{a CIF object.}
 }
 \value{
-\preformatted{* {cifEntry} `Character` with the mmCIF PDB ID
-* {cifAudit_conform} `Character` vector with dictionary version
-* {cifDatabase_2} `Data.frame` with cross-references
-* {cifPdbx_database_status} `Character` vector with deposition data
-* {cifAudit_author} `Data.frame` with author names
-* {cifEntity} `Data.frame` with molecules & ions in the structure
-* {cifChem_comp} `Data.frame` with residues records in the structure
-* {cifExptl} `Character` vector with experimental technique
+\preformatted{* {cifEntry} `Character` with the mmCIF PDB ID.
+* {cifAudit_conform} `Character` vector with dictionary version.
+* {cifDatabase_2} `Data.frame` with cross-references.
+* {cifPdbx_database_status} `Character` vector with deposition data.
+* {cifAudit_author} `Data.frame` with author names.
+* {cifEntity} `Data.frame` with molecules & ions in the structure.
+* {cifChem_comp} `Data.frame` with residues records in the structure.
+* {cifExptl} `Character` vector with experimental technique.
 * {cifStruct} `Character` vector with author description of the 
-    structure
-* {cifStruct_keywords} `Character` vector with author selected key words
-* {cifStruct_asym} `Data.frame` with chain-entity equivalences
+    structure.
+* {cifStruct_keywords} `Character` vector with author selected key 
+    words.
+* {cifStruct_asym} `Data.frame` with chain-entity equivalences.
 * {cifAtom_sites} `Character` vector with details about the 
-    crystallographic cell
-* {cifAtom_type} `Data.frame` with about the atoms in structure
-* {cifAtom_site} `Data.frame` with atomic coordinates
+    crystallographic cell.
+* {cifAtom_type} `Data.frame` with about the atoms in structure.
+* {cifAtom_site} `Data.frame` with atomic coordinates.
 }
 }
 \description{

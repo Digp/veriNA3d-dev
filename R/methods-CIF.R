@@ -147,12 +147,35 @@ setMethod("cifParser",
 ##############################################################################
 
 ##############################################################################
+
+#' Download Protein Data Bank structures
+#'
+#' Given a 4-character string (PDB ID), download structure.
+#'
+#' @param pdbID A 4 character string that matches a structure in the Protein 
+#'     Data Bank.
+#' @param destfile File name to save the downloaded structure. If NULL, a 
+#'     temporal directory is used and  the file name is constructed based on
+#'     the PDB ID and extension.
+#' @param extension A string with the desired file extension.
+#' @param URL A string with the URL of use. If NULL, the RCSB is used as
+#'     default.
+#' @param verbose A logical to print process details.
+#'
+#' @return The file name.
+#'
+#' @examples
+#'     ## cifDownload("1bau")
+#'
+#' @author Diego Gallego
+#'
+#' @rdname cifDownload
 cifDownload <- 
-function(pdbID, destfile=NULL, URL=NULL, verbose=FALSE) {
+function(pdbID, destfile=NULL, extension=".cif.gz", URL=NULL, verbose=FALSE) {
     ## If file name is not provided, use temp directory and filename
     if (is.null(destfile)) {
         tmpdir <- tempdir()
-        destfile <- paste(tmpdir, "/", pdbID, ".cif.gz", sep="")
+        destfile <- paste(tmpdir, "/", pdbID, extension, sep="")
     }
 
     ## If file is already there but has size 0, remove it and download again
@@ -171,9 +194,9 @@ function(pdbID, destfile=NULL, URL=NULL, verbose=FALSE) {
             #URL <- paste("http://mmb.pcb.ub.es/api/pdb/", 
             ## For development tests I rather use the internal call
             #URL <- paste("http://web.mmb.pcb.ub.es/MMBApi/web/pdb/", 
-                            pdbID, ".cif.gz", sep ="")
+                            pdbID, extension, sep ="")
         } else {
-            URL <- paste(URL, pdbID, ".cif.gz", sep ="")
+            URL <- paste(URL, pdbID, extension, sep ="")
         }
 
         ## Use lanchquery internal function to have error-handling
@@ -196,9 +219,9 @@ function(pdbID, destfile=NULL, URL=NULL, verbose=FALSE) {
 #
 # @rdname .isCIF
 #
-# @param x An R object
+# @param x An R object.
 #
-# @return A logical
+# @return A logical.
 #
 # @examples
 # cif <- cifParser("1bau")
@@ -221,11 +244,11 @@ function(x) {
 #
 # @param cif A cif object obtained from cifParser or a pdb ID so that the
 #    function can download the data.
-# @param verbose A logical indicating whether to print details of the process
+# @param verbose A logical indicating whether to print details of the process.
 # @param check A string with the name of the function to use. It has been
 #    thought to be used with '.isCIF' function.
 #
-# @return A cif object, which might be the same input or the downloaded data
+# @return A cif object, which might be the same input or the downloaded data.
 #
 # @examples 
 # cif <- veriNA3d:::.cifMakeSure("1bau")

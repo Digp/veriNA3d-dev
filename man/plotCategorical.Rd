@@ -21,21 +21,21 @@ analysis. If NULL all the nucleotides in the data.frame will be used.}
 
 \item{main}{A string with the title of the plot.}
 
-\item{cex}{To be passed to the par() function}
+\item{cex}{To be passed to the par() function.}
 
 \item{file}{A string with the name of the output file. If NULL, the
 plot will be printed to screen.}
 
-\item{width}{The width of the plot (passed to the png() function)}
+\item{width}{The width of the plot (passed to the png() function).}
 
-\item{height}{The height of the plot (passed to the png() function)}
+\item{height}{The height of the plot (passed to the png() function).}
 
-\item{bg}{The background color of the plot (passed to the png() function)}
+\item{bg}{The background color of the plot (passed to the png() function).}
 
 \item{units}{The unit to measure height and width (passed to the png()
-function)}
+function).}
 
-\item{res}{Resolution (passed to the png() function)}
+\item{res}{Resolution (passed to the png() function).}
 }
 \value{
 A barplot with the categorical data of interest, which can be

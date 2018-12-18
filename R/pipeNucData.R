@@ -25,9 +25,9 @@
 #'     provided.
 #' @param cores Number of CPU cores to be used.
 #' @param progressbar A logical to print in screen a progress bar.
-#' @param ... Arguments to be passed to [measureNuc()]
+#' @param ... Arguments to be passed to [measureNuc()].
 #'
-#' @return A data.frame with data about every nucleotide in the input set
+#' @return A data.frame with data about every nucleotide in the input set.
 #'
 #' @examples 
 #'     ## This is a toy example, see vignettes for real-world usages.
@@ -69,7 +69,7 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
     ## Download files if necessary
     if (any(read == "download.RAM")) {
         down <- unique(unlist(pdbID[which(read == "download.RAM")]))
-        applyToPDB(listpdb=down, FUN=cifDownload, 
+        applyToPDB(listpdb=down, FUNCTION=cifDownload, 
                     cores=cores, progressbar=progressbar)
         print(paste("Download completed, saved in: ", tempdir()))
     }
