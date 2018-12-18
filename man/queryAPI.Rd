@@ -48,8 +48,8 @@ wrapper called by most of the queryFunctions (for documentation see
     ## 'ID' is just the PDB code.
     ## 'string2' is the string after the pdb ID.
     ## Thus, the call would be:
-    data <- queryAPI(ID="1s72", API="ebi", 
-                        string1="topology/entry/", string2="chain/H/")
+    #data <- queryAPI(ID="1s72", API="ebi", 
+    #                    string1="topology/entry/", string2="chain/H/")
 
 }
 \author{

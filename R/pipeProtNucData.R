@@ -217,7 +217,7 @@ function(pdbID, read) {
     } else {
         name <- pdbID
 
-        if (queryCompType(name) == "Prot-nuc") {
+        if (sum(countEntities(name)[c("Prot", "Dprot")]) > 0) {
             return(FALSE)
         } else {
             return(TRUE)

@@ -47,7 +47,7 @@ now.
 The R package presented in here, veriNA3d, does not replace bio3d at all.
 Rather, it was developed on top of it to cover additional necessities. 
 The only common tool integrated in both packages is a parser for mmCIF files
-(see below). veriNA3d is mainly intended (but not limited) to the analysis of 
+(see below). VeriNA3d is mainly intended (but not limited) to the analysis of 
 Nucleic Acids. It integrates a higher level of abstraction than bio3d since it
 also allows the analysis of datasets, in addition to analysis of single
 structures. The functions in the package could be divided in the following 
@@ -58,11 +58,11 @@ access to the [representative lists of RNA](
 http://rna.bgsu.edu/rna3dhub/nrlist/)
 by [@Leontis2012] and other analytical functions.
 
-* Structure level: Functions to get data, parse mmCIF files and analyse these
-data. This includes a wrapper of DSSR [@Lu2015] and a function to calculate
+* Structure level: Functions to get data, parse mmCIF files and analyse them. 
+This includes a wrapper of DSSR [@Lu2015] and a function to calculate
 the \(\epsilon\)RMSD [@Bottaro2014].
 
-* Plots: examples to show the results of the previous analysis.
+* Plots: few functions to show the results of the previous analysis.
 
 The complete list of functions can be found in the README.md file within the
 package, also accessible on the gitlab 
@@ -91,9 +91,9 @@ developed for the PDB format.
 
 The PDB format was definetely frozen in 2014. However, it will still coexist
 with the standard mmCIF format as long as all softwares evolve to accept
-mmCIFs. Following this trend, the bio3d R package integrated a read.cif 
+mmCIFs. Following this trend, the bio3d R package integrated a `read.cif` 
 function in their version 2.3. At that time, we had already started the 
-development of our own cifParser function. Given that the mmCIF format is
+development of our own `cifParser` function. Given that the mmCIF format is
 constantly evolving and that both functions take slightly different approaches,
 we decided to offer our own version of it, which might provide an useful and
 fast alternative for users working with mmCIF files.
@@ -207,6 +207,9 @@ tech <- queryTechnique("4KQX", verbose=TRUE)
 
 ## Run the same query for the second time, which will get it from memory
 tech <- queryTechnique("4KQX", verbose=TRUE)
+
+## See result
+tech
 ```
 
 However, this is only saved across the current session of R, and any script
@@ -412,8 +415,8 @@ trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
 Atomic distances are calculated internally in the `trimSphere` function, a 
 resource that is also made available to the user through the functions
 `measureEntityDist` (returns all the distances between the atoms 
-of two entities) and `measureElenoDist` (returns all the distances between a
-set of atoms).
+of two entities) and `measureElenoDist` (returns all the distances between two
+sets of atoms).
 
 Herein it is shown how to calculate the pair-wise distances between all the
 phosphate atoms of an RNA structure, which could be easily adapted for alpha
@@ -462,6 +465,7 @@ head(rnalist)
 ```
 
 The previous object is a data-frame with three columns:
+
 * Equivalence class
 * Representative structure
 * Members of the Equivalence class
@@ -517,13 +521,14 @@ When you have your desired list of PDB IDs, the function `pipeNucData` and
 `pipeProtNucData` can extract multiple structural parameters for all the 
 dataset.
 
-```{r pipeNucData(pdblist, chainlist, cores), eval=FALSE}
-## It takes ~3 min with 2 cores, but it depens on the Internet connection. 
-## Set progressbar=TRUE to see the progress
+```{r pipeNucData(pdblist, chainlist, cores)}
+## After the download is finished, this dataset is analised in less than 2 min
+## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
 ntinfo <- pipeNucData(pdbID=nrlist$pdb, 
                         model=nrlist$model,
                         chain=nrlist$chain, 
                         progressbar=FALSE, cores=2)
+str(ntinfo)
 ```
 
 In this case, `pipeNucData` is downloading each structure from internet, but
@@ -532,14 +537,29 @@ and provide it to the function. When reading files locally, the function is
 obviously faster. The file format can either be pdb or cif, being the cif files
 the recommended option (they can also be read when compressed in .gz). To make
 it work with local files, the extension should also be provided
-(e.g. ".cif.gz", ".cif" or ".pdb"). The following lines have not been executed:
+(e.g. ".cif.gz", ".cif" or ".pdb").
 
 ```{r pipeNucData(pdblist, chainlist, cores, path, extension), eval=FALSE}
 ntinfo <- pipeNucData(pdbID=nrlist$pdb, 
                         model=nrlist$model,
                         chain=nrlist$chain, 
                         progressbar=FALSE, cores=2, 
-                        path="/your/path/to/the/dataset/", extension="cif.gz")
+                        path="/your/path/to/the/dataset/", extension=".cif.gz")
+```
+
+The second dataset analysis available in the dataset is designed to study
+the interactions between proteins and nucleic acids, and would be executed as
+follows:
+
+
+```{r pipeProtNucData(pdblist, chainlist, cores)}
+## After the download is finished, this dataset is analised in less than 1 min
+## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
+aantinfo <- pipeProtNucData(pdbID=nrlist$pdb, 
+                            model=nrlist$model,
+                            chain=nrlist$chain, 
+                            progressbar=FALSE, cores=2)
+str(aantinfo)
 ```
 
 

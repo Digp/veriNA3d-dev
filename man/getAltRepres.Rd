@@ -35,9 +35,9 @@ desired features. The first member that matches all the desired features
 is returned.
 }
 \examples{
-    rnalist <- getLeontisList(release=3.2, threshold="1.5A")
-    alternative <- getAltRepres(rnalist=rnalist, 
-                                type="nakedRNA")
+    #rnalist <- getLeontisList(release=3.2, threshold="1.5A")
+    #alternative <- getAltRepres(rnalist=rnalist, 
+    #                            type="nakedRNA")
 
 }
 \author{

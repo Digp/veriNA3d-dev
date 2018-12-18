@@ -19,9 +19,9 @@
 #'  the selected Representants according with the specified conditions. 
 #'
 #' @examples 
-#'     rnalist <- getLeontisList(release=3.2, threshold="1.5A")
-#'     alternative <- getAltRepres(rnalist=rnalist, 
-#'                                 type="nakedRNA")
+#'     #rnalist <- getLeontisList(release=3.2, threshold="1.5A")
+#'     #alternative <- getAltRepres(rnalist=rnalist, 
+#'     #                            type="nakedRNA")
 #'
 #' @author Diego Gallego
 #'

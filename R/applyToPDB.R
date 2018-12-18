@@ -17,7 +17,7 @@
 #'
 #' @examples
 #'     listpdb <- c("1s72", "1bau", "1rna")
-#'     applyToPDB(queryTechnique, listpdb)
+#'     applyToPDB(listpdb, queryTechnique)
 #'
 #' @author Diego Gallego
 #'

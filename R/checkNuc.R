@@ -150,15 +150,15 @@ function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
                             ntinfo=ntinfo, angle="theta"))
 
     ## and if they can be used for trinucleotide eRMSD comparisons -----------
-    eRMSD_valid <- unlist(lapply(seq_len(nrow(ntinfo)), 
-                                    FUN=.is_valid_eRMSD,
-                                    ntinfo=ntinfo))
+    #eRMSD_valid <- unlist(lapply(seq_len(nrow(ntinfo)), 
+    #                                FUN=.is_valid_eRMSD,
+    #                                ntinfo=ntinfo))
 
     ## Prepare the output ----------------------------------------------------
     ntinfo <- cbind(ntinfo, 
                     eta_valid=eta, 
-                    theta_valid=theta, 
-                    eRMSD_valid=eRMSD_valid)
+                    theta_valid=theta)#, 
+                    #eRMSD_valid=eRMSD_valid)
     return(ntinfo)
 }
 

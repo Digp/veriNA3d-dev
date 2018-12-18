@@ -150,20 +150,28 @@ head(nrlist)
 ## To see only the structures containing Mg use
 head(nrlist[nrlist$Mg == TRUE, ])
 
-## ----data(dataset_wadley2007)----------------------------------------------
-data(dataset_wadley2007)
-head(dataset_wadley2007)
-
-## ----pipeNucData(pdblist, chainlist, cores), eval=FALSE--------------------
-#  ## It takes ~3 min with 2 cores, but it depens on the Internet connection.
-#  ## Set progressbar=TRUE to see the progress
-#  ntinfo <- pipeNucData(dataset_wadley2007$pdb,
-#                          chain=dataset_wadley2007$chain,
-#                          progressbar=FALSE, cores=2)
+## ----pipeNucData(pdblist, chainlist, cores)--------------------------------
+## After the download is finished, this dataset is analised in less than 2 min
+## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
+ntinfo <- pipeNucData(pdbID=nrlist$pdb, 
+                        model=nrlist$model,
+                        chain=nrlist$chain, 
+                        progressbar=FALSE, cores=2)
+str(ntinfo)
 
 ## ----pipeNucData(pdblist, chainlist, cores, path, extension), eval=FALSE----
-#  ntinfo <- pipeNucData(dataset_wadley2007$pdb,
-#                          chain=dataset_wadley2007$chain,
+#  ntinfo <- pipeNucData(pdbID=nrlist$pdb,
+#                          model=nrlist$model,
+#                          chain=nrlist$chain,
 #                          progressbar=FALSE, cores=2,
-#                          path="/your/path/to/the/dataset/", extension="cif.gz")
+#                          path="/your/path/to/the/dataset/", extension=".cif.gz")
+
+## ----pipeProtNucData(pdblist, chainlist, cores)----------------------------
+## After the download is finished, this dataset is analised in less than 1 min
+## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
+aantinfo <- pipeProtNucData(pdbID=nrlist$pdb, 
+                            model=nrlist$model,
+                            chain=nrlist$chain, 
+                            progressbar=FALSE, cores=2)
+str(aantinfo)
 
