@@ -39,6 +39,9 @@ tech <- queryTechnique("4KQX", verbose=TRUE)
 ## Run the same query for the second time, which will get it from memory
 tech <- queryTechnique("4KQX", verbose=TRUE)
 
+## See result
+tech
+
 ## ----"Example1: queryAPI(ID, API, string1, string2)"-----------------------
 atpsummary <- queryAPI(ID="ATP", API="ebi", 
                         string1="pdb/compound/summary/", string2="")

@@ -28,7 +28,7 @@ distribution in a circular format.
 \examples{
     ntinfo <- pipeNucData("1bau")
     C3endo_ntID <- cleanByPucker(ntinfo, pucker="C3'endo")
-    C3endo <- ntinfo[ntinfo$ntID \%in\% C3endo_ntID,]
+    C3endo <- ntinfo[ntinfo$ntID \%in\% C3endo_ntID, ]
     plotCircularDistribution(C3endo[, "delta"])
 
 }

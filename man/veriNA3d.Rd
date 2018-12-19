@@ -6,28 +6,13 @@
 \alias{veriNA3d-package}
 \title{veriNA3d: Structural bioinformatics package for data mining of the PDB.}
 \description{
-The data pipeline starts obtaining, cleaning and exploring data. When
-considering biological data, reproducibility, scalability and
-standardization usually become issues. veriNA3d provides tools to analyse
-PDB (Protein Data Bank) structural data - with a focus on RNA - while
-making these issues easy to address. It makes data mining straightforward
-by providing three categories of functions to get, manage and explore data.
+VeriNA3d is an R package for the analysis of Nucleic Acid structural data.
+The software was developed on top of bio3d (Grant et al, 2006) with a higher
+level of abstraction. In addition of single-structure analyses, veriNA3d also
+implements pipelines to handle whole datasets of mmCIF/PDB structures. As far
+as we know, no similar software has been previously distributed, thus it aims
+to fill a gap in the data mining pipelines of PDB structural data analyses.
 }
-\section{Get/query functions}{
-
-The query functions ...
-}
-
-\section{Manage/compute functions}{
-
-The manage functions ...
-}
-
-\section{Explore/save functions}{
-
-The explore functions ...
-}
-
 \author{
 Diego Gallego
 \href{mailto:diego.gallego@irbbarcelona.org}{diego.gallego@irbbarcelona.org}

@@ -5,12 +5,13 @@ Version: 0.99.0
 Date: 2018-12-12
 Author: Diego Gallego
 Maintainer: Diego Gallego <diego.gallego@irbbarcelona.org>
-Description: Structural bioinformatics is a hard field we work to make easier.
-    We provide tools to extract information from PDB structures, manage these 
-    data and save the results in different kinds of plots. The package was 
-    developed (and so the examples and vignettes) to do data mining with PDB 
-    data focused on RNA, but most of its functionalities are extensible to the 
-    analysis of any PDB structure.
+Description: 
+VeriNA3d is an R package for the analysis of Nucleic Acid structural data. 
+The software was developed on top of bio3d (Grant et al, 2006) with a higher 
+level of abstraction. In addition of single-structure analyses, veriNA3d also
+implements pipelines to handle whole datasets of mmCIF/PDB structures. As far
+as we know, no similar software has been previously distributed, thus it aims
+to fill a gap in the data mining pipelines of PDB structural data analyses.
 License: GPL-3
 Depends: R (>= 3.5)
 Imports: methods, graphics, grDevices, stats, utils,
