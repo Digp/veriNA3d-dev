@@ -220,4 +220,4 @@ Leonardo Darré (Former Developer)
 ## License
 ----------
 
-GPL-3 (See LICENSE)
+GPL-3
