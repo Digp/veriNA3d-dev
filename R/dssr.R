@@ -72,9 +72,9 @@ function(pdb, exefile="x3dna-dssr",
             flag <- TRUE
             tryCatch(
                     { 
-                        write.pdb(pdb, file=infile, segid=pdb$atom$entid)
-                    }, error=function(e) {
                         write.pdb(pdb, file=infile, segid=pdb$atom$segid)
+                    }, error=function(e) {
+                        write.pdb(pdb, file=infile, segid=pdb$atom$entid)
                     })
 
         ## If the input is not a S3 bio3d pdb object

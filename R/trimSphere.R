@@ -146,7 +146,12 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
                 paste("resno", resno2[i], ".", sep=""), file)
             }
         }
-        write.pdb(pdb=pdb, file=file, segid=pdb$atom$entid)
+    tryCatch(
+            {
+                write.pdb(pdb, file=file, segid=pdb$atom$segid)
+            }, error=function(e) {
+                write.pdb(pdb, file=file, segid=pdb$atom$entid)
+            })
     }
 }
 ##############################################################################
