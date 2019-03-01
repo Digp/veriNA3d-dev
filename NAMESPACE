@@ -51,6 +51,7 @@ export(
     eRMSD,
 
     findBindingSite,
+    findHDR,
 
     getAltRepres,
     getLeontisList,

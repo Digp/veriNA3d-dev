@@ -270,7 +270,7 @@ function(data, totalfields) {
 function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
 
     ## Take coordinates with columns ordered as pdb objects (bio3d S3)
-    atom <- cifAtom_site(cif)[, .colNames[,2 ]]
+    atom <- cifAtom_site(cif)[, .colNames[, 2]]
     names(atom) <- .colNames[, 1]
 
     ## In case there are Sodium ions ("NA"), replace them by "Na" string 
