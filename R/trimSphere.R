@@ -225,11 +225,13 @@ function(pdb) {
 
 .perfect_output_format <-
 function(pdb, outeleno, query) {
-    if (any(is.na(pdb$atom$alt)))
+    if (any(is.na(pdb$atom$alt))) {
         pdb$atom$alt <- ""
+    }
 
-    if (any(pdb$atom$alt == "."))
+    if (any(pdb$atom$alt == ".")) {
         pdb$atom$alt <- ""
+    }
 
     pdb$atom$charge <- ""
     pdb$atom$entid <- ""
@@ -249,11 +251,13 @@ function(pdb, outeleno, query) {
     } else {
         resno2 <- NULL
     }
-    if (any(is.na(pdb$atom$insert))) 
-        pdb$atom$insert <- ""
+    if (any(is.na(pdb$atom$insert))) { 
+        pdb$atom$insert <- pdb$atom$insert[which(is.na(pdb$atom$insert))]
+    }
 
-    if (any(pdb$atom$insert == "?")) 
-        pdb$atom$insert <- ""
+    if (any(pdb$atom$insert == "?")) {
+        pdb$atom$insert <- pdb$atom$insert[which(pdb$atom$insert == "?")]
+    }
 
     return(list(pdb=pdb, resno2=resno2))
 }
