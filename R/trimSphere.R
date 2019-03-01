@@ -252,11 +252,11 @@ function(pdb, outeleno, query) {
         resno2 <- NULL
     }
     if (any(is.na(pdb$atom$insert))) { 
-        pdb$atom$insert <- pdb$atom$insert[which(is.na(pdb$atom$insert))]
+        pdb$atom$insert[which(is.na(pdb$atom$insert))] <- ""
     }
 
     if (any(pdb$atom$insert == "?")) {
-        pdb$atom$insert <- pdb$atom$insert[which(pdb$atom$insert == "?")]
+        pdb$atom$insert[which(pdb$atom$insert == "?")] <- ""
     }
 
     return(list(pdb=pdb, resno2=resno2))
