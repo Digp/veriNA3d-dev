@@ -150,7 +150,7 @@ function(index, data, #eqclass, members,
         }
 
         ## If interested in any technique, query technique and cache result --
-        if (technique != "") {
+        if (technique[1] != "") {
             if (fast) {
                 Tech <- fastquery[fast_ind, "Technique"]
             } else {

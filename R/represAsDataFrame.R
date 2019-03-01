@@ -44,5 +44,8 @@ function(nrlist) {
                             stringsAsFactors=FALSE)
     out <- cbind(eq_classes, rep)
     names(out) <- c("Equivalence_class", "pdb", "model", "chain")
+    if (any(nchar(out$pdb) > 4)) {
+        out$pdb <- gsub(" ", "", out$pdb)
+    }
     return(out)
 }
