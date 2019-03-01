@@ -283,14 +283,20 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
 
     ## Check for alternative (alt) records -----------------------------------
     if (!is.null(alt)) {
-        if (sum(atom$alt != ".") > 0) {
-            altind <- unique(sort(c(which(atom$alt == "."),
-                                which(atom$alt %in% alt))))
-            atom <- atom[altind, ]
-            if (verbose) {
-                print(paste("PDB has alt records, taking ", 
-                            paste(alt, collapse=","), sep=""))
+        if (alt != "uniq") {
+            if (sum(atom$alt != ".") > 0) {
+                altind <- unique(sort(c(which(atom$alt == "."),
+                                    which(atom$alt %in% alt))))
+                atom <- atom[altind, ]
             }
+        } else {
+            if (sum(atom$alt != ".") > 0) {
+                alt <- sort(unique(atom$alt))[2]
+            }
+        }
+        if (verbose) {
+            print(paste("PDB has alt records, taking ", 
+                    paste(alt, collapse=","), sep=""))
         }
     }
 

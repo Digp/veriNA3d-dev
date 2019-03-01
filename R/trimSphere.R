@@ -54,10 +54,10 @@
 #'
 trimSphere <-
 function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8, 
-            cutres=FALSE, file=NULL, verbose=TRUE, ...) {
+            cutres=FALSE, file=NULL, verbose=TRUE, alt="uniq", ...) {
 
     ## Make sure the object is a S3 pdb object with the desired model --------
-    cif <- .input_to_pdb(cif=cif, model=model, verbose=verbose, ...)
+    cif <- .input_to_pdb(cif=cif, model=model, verbose=verbose, alt=NULL, ...)
 
     ## Make sure the pdb object has the necessary format ---------------------
     cif <- .perfect_input_format(cif)
@@ -126,6 +126,15 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
             if (chain == Unique[i]) 
                 chain <- toupper(letters)[i]
         }
+    }
+
+    ## Get just desired alt records ------------------------------------------
+    if (alt == "uniq") {
+        alts <- alts <- sort(unique(pdb$atom$alt))
+        alt <- alts[!alts == c(".")][1]
+        eleno <- pdb$atom$eleno[pdb$atom$alt %in% c(".", alt)]
+        sel <- atom.select(pdb, eleno=eleno)
+        pdb <- trim.pdb(pdb, inds=sel)
     }
 
     ## Ensure that the output pdb has the correct format ---------------------
