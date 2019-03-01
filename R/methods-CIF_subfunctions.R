@@ -283,7 +283,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
 
     ## Check for alternative (alt) records -----------------------------------
     if (!is.null(alt)) {
-        if (alt != "uniq") {
+        if (alt[1] != "uniq") {
             if (sum(atom$alt != ".") > 0) {
                 altind <- unique(sort(c(which(atom$alt == "."),
                                     which(atom$alt %in% alt))))

@@ -69,6 +69,10 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
             stop("Please, provide a sel or chain argument")
         }
         inds <- which(cif$atom$elety == "C4'" & cif$atom$chain == chain)
+        inds2 <- which(duplicated(data[inds]))
+        if (length(inds2) != 0) {
+            inds <- inds[-inds2]
+        }
         if (length(inds) == 0) {
             inds <- which(cif$atom$elety == "CA" & cif$atom$chain == chain)
         }
@@ -129,7 +133,7 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
     }
 
     ## Get just desired alt records ------------------------------------------
-    if (alt == "uniq") {
+    if (alt[1] == "uniq") {
         alts <- alts <- sort(unique(pdb$atom$alt))
         alt <- alts[!alts == c(".")][1]
         eleno <- pdb$atom$eleno[pdb$atom$alt %in% c(".", alt)]
