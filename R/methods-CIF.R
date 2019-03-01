@@ -82,15 +82,26 @@ setMethod("cifAtom_site",
 ## cifParser 
 #' @rdname cifParser
 setMethod("cifParser",
-    definition=function(pdbID, verbose=FALSE) {
+    definition=function(pdbID, verbose=FALSE, cache=TRUE) {
 
+        ## Print ID if verbose is TRUE
         if (verbose)
             print(pdbID)
-    
+
+        ## Retrieve structure from RAM if it's there
+        if (cache) {
+            ID <- toupper(substr(pdbID, 1, 4))
+            if (exists(".cacheCIF", envir=.GlobalEnv) && 
+                    cifEntry(get(".cacheCIF", envir=.GlobalEnv)) == ID) {
+
+                return(get(".cacheCIF", envir=.GlobalEnv))            
+            }
+        }
+
         ## Read CIF block ----------------------------------------------------
         ## Save extension, in case its a file
         ext <- substr(pdbID, nchar(pdbID) - 3, nchar(pdbID))
-    
+
         if (file.exists(pdbID) && (ext == ".cif" || ext == "f.gz")) { # Read
             pdb <- readLines(pdbID)
 
@@ -139,6 +150,11 @@ setMethod("cifParser",
                     atom_sites           = as.character(cif$atom_sites),
                     atom_type            = as.data.frame(cif$atom_type),
                     atom_site            = cif$atom_site)
+
+        ## Save structure in RAM if cache is TRUE
+        if (cache) {
+            assign(".cacheCIF", out, envir=.GlobalEnv)
+        }
 
         return(out)
     })

@@ -106,6 +106,8 @@ setGeneric("cifAtom_site",
 #' @param pdbID A 4-character string that matches a structure in the Protein
 #'     Data Bank (or an existing file in disk).
 #' @param verbose A logical indicating whether to print details of the process.
+#' @param cache A logical indicating whether to save mmCIF in RAM. Only one
+#'     structure will be saved a time.
 #'
 #' @return A S4 CIF object.
 #'
@@ -115,7 +117,7 @@ setGeneric("cifAtom_site",
 #' @author Diego Gallego
 #'
 setGeneric("cifParser",
-            function(pdbID, verbose=FALSE)
+            function(pdbID, verbose=FALSE, cache=TRUE)
             standardGeneric("cifParser"))
 
 ##############################################################################
