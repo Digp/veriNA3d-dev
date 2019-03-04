@@ -122,7 +122,7 @@ function(pdb, cutoff=5, select="Nuc", nchain=NULL,
                             verbose=verbose,
                             data_of_interest=c("elety", "resid", "resno",
                                                 "chain", "insert", "alt", 
-                                                "entid", "b", "asym_id"))
+                                                "b"))
 
     ## A different selection is made if the desired output is by residue -----
     if (byres) {
