@@ -53,12 +53,13 @@ function(cif=NULL, ntID, ntinfo, prev=2, post=2,
 
     ntindex <- ntinfo[as.character(desired), "ntindex"]
     chain <- ntinfo[as.character(ntID), "chain"]
+    model <- ntinfo[as.character(ntID), "model"]
 
     if (is.null(file)) {
-        return(trimSphere(cif=cif, ntindex=ntindex, 
+        return(trimSphere(cif=cif, ntindex=ntindex, model=model,
                             chain=chain, verbose=verbose, ...=...))
     } else {
-        trimSphere(cif=cif, ntindex=ntindex, file=file,
+        trimSphere(cif=cif, ntindex=ntindex, file=file, model=model,
                     chain=chain, verbose=verbose, ...=...)
     }
 }
