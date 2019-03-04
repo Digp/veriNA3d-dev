@@ -9,6 +9,7 @@
 #' @param threshold A string that matches one of the lists in the BGSU RNA 
 #'     site ("1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all").
 #'     Note that "all" returns structures solved by any technique.
+#' @param as.df A logical to return the output as a data.frame
 #'
 #' @return A data frame with the list of Equivalence Classes and the 
 #'     Representant and Members of each Equivalence Class. Note that the 

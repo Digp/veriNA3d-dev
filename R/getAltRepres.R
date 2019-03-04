@@ -14,6 +14,7 @@
 #' @param length To be passed to {classifyRNA}.
 #' @param progressbar A logical to print in screen a progress bar.
 #' @param verbose A logical to print details of the process.
+#' @param as.df A logical to return the output as a data.frame
 #'
 #' @return A data.frame with info about all the "Equivalence Classes" and
 #'  the selected Representants according with the specified conditions. 
@@ -28,7 +29,7 @@
 
 getAltRepres <-
 function(rnalist, technique=NULL, resol=NULL, type=NULL, length=3, 
-            progressbar=TRUE, verbose=FALSE) {
+            progressbar=TRUE, verbose=FALSE, as.df=FALSE) {
     ## Make sure the inputs make sense ---------------------------------------
     if (is.null(c(technique, resol, type))) {
         stop("Which features should the alternative representants have?")
@@ -87,7 +88,11 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL, length=3,
     if (progressbar)
         cat("\n")
 
-    return(rnalist[, 2:1])
+    if (as.df) {
+        return(represAsDataFrame(rnalist[, 2:1]))
+    } else {
+        return(rnalist[, 2:1])
+    }
 }
 
 ###############################################################################
