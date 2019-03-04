@@ -215,12 +215,12 @@ function(pdbID, read) {
         }
 
     } else {
-        name <- pdbID
+        #name <- pdbID
 
-        if (sum(countEntities(name)[c("Prot", "Dprot")]) > 0) {
+        #if (sum(countEntities(name)[c("Prot", "Dprot")]) > 0) {
             return(FALSE)
-        } else {
-            return(TRUE)
-        }
+        #} else {
+        #    return(TRUE)
+        #}
     }
 }

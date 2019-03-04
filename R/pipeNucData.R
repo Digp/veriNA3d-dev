@@ -230,7 +230,8 @@ function(pdbID, model, chain, read, ...,
         temp_PDB <- pdbID
     } else if (read == "read.list.cif") {
         temp_PDB <- cifAsPDB(pdbID, alt=ALT)
-    } else if (read %in% c("read.pdb", "read.pdb.gz")) {
+    } else if (read %in% c("read.pdb", "read.pdb.gz", 
+                            "read.ent", "read.ent.gz")) {
         temp_PDB <- suppressWarnings(read.pdb(
                                         paste(path, name, extension, sep=""), 
                                         multi=multi, 
