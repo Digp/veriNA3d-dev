@@ -207,7 +207,9 @@ function(index, data, #eqclass, members,
                     envir=parent.frame(n=1))
         }
 
-        if (Tech %in% technique && Resol <= resol && Type %in% type) {
+        if (tolower(Tech) %in% tolower(technique) && 
+                Resol <= resol && Type %in% type) {
+
             out <- members[i]
             break()
         }
