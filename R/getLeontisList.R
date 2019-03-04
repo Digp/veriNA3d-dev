@@ -28,7 +28,7 @@
 #'     E. Westhof, 27:281–98. Springer Berlin Heidelberg
 #'
 getLeontisList <- 
-function(release="current", threshold="all") {
+function(release="current", threshold="all", as.df=FALSE) {
 
     ## Check argument threshold is correct -----------------------------------
     if (!threshold %in% thresholds) { 
@@ -75,6 +75,10 @@ function(release="current", threshold="all") {
     output <- as.data.frame(matrix(data, ncol=3, byrow=TRUE),
                             stringsAsFactors=FALSE)
     names(output) <- c("Equivalence_class", "Representative", "Class_members")
+
+    if (as.df) {
+        output <- represAsDataFrame(output)
+    }
     return(output)
 }
 
