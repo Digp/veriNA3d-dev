@@ -18,7 +18,8 @@
 #' @param post Number of desired 3' neigbours to be returned.
 #' @param verbose A logical to print details of the process.
 #' @param file A string to save the output in a pdb formated file. If NULL the
-#'     fucntions just returns the pdb object.
+#'     functions just returns the pdb object.
+#' @param justbackbone A logical to keep only the bakcbone of the output pdb.
 #' @param ... Arguments to be passed to trimSphere (type ?trimSphere for 
 #'     details).
 #' 
@@ -40,8 +41,8 @@
 #' @author Diego Gallego
 #'
 trimByID <-
-function(cif=NULL, ntID, ntinfo, prev=2, post=2, 
-            verbose=TRUE, file=NULL, ...) {
+function(cif=NULL, ntID, ntinfo, prev=2, post=2,
+            verbose=TRUE, file=NULL, justbackbone=FALSE, ...) {
 
     row.names(ntinfo) <- ntinfo$ntID
     if (is.null(cif)) 
@@ -55,12 +56,48 @@ function(cif=NULL, ntID, ntinfo, prev=2, post=2,
     chain <- ntinfo[as.character(ntID), "chain"]
     model <- ntinfo[as.character(ntID), "model"]
 
-    if (is.null(file)) {
-        return(trimSphere(cif=cif, ntindex=ntindex, model=model,
-                            chain=chain, verbose=verbose, ...=...))
+    pdb <- trimSphere(cif=cif, ntindex=ntindex, model=model,
+                        chain=chain, verbose=verbose, ...=...)
+
+    if (justbackbone) {
+        ## Select backbone atoms
+        ind <- which(pdb$atom$elety == "C4'")
+        rlist <- pdb$atom$resno[ind]
+        ilist <- pdb$atom$insert[ind]
+
+        ## For first residue of the chain, keep atoms from C4' onwards
+        inds1 <- which(pdb$atom$resno == rlist[1] & 
+                        pdb$atom$insert == ilist[1] &
+                        pdb$atom$elety %in% c("C4'", "C3'", "O3'"))
+        inds2 <- c()
+        for (j in 2:(length(rlist) - 1)) {
+            inds <- which(pdb$atom$resno == rlist[j] &
+                            pdb$atom$insert == ilist[j] &
+                            pdb$atom$elety %in% c("P", "O5'", "C5'", 
+                                                    "C4'", "C3'", "O3'"))
+            inds2 <- append(inds2, inds)
+        }
+        ## For the last residue of the chain, keep atoms from P to C4'
+        inds3 <- which(pdb$atom$resno == rlist[length(rlist)] &
+                        pdb$atom$insert == ilist[length(rlist)] &
+                        pdb$atom$elety %in% c("P", "O5'", "C5'", "C4'"))
+
+        ele <- pdb$atom$eleno[c(inds1, inds2, inds3)]
+        sel = atom.select(pdb, eleno=ele)
+
+        ## Trim pdb
+        pdb <- trim.pdb(pdb, inds=sel)
+    }
+
+    if (!is.null(file)) {
+        tryCatch(
+            {
+                write.pdb(pdb, file=file, segid=pdb$atom$segid)
+            }, error=function(e) {
+                write.pdb(pdb, file=file, segid=pdb$atom$entid)
+            })
     } else {
-        trimSphere(cif=cif, ntindex=ntindex, file=file, model=model,
-                    chain=chain, verbose=verbose, ...=...)
+        return(pdb)
     }
 }
 ##############################################################################
