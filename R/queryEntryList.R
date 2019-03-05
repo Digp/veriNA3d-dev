@@ -24,6 +24,9 @@ function(justIDs=TRUE){
         out <- out[, 1]
     } else {
         names(out) <- c("pdbID", "type", "technique")
+        class(out$pdbID) <- "character"
+        class(out$type) <- "character"
+        class(out$technique) <- "character"
     }
     return(out)
 }
