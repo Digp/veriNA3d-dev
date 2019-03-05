@@ -2,6 +2,8 @@
 #' 
 #' Function to get the list of ALL PDB IDs in the Protein Data Bank at the 
 #' moment.
+#'
+#' @param justIDs A logical to return only pdbIDs without other information.
 #' 
 #' @return A vector with all the PDB ID entries (updated weekly).
 #' 
@@ -12,15 +14,17 @@
 #' 
 
 queryEntryList <-
-function(){
+function(justIDs=TRUE){
     ## Send query
-    URL <- "https://www.rcsb.org/pdb/rest/getCurrent"
-    out <- .launchquery(URL, FUN=readLines)
+    URL <- "ftp://ftp.wwpdb.org/pub/pdb/derived_data/pdb_entry_type.txt"
+    out <- .launchquery(URL, FUN=read.table)
 
     ## Extract PDB IDs and sort them
-    out <- substr(out[grep(pattern="^  <PDB", out, perl=T)], start=21, stop=24)
-    out <- sort(out)
-
+    if (justIDs) {
+        out <- out[, 1]
+    } else {
+        names(out) <- c("pdbID", "type", "technique")
+    }
     return(out)
 }
 
