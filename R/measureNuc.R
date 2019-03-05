@@ -743,7 +743,7 @@ function(index, reslist, inslist, ridlist, pdb,
         output <- append(output, torsions_list)
 #        if (all(c("alpha", "beta", "gamma", "delta", "epsilon", "zeta", 
 #                    "chi", "eta", "theta") %in% names(torsions_list))) {
-#            ind <- which(names(torsions_list) %in% c("alpha", "beta", "gamma", 
+#            ind <- which(names(torsions_list) %in% c("alpha", "beta", "gamma",
 #                                                        "delta", "epsilon", 
 #                                                        "zeta", "chi", "eta", 
 #                                                        "theta"))
@@ -888,7 +888,7 @@ function(tor) {
 #            next()
 #        }
 #        if (!(torsions[i] < .helical_df[.helical_df$angle == angles[i], "max"]
-#            & torsions[i] > .helical_df[.helical_df$angle == angles[i], "min"])
+#            &torsions[i] > .helical_df[.helical_df$angle == angles[i], "min"])
 #            ) {
 #
 #            return(FALSE)
@@ -908,4 +908,5 @@ data.frame(
     max=c(327.377, 202.044, 87.258, 97.825, 240.538, 316.248, 
             227.813, 189.244, 245.499),
     min=c(256.688, 142.805, 26.089, 65.463, 177.408, 260.382, 
-            171.739, 146.844, 187.143), stringsAsFactors=FALSE, row.names="angle")
+            171.739, 146.844, 187.143), stringsAsFactors=FALSE, 
+            row.names="angle")

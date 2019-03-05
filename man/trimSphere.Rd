@@ -39,6 +39,8 @@ fucntions just returns the pdb object.}
 
 \item{verbose}{A logical to print details of the process.}
 
+\item{alt}{Value of alternative records to keep in output object.}
+
 \item{...}{Arguments to be passed to internal functions.}
 }
 \value{

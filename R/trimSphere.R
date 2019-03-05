@@ -25,6 +25,7 @@
 #' @param file A string to save the output in a pdb formated file. If NULL the
 #'     fucntions just returns the pdb object.
 #' @param verbose A logical to print details of the process.
+#' @param alt Value of alternative records to keep in output object.
 #' @param ... Arguments to be passed to internal functions.
 #'
 #' @return A smaller pdb object or a pdb file. 

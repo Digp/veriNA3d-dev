@@ -4,12 +4,12 @@
 #' structure and parse the result.
 #'
 #' @param pdb It can be: 
-#'    \itemize{
-#'        \item A 4 character string corresponding to a PDB ID.
-#'        \item A pdb/mmcif file.
-#'        \item A pdb object as provided by [cifAsPDB()] or 
-#'            [bio3d::read.pdb()].
-#'    }
+#'     \itemize{
+#'         \item A 4 character string corresponding to a PDB ID.
+#'         \item A pdb/mmcif file.
+#'         \item A pdb object as provided by [cifAsPDB()] or 
+#'             [bio3d::read.pdb()].
+#'     }
 #'
 #' @param exefile A string with the program name.
 #' @param dssrargs A vector of strings with the desired arguments to feed DSSR.

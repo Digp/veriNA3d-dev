@@ -65,10 +65,10 @@ export(
     pipeNucData,
     pipeProtNucData,
 
+    plot2D,
+    plot3Ddens,
     plotCategorical,
     plotCircularDistribution,
-    plotEtaTheta,
-    plotEtaTheta3D,
 
     queryAPI,
     queryAuthors,

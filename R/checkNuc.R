@@ -86,7 +86,7 @@ function(pdb, model=1, chain="all", id=NULL, refatm="C4'", force=FALSE) {
 ## combinations.
 
 .checkNuc <-
-function(pdb, model, chain, id=NULL, refatm, force, select=TRUE) {
+function(pdb, model, chain, id=NULL, refatm, force=FALSE, select=TRUE) {
 
     if (select) {
         ## Selection of Model of interest ------------------------------------
