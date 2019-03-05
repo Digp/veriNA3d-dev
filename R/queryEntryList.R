@@ -21,7 +21,7 @@ function(justIDs=TRUE){
 
     ## Extract PDB IDs and sort them
     if (justIDs) {
-        out <- toupper(as.character(out[, 1])
+        out <- toupper(as.character(out[, 1]))
     } else {
         names(out) <- c("pdbID", "type", "technique")
         out$pdbID <- toupper(as.character(out$pdbID))
