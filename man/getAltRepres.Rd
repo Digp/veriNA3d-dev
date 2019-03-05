@@ -5,7 +5,7 @@
 \title{Get Alternative Representants}
 \usage{
 getAltRepres(rnalist, technique = NULL, resol = NULL, type = NULL,
-  length = 3, progressbar = TRUE, verbose = FALSE)
+  length = 3, progressbar = TRUE, verbose = FALSE, as.df = FALSE)
 }
 \arguments{
 \item{rnalist}{The output of getLeontisList.}
@@ -23,6 +23,8 @@ the {classifyRNA} function.}
 \item{progressbar}{A logical to print in screen a progress bar.}
 
 \item{verbose}{A logical to print details of the process.}
+
+\item{as.df}{A logical to return the output as a data.frame}
 }
 \value{
 A data.frame with info about all the "Equivalence Classes" and

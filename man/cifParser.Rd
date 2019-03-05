@@ -6,15 +6,18 @@
 \alias{cifParser,ANY-method}
 \title{Parse coordinates from CIF files}
 \usage{
-cifParser(pdbID, verbose = FALSE)
+cifParser(pdbID, verbose = FALSE, cache = TRUE)
 
-\S4method{cifParser}{ANY}(pdbID, verbose = FALSE)
+\S4method{cifParser}{ANY}(pdbID, verbose = FALSE, cache = TRUE)
 }
 \arguments{
 \item{pdbID}{A 4-character string that matches a structure in the Protein
 Data Bank (or an existing file in disk).}
 
 \item{verbose}{A logical indicating whether to print details of the process.}
+
+\item{cache}{A logical indicating whether to save mmCIF in RAM. Only one
+structure will be saved a time.}
 }
 \value{
 A S4 CIF object.

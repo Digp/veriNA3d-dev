@@ -69,7 +69,6 @@ export(
     plotCircularDistribution,
     plotEtaTheta,
     plotEtaTheta3D,
-    plotSetOfDistributions,
 
     queryAPI,
     queryAuthors,

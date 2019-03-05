@@ -5,7 +5,7 @@
 \title{Calls trimSphere to generate smaller pdb files}
 \usage{
 trimByID(cif = NULL, ntID, ntinfo, prev = 2, post = 2,
-  verbose = TRUE, file = NULL, ...)
+  verbose = TRUE, file = NULL, justbackbone = FALSE, ...)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
@@ -27,7 +27,9 @@ output of pipeNucData function).}
 \item{verbose}{A logical to print details of the process.}
 
 \item{file}{A string to save the output in a pdb formated file. If NULL the
-fucntions just returns the pdb object.}
+functions just returns the pdb object.}
+
+\item{justbackbone}{A logical to keep only the bakcbone of the output pdb.}
 
 \item{...}{Arguments to be passed to trimSphere (type ?trimSphere for
 details).}

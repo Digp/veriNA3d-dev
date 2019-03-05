@@ -4,7 +4,7 @@
 \alias{getLeontisList}
 \title{Download Representative List of RNA structures}
 \usage{
-getLeontisList(release = "current", threshold = "all")
+getLeontisList(release = "current", threshold = "all", as.df = FALSE)
 }
 \arguments{
 \item{release}{A number indicating the list of interest.}
@@ -12,6 +12,8 @@ getLeontisList(release = "current", threshold = "all")
 \item{threshold}{A string that matches one of the lists in the BGSU RNA
 site ("1.5A", "2.0A", "2.5A", "3.0A", "3.5A", "4.0A", "20.0A", "all").
 Note that "all" returns structures solved by any technique.}
+
+\item{as.df}{A logical to return the output as a data.frame}
 }
 \value{
 A data frame with the list of Equivalence Classes and the

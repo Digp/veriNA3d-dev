@@ -1,67 +1,3 @@
-#' Plot distribution of desired angles in circular plots
-#'
-#' Given a data.frame with nucleotides data, it generates a series of circular
-#' plots for the desired angles. NA in the data are ignored.
-#'
-#' @param ntinfo A data.frame with the input data. It should contain the 
-#'     columns with the desired angles and a column labeled ntID.
-#' @param ntID A vector of integers with the desired nucleotides of 
-#'     analysis. If NULL all the nucleotides in the data.frame will be used.
-#' @param angles The column names with the desired data.
-#' @param cex To be passed to the `par`.
-#' @param cols Number of columns in the ouput picture.
-#' @param file A string with the name of the output file. If NULL, the
-#'     plot will be printed to screen.
-#' @param width The width of the plot to be passed to `png`.
-#' @param height The height of the plot to be passed to `png`.
-#' @param bg The background color of the plot to be passed to `png`.
-#' @param units The unit to measure height and width to be passed 
-#'     to `png`.
-#' @param res Resolution to be passed to `png`.
-#'
-#' @return A series of circular plots with the distributions of the desired
-#'     angles, which can be directly saved  to a ".png" file.
-#'
-#' @examples
-#'     #ntinfo <- pipeNucData("1bau")
-#'     #C3endo_ntID <- cleanByPucker(ntinfo, pucker="C3'endo")
-#'
-#'     ## Plot torsional angles for C3'endo nucleotides
-#'     #plotSetOfDistributions(ntinfo=ntinfo, ntID=C3endo_ntID, 
-#'     #                        file="1bau_C3endo.png")
-#'
-#'     ## Which is the same as doing:
-#'     #C3endo <- ntinfo[ntinfo$ntID %in% C3endo_ntID,]
-#'     #plotSetOfDistributions(ntinfo=C3endo, file="1bau_C3endo.png")
-#'
-#' @author Diego Gallego
-#'
-plotSetOfDistributions <-
-function(ntinfo, ntID=NULL,
-        angles=c("alpha", "beta", "gamma", "delta", "epsilon", "zeta",
-                    "chi", "pu_phase"),
-        cex=0.6, cols=3,
-        file=NULL, width=15, height=15,
-        bg="white", units="cm", res=200) {
-
-    ntID <- .giveMeValidntIDs(ntinfo, ntID)
-    rows <- ceiling(length(angles)/cols)
-
-    if (!is.null(file)) {
-        png(file, width=width, height=height, bg=bg,
-                units=units, res=res)
-    }
-    par(mfrow=c(rows, cols), mar=c(2, 2, 2, 2), cex=cex)
-    lapply(angles, FUN=function(x) {
-        plotCircularDistribution(data=ntinfo[ntinfo$ntID %in% ntID, x],
-        clockwise=FALSE, start.degree=0, main=x)
-    })
-    if (!is.null(file)) {
-        dev.off()
-    }
-}
-##############################################################################
-
 #' Plot a scatter&frequency circular plot for angular data
 #'
 #' For a vector of angular data (0 to 360), the function plots the 
@@ -183,30 +119,28 @@ function(ntinfo, field, ntID=NULL, na.rm=FALSE,
 }
 ##############################################################################
 
-#' Plot eta-theta
+#' Make 2D data plot or 3D view of the density
 #'
-#' Function to plot eta-theta and highlight the most populated regions.
+#' Function to make a plot highlighting the most populated regions.
 #'
 #' @param ntinfo A data.frame with the input data. It should contain the 
-#'     columns with eta and theta data and a column labeled ntID.
+#'     columns with the desired data and a column labeled ntID.
 #' @param ntID A vector of integers with the desired nucleotides of 
 #'     analysis. If NULL all the nucleotides in the data.frame will be used.
 #' @param dens The output of a kernel density estimation (e.g. kde2d function)
 #'     over the data of interest. If it is NULL and drawcontour=TRUE, it will 
-#'     be computed under the hood.
+#'     be computed on the fly.
 #' @param bandwidths In case dens=NULL and drawcontour=TRUE, it will be passed
 #'     to kde2d().
-#' @param eta A string with the parameter to be placed in the x axis.
-#' @param theta A string with the parameter to be placed in the y axis.
+#' @param x A string with the parameter to be placed in the x axis.
+#' @param y A string with the parameter to be placed in the y axis.
 #' @param drawcontour A logical to highlight the most populated regions of the
 #'     plot.
 #' @param sd_over_mean_contours A numeric vector with the standard deviations
 #'     over the mean to plot the contours (in case drawcontour=TRUE).
-#' @param highlight_helical A logical to highlight the helical region of the
-#'     eta-theta plot.
-#' @param points An integer vector for advanced usage of the function. It 
-#'     should contain the ntID of the nucleotides to print in a different 
-#'     color.
+#' @param etatheta A logical to return a eta-theta plot.
+#' @param points A vector of integers. It should contain the ntID of the 
+#'     nucleotides to print in a different color.
 #' @param colpoints A string with the desired color if points is not NULL.
 #' @param defaultview A string to set different default options. Chose
 #'     between '2Dupview', 'leftview' and 'rightview'.
@@ -226,43 +160,43 @@ function(ntinfo, field, ntID=NULL, na.rm=FALSE,
 #' @param res Resolution (passed to the png() function).
 #'
 #' @return A plot in screen, which can be directly saved  to a ".png" file.
-#'     * {plotEtaTheta} A scatter plot with eta-theta values.
-#'     * {plotEtaTheta3D} A density map of the data in 3D.
+#'     * {plot2D} A scatter plot.
+#'     * {plot3Ddens} A density map of the data in 3D.
 #'
 #' @examples
 #'     ntinfo <- pipeNucData("1bau")
 #'     C3endo_ntID <- cleanByPucker(ntinfo, pucker="C3'endo")
-#'     plotEtaTheta(ntinfo=ntinfo, ntID=C3endo_ntID)
+#'     plot2D(ntinfo=ntinfo, ntID=C3endo_ntID)
 #' 
 #' @author Diego Gallego
 #'
-#' @name plotEtaTheta
+#' @name plot2D
 NULL
 ##############################################################################
 
 #' @export
-#' @rdname plotEtaTheta
-plotEtaTheta <-
+#' @rdname plot2D
+plot2D <-
 function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL, 
-            eta="eta", theta="theta", drawcontour=TRUE, 
-            sd_over_mean_contours=c(1, 2, 4), highlight_helical=TRUE, 
+            x="eta", y="theta", drawcontour=TRUE, 
+            sd_over_mean_contours=c(1, 2, 4), etatheta=FALSE,
             points=NULL, colpoints="red", 
             file=NULL, width=15, height=15,
             bg="white", units="cm", res=200) {
 
     ## Check input -----------------------------------------------------------
     ntID <- .giveMeValidntIDs(ntinfo, ntID)
-    if (!eta %in% colnames(ntinfo) | !theta %in% colnames(ntinfo)) {
-        stop("Provide strings in the eta&theta arguments that match ", 
+    if (!x %in% colnames(ntinfo) | !y %in% colnames(ntinfo)) {
+        stop("Provide strings in the x&y arguments that match ", 
                 "two columns of the data.frame ntinfo", sep="")
     }
 
     ## Save x and y values ---------------------------------------------------
-    inds <- which(complete.cases(ntinfo[, c(eta, theta)]))
+    inds <- which(complete.cases(ntinfo[, c(x, y)]))
     useful <- ntinfo[inds, "ntID"]
     ntID <- ntID[ntID %in% useful]
-    x <- ntinfo[ntinfo$ntID %in% ntID, eta]
-    y <- ntinfo[ntinfo$ntID %in% ntID, theta]
+    x <- ntinfo[ntinfo$ntID %in% ntID, x]
+    y <- ntinfo[ntinfo$ntID %in% ntID, y]
 
     ## If neccessary, find high-density regions ------------------------------
     if (drawcontour) {
@@ -285,12 +219,12 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
 
     plot(x, y,
             xlim=c(0, 360), ylim=c(0, 360),
-            xlab=expression(paste(eta, " (degrees)", sep="")),
-            ylab=expression(paste(theta, " (degrees)", sep="")),
+            xlab=expression(paste(x, " (degrees)", sep="")),
+            ylab=expression(paste(y, " (degrees)", sep="")),
             pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
 
     ## Add vertical and horizontal lines to highlight helical region ---------
-    if (highlight_helical) {
+    if (etatheta) {
         abline(h=190, lty=2, lwd=1.5, col="red", cex=2)
         abline(h=240, lty=2, lwd=1.5, col="red", cex=2)
         abline(v=150, lty=2, lwd=1.5, col="red", cex=2)
@@ -304,8 +238,8 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
     ## If necessary, add points in a different color -------------------------
     if (!is.null(points)) {
         points <- points[points %in% useful]
-        points(ntinfo[ntinfo$ntID %in% points, eta],
-                ntinfo[ntinfo$ntID %in% points, theta],
+        points(ntinfo[ntinfo$ntID %in% points, x],
+                ntinfo[ntinfo$ntID %in% points, y],
                 col=colpoints, pch=19, cex=0.3)
     }
 
@@ -337,10 +271,10 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
 ##############################################################################
 
 #' @export
-#' @rdname plotEtaTheta
-plotEtaTheta3D <-
+#' @rdname plot2D
+plot3Ddens <-
 function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
-            eta="eta", theta="theta",
+            x="eta", y="theta",
             defaultview=NULL, 
             thetaplot, phiplot, cleanerview=FALSE,
             file=NULL, width=15, height=15,
@@ -348,24 +282,24 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
 
     ## Check input -----------------------------------------------------------
     ntID <- .giveMeValidntIDs(ntinfo, ntID)
-    if (!eta %in% colnames(ntinfo) | !theta %in% colnames(ntinfo)) {
-        stop("Provide strings in the eta&theta arguments that match ", 
+    if (!x %in% colnames(ntinfo) | !y %in% colnames(ntinfo)) {
+        stop("Provide strings in the x&y arguments that match ", 
                 "two columns of the data.frame ntinfo", sep="")
     }
 
     ## Save x and y values ---------------------------------------------------
-    inds <- which(complete.cases(ntinfo[, c(eta, theta)]))
+    inds <- which(complete.cases(ntinfo[, c(x, y)]))
     useful <- ntinfo[inds, "ntID"]
     ntID <- ntID[ntID %in% useful]
-    x <- ntinfo[ntinfo$ntID %in% ntID, eta]
-    y <- ntinfo[ntinfo$ntID %in% ntID, theta]
+    x0 <- ntinfo[ntinfo$ntID %in% ntID, x]
+    y0 <- ntinfo[ntinfo$ntID %in% ntID, y]
 
     ## If neccessary, find high-density regions ------------------------------
     if (is.null(dens)) {
         if (is.null(bandwidths)) {
             bandwidths <- c(40, 40)
         }
-        dens <- kde2d(x, y, 
+        dens <- kde2d(x0, y0, 
                         n=c(361, 361), h=bandwidths, 
                         lims=c(0, 360, 0, 360))
     }
@@ -374,9 +308,9 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
     sd_z=sd(dens$z)
 
     ## Find range of data ----------------------------------------------------
-    etarange <- range(x)
+    etarange <- range(x0)
     etaseq <- seq(etarange[1], etarange[2], length=361)
-    thetarange <- range(y)
+    thetarange <- range(y0)
     thetaseq <- seq(thetarange[1], thetarange[2], length=361)
     newdensZ <- dens$z
 
@@ -426,8 +360,8 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
             y=thetaseq,
             z=newdensZ,
             border=NA, theta=thetaplot, phi=phiplot,
-            xlab=eta,
-            ylab=theta,
+            xlab=x,
+            ylab=y,
             zlab="", lighting=TRUE)
 
     if (!is.null(file)) {
@@ -435,134 +369,6 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
     }
 }
 ##############################################################################
-## Subfunctions
-## ===========================================================================
-
-# Scatter plot into a png file
-# Given a data.frame with three columns generate a scatter plot
-.rvec_plot <-
-function(ntID=NULL, df_rvectors, o="", width=15, height=15, 
-        bg="white", units="cm", res=200, cex=0.6, cols=3) {
-
-    if (is.null(ntID)) {
-    ntID <- unique(df_rvectors$ntID)
-    }
-
-    ind <- which(df_rvectors$ntID %in% ntID)
-    neighbour5 <- ind[df_rvectors[ind, "nt_neighbour"] == 5]
-    neighbour3 <- ind[df_rvectors[ind, "nt_neighbour"] == 3]
-
-    png(paste(o, ".png", sep=""), 
-        width=15, height=15, bg="white", units="cm", res=200)
-    plot(df_rvectors[neighbour5, "rho"],
-        df_rvectors[neighbour5, "z"],
-        col="red", pch=19, cex=0.5, ylab="z (A)", xlab="rho (A)",
-        ylim=range(df_rvectors[, "z"]), xlim=range(df_rvectors[, "rho"]))
-    points(df_rvectors[neighbour3, "rho"],
-        df_rvectors[neighbour3, "z"],
-        col="green", pch=19, cex=0.5)
-    legendtxt <- c("5'", "3'")
-    legend("bottomleft", legend=legendtxt, pch=19, bty="n", 
-            col=c("red", "green"))
-    dev.off()
-}
-## ===========================================================================
-
-## Description: takes eta-theta data and generates plots saved on disk
-.plotAllEtaTheta <-
-function(data, pucker, dir, ntinfo, bandwidths=NULL, 
-                            eta="eta", theta="theta") {
-
-    if (!dir.exists(dir)) {
-        invisible(dir.create(dir))
-    }
-
-    ## Make sure there are no NA
-    inds <- which(complete.cases(data[, c(eta, theta)]))
-    useful <- data[inds, "ntID"]
-    data <- data[inds, ]
-
-    if (is.null(bandwidths)) {
-        bandwidths <- c(bandwidth.nrd(data[, eta]), 
-                                bandwidth.nrd(data[, theta]))
-        write(bandwidths, 
-                paste("./", dir, "/", pucker, "bandwidths.txt", sep=""), 
-                ncolumns=2, append=FALSE)
-    }
-
-    ## Kernel density estimation
-    z <- kde2d(data[, eta], data[, theta], n=c(361, 361), 
-                h=bandwidths, lims=c(0, 360, 0, 360))
-
-    file <- paste("./", dir, "/", pucker, "3D_upview.png", sep="")
-    plotEtaTheta3D(ntinfo=data, defaultview="2Dupview", file=file, dens=z)
-    
-    file <- paste("./", dir, "/", pucker, "3D_leftview.png", sep="")
-    plotEtaTheta3D(ntinfo=data, defaultview="leftview", file=file, dens=z)
-
-    file <- paste("./", dir, "/", pucker, "3D_rightview.png", sep="")
-    plotEtaTheta3D(ntinfo=data, defaultview="rightview", file=file, dens=z)
-
-    file <- paste("./", dir, "/", pucker, ".png", sep="")
-    plotEtaTheta(ntinfo=data, file=file, dens=z)
-
-    base_type <- ntinfo[(ntinfo$ntID %in% data$ntID), "base_type"]
-    for (i in c("pu", "py")) {
-        if (nrow(data[base_type == i,]) != 0) {
-            z=kde2d(data[base_type == i, eta], 
-                    data[base_type == i, theta], 
-                    n=c(361, 361), h=c(36, 36), lims=c(0, 360, 0, 360))
-
-            file <- paste("./", dir, "/", pucker, "_", i, ".png", sep="")
-            plotEtaTheta(ntinfo=data[base_type == i, ], file=file, dens=z)
-        }
-    }
-    base_type <- ntinfo[(ntinfo$ntID %in% data$ntID), "resID"]
-    for (i in c("A", "U", "C", "G")) {
-        if (nrow(data[base_type == i,]) != 0) {
-            z=kde2d(data[base_type == i, eta], 
-                    data[base_type == i, theta], 
-                    n=c(361, 361), h=c(36, 36), lims=c(0, 360, 0, 360))
-            file <- paste("./", dir, "/", pucker, "_", i, ".png", sep="")
-            plotEtaTheta(ntinfo=data[base_type == i, ], file=file, dens=z)
-        }
-    }
-}
-## ===========================================================================
-
-.plot_hist <-
-function(data, main=NULL, cex=0.5) {
-
-    par(mfrow=c(1, 1))
-    dataFactor <- as.factor(data)
-    labels <- as.numeric(round(100 *
-                                table(dataFactor)/sum(table(dataFactor)), 1))
-    ylim=c(0, 1.1 * max(table(dataFactor)))
-
-    xx <- barplot(table(dataFactor), main=main, 
-                    density=TRUE, ylim=ylim, xaxt="n")
-
-    text(xx, y=table(dataFactor), 
-            labels=paste(labels, "%", sep=""), pos=3, cex=cex)
-    axis(1, at=xx, labels=names(table(dataFactor)), 
-            tick=FALSE, las=2, cex.axis=cex)
-}
-## ===========================================================================
-
-.giveMeValidntIDs <-
-function(ntinfo, ntID) {
-
-    if (is.null(ntID)) {
-        ntID <- ntinfo[, "ntID"]
-    } else {
-        if (sum(ntID %in% ntinfo$ntID)!=length(ntID)) {
-            stop("Some of the specified IDs does not match an existing ID",
-                    " in your data.frame", sep="")
-        }
-    }
-    return(ntID)
-}
-## ===========================================================================
 
 #' Find 2D High Density Regions and return list of nucleotides
 #'
@@ -591,6 +397,9 @@ function(ntinfo, ntID) {
 #'
 #' @author Diego Gallego
 #'
+
+#' @export
+#' @rdname findHDR
 findHDR <-
 function(ntID=NULL, ntinfo, x="eta", y="theta", SD_DENS=1, 
             bandwidths=c(40, 40), dens=NULL, lims=c(0, 360, 0, 360)) {
@@ -734,5 +543,42 @@ function(ntID=NULL, ntinfo, x="eta", y="theta", SD_DENS=1,
                             return(grid_coords[ind, "ntID"])
                         })
     return(output)
+}
+##############################################################################
+## ===========================================================================
+## Subfunctions
+## ===========================================================================
+
+.plot_hist <-
+function(data, main=NULL, cex=0.5) {
+
+    par(mfrow=c(1, 1))
+    dataFactor <- as.factor(data)
+    labels <- as.numeric(round(100 *
+                                table(dataFactor)/sum(table(dataFactor)), 1))
+    ylim=c(0, 1.1 * max(table(dataFactor)))
+
+    xx <- barplot(table(dataFactor), main=main, 
+                    density=TRUE, ylim=ylim, xaxt="n")
+
+    text(xx, y=table(dataFactor), 
+            labels=paste(labels, "%", sep=""), pos=3, cex=cex)
+    axis(1, at=xx, labels=names(table(dataFactor)), 
+            tick=FALSE, las=2, cex.axis=cex)
+}
+## ===========================================================================
+
+.giveMeValidntIDs <-
+function(ntinfo, ntID) {
+
+    if (is.null(ntID)) {
+        ntID <- ntinfo[, "ntID"]
+    } else {
+        if (sum(ntID %in% ntinfo$ntID)!=length(ntID)) {
+            stop("Some of the specified IDs does not match an existing ID",
+                    " in your data.frame", sep="")
+        }
+    }
+    return(ntID)
 }
 ## ===========================================================================
