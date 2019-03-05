@@ -136,7 +136,7 @@ function(text, info, pdbID) {
         start <- grep("[", text, fixed=TRUE)
         end <- grep("]", text, fixed=TRUE)
 
-        if (is.null(start) | is.null(end))
+        if (length(start) == 0 | length(end) == 0)
             return(NULL)
 
         if ((end-start) == 1) 
