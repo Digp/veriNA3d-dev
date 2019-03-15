@@ -57,7 +57,7 @@ function(pdb, exefile="x3dna-dssr",
             infile <- paste(tempdir(), "/", pdb, ".cif", sep="")
             #flag <- TRUE
             url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/"
-            cifDownload(pdbID=tolower(pdb), 
+            cifDownload(pdbID=pdb, 
                         extension=".cif", URL=url, verbose=verbose)
 
         ## If the string is not a file or ID, stop
