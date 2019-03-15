@@ -54,7 +54,7 @@ function(pdb, exefile="x3dna-dssr",
 
         ## Otherwise, download structure if possible
         } else if (nchar(pdb) == 4) {
-            infile <- tempfile()
+            infile <- paste(pdb, ".cif", sep="")
             flag <- TRUE
             url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/"
             cifDownload(pdbID=tolower(pdb), destfile=infile, 
