@@ -220,8 +220,8 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
     if (etatheta) {
         plot(x, y,
                 xlim=c(0, 360), ylim=c(0, 360),
-                xlab=expression(paste(x, " (degrees)", sep="")),
-                ylab=expression(paste(y, " (degrees)", sep="")),
+                xlab=expression(paste(eta, " (degrees)", sep="")),
+                ylab=expression(paste(theta, " (degrees)", sep="")),
                 pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
     } else {
         plot(x, y,
