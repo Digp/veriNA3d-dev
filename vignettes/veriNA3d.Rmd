@@ -1,13 +1,27 @@
 ---
 title: "VeriNA3d: introduction and use cases"
 author:
-  - name: Diego Gallego Perez
+  - name: Diego Gallego
     affiliation:
-    - University of Barcelona - Department of Biochemistry and Molecular 
-        Biomedicine
-    - Institute for Research in Biomedicine (IRB Barcelona), Barcelona 
-        Institute of Science and Technology
-    - Joint BSC-IRB Program in Computational Biology
+    - Institute for Research in Biomedicine (IRB Barcelona), the Barcelona 
+        Institute of Science and Technology, Spain.
+    - Department of Biochemistry and Molecular Biomedicine, Faculty of Biology,
+        University of Barcelona, Spain.
+  - name: Leonardo Darre
+    affiliation:
+    - Institute for Research in Biomedicine (IRB Barcelona), the Barcelona 
+        Institute of Science and Technology, Spain.
+    - Functional Genomics Lab, Institute Pasteur of Montevideo, Uruguay.
+  - name: Pablo D. Dans
+    affiliation:
+    - Institute for Research in Biomedicine (IRB Barcelona), the Barcelona 
+        Institute of Science and Technology, Spain.
+  - name: Modesto Orozco
+    affiliation:
+    - Institute for Research in Biomedicine (IRB Barcelona), the Barcelona 
+        Institute of Science and Technology, Spain.
+    - Department of Biochemistry and Molecular Biomedicine, Faculty of Biology,
+        University of Barcelona, Spain.
 date: "`r Sys.Date()`"
 output: BiocStyle::pdf_document
 bibliography: references.bib
