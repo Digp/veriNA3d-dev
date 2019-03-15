@@ -50,14 +50,14 @@ function(pdb, exefile="x3dna-dssr",
         ## When file exists, infile is defined as input pdb
         if (file.exists(pdb)) {
             infile <- pdb
-            flag <- FALSE
+            #flag <- FALSE
 
         ## Otherwise, download structure if possible
         } else if (nchar(pdb) == 4) {
             infile <- paste(pdb, ".cif", sep="")
-            flag <- TRUE
+            #flag <- TRUE
             url <- "http://www.ebi.ac.uk/pdbe/entry-files/download/"
-            cifDownload(pdbID=tolower(pdb), destfile=infile, 
+            cifDownload(pdbID=tolower(pdb), 
                         extension=".cif", URL=url, verbose=verbose)
 
         ## If the string is not a file or ID, stop
@@ -69,7 +69,7 @@ function(pdb, exefile="x3dna-dssr",
         ## Write file from pdb object
         if ("pdb" %in% class(pdb)) {
             infile <- tempfile()
-            flag <- TRUE
+            #flag <- TRUE
             tryCatch(
                     { 
                         write.pdb(pdb, file=infile, segid=pdb$atom$segid)
@@ -107,9 +107,9 @@ function(pdb, exefile="x3dna-dssr",
     }
     
     ## Remove input file if necessary and leave things as they were before
-    if (flag) {
-        file.remove(infile)
-    }
+    #if (flag) {
+    #    file.remove(infile)
+    #}
 
     ## Parse the result, remove outfile and return output
     out <- fromJSON(outfile)
