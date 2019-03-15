@@ -217,11 +217,19 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
         png(file, width=width, height=height, bg=bg, units=units, res=res)
     }
 
-    plot(x, y,
-            xlim=c(0, 360), ylim=c(0, 360),
-            xlab=expression(paste(x, " (degrees)", sep="")),
-            ylab=expression(paste(y, " (degrees)", sep="")),
-            pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
+    if (etatheta) {
+        plot(x, y,
+                xlim=c(0, 360), ylim=c(0, 360),
+                xlab=expression(paste(x, " (degrees)", sep="")),
+                ylab=expression(paste(y, " (degrees)", sep="")),
+                pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
+    } else {
+        plot(x, y,
+                xlim=c(0, 360), ylim=c(0, 360),
+                xlab=paste(x, " (degrees)", sep=""),
+                ylab=paste(y, " (degrees)", sep=""),
+                pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
+    }
 
     ## Add vertical and horizontal lines to highlight helical region ---------
     if (etatheta) {
