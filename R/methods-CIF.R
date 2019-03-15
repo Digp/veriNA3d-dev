@@ -188,10 +188,13 @@ setMethod("cifParser",
 #' @rdname cifDownload
 cifDownload <- 
 function(pdbID, destfile=NULL, extension=".cif.gz", URL=NULL, verbose=FALSE) {
+    ## Make sure the input is lower case
+    pdbID <- tolower(pdbID)
+
     ## If file name is not provided, use temp directory and filename
     if (is.null(destfile)) {
         tmpdir <- tempdir()
-        destfile <- paste(tmpdir, "/", tolower(pdbID), extension, sep="")
+        destfile <- paste(tmpdir, "/", pdbID, extension, sep="")
     }
 
     ## If file is already there but has size 0, remove it and download again
