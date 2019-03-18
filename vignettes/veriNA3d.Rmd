@@ -11,7 +11,8 @@ author:
     affiliation:
     - Institute for Research in Biomedicine (IRB Barcelona), the Barcelona 
         Institute of Science and Technology, Spain.
-    - Functional Genomics Lab, Institute Pasteur of Montevideo, Uruguay.
+    - Functional Genomics Laboratory and Biomolecular Simulations Laboratory, 
+        Institute Pasteur of Montevideo, Uruguay.
   - name: Pablo D. Dans
     affiliation:
     - Institute for Research in Biomedicine (IRB Barcelona), the Barcelona 

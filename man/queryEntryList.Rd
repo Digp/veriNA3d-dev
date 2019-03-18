@@ -4,7 +4,10 @@
 \alias{queryEntryList}
 \title{Downloads the list of ID of ALL current PDB entries}
 \usage{
-queryEntryList()
+queryEntryList(justIDs = TRUE)
+}
+\arguments{
+\item{justIDs}{A logical to return only pdbIDs without other information.}
 }
 \value{
 A vector with all the PDB ID entries (updated weekly).
