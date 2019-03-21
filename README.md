@@ -191,17 +191,15 @@ Instructions for Unix systems
 
 ### Exploratory analysis
 
+`findHDR`: Finds High Density Regions in a 2D scatter plot
+
+`plot2D`: Scatter plot of angles
+
+`plot3Ddens`: 3D view of the density of 2D data.
+
 `plotCategorical`
 
 `plotCircularDistribution`
-
-`plotEtaTheta`
-
-`plot_et`
-
-`plotSetOfDistributions`
-
-`rvec_plot`
 
 
 ## Developers
