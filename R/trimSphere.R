@@ -147,7 +147,7 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
     }
 
     ## Ensure that the output pdb has the correct format ---------------------
-    tmp <- .perfect_output_format(pdb, outeleno, query)
+    tmp <- .perfect_output_format(pdb, outeleno, query, rename)
     resno2 <- tmp$resno2
     pdb <- tmp$pdb
 
@@ -242,7 +242,7 @@ function(pdb) {
 }
 
 .perfect_output_format <-
-function(pdb, outeleno, query) {
+function(pdb, outeleno, query, rename=TRUE) {
     if (any(is.na(pdb$atom$alt))) {
         pdb$atom$alt <- ""
     }
@@ -253,22 +253,25 @@ function(pdb, outeleno, query) {
 
     pdb$atom$charge <- ""
     pdb$atom$entid <- ""
-    if (any(outeleno > 99999))
-        pdb$atom$eleno <- seq_len(nrow(pdb$atom))
-    if (any(pdb$atom$resno > 9999)) {
-        query3 <- paste(pdb$atom[as.character(outeleno), "resno"],
-                        pdb$atom[as.character(outeleno), "insert"],
-                        pdb$atom[as.character(outeleno), "chain"],
-                        sep="|")
-        Unique <- unique(query3)
-        resno2 <- c()
-        for (i in seq_along(Unique)) {
-            pdb$atom$resno[query3 == Unique[i]] <- i
-            if (any(query == Unique[i])) resno2[query == Unique[i]] <- i
+    if (rename) {
+        if (any(outeleno > 99999))
+            pdb$atom$eleno <- seq_len(nrow(pdb$atom))
+        if (any(pdb$atom$resno > 9999)) {
+            query3 <- paste(pdb$atom[as.character(outeleno), "resno"],
+                            pdb$atom[as.character(outeleno), "insert"],
+                            pdb$atom[as.character(outeleno), "chain"],
+                            sep="|")
+            Unique <- unique(query3)
+            resno2 <- c()
+            for (i in seq_along(Unique)) {
+                pdb$atom$resno[query3 == Unique[i]] <- i
+                if (any(query == Unique[i])) resno2[query == Unique[i]] <- i
+            }
+        } else {
+            resno2 <- NULL
         }
-    } else {
-        resno2 <- NULL
     }
+
     if (any(is.na(pdb$atom$insert))) { 
         pdb$atom$insert[which(is.na(pdb$atom$insert))] <- ""
     }
