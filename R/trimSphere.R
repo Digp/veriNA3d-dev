@@ -67,6 +67,7 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
 
     ## Find eleno numbers ----------------------------------------------------
     data <- paste(cif$atom$resno, cif$atom$insert, cif$atom$chain, sep="|")
+    query <- paste(resno, insert, chain, sep="|")
     if (is.null(sel)) {
         if (is.null(chain)) {
             stop("Please, provide a sel or chain argument")
@@ -87,7 +88,6 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
         }
         resno <- cif$atom$resno[inds][ntindex]
         insert <- cif$atom$insert[inds][ntindex]
-        query <- paste(resno, insert, chain, sep="|")
         refeleno <- cif$atom$eleno[data %in% query]
     } else {
         refeleno <- cif$atom$eleno[sel$atom]
