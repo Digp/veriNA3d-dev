@@ -26,6 +26,7 @@
 #'     fucntions just returns the pdb object.
 #' @param verbose A logical to print details of the process.
 #' @param alt Value of alternative records to keep in output object.
+#' @param rename A logical to rename the chains of the oucput pdb.
 #' @param ... Arguments to be passed to internal functions.
 #'
 #' @return A smaller pdb object or a pdb file. 
@@ -55,7 +56,8 @@
 #'
 trimSphere <-
 function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8, 
-            cutres=FALSE, file=NULL, verbose=TRUE, alt="uniq", ...) {
+            cutres=FALSE, file=NULL, verbose=TRUE, alt="uniq", rename=TRUE, 
+            ...) {
 
     ## Make sure the object is a S3 pdb object with the desired model --------
     cif <- .input_to_pdb(cif=cif, model=model, verbose=verbose, alt=NULL, ...)
@@ -123,13 +125,15 @@ function(cif, model=NULL, ntindex=NULL, chain=NULL, sel=NULL, cutoff=8,
 
     ## Trim the input pdb to prepare a smaller one ---------------------------
     pdb <- trim.pdb(cif, eleno=outeleno)
-    if (any(nchar(pdb$atom$chain) > 1) | any(pdb$atom$chain == "?")) {
-        query3 <- pdb$atom[as.character(outeleno), "chain"]
-        Unique <- unique(query3)
-        for (i in seq_along(Unique)) {
-            pdb$atom$chain[query3 == Unique[i]] <- toupper(letters)[i]
-            if (chain == Unique[i]) 
-                chain <- toupper(letters)[i]
+    if (rename) {
+        if (any(nchar(pdb$atom$chain) > 1) | any(pdb$atom$chain == "?")) {
+            query3 <- pdb$atom[as.character(outeleno), "chain"]
+            Unique <- unique(query3)
+            for (i in seq_along(Unique)) {
+                pdb$atom$chain[query3 == Unique[i]] <- toupper(letters)[i]
+                if (chain == Unique[i]) 
+                    chain <- toupper(letters)[i]
+            }
         }
     }
 
