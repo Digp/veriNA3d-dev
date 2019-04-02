@@ -145,8 +145,8 @@ function(pdb, model=NULL, refeleno, eleno, n=1, cutoff=c(0, 5), verbose=FALSE,
             print("Finding the atom details ...")
 
         row.names(pdb$atom) <- pdb$atom$eleno
-        df_A <- pdb$atom[as.character(out$eleno_A), data_of_interest]
-        df_B <- pdb$atom[as.character(out$eleno_B), data_of_interest]
+        df_A <- pdb$atom[as.character(as.integer(out$eleno_A)),data_of_interest]
+        df_B <- pdb$atom[as.character(as.integer(out$eleno_B)),data_of_interest]
         names(df_A) <- paste(data_of_interest, "_A", sep="")
         names(df_B) <- paste(data_of_interest, "_B", sep="")
 
