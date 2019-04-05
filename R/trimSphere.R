@@ -271,6 +271,8 @@ function(pdb, outeleno, query, rename=TRUE) {
         } else {
             resno2 <- NULL
         }
+    } else {
+        resno2 <- NULL
     }
 
     if (any(is.na(pdb$atom$insert))) { 
