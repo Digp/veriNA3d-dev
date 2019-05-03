@@ -46,7 +46,7 @@ function(release="current", threshold="all", as.df=FALSE) {
 
     ## Find last release -----------------------------------------------------
     if (release == "current") {
-        release <- .getLastRelease()[[1]]
+        release <- .getLastReleaseOLD()[[1]]
     }
 
     ## Dowload data ----------------------------------------------------------
