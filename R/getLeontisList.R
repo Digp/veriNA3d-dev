@@ -135,7 +135,7 @@ function() {
 .getLastReleaseOLD <-
 function() {
     ## Find last release -----------------------------------------------------
-    URL <- "http://rna.bgsu.edu/rna3dhub/nrlist/release/current"
+    URL <- "http://rna.bgsu.edu/rna3dhub/nrlist/release/current/1.5A"
     text <- .launchquery(URL=URL, FUN=readLines, N.TRIES=2L, n=200)
     info <- text[grep("<small>Release", text)]
     
