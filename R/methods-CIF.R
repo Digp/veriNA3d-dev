@@ -402,7 +402,14 @@ setMethod("rVector",
     signature(cif="CIF"),
     definition=function(cif, outformat="rvector", simple_out=TRUE) {
         pdb <- cifAsPDB(cif)
-        return(.rVector(pdb, outformat, simple_out))
+        out <- tryCatch({
+                    .rVector(pdb=pdb, outformat=outformat, 
+                                simple_out=simple_out, elety="C4'")
+                }, error=function(e) {
+                    .rVector(pdb=pdb, outformat=outformat, 
+                                simple_out=simple_out, elety="C4")
+                })
+        return(out)
     })
 
 #' @rdname rVector
@@ -410,13 +417,27 @@ setMethod("rVector",
     signature(cif="character"),
     definition=function(cif, outformat="rvector", simple_out=TRUE) {
         pdb <- cifAsPDB(cif)
-        return(.rVector(pdb, outformat, simple_out))
+        out <- tryCatch({
+                    .rVector(pdb=pdb, outformat=outformat, 
+                                simple_out=simple_out, elety="C4'")
+                }, error=function(e) {
+                    .rVector(pdb=pdb, outformat=outformat, 
+                                simple_out=simple_out, elety="C4")
+                })
+        return(out)
     })
 
 #' @rdname rVector
 setMethod("rVector",
     definition=function(pdb, outformat="rvector", simple_out=TRUE) {
-        return(.rVector(pdb, outformat, simple_out))
+        out <- tryCatch({
+                    .rVector(pdb=pdb, outformat=outformat, 
+                                simple_out=simple_out, elety="C4'")
+                }, error=function(e) {
+                    .rVector(pdb=pdb, outformat=outformat, 
+                                simple_out=simple_out, elety="C4")
+                })
+        return(out)
     })
 
 ## End of section for rVector methods

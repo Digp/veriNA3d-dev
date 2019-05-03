@@ -380,7 +380,7 @@ function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
 
 ## I should have commented more on the code while I did it, Revision in TODO!
 .rVector <-
-function(pdb1, outformat="rvector", simple_out=TRUE) {
+function(pdb1, outformat="rvector", simple_out=TRUE, elety="C4'") {
     if (!simple_out && 
         !outformat %in% c("rvector", "vector_coord", "cylindrical_coord")) {
 
@@ -398,7 +398,7 @@ function(pdb1, outformat="rvector", simple_out=TRUE) {
 
     pdb1$atom$insert[which(is.na(pdb1$atom$insert))] <- "?"
     pdb1$atom$chain[which(is.na(pdb1$atom$chain))] <-"?"
-    sel1 <- atom.select(pdb1, elety="C4'")
+    sel1 <- atom.select(pdb1, elety=elety)
     resno1 <- pdb1$atom$resno[sel1$atom]
     resid1 <- pdb1$atom$resid[sel1$atom]
     insert1 <- pdb1$atom$insert[sel1$atom]
