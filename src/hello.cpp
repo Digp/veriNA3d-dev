@@ -6,7 +6,9 @@ using namespace Rcpp;
  */
 
 // [[Rcpp::export]]
-void hello()
+List hello()
 {
-    printf("hello, world\n");
+
+    char out = 'h';
+    return List::create(out);
 }
