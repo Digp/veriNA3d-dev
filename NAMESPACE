@@ -1,4 +1,7 @@
+useDynLib(veriNA3d, .registration=TRUE)
 import(bio3d)
+import(Rcpp)
+importFrom(Rcpp, evalCpp)
 import(parallel)
 importFrom("graphics", "abline", "axis", "barplot", "contour",
             "legend", "par", "plot", "points", "text", "title")
@@ -19,6 +22,8 @@ importFrom(circlize, circos.par, circos.initialize,
 #exportPattern("^[[:alpha:]]+")
 exportClasses(CIF)
 export(
+    hello,
+
     applyToPDB,
 
     checkNuc,
