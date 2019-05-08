@@ -3,13 +3,15 @@
 using namespace Rcpp;
 
 /*
- * Function can now print the whole file in screen and save the first
- * 100 characters, returning them to R.
+ * Function can now detect new sections and return to R the first character
+ * of each section.
  * gzip files are incorrectly read!
  */
 
+// Temporal macro definition
 #define maxchar 100
-// Detect new mmCIF section based on lines like '# \n'
+
+// Helper function to detect new mmCIF section based on lines like '# \n'
 int newsec(FILE *file, int c)
 {
     if (c == '#') {
