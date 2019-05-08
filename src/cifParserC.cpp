@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <string.h>
 #include <stdio.h>
 using namespace Rcpp;
 
@@ -13,34 +14,25 @@ using namespace Rcpp;
 
 // Helper function to detect new mmCIF section based on lines like '# \n'
 // Designed to be executed after a \n character or beggining of file
-int newsec(FILE *file, int c)
+int newsec(FILE *file)
 {
-    // Read first character
-    c = fgetc(file);
-    // Detect # character or move back file pointer 1 place
-    if (c == '#') {
-        // Read second character
-        c = fgetc(file);
-        // Detect space character or move back file pointer 2 places
-        if (c == ' ') {
-            // Read third character
-            c = fgetc(file);
-            // Detect new line of move back file pointer 3 places
-            if (c == '\n') {
-                // Return 1 to be used as bool true
-                return 1;
-            } else {
-                fseek(file, -3, SEEK_CUR);
-            }
-        } else {
-            fseek(file, -2, SEEK_CUR);
-        }
-    } else {
-        fseek(file, -1, SEEK_CUR);
-    }
+    // Read three characters
+    char line[4];
+    line[0] = fgetc(file);
+    line[1] = fgetc(file);
+    line[2] = fgetc(file);
+    // Terminate array
+    line[3] = '\0';
 
-    // Return 0 to be used as bool false
-    return 0;
+    // If it does not detect array '# \n', move back file pointer 3 places
+    if (strcmp(line, "# \n\0")) {
+        fseek(file, -3, SEEK_CUR);
+        // Return 0 to be used as bool false
+        return 0;
+    } else {
+        // Return 1 to be used as bool true
+        return 1;
+    }
 }
     
 // [[Rcpp::export]]
@@ -82,7 +74,7 @@ List cifParserC(std::string strings="")
         }
 
         // After newline, check if a new section starts
-        newsection = newsec(file, c);
+        newsection = newsec(file);
     }
 
     // Terminate array
