@@ -7,7 +7,7 @@ using namespace Rcpp;
  */
 
 // [[Rcpp::export]]
-List hello(char str='s')
+List hello(char str='s', std::string strings="")
 {
 
     //char out[2] = {'h', 'f'};
@@ -19,18 +19,19 @@ List hello(char str='s')
     //printf("Your string: %s\n", text);
 
     //char *text = *strings;
-    //FILE *file = fopen(text, "r");
-    //if (file == NULL)
-    //{
-    //    printf("Could not open %s.\n", text);
-    //    //unload();
-    //    return 1;
-    //}
+    FILE *file = fopen(strings.c_str(), "r");
+    if (file == NULL)
+    {
+        printf("Could not open %s.\n", strings.c_str());
+        // Close text
+        fclose(file);
+        return 1;
+    }
 
-    //// Close text
-    //fclose(file);
+    // Close text
+    fclose(file);
 
-    return List::create(out, str);
+    return List::create(out, str, strings);
 }
 
 // List hello(std::vector< std::string > strings)

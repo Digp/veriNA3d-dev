@@ -6,19 +6,20 @@
 using namespace Rcpp;
 
 // hello
-List hello(char str);
-RcppExport SEXP _veriNA3d_hello(SEXP strSEXP) {
+List hello(char str, std::string strings);
+RcppExport SEXP _veriNA3d_hello(SEXP strSEXP, SEXP stringsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< char >::type str(strSEXP);
-    rcpp_result_gen = Rcpp::wrap(hello(str));
+    Rcpp::traits::input_parameter< std::string >::type strings(stringsSEXP);
+    rcpp_result_gen = Rcpp::wrap(hello(str, strings));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_veriNA3d_hello", (DL_FUNC) &_veriNA3d_hello, 1},
+    {"_veriNA3d_hello", (DL_FUNC) &_veriNA3d_hello, 2},
     {NULL, NULL, 0}
 };
 
