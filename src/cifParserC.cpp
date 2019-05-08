@@ -30,7 +30,7 @@ int newsec(FILE *file, int c)
                 // Return 1 to be used as bool true
                 return 1;
             } else {
-                fseek(file, -2, SEEK_CUR);
+                fseek(file, -3, SEEK_CUR);
             }
         } else {
             fseek(file, -2, SEEK_CUR);
