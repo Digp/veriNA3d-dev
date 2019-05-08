@@ -9,6 +9,21 @@ using namespace Rcpp;
  */
 
 #define maxchar 100
+// Detect new mmCIF section based on lines like '# \n'
+int newsec(FILE *file, int c)
+{
+    if (c == '#') {
+        c = fgetc(file);
+        if (c == ' ') {
+            c = fgetc(file);
+            if (c == '\n') {
+                return 1;
+            }   
+        }   
+    }
+
+    return 0;
+}
     
 // [[Rcpp::export]]
 List cifParserC(std::string strings="")
@@ -27,28 +42,19 @@ List cifParserC(std::string strings="")
     int index = 0;
     int newsection = 0;
 
-    // Iterate over the characters of the file and save them
+    // Iterate over the characters of the file
     for (int c = fgetc(file); c != EOF; c = fgetc(file))
     {
-        // Detect new mmCIF section based on lines like '# \n'
-        newsection = 0;
-        if (c == '#') {
-            c = fgetc(file);
-            if (c == ' ') {
-                c = fgetc(file);
-                if (c == '\n') {
-                    newsection = 1;
-                }
-            }
-        }
+        newsection = newsec(file, c);
 
+        // Parse section
         if (newsection) 
         {
             c = fgetc(file);
             //printf("%c", c);
             if (index < maxchar)
             {
-                line[index] = ' ';
+                line[index] = 'q';
                 index++;
             }
         }
