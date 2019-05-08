@@ -3,10 +3,12 @@
 using namespace Rcpp;
 
 /*
- * Test
+ * Function can now print the whole file in screen and save the first
+ * 100 characters, returning them to R.
+ * gzip files are incorrectly read!
  */
 
-#define maxchar 10
+#define maxchar 100
     
 // [[Rcpp::export]]
 List hello(std::string strings="")
@@ -16,9 +18,7 @@ List hello(std::string strings="")
     // Check if pointer to file is correct, or stop function
     if (file == NULL)
     {
-        printf("Could not open %s.\n", strings.c_str());
-        // Close text
-        //fclose(file);
+        printf("Could not open %s\n", strings.c_str());
         return 1;
     }
 
@@ -29,7 +29,7 @@ List hello(std::string strings="")
     // Iterate over the characters of the file and save them
     for (int c = fgetc(file); c != EOF; c = fgetc(file))
     {
-        printf("%c\n", c);
+        printf("%c", c);
         if (index < maxchar)
         {
             line[index] = c;
@@ -45,14 +45,5 @@ List hello(std::string strings="")
     fclose(file);
 
     // Return output
-    return List::create(line, strings);
+    return List::create(line);
 }
-
-// List hello(std::vector< std::string > strings)
-    //char out[2] = {'h', 'f'};
-//    char out[4] = "asi";
-    //out[0] = 'g';
-    //out[2] = '\0';
-    //out[1] = 'g';
-    //char text[] = "dsf";
-    //printf("Your string: %s\n", text);
