@@ -25,21 +25,37 @@ List hello(std::string strings="")
     // Define object line and index to save the contents of the file
     char line[maxchar];
     int index = 0;
+    int newsection = 0;
 
     // Iterate over the characters of the file and save them
     for (int c = fgetc(file); c != EOF; c = fgetc(file))
     {
-        printf("%c", c);
-        if (index < maxchar)
+        // Detect new mmCIF section based on lines like '# \n'
+        newsection = 0;
+        if (c == '#') {
+            c = fgetc(file);
+            if (c == ' ') {
+                c = fgetc(file);
+                if (c == '\n') {
+                    newsection = 1;
+                }
+            }
+        }
+
+        if (newsection) 
         {
-            line[index] = c;
-            index++;
+            c = fgetc(file);
+            //printf("%c", c);
+            if (index < maxchar)
+            {
+                line[index] = ' ';
+                index++;
+            }
         }
     }
 
     // Terminate array
     line[index] = '\0';
-
 
     // Close text
     fclose(file);
