@@ -11,7 +11,7 @@ using namespace Rcpp;
 #define maxchar 100
     
 // [[Rcpp::export]]
-List hello(std::string strings="")
+List cifParserC(std::string strings="")
 {
     // Open file
     FILE *file = fopen(strings.c_str(), "r");
