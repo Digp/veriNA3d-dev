@@ -48,9 +48,15 @@ List cifParserC(std::string strings="")
     }
 
     // Define object line and index to save the contents of the file
+    // char* pl = NULL;
     char line[maxchar];
+    char line2[maxchar] = "asfasdgfsadfasdf";
+    // pl = &line2;
+    //*pl = 'b';
+    //free(pl);
+
     int index = 0;
-    int newsection = 1;
+    int newsection = newsec(file);
 
     // Iterate over the characters of the file
     for (int c = fgetc(file); c != EOF; c = fgetc(file))
@@ -84,5 +90,5 @@ List cifParserC(std::string strings="")
     fclose(file);
 
     // Return output
-    return List::create(line);
+    return List::create(_["line"] = line, line2);
 }
