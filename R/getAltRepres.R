@@ -177,7 +177,7 @@ function(index, data, #eqclass, members,
             }
 
             ## If Resol is NA, check whether the query actually made sense
-            if (is.na(Resol)) {
+            if (is.na(Resol) || length(Resol) == 0) {
                 ## Make sure to know the experimental technique
                 if (Tech == "") {
                     if (fast) {
