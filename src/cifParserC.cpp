@@ -24,8 +24,6 @@ int newsec(FILE *file, int c)
         c = fgetc(file);
         line[i] = c;
     }
-    //line[0] = fgetc(file);
-    //line[2] = fgetc(file);
     // Terminate array
     line[3] = '\0';
 
@@ -41,8 +39,8 @@ int newsec(FILE *file, int c)
 }
 
 // Helper function to find and return the entry section of the mmCIF
-Rcpp::StringVector entry(FILE *file, int c) {
-
+Rcpp::StringVector entry(FILE *file, int c) 
+{
     // Read 7 characters to recognize section
     char line[8];
     line[0] = c;
@@ -77,10 +75,24 @@ Rcpp::StringVector entry(FILE *file, int c) {
 
         return myvector;
     } else { //no: move file pointer back
-        //fseek(file, -7, SEEK_CUR);
+        fseek(file, -7, SEEK_CUR);
         Rcpp::StringVector myvector(1);
         return myvector;
         //return 1;
+    }
+}
+
+// Helper function to detect the end of the mmCIF file
+int is_end(FILE *file, int *c)
+{
+    fseek(file, 2, SEEK_CUR);
+    *c = fgetc(file);
+    if (*c == EOF) 
+    {
+        return 1;
+    } else {
+        fseek(file, -2, SEEK_CUR);
+        return 0;
     }
 }
     
@@ -113,11 +125,6 @@ List cifParserC(std::string strings="")
 //    line[0] = fgetc(file);
 //    line[1] = '\0';
 //
-//    for (int i = 0; i < 7; i++)
-//    {
-//        line[i] = fgetc(file);
-//    }
-//    line[7] = '\0';
     
     int c = fgetc(file);
     while ((c = fgetc(file)) != EOF && c != '\n');
@@ -141,6 +148,21 @@ List cifParserC(std::string strings="")
                 sec1 = line3;
                 Rcpp::Rcout << line3[0] << '\n';
             }
+
+            line[0] = c;
+            for (int i = 0; i < 2; i++)
+            {
+                line[i] = fgetc(file);
+            }
+            line[2] = '\n';
+            line[3] = '\0';
+            printf("%s", line);
+
+            //c = fgetc(file);
+            //line2[0] = c;
+            //line2[1] = '\0';
+            //printf("%s", line2);
+            //fseek(file, -1, SEEK_CUR);
 //            line[index] = c;
 //            index++;
 //            while ((c = fgetc(file)) != EOF && c != '\n')
@@ -159,17 +181,18 @@ List cifParserC(std::string strings="")
 //        newsection = newsec(file);
         //} else {
             //printf();
-        }
+        //}
         //while ((c = fgetc(file)) != EOF && c != '\n');
+        }
         while ((c = fgetc(file)) != EOF && c != '\n');
         //c = fgetc(file);
-        if (c == EOF)
-        {
-            line2[0] = c;
-            line2[1] = '\0';
-            printf("%s", line2);
-        }
+        //if (c == EOF)
+        //{
+        //    line2[0] = c;
+        //    line2[1] = '\0';
+        //    printf("%s", line2);
 //    } while ((c = fgetc(file)) != EOF);
+        is_end(file, &c);
     } while (c != EOF);
 
     // Terminate array
