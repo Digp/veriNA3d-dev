@@ -16,7 +16,7 @@ using namespace Rcpp;
 // Designed to be executed after a \n character or beggining of file
 int newsec(FILE *file, int c)
 {
-    // Read three characters
+    // Read three characters in array 'line'
     char line[4];
     line[0] = c;
     for (int i = 1; i < 3; i++)
@@ -39,9 +39,9 @@ int newsec(FILE *file, int c)
 }
 
 // Helper function to find and return the entry section of the mmCIF
-Rcpp::StringVector entry(FILE *file, int c) 
+Rcpp::StringVector entry(FILE *file, int c)
 {
-    // Read 7 characters to recognize section
+    // Read 7 characters in array 'line' to recognize section
     char line[8];
     line[0] = c;
     for (int i = 1; i < 7; i++)
@@ -52,7 +52,8 @@ Rcpp::StringVector entry(FILE *file, int c)
     line[8] = '\0';
 
     // Check if section is the one desired
-    if (strcmp(line, "_entry.\0") == 0) { //yes
+    if (strcmp(line, "_entry.\0") == 0) 
+    { //yes
         // Skip unnecesary chars
         fseek(file, 5, SEEK_CUR);
 
@@ -64,18 +65,25 @@ Rcpp::StringVector entry(FILE *file, int c)
         // Terminate array
         line[4] = '\0';
 
-        //printf("%s\n", line);
+        // Create Rcpp string vector
         Rcpp::StringVector myvector(1);
+        // Assign resulting char string
         myvector[0] = line;
+        // Assign names attribute
         myvector.attr("names") = "id";
 
-        // Skip file pointer to next section
+        // Skip file pointer to next section/line
         int c;
         while ((c = fgetc(file)) != '\n');
 
+        // Return Rcpp string vector
         return myvector;
-    } else { //no: move file pointer back
+
+    } else { //no: 
+        // Move file pointer back
         fseek(file, -7, SEEK_CUR);
+
+        // Return empty string
         Rcpp::StringVector myvector(1);
         return myvector;
         //return 1;
@@ -85,13 +93,22 @@ Rcpp::StringVector entry(FILE *file, int c)
 // Helper function to detect the end of the mmCIF file
 int is_end(FILE *file, int *c)
 {
+    // Move file pointer two positions ahead
     fseek(file, 2, SEEK_CUR);
+    int tmp = *c;
+
+    // Read byte and assign to variable 'c' using its pointer
     *c = fgetc(file);
+
+    // Check if the byte was end of file
     if (*c == EOF) 
-    {
+    { // yes
         return 1;
-    } else {
+    } else { // no
+        // Move file pointer back
         fseek(file, -2, SEEK_CUR);
+        // Change back 'c' variable
+        *c = tmp;
         return 0;
     }
 }
@@ -136,8 +153,9 @@ List cifParserC(std::string strings="")
     do {
         c = fgetc(file);
         newsection = newsec(file, c);
-//        line2[0] = c;
-//        printf("%s", line2);
+        line2[0] = c;
+        line2[1] = '\0';
+        printf("%s", line2);
         // Parse section
         if (newsection) 
         {
@@ -146,8 +164,8 @@ List cifParserC(std::string strings="")
             if (line3[0] != "") 
             {
                 sec1 = line3;
-                Rcpp::Rcout << line3[0] << '\n';
             }
+            Rcpp::Rcout << line3[0] << '\n';
 
             line[0] = c;
             for (int i = 0; i < 2; i++)
@@ -181,8 +199,6 @@ List cifParserC(std::string strings="")
 //        newsection = newsec(file);
         //} else {
             //printf();
-        //}
-        //while ((c = fgetc(file)) != EOF && c != '\n');
         }
         while ((c = fgetc(file)) != EOF && c != '\n');
         //c = fgetc(file);
@@ -192,6 +208,8 @@ List cifParserC(std::string strings="")
         //    line2[1] = '\0';
         //    printf("%s", line2);
 //    } while ((c = fgetc(file)) != EOF);
+
+        // Check for EOF. Second argument is the direciton of 'c' in memory
         is_end(file, &c);
     } while (c != EOF);
 
