@@ -73,7 +73,7 @@ Rcpp::StringVector entry(FILE *file, int c) {
 
         // Skip file pointer to next section
         int c;
-        while ((c = fgetc(file)) != EOF && c != '\n');
+        while ((c = fgetc(file)) != '\n');
 
         return myvector;
     } else { //no: move file pointer back
@@ -125,8 +125,9 @@ List cifParserC(std::string strings="")
     //int newsection = newsec(file);
     // Iterate over the characters of the file
     //for (int c = fgetc(file); c != EOF; c = fgetc(file))
-    c = fgetc(file);
+    //c = fgetc(file);
     do {
+        c = fgetc(file);
         newsection = newsec(file, c);
 //        line2[0] = c;
 //        printf("%s", line2);
@@ -138,7 +139,7 @@ List cifParserC(std::string strings="")
             if (line3[0] != "") 
             {
                 sec1 = line3;
-                //Rcpp::Rcout << line3[0] << '\n';
+                Rcpp::Rcout << line3[0] << '\n';
             }
 //            line[index] = c;
 //            index++;
@@ -159,11 +160,17 @@ List cifParserC(std::string strings="")
         //} else {
             //printf();
         }
+        //while ((c = fgetc(file)) != EOF && c != '\n');
         while ((c = fgetc(file)) != EOF && c != '\n');
         //c = fgetc(file);
-    //    c = fgetc(file);
-    } while ((c = fgetc(file)) != EOF);
-//    line2[1] = '\0';
+        if (c == EOF)
+        {
+            line2[0] = c;
+            line2[1] = '\0';
+            printf("%s", line2);
+        }
+//    } while ((c = fgetc(file)) != EOF);
+    } while (c != EOF);
 
     // Terminate array
 //    line[index] = '\0';
