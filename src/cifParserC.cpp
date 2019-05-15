@@ -14,13 +14,18 @@ using namespace Rcpp;
 
 // Helper function to detect new mmCIF section based on lines like '# \n'
 // Designed to be executed after a \n character or beggining of file
-int newsec(FILE *file)
+int newsec(FILE *file, int c)
 {
     // Read three characters
     char line[4];
-    line[0] = fgetc(file);
-    line[1] = fgetc(file);
-    line[2] = fgetc(file);
+    line[0] = c;
+    for (int i = 1; i < 3; i++)
+    {
+        c = fgetc(file);
+        line[i] = c;
+    }
+    //line[0] = fgetc(file);
+    //line[2] = fgetc(file);
     // Terminate array
     line[3] = '\0';
 
@@ -36,26 +41,46 @@ int newsec(FILE *file)
 }
 
 // Helper function to find and return the entry section of the mmCIF
-Rcpp::StringVector entry(FILE *file) {
-    // Read three characters
-    char line[8];
+Rcpp::StringVector entry(FILE *file, int c) {
 
-    for (int i = 0; i < 7; i++)
+    // Read 7 characters to recognize section
+    char line[8];
+    line[0] = c;
+    for (int i = 1; i < 7; i++)
     {
         line[i] = fgetc(file);
     }
-    //line[2] = fgetc(file);
     // Terminate array
     line[8] = '\0';
 
-    if (strcmp(line, "_entry.\0") == 0) {
-        printf("%s\n", line);
+    // Check if section is the one desired
+    if (strcmp(line, "_entry.\0") == 0) { //yes
+        // Skip unnecesary chars
+        fseek(file, 5, SEEK_CUR);
+
+        // Read 4 characters with pdb ID
+        for (int i = 0; i < 4; i++)
+        {
+            line[i] = fgetc(file);
+        }
+        // Terminate array
+        line[4] = '\0';
+
+        //printf("%s\n", line);
         Rcpp::StringVector myvector(1);
         myvector[0] = line;
+        myvector.attr("names") = "id";
+
+        // Skip file pointer to next section
+        int c;
+        while ((c = fgetc(file)) != EOF && c != '\n');
+
         return myvector;
-    } else {
-        fseek(file, -7, SEEK_CUR);
-        return 1;
+    } else { //no: move file pointer back
+        //fseek(file, -7, SEEK_CUR);
+        Rcpp::StringVector myvector(1);
+        return myvector;
+        //return 1;
     }
 }
     
@@ -75,34 +100,46 @@ List cifParserC(std::string strings="")
     // char* pl = NULL;
     char line[maxchar];
     char line2[maxchar] = "asfasdgfsadfasdf";
-    // pl = &line2;
-    //*pl = 'b';
-    //free(pl);
+    Rcpp::StringVector line3;
+    Rcpp::StringVector sec1;
+    //char line3[maxchar] = "asfasdgfsadfasdf";
+    line[0] = line2[0];
 
-    //int index = 0;
-
-    fseek(file, 9, SEEK_CUR);
-    line2[0] = fgetc(file);
-    line2[1] = '\0';
-    //printf("%i\n", c);
-    int newsection = newsec(file);
-    printf("%i\n", newsection);
-    Rcpp::StringVector line3 = entry(file);
-
-    for (int i = 0; i < 7; i++)
-    {
-        line[i] = fgetc(file);
-    }
-    line[7] = '\0';
+//    fseek(file, 10, SEEK_CUR);
+//    int c = fgetc(file);
+//    int newsection = newsec(file, c);
+//    c = fgetc(file);
+//    Rcpp::StringVector line3 = entry(file, c);
+//    line[0] = fgetc(file);
+//    line[1] = '\0';
+//
+//    for (int i = 0; i < 7; i++)
+//    {
+//        line[i] = fgetc(file);
+//    }
+//    line[7] = '\0';
     
-
+    int c = fgetc(file);
+    while ((c = fgetc(file)) != EOF && c != '\n');
+    int newsection;
+    //int newsection = newsec(file);
     // Iterate over the characters of the file
     //for (int c = fgetc(file); c != EOF; c = fgetc(file))
-    //do {
-
+    c = fgetc(file);
+    do {
+        newsection = newsec(file, c);
+//        line2[0] = c;
+//        printf("%s", line2);
         // Parse section
-//        if (newsection) 
-//        {
+        if (newsection) 
+        {
+            c = fgetc(file);
+            line3 = entry(file, c);
+            if (line3[0] != "") 
+            {
+                sec1 = line3;
+                //Rcpp::Rcout << line3[0] << '\n';
+            }
 //            line[index] = c;
 //            index++;
 //            while ((c = fgetc(file)) != EOF && c != '\n')
@@ -119,9 +156,14 @@ List cifParserC(std::string strings="")
 //
 //        // After newline, check if a new section starts
 //        newsection = newsec(file);
-    //}
+        //} else {
+            //printf();
+        }
+        while ((c = fgetc(file)) != EOF && c != '\n');
+        //c = fgetc(file);
     //    c = fgetc(file);
-    //} while (c != EOF);
+    } while ((c = fgetc(file)) != EOF);
+//    line2[1] = '\0';
 
     // Terminate array
 //    line[index] = '\0';
@@ -130,5 +172,6 @@ List cifParserC(std::string strings="")
     fclose(file);
 
     // Return output
-    return List::create(_["line"] = line, line2, line3);
+    //return List::create(_["entry"] = line3, line2, line);
+    return List::create(_["entry"] = sec1, line2, line);
 }
