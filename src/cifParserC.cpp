@@ -94,23 +94,28 @@ Rcpp::StringVector entry(FILE *file, int c)
 int is_end(FILE *file, int *c)
 {
     // Move file pointer two positions ahead
-    fseek(file, 2, SEEK_CUR);
-    int tmp = *c;
+    //fseek(file, 2, SEEK_CUR);
+    //int tmp = *c;
+    int tmp = 0;
 
     // Read byte and assign to variable 'c' using its pointer
-    *c = fgetc(file);
+    do {
+        *c = fgetc(file);
 
-    // Check if the byte was end of file
-    if (*c == EOF) 
-    { // yes
-        return 1;
-    } else { // no
+        // Check if the byte was end of file
+        if (*c == EOF) 
+        { // yes
+            return 1;
+        } //else { // no
+        tmp++;
+    } while (tmp < 4);
+
         // Move file pointer back
-        fseek(file, -2, SEEK_CUR);
+        fseek(file, -3, SEEK_CUR);
         // Change back 'c' variable
-        *c = tmp;
+        //*c = tmp;
         return 0;
-    }
+    
 }
     
 // [[Rcpp::export]]
@@ -134,15 +139,6 @@ List cifParserC(std::string strings="")
     //char line3[maxchar] = "asfasdgfsadfasdf";
     line[0] = line2[0];
 
-//    fseek(file, 10, SEEK_CUR);
-//    int c = fgetc(file);
-//    int newsection = newsec(file, c);
-//    c = fgetc(file);
-//    Rcpp::StringVector line3 = entry(file, c);
-//    line[0] = fgetc(file);
-//    line[1] = '\0';
-//
-    
     int c = fgetc(file);
     while ((c = fgetc(file)) != EOF && c != '\n');
     int newsection;
@@ -153,9 +149,11 @@ List cifParserC(std::string strings="")
     do {
         c = fgetc(file);
         newsection = newsec(file, c);
-        line2[0] = c;
-        line2[1] = '\0';
-        printf("%s", line2);
+        //line2[0] = c;
+        //line2[1] = '\n';
+        //line2[1] = '\0';
+        //printf("%s", line2);
+        //printf("%i", newsection);
         // Parse section
         if (newsection) 
         {
@@ -165,16 +163,16 @@ List cifParserC(std::string strings="")
             {
                 sec1 = line3;
             }
-            Rcpp::Rcout << line3[0] << '\n';
+            //Rcpp::Rcout << line3[0] << '\n';
 
-            line[0] = c;
-            for (int i = 0; i < 2; i++)
-            {
-                line[i] = fgetc(file);
-            }
-            line[2] = '\n';
-            line[3] = '\0';
-            printf("%s", line);
+            //line[0] = c;
+            //for (int i = 0; i < 2; i++)
+            //{
+            //    line[i] = fgetc(file);
+            //}
+            //line[2] = '\n';
+            //line[3] = '\0';
+            //printf("%s", line);
 
             //c = fgetc(file);
             //line2[0] = c;
@@ -201,12 +199,19 @@ List cifParserC(std::string strings="")
             //printf();
         }
         while ((c = fgetc(file)) != EOF && c != '\n');
-        //c = fgetc(file);
-        //if (c == EOF)
-        //{
-        //    line2[0] = c;
-        //    line2[1] = '\0';
-        //    printf("%s", line2);
+//        c = fgetc(file);
+//        line2[0] = c;
+//        line2[1] = '\0';
+//        printf("%s", line2);
+//        c = fgetc(file);
+//        line2[0] = c;
+//        line2[1] = '\0';
+//        printf("%s", line2);
+//        c = fgetc(file);
+//        line2[0] = c;
+//        line2[1] = '\0';
+//        printf("%s", line2);
+//        fseek(file, -3, SEEK_CUR);
 //    } while ((c = fgetc(file)) != EOF);
 
         // Check for EOF. Second argument is the direciton of 'c' in memory
