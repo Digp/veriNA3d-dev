@@ -55,7 +55,7 @@ int newsec(FILE *file, int c)
 Rcpp::StringVector entry(FILE *file, int c)
 {
     // Read 7 characters in array 'line' to recognize section
-    char line[8];
+    char line[maxchar];
     line[0] = c;
     for (int i = 1; i < 7; i++)
     {
@@ -70,6 +70,7 @@ Rcpp::StringVector entry(FILE *file, int c)
         // Skip unnecesary chars
         fseek(file, 2, SEEK_CUR);
 
+        // Read pdbID or string
         int i = 0;
         while ((c = fgetc(file)) != '\n') {
             if (c != ' ')
@@ -78,11 +79,6 @@ Rcpp::StringVector entry(FILE *file, int c)
                 i++;
             }
         }
-        // Read 4 characters with pdb ID
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    line[i] = fgetc(file);
-        //}
         // Terminate array
         line[i] = '\0';
 
@@ -154,11 +150,11 @@ List cifParserC(std::string strings="")
     char line2[maxchar] = "asfasdgfsadfasdf";
     Rcpp::StringVector line3;
     Rcpp::StringVector sec1;
-    //char line3[maxchar] = "asfasdgfsadfasdf";
     line[0] = line2[0];
 
-    int c = fgetc(file);
-    while ((c = fgetc(file)) != EOF && c != '\n');
+    int c;
+    //int c = fgetc(file);
+    //while ((c = fgetc(file)) != EOF && c != '\n');
     int newsection;
     //int newsection = newsec(file);
     // Iterate over the characters of the file
@@ -221,16 +217,7 @@ List cifParserC(std::string strings="")
 //        line2[0] = c;
 //        line2[1] = '\0';
 //        printf("%s", line2);
-//        c = fgetc(file);
-//        line2[0] = c;
-//        line2[1] = '\0';
-//        printf("%s", line2);
-//        c = fgetc(file);
-//        line2[0] = c;
-//        line2[1] = '\0';
-//        printf("%s", line2);
 //        fseek(file, -3, SEEK_CUR);
-//    } while ((c = fgetc(file)) != EOF);
 
         // Check for EOF. Second argument is the direciton of 'c' in memory
         is_end(file, &c);
