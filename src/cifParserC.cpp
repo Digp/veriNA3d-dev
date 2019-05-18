@@ -68,15 +68,23 @@ Rcpp::StringVector entry(FILE *file, int c)
     if (strcmp(line, "_entry.\0") == 0) 
     { //yes
         // Skip unnecesary chars
-        fseek(file, 5, SEEK_CUR);
+        fseek(file, 2, SEEK_CUR);
 
-        // Read 4 characters with pdb ID
-        for (int i = 0; i < 4; i++)
-        {
-            line[i] = fgetc(file);
+        int i = 0;
+        while ((c = fgetc(file)) != '\n') {
+            if (c != ' ')
+            {
+                line[i] = c;
+                i++;
+            }
         }
+        // Read 4 characters with pdb ID
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    line[i] = fgetc(file);
+        //}
         // Terminate array
-        line[4] = '\0';
+        line[i] = '\0';
 
         // Create Rcpp string vector
         Rcpp::StringVector myvector(1);
@@ -86,8 +94,8 @@ Rcpp::StringVector entry(FILE *file, int c)
         myvector.attr("names") = "id";
 
         // Skip file pointer to next section/line
-        int c;
-        while ((c = fgetc(file)) != '\n');
+        //int c;
+        //while ((c = fgetc(file)) != '\n');
 
         // Return Rcpp string vector
         return myvector;
@@ -97,9 +105,9 @@ Rcpp::StringVector entry(FILE *file, int c)
         fseek(file, -7, SEEK_CUR);
 
         // Return empty string
-        Rcpp::StringVector myvector(1);
-        return myvector;
-        //return 1;
+        //Rcpp::StringVector myvector(1);
+        //return myvector;
+        return 1;
     }
 }
 
