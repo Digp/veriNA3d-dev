@@ -52,6 +52,63 @@ int newsec(FILE *file, int c)
 }
 
 // Helper function to find and return the entry section of the mmCIF
+Rcpp::StringVector audit_conform(FILE *file, int c)
+{
+    // Read 15 characters in array 'line' to recognize section
+    char line[maxchar];
+    line[0] = c;
+    for (int i = 1; i < 15; i++)
+    {
+        line[i] = fgetc(file);
+    }
+    // Terminate array
+    line[16] = '\0';
+
+    // Check if section is the one desired
+    if (strcmp(line, "_audit_conform.\0") == 0) 
+    { //yes
+        // Skip unnecesary chars
+        fseek(file, 13, SEEK_CUR);
+
+        // Read pdbID or string
+        int i = 0;
+        while ((c = fgetc(file)) != '\n') {
+            if (c != ' ')
+            {
+                line[i] = c;
+                i++;
+            }
+        }
+        fseek(file, -1, SEEK_CUR);
+        // Terminate array
+        line[i] = '\0';
+
+        // Create Rcpp string vector
+        Rcpp::StringVector myvector(1);
+        // Assign resulting char string
+        myvector[0] = line;
+        // Assign names attribute
+        myvector.attr("names") = "id";
+
+        // Skip file pointer to next section/line
+        //int c;
+        //while ((c = fgetc(file)) != '\n');
+
+        // Return Rcpp string vector
+        return myvector;
+
+    } else { //no: 
+        // Move file pointer back
+        fseek(file, -15, SEEK_CUR);
+
+        // Return empty string
+        //Rcpp::StringVector myvector(1);
+        //return myvector;
+        return 1;
+    }
+}
+
+// Helper function to find and return the entry section of the mmCIF
 Rcpp::StringVector entry(FILE *file, int c)
 {
     // Read 7 characters in array 'line' to recognize section
@@ -79,6 +136,7 @@ Rcpp::StringVector entry(FILE *file, int c)
                 i++;
             }
         }
+        fseek(file, -1, SEEK_CUR);
         // Terminate array
         line[i] = '\0';
 
@@ -137,6 +195,7 @@ List cifParserC(std::string strings="")
 {
     // Open file
     FILE *file = fopen(strings.c_str(), "r");
+    fseek(file, 0, SEEK_SET);
     // Check if pointer to file is correct, or stop function
     if (file == NULL)
     {
@@ -146,11 +205,13 @@ List cifParserC(std::string strings="")
 
     // Define object line and index to save the contents of the file
     // char* pl = NULL;
-    char line[maxchar];
-    char line2[maxchar] = "asfasdgfsadfasdf";
-    Rcpp::StringVector line3;
+    //char line[maxchar];
+    //char line2[maxchar] = "asfasdgfsadfasdf";
+    Rcpp::StringVector presec1;
+    Rcpp::StringVector presec2;
     Rcpp::StringVector sec1;
-    line[0] = line2[0];
+    //Rcpp::StringVector sec2;
+    //line[0] = line2[0];
 
     int c;
     //int c = fgetc(file);
@@ -160,6 +221,11 @@ List cifParserC(std::string strings="")
     // Iterate over the characters of the file
     //for (int c = fgetc(file); c != EOF; c = fgetc(file))
     //c = fgetc(file);
+    //        line[0] = c;
+    //        line[1] = '\n';
+    //        line[2] = '\0';
+    //        printf("%s", line);
+    //        fseek(file, -1, SEEK_CUR);
     do {
         c = fgetc(file);
         newsection = newsec(file, c);
@@ -172,27 +238,34 @@ List cifParserC(std::string strings="")
         if (newsection) 
         {
             c = fgetc(file);
-            line3 = entry(file, c);
-            if (line3[0] != "") 
+            presec1 = entry(file, c);
+            if (presec1[0] != "") 
             {
-                sec1 = line3;
+                sec1 = presec1;
             }
-            //Rcpp::Rcout << line3[0] << '\n';
+            Rcpp::Rcout << presec1[0] << '\n';
+            c = fgetc(file);
+            //presec2 = audit_conform(file, c);
+            //if (presec2[0] != "") 
+            //{
+            //    sec2 = presec2;
+            //}
+            //Rcpp::Rcout << presec2[0] << '\n';
 
-            //line[0] = c;
             //for (int i = 0; i < 2; i++)
             //{
             //    line[i] = fgetc(file);
             //}
-            //line[2] = '\n';
-            //line[3] = '\0';
+            //line[0] = c;
+            //line[1] = '\n';
+            //line[2] = '\0';
             //printf("%s", line);
 
             //c = fgetc(file);
             //line2[0] = c;
             //line2[1] = '\0';
             //printf("%s", line2);
-            //fseek(file, -1, SEEK_CUR);
+            fseek(file, -1, SEEK_CUR);
 //            line[index] = c;
 //            index++;
 //            while ((c = fgetc(file)) != EOF && c != '\n')
@@ -226,10 +299,12 @@ List cifParserC(std::string strings="")
     // Terminate array
 //    line[index] = '\0';
 
+    fseek(file, 0, SEEK_END);
     // Close text
     fclose(file);
 
     // Return output
-    //return List::create(_["entry"] = line3, line2, line);
-    return List::create(_["entry"] = sec1, line2, line);
+    //return List::create(_["entry"] = sec1, _["audit_conform"] = sec2);
+    //return List::create(_["entry"] = sec1, sec2);
+    return List::create(_["entry"] = sec1);
 }
