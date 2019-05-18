@@ -106,29 +106,26 @@ Rcpp::StringVector entry(FILE *file, int c)
 // Helper function to detect the end of the mmCIF file
 int is_end(FILE *file, int *c)
 {
-    // Move file pointer two positions ahead
-    //fseek(file, 2, SEEK_CUR);
-    //int tmp = *c;
+    // Define counter
     int tmp = 0;
 
-    // Read byte and assign to variable 'c' using its pointer
     do {
-        *c = fgetc(file);
-
-        // Check if the byte was end of file
+        // Check if the byte is the end of file
         if (*c == EOF) 
         { // yes
             return 1;
         } //else { // no
         tmp++;
+
+        // Read byte and assign to variable 'c' using its pointer
+        *c = fgetc(file);
     } while (tmp < 4);
 
-        // Move file pointer back
-        fseek(file, -3, SEEK_CUR);
-        // Change back 'c' variable
-        //*c = tmp;
-        return 0;
-    
+    // Move file pointer back
+    fseek(file, -tmp, SEEK_CUR);
+    // Change back 'c' variable2
+    //*c = tmp; // Not necessary
+    return 0;    
 }
     
 // [[Rcpp::export]]
