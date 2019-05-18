@@ -27,15 +27,28 @@ int newsec(FILE *file, int c)
     // Terminate array
     line[3] = '\0';
 
-    // If it does not detect array '# \n', move back file pointer 3 places
-    if (strcmp(line, "# \n\0")) {
-        fseek(file, -3, SEEK_CUR);
-        // Return 0 to be used as bool false
-        return 0;
-    } else {
+    // If line is '# \n'
+    if (strcmp(line, "# \n\0") == 0) {
         // Return 1 to be used as bool true
         return 1;
     }
+
+    // Terminate array one before
+    line[2] = '\0';
+
+    // If line is '#\n'
+    if (strcmp(line, "#\n\0") == 0) {
+        // Move file pointer one back
+        fseek(file, -1, SEEK_CUR);
+        // Return 1 to be used as bool true
+        return 1;
+    }
+
+
+    // If it does not detect array '# \n', move back file pointer 3 places
+    fseek(file, -3, SEEK_CUR);
+    // Return 0 to be used as bool false
+    return 0;
 }
 
 // Helper function to find and return the entry section of the mmCIF
