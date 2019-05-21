@@ -22,8 +22,11 @@ List cifParserC(std::string strings="")
 
     // Define containers for sections 
     Rcpp::StringVector tmpsec;
+    Rcpp::DataFrame tmpsec_df;
     Rcpp::StringVector sec1;
     Rcpp::StringVector sec2;
+    Rcpp::DataFrame sec3;
+
 
     int c;
     //int c = fgetc(file);
@@ -53,6 +56,13 @@ List cifParserC(std::string strings="")
             {
                 sec2 = tmpsec;
             }
+            c = fgetc(file);
+            tmpsec_df = database_2(file, c);
+            //Rcpp::Rcout << tmpsec_df[0] << '\n';
+            //if (tmpsec_df["V1"] != "")
+            //{
+                sec3 = tmpsec_df;
+            //}
 
             // Check if it's "_database_2" section and parse it
             // Check if it's "_pdbx_database_status" section and parse it
@@ -79,5 +89,5 @@ List cifParserC(std::string strings="")
     fclose(file);
 
     // Return output
-    return List::create(_["entry"] = sec1, _["audit_conform"] = sec2);
+    return List::create(_["entry"] = sec1, _["audit_conform"] = sec2, _["database_2"] = sec3);
 }

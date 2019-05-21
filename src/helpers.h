@@ -195,4 +195,80 @@ Rcpp::StringVector audit_conform(FILE *file, int c)
     }
 }
 
+// Helper function to find and return the entry section of the mmCIF
+Rcpp::DataFrame database_2(FILE *file, int c)
+{
+    // Read 15 characters in array 'line2' to recognize section
+    char line2[maxchar];
+    line2[0] = c;
+    for (int i = 1; i < 18; i++)
+    {
+        line2[i] = fgetc(file);
+    }
+    // Terminate array
+    line2[18] = '\0';
+    //printf("%s", line2);
+
+    // Check if section is the one desired
+    if (strcmp(line2, "loop_\n_database_2.\0") == 0)
+    { //yes
+        // Create Rcpp string vector
+        //Rcpp::StringVector myvector2(3);
+
+        // Move file pointer back
+        //fseek(file, -12, SEEK_CUR);
+
+        //int i = 0;
+        //while (i < 3) {
+        //    // Skip unnecesary chars
+        //    fseek(file, 28, SEEK_CUR);
+
+        //    // Read pdbID or string
+        //    int j = 0;
+        //    while ((c = fgetc(file)) != '\n') {
+        //        if (c != ' ')
+        //        {
+        //            line2[j] = c;
+        //            j++;
+        //        }
+        //    }
+        //    // Terminate array
+        //    line2[j] = '\0';
+
+        //    // Assign resulting char string
+        //    myvector2[i] = line2;
+
+        //    i++;
+        //}
+
+        //// Assign names attribute
+        //myvector2.attr("names") = CharacterVector::create("dict_name", "dict_version", "dict_location");
+
+        //// Move file pointer one back to stay in same line
+        //// Calling function needs it this way
+        //fseek(file, -1, SEEK_CUR);
+
+        // Return Rcpp string vector
+        //return myvector2;
+
+        // Creating vector v
+        NumericVector v = {1,2};
+        // Creating DataFrame df
+        DataFrame df = DataFrame::create(Named("V1") = v,         // simple assign
+                                         Named("V2") = clone(v)); // using clone()
+        // Changing vector v
+        v = v * 2;
+        return df;
+
+    } else { //no: 
+        // Move file pointer back
+        fseek(file, -18, SEEK_CUR);
+
+        DataFrame df = DataFrame::create(Named("V1") = "");         // simple assign
+
+        // Return empty string
+        return df;
+    }
+}
+
 #endif
