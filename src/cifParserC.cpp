@@ -59,10 +59,10 @@ List cifParserC(std::string strings="")
             c = fgetc(file);
             tmpsec_df = database_2(file, c);
             //Rcpp::Rcout << tmpsec_df[0] << '\n';
-            //if (tmpsec_df["V1"] != "")
-            //{
+            if (tmpsec_df.size() > 1)
+            {
                 sec3 = tmpsec_df;
-            //}
+            }
 
             // Check if it's "_database_2" section and parse it
             // Check if it's "_pdbx_database_status" section and parse it
