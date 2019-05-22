@@ -212,11 +212,49 @@ Rcpp::DataFrame database_2(FILE *file, int c)
     // Check if section is the one desired
     if (strcmp(line2, "loop_\n_database_2.\0") == 0)
     { //yes
-        // Create Rcpp string vector
-        //Rcpp::StringVector myvector2(3);
-
         // Move file pointer back
         //fseek(file, -12, SEEK_CUR);
+
+        // Create Rcpp string vector with unknown length
+        //Rcpp::StringVector myvector2(XX);
+
+        // As long as the first character of the line is '_' do:
+
+            // Skip 12 characters
+
+            // Read characters until a newline is found
+
+            // Resize Rcpp vector to be able to add a new string
+
+            // Add new string into the Rcpp vector of strings
+
+        // The loop will finish when the first character of the line is not '_'
+        // Move file pointer one back - NOT NECESSARY SINCE IT'S DONE LATER
+
+        // Create list of vectors of unknown length or somewhat similar
+        // Define index that will be used in next loop
+
+        // As long as the first character of the line is NOT "#" do:
+            // Set to 0 an index that will count the entries in the line
+            // Move file pointer one back
+            // As long as index < length of Rcpp list
+                // Read first character
+
+                // Check if it is a ' or a ", or a ;, or something different.
+
+                // Define the character to detect end of entry:
+                // If first character was ', end = '
+                // Else if first character was ", end = "
+                // Else if first character was ;, end = ';'
+                // Else, Save first character of line as first character of vector and define end = " "
+
+                // Keep reading and saving characters until a character matches the variable end, and ignoring newlines
+
+                // Add string to Rcpp list, vector selected by variable index 
+                // Add +1 to index
+
+            // If current character is not '\n', keep reading until finding a newline
+            // Read next character to check if it's '#'
 
         //int i = 0;
         //while (i < 3) {
