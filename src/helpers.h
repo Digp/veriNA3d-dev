@@ -213,25 +213,35 @@ Rcpp::DataFrame database_2(FILE *file, int c)
     if (strcmp(line2, "loop_\n_database_2.\0") == 0)
     { //yes
         // Move file pointer back
-        //fseek(file, -12, SEEK_CUR);
+        fseek(file, -11, SEEK_CUR);
 
         // Create Rcpp string vector with unknown length
-        //Rcpp::StringVector myvector2(XX);
+        Rcpp::StringVector myvec;
 
         // As long as the first character of the line is '_' do:
-
+        do {
             // Skip 12 characters
+            fseek(file, 11, SEEK_CUR);
 
             // Read characters until a newline is found
+            int i = 0;
+            while ((c = fgetc(file)) != '\n') {
+                line2[i] = c;
+                i++;
+            }
+            line2[i-1] = '\0';
 
             // Resize Rcpp vector to be able to add a new string
-
             // Add new string into the Rcpp vector of strings
+            myvec.push_back(line2);
 
         // The loop will finish when the first character of the line is not '_'
+        } while ((c = fgetc(file)) == '_');
+
         // Move file pointer one back - NOT NECESSARY SINCE IT'S DONE LATER
 
         // Create list of vectors of unknown length or somewhat similar
+        //Rcpp::List tmp(myvec.size());
         // Define index that will be used in next loop
 
         // As long as the first character of the line is NOT "#" do:
@@ -256,44 +266,13 @@ Rcpp::DataFrame database_2(FILE *file, int c)
             // If current character is not '\n', keep reading until finding a newline
             // Read next character to check if it's '#'
 
-        //int i = 0;
-        //while (i < 3) {
-        //    // Skip unnecesary chars
-        //    fseek(file, 28, SEEK_CUR);
-
-        //    // Read pdbID or string
-        //    int j = 0;
-        //    while ((c = fgetc(file)) != '\n') {
-        //        if (c != ' ')
-        //        {
-        //            line2[j] = c;
-        //            j++;
-        //        }
-        //    }
-        //    // Terminate array
-        //    line2[j] = '\0';
-
-        //    // Assign resulting char string
-        //    myvector2[i] = line2;
-
-        //    i++;
-        //}
-
-        //// Assign names attribute
-        //myvector2.attr("names") = CharacterVector::create("dict_name", "dict_version", "dict_location");
-
-        //// Move file pointer one back to stay in same line
-        //// Calling function needs it this way
-        //fseek(file, -1, SEEK_CUR);
-
-        // Return Rcpp string vector
-        //return myvector2;
-
         // Creating vector v
         NumericVector v = {1,2};
         // Creating DataFrame df
         DataFrame df = DataFrame::create(Named("V1") = v,         // simple assign
                                          Named("V2") = clone(v)); // using clone()
+        //df.attr("names") = CharacterVector::create("dict_name", "dict_version");
+        df.attr("names") = myvec;
         // Changing vector v
         v = v * 2;
         return df;
