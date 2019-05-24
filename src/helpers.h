@@ -229,7 +229,13 @@ Rcpp::DataFrame database_2(FILE *file, int c)
                 line2[i] = c;
                 i++;
             }
-            line2[i-1] = '\0';
+            // Terminate array
+            if (line2[i] == ' ')
+            {
+                line2[i-1] = '\0';
+            } else {
+                line2[i] = '\0';
+            }
 
             // Resize Rcpp vector to be able to add a new string
             // Add new string into the Rcpp vector of strings
@@ -241,14 +247,23 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         // Move file pointer one back - NOT NECESSARY SINCE IT'S DONE LATER
 
         // Create list of vectors of unknown length or somewhat similar
-        //Rcpp::List tmp(myvec.size());
+        Rcpp::List tmp(myvec.size());
         // Define index that will be used in next loop
+        int i;
+        int j;
+        char line[maxchar];
 
         // As long as the first character of the line is NOT "#" do:
+        do {
             // Set to 0 an index that will count the entries in the line
+            i = 0;
             // Move file pointer one back
+            fseek(file, -1, SEEK_CUR);
             // As long as index < length of Rcpp list
+            while (i < myvec.size()) {
                 // Read first character
+                c = fgetc(file);
+                j = 0;
 
                 // Check if it is a ' or a ", or a ;, or something different.
 
@@ -257,24 +272,44 @@ Rcpp::DataFrame database_2(FILE *file, int c)
                 // Else if first character was ", end = "
                 // Else if first character was ;, end = ';'
                 // Else, Save first character of line as first character of vector and define end = " "
+                char end = ' ';
 
                 // Keep reading and saving characters until a character matches the variable end, and ignoring newlines
+                do {
+                    line[j] = c;
+                    j++;
+                    c = fgetc(file);
+                } while (c != end);
+                // Terminate array
+                line[j] = '\0';
 
                 // Add string to Rcpp list, vector selected by variable index 
+                //tmp[i].push_back(line);
+                tmp[i] = line;
+
                 // Add +1 to index
-
+                i++;
+            }
             // If current character is not '\n', keep reading until finding a newline
-            // Read next character to check if it's '#'
+            while ((c = fgetc(file)) != EOF && c != '\n');
 
+        // Read next character to check if it's '#'
+        } while ((c = fgetc(file)) != '#');
+
+        // Move file pointer one back to stay in same line
+        // Calling function needs it this way
+        fseek(file, -1, SEEK_CUR);
+
+        Rcpp::DataFrame df(tmp);
         // Creating vector v
-        NumericVector v = {1,2};
-        // Creating DataFrame df
-        DataFrame df = DataFrame::create(Named("V1") = v,         // simple assign
-                                         Named("V2") = clone(v)); // using clone()
+        //NumericVector v = {1,2};
+        //// Creating DataFrame df
+        //DataFrame df = DataFrame::create(Named("V1") = v,         // simple assign
+        //                                 Named("V2") = clone(v)); // using clone()
         //df.attr("names") = CharacterVector::create("dict_name", "dict_version");
         df.attr("names") = myvec;
         // Changing vector v
-        v = v * 2;
+        //v = v * 2;
         return df;
 
     } else { //no: 
