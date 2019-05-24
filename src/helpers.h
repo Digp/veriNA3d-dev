@@ -230,7 +230,7 @@ Rcpp::DataFrame database_2(FILE *file, int c)
                 i++;
             }
             // Terminate array
-            if (line2[i] == ' ')
+            if (line2[i-1] == ' ')
             {
                 line2[i-1] = '\0';
             } else {
@@ -252,6 +252,7 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         int i;
         int j;
         char line[maxchar];
+        char end;
 
         // As long as the first character of the line is NOT "#" do:
         do {
@@ -272,16 +273,22 @@ Rcpp::DataFrame database_2(FILE *file, int c)
                 // Else if first character was ", end = "
                 // Else if first character was ;, end = ';'
                 // Else, Save first character of line as first character of vector and define end = " "
-                char end = ' ';
+                end = ' ';
 
-                // Keep reading and saving characters until a character matches the variable end, and ignoring newlines
+                // Keep reading and saving characters until a character matches the variable end
                 do {
-                    line[j] = c;
-                    j++;
+                    // Ignore newlines
+                    if (c != '\n')
+                    {
+                        line[j] = c;
+                        j++;
+                    }
                     c = fgetc(file);
                 } while (c != end);
                 // Terminate array
                 line[j] = '\0';
+                printf("%i", j);
+                //printf("%s", line);
 
                 // Add string to Rcpp list, vector selected by variable index 
                 //tmp[i].push_back(line);
@@ -289,6 +296,10 @@ Rcpp::DataFrame database_2(FILE *file, int c)
 
                 // Add +1 to index
                 i++;
+                // If current character is ' ', keep reading until finding something else
+                while ((c = fgetc(file)) == ' ');
+                // Move file pointer one back
+                fseek(file, -1, SEEK_CUR);
             }
             // If current character is not '\n', keep reading until finding a newline
             while ((c = fgetc(file)) != EOF && c != '\n');
