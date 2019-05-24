@@ -220,7 +220,7 @@ Rcpp::DataFrame database_2(FILE *file, int c)
 
         // As long as the first character of the line is '_' do:
         do {
-            // Skip 12 characters
+            // Skip 11 characters
             fseek(file, 11, SEEK_CUR);
 
             // Read characters until a newline is found
@@ -248,11 +248,18 @@ Rcpp::DataFrame database_2(FILE *file, int c)
 
         // Create list of vectors of unknown length or somewhat similar
         Rcpp::List tmp(myvec.size());
+        for (int w = 0; w < myvec.size(); w++)
+        {
+            tmp[w] = Rcpp::StringVector(2);
+        }
+
         // Define index that will be used in next loop
         int i;
         int j;
         char line[maxchar];
         char end;
+        int lineind = 0;
+        //Rcpp::StringVector tmpvec;
 
         // As long as the first character of the line is NOT "#" do:
         do {
@@ -287,12 +294,18 @@ Rcpp::DataFrame database_2(FILE *file, int c)
                 } while (c != end);
                 // Terminate array
                 line[j] = '\0';
-                printf("%i", j);
+                //printf("%i", j);
                 //printf("%s", line);
 
                 // Add string to Rcpp list, vector selected by variable index 
-                //tmp[i].push_back(line);
-                tmp[i] = line;
+                //StringVector tmpvec = tmp[i] ; tmpvec.push_back(line);
+                //as<StringVector>(tmp[i]).push_back(line);
+                as<StringVector>(tmp[i])[lineind] = line;
+                //tmp[i] = line;
+                //tmp[i] = tmpvec;
+                //Rcpp::StringVector tmpvec(lineind) = tmp[i];
+                //tmpvec[lineind] = line;
+                //tmpvec.push_back(line);
 
                 // Add +1 to index
                 i++;
@@ -304,6 +317,7 @@ Rcpp::DataFrame database_2(FILE *file, int c)
             // If current character is not '\n', keep reading until finding a newline
             while ((c = fgetc(file)) != EOF && c != '\n');
 
+        lineind++;
         // Read next character to check if it's '#'
         } while ((c = fgetc(file)) != '#');
 
