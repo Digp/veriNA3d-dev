@@ -248,11 +248,6 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         //FILE *file2 = file;
         int maxline = 0;
         double maxchars = 0;
-        //c = fgetc(file);
-        //printf("%c", c);
-        //c = fgetc(file2);
-        //printf("%c", c);
-        //char c2;
         do {
             do {
                 maxchars++;
@@ -260,17 +255,14 @@ Rcpp::DataFrame database_2(FILE *file, int c)
             maxchars++;
             maxline++;
         } while ((c = fgetc(file)) != '#');
-        //printf("%c", c2);
-        //file = file2;
-        //printf("%i", maxline);
+        // Move file pointer back
         fseek(file, -maxchars, SEEK_CUR);
 
-        // Create list of vectors of unknown length or somewhat similar
+        // Create list of vectors with the length equal to the number of lines
         Rcpp::List tmp(myvec.size());
         for (int w = 0; w < myvec.size(); w++)
         {
             tmp[w] = Rcpp::StringVector(maxline);
-            //tmp[w] = Rcpp::StringVector(2);
         }
 
         // Define index that will be used in next loop
@@ -279,7 +271,6 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         char line[maxchar];
         char end;
         int lineind = 0;
-        //Rcpp::StringVector tmpvec;
 
         // As long as the first character of the line is NOT "#" do:
         do {
@@ -318,14 +309,7 @@ Rcpp::DataFrame database_2(FILE *file, int c)
                 //printf("%s", line);
 
                 // Add string to Rcpp list, vector selected by variable index 
-                //StringVector tmpvec = tmp[i] ; tmpvec.push_back(line);
-                //as<StringVector>(tmp[i]).push_back(line);
                 as<StringVector>(tmp[i])[lineind] = line;
-                //tmp[i] = line;
-                //tmp[i] = tmpvec;
-                //Rcpp::StringVector tmpvec(lineind) = tmp[i];
-                //tmpvec[lineind] = line;
-                //tmpvec.push_back(line);
 
                 // Add +1 to index
                 i++;
@@ -345,20 +329,11 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         // Calling function needs it this way
         fseek(file, -1, SEEK_CUR);
 
+        // Create a dataframe from the list of vectors
         Rcpp::DataFrame df(tmp);
-        //Rcpp::DataFrame df(tmp, _["stringsAsFactors"] = false);
-        //Rcpp::DataFrame df = DataFrame::create(Named("stringsAsFactors") = false);
-        //df = df(tmp);
-        //Rcpp::DataFrame::create(_["stringsAsFactors"] = false); df(tmp);
-        // Creating vector v
-        //NumericVector v = {1,2};
-        //// Creating DataFrame df
-        //DataFrame df = DataFrame::create(Named("V1") = v,         // simple assign
-        //                                 Named("V2") = clone(v)); // using clone()
-        //df.attr("names") = CharacterVector::create("dict_name", "dict_version");
+
+        // Assign attribute names to the data.frame
         df.attr("names") = myvec;
-        // Changing vector v
-        //v = v * 2;
         return df;
 
     } else { //no: 
