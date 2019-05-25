@@ -244,13 +244,33 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         // The loop will finish when the first character of the line is not '_'
         } while ((c = fgetc(file)) == '_');
 
-        // Move file pointer one back - NOT NECESSARY SINCE IT'S DONE LATER
+        // Count lines
+        //FILE *file2 = file;
+        int maxline = 0;
+        double maxchars = 0;
+        //c = fgetc(file);
+        //printf("%c", c);
+        //c = fgetc(file2);
+        //printf("%c", c);
+        //char c2;
+        do {
+            do {
+                maxchars++;
+            } while ((c = fgetc(file)) != '\n');
+            maxchars++;
+            maxline++;
+        } while ((c = fgetc(file)) != '#');
+        //printf("%c", c2);
+        //file = file2;
+        //printf("%i", maxline);
+        fseek(file, -maxchars, SEEK_CUR);
 
         // Create list of vectors of unknown length or somewhat similar
         Rcpp::List tmp(myvec.size());
         for (int w = 0; w < myvec.size(); w++)
         {
-            tmp[w] = Rcpp::StringVector(2);
+            tmp[w] = Rcpp::StringVector(maxline);
+            //tmp[w] = Rcpp::StringVector(2);
         }
 
         // Define index that will be used in next loop
@@ -326,6 +346,10 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         fseek(file, -1, SEEK_CUR);
 
         Rcpp::DataFrame df(tmp);
+        //Rcpp::DataFrame df(tmp, _["stringsAsFactors"] = false);
+        //Rcpp::DataFrame df = DataFrame::create(Named("stringsAsFactors") = false);
+        //df = df(tmp);
+        //Rcpp::DataFrame::create(_["stringsAsFactors"] = false); df(tmp);
         // Creating vector v
         //NumericVector v = {1,2};
         //// Creating DataFrame df
