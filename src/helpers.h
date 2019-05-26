@@ -230,9 +230,10 @@ Rcpp::DataFrame core_loop(FILE *file, int skip)
 
     // The loop will finish when the first character of the line is not '_'
     } while ((c = fgetc(file)) == '_');
+    //int kk = myvec.size();
+    //printf("%i", kk);
 
     // Count lines
-    //FILE *file2 = file;
     int maxline = 0;
     double maxchars = 0;
     do {
@@ -269,6 +270,14 @@ Rcpp::DataFrame core_loop(FILE *file, int skip)
         while (i < myvec.size()) {
             // Read first character
             c = fgetc(file);
+
+            // If it's a new line, skip character
+            if (c == '\n')
+            {
+                c = fgetc(file);
+            }
+
+            // Set index to 0
             j = 0;
 
             // Check if it is a ' or a ", or a ;, or something different.
@@ -334,45 +343,7 @@ Rcpp::DataFrame core_loop(FILE *file, int skip)
     return df;
 }
 
-// Helper function to find and return the entry section of the mmCIF
-Rcpp::DataFrame database_2(FILE *file, int c)
-{
-    // Read 15 characters in array 'line2' to recognize section
-    char line2[maxchar];
-    line2[0] = c;
-    for (int i = 1; i < 18; i++)
-    {
-        line2[i] = fgetc(file);
-    }
-    // Terminate array
-    line2[18] = '\0';
-    //printf("%s", line2);
-
-    // Check if section is the one desired
-    if (strcmp(line2, "loop_\n_database_2.\0") == 0)
-    { //yes
-        // Move file pointer back
-        fseek(file, -11, SEEK_CUR);
-
-        // Parse _loop section
-        Rcpp::DataFrame df = core_loop(file, 11);
-
-        // Return data frame
-        return df;
-
-    } else { //no: 
-        // Move file pointer back
-        fseek(file, -18, SEEK_CUR);
-
-        // Create empty df
-        DataFrame df = DataFrame::create(Named("V1") = "");
-
-        // Return empty string
-        return df;
-    }
-}
-
-// Helper function to find and return the audit_author section of the mmCIF
+// Helper function to parse _loop sections of the mmCIF
 Rcpp::DataFrame parse_loop(FILE *file, int c, int len, char title[maxchar])
 {
     // Read 15 characters in array 'line2' to recognize section
@@ -384,11 +355,11 @@ Rcpp::DataFrame parse_loop(FILE *file, int c, int len, char title[maxchar])
     }
     // Terminate array
     line2[len] = '\0';
-    //printf("%s", line2);
 
     // Check if section is the one desired
     if (strcmp(line2, title) == 0)
     { //yes
+        printf("%s\n", line2);
         // Move file pointer back
         len = len - 7;
         fseek(file, -len, SEEK_CUR);
