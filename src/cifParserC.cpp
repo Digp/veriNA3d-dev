@@ -26,7 +26,7 @@ List cifParserC(std::string strings="")
     Rcpp::StringVector sec1;
     Rcpp::StringVector sec2;
     Rcpp::DataFrame sec3;
-
+    Rcpp::DataFrame sec5;
 
     int c;
     //int c = fgetc(file);
@@ -56,17 +56,24 @@ List cifParserC(std::string strings="")
             {
                 sec2 = tmpsec;
             }
+
+            // Check if it's "_database_2" section and parse it
             c = fgetc(file);
             tmpsec_df = database_2(file, c);
-            //Rcpp::Rcout << tmpsec_df[0] << '\n';
             if (tmpsec_df.size() > 1)
             {
                 sec3 = tmpsec_df;
             }
 
-            // Check if it's "_database_2" section and parse it
             // Check if it's "_pdbx_database_status" section and parse it
             // Check if it's "_audit_author" section and parse it
+            c = fgetc(file);
+            tmpsec_df = audit_author(file, c);
+            if (tmpsec_df.size() > 1)
+            {
+                sec5 = tmpsec_df;
+            }
+
             // Check if it's "_entity" section and parse it
             // Check if it's "_chem_comp" section and parse it
             // Check if it's "_exptl" section and parse it
@@ -89,5 +96,6 @@ List cifParserC(std::string strings="")
     fclose(file);
 
     // Return output
-    return List::create(_["entry"] = sec1, _["audit_conform"] = sec2, _["database_2"] = sec3);
+    return List::create(_["entry"] = sec1, _["audit_conform"] = sec2, _["database_2"] = sec3,
+                        _["audit_author"] = sec5);
 }

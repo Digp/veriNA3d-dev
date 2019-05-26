@@ -372,4 +372,41 @@ Rcpp::DataFrame database_2(FILE *file, int c)
     }
 }
 
+// Helper function to find and return the audit_author section of the mmCIF
+Rcpp::DataFrame audit_author(FILE *file, int c)
+{
+    // Read 15 characters in array 'line2' to recognize section
+    char line2[maxchar];
+    line2[0] = c;
+    for (int i = 1; i < 20; i++)
+    {
+        line2[i] = fgetc(file);
+    }
+    // Terminate array
+    line2[20] = '\0';
+    //printf("%s", line2);
+
+    // Check if section is the one desired
+    if (strcmp(line2, "loop_\n_audit_author.\0") == 0)
+    { //yes
+        // Move file pointer back
+        fseek(file, -13, SEEK_CUR);
+
+        // Parse _loop section
+        Rcpp::DataFrame df = core_loop(file, 13);
+
+        // Return data frame
+        return df;
+
+    } else { //no: 
+        // Move file pointer back
+        fseek(file, -20, SEEK_CUR);
+
+        // Create empty df
+        DataFrame df = DataFrame::create(Named("V1") = "");
+
+        // Return empty string
+        return df;
+    }
+}
 #endif
