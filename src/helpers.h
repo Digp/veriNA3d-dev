@@ -272,13 +272,23 @@ Rcpp::DataFrame core_loop(FILE *file, int skip)
             j = 0;
 
             // Check if it is a ' or a ", or a ;, or something different.
-
-            // Define the character to detect end of entry:
-            // If first character was ', end = '
-            // Else if first character was ", end = "
-            // Else if first character was ;, end = ';'
-            // Else, Save first character of line as first character of vector and define end = " "
-            end = ' ';
+            // Then, define the character to detect end character
+            if (c == '"')
+            { // If first character was ", end = "
+                // Read next character
+                c = fgetc(file);
+                end = '"';
+            } else if (c == ';') { // Else if first character was ;, end = ';'
+                // Read next character
+                c = fgetc(file);
+                end = ';';
+            } else if (c == '\'') { // Else if first character was ', end = '
+                // Read next character
+                c = fgetc(file);
+                end = '\'';
+            } else { // Else, just define end = " "
+                end = ' ';
+            }
 
             // Keep reading and saving characters until a character matches the variable end
             do {
