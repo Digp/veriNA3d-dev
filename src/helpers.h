@@ -195,6 +195,135 @@ Rcpp::StringVector audit_conform(FILE *file, int c)
     }
 }
 
+// Helper function to read the sections starting with _loop
+Rcpp::DataFrame core_loop(FILE *file, int skip)
+{
+    // Create Rcpp string vector with unknown length
+    Rcpp::StringVector myvec;
+
+    // Create necessary variables to contain data
+    char line2[maxchar];
+    char c;
+
+    // As long as the first character of the line is '_' do:
+    do {
+        // Skip desired characters
+        fseek(file, skip, SEEK_CUR);
+
+        // Read characters until a newline is found
+        int i = 0;
+        while ((c = fgetc(file)) != '\n') {
+            line2[i] = c;
+            i++;
+        }
+        // Terminate array
+        if (line2[i-1] == ' ')
+        {
+            line2[i-1] = '\0';
+        } else {
+            line2[i] = '\0';
+        }
+
+        // Resize Rcpp vector to be able to add a new string
+        // Add new string into the Rcpp vector of strings
+        myvec.push_back(line2);
+
+    // The loop will finish when the first character of the line is not '_'
+    } while ((c = fgetc(file)) == '_');
+
+    // Count lines
+    //FILE *file2 = file;
+    int maxline = 0;
+    double maxchars = 0;
+    do {
+        do {
+            maxchars++;
+        } while ((c = fgetc(file)) != '\n');
+        maxchars++;
+        maxline++;
+    } while ((c = fgetc(file)) != '#');
+    // Move file pointer back
+    fseek(file, -maxchars, SEEK_CUR);
+
+    // Create list of vectors with the length equal to the number of lines
+    Rcpp::List tmp(myvec.size());
+    for (int w = 0; w < myvec.size(); w++)
+    {
+        tmp[w] = Rcpp::StringVector(maxline);
+    }
+
+    // Define index that will be used in next loop
+    int i;
+    int j;
+    char line[maxchar];
+    char end;
+    int lineind = 0;
+
+    // As long as the first character of the line is NOT "#" do:
+    do {
+        // Set to 0 an index that will count the entries in the line
+        i = 0;
+        // Move file pointer one back
+        fseek(file, -1, SEEK_CUR);
+        // As long as index < length of Rcpp list
+        while (i < myvec.size()) {
+            // Read first character
+            c = fgetc(file);
+            j = 0;
+
+            // Check if it is a ' or a ", or a ;, or something different.
+
+            // Define the character to detect end of entry:
+            // If first character was ', end = '
+            // Else if first character was ", end = "
+            // Else if first character was ;, end = ';'
+            // Else, Save first character of line as first character of vector and define end = " "
+            end = ' ';
+
+            // Keep reading and saving characters until a character matches the variable end
+            do {
+                // Ignore newlines
+                if (c != '\n')
+                {
+                    line[j] = c;
+                    j++;
+                }
+                c = fgetc(file);
+            } while (c != end);
+            // Terminate array
+            line[j] = '\0';
+            //printf("%i", j);
+            //printf("%s", line);
+
+            // Add string to Rcpp list, vector selected by variable index 
+            as<StringVector>(tmp[i])[lineind] = line;
+
+            // Add +1 to index
+            i++;
+            // If current character is ' ', keep reading until finding something else
+            while ((c = fgetc(file)) == ' ');
+            // Move file pointer one back
+            fseek(file, -1, SEEK_CUR);
+        }
+        // If current character is not '\n', keep reading until finding a newline
+        while ((c = fgetc(file)) != EOF && c != '\n');
+
+    lineind++;
+    // Read next character to check if it's '#'
+    } while ((c = fgetc(file)) != '#');
+
+    // Move file pointer one back to stay in same line
+    // Calling function needs it this way
+    fseek(file, -1, SEEK_CUR);
+
+    // Create a dataframe from the list of vectors
+    Rcpp::DataFrame df(tmp);
+
+    // Assign attribute names to the data.frame
+    df.attr("names") = myvec;
+    return df;
+}
+
 // Helper function to find and return the entry section of the mmCIF
 Rcpp::DataFrame database_2(FILE *file, int c)
 {
@@ -215,132 +344,18 @@ Rcpp::DataFrame database_2(FILE *file, int c)
         // Move file pointer back
         fseek(file, -11, SEEK_CUR);
 
-        // Create Rcpp string vector with unknown length
-        Rcpp::StringVector myvec;
+        // Parse _loop section
+        Rcpp::DataFrame df = core_loop(file, 11);
 
-        // As long as the first character of the line is '_' do:
-        do {
-            // Skip 11 characters
-            fseek(file, 11, SEEK_CUR);
-
-            // Read characters until a newline is found
-            int i = 0;
-            while ((c = fgetc(file)) != '\n') {
-                line2[i] = c;
-                i++;
-            }
-            // Terminate array
-            if (line2[i-1] == ' ')
-            {
-                line2[i-1] = '\0';
-            } else {
-                line2[i] = '\0';
-            }
-
-            // Resize Rcpp vector to be able to add a new string
-            // Add new string into the Rcpp vector of strings
-            myvec.push_back(line2);
-
-        // The loop will finish when the first character of the line is not '_'
-        } while ((c = fgetc(file)) == '_');
-
-        // Count lines
-        //FILE *file2 = file;
-        int maxline = 0;
-        double maxchars = 0;
-        do {
-            do {
-                maxchars++;
-            } while ((c = fgetc(file)) != '\n');
-            maxchars++;
-            maxline++;
-        } while ((c = fgetc(file)) != '#');
-        // Move file pointer back
-        fseek(file, -maxchars, SEEK_CUR);
-
-        // Create list of vectors with the length equal to the number of lines
-        Rcpp::List tmp(myvec.size());
-        for (int w = 0; w < myvec.size(); w++)
-        {
-            tmp[w] = Rcpp::StringVector(maxline);
-        }
-
-        // Define index that will be used in next loop
-        int i;
-        int j;
-        char line[maxchar];
-        char end;
-        int lineind = 0;
-
-        // As long as the first character of the line is NOT "#" do:
-        do {
-            // Set to 0 an index that will count the entries in the line
-            i = 0;
-            // Move file pointer one back
-            fseek(file, -1, SEEK_CUR);
-            // As long as index < length of Rcpp list
-            while (i < myvec.size()) {
-                // Read first character
-                c = fgetc(file);
-                j = 0;
-
-                // Check if it is a ' or a ", or a ;, or something different.
-
-                // Define the character to detect end of entry:
-                // If first character was ', end = '
-                // Else if first character was ", end = "
-                // Else if first character was ;, end = ';'
-                // Else, Save first character of line as first character of vector and define end = " "
-                end = ' ';
-
-                // Keep reading and saving characters until a character matches the variable end
-                do {
-                    // Ignore newlines
-                    if (c != '\n')
-                    {
-                        line[j] = c;
-                        j++;
-                    }
-                    c = fgetc(file);
-                } while (c != end);
-                // Terminate array
-                line[j] = '\0';
-                //printf("%i", j);
-                //printf("%s", line);
-
-                // Add string to Rcpp list, vector selected by variable index 
-                as<StringVector>(tmp[i])[lineind] = line;
-
-                // Add +1 to index
-                i++;
-                // If current character is ' ', keep reading until finding something else
-                while ((c = fgetc(file)) == ' ');
-                // Move file pointer one back
-                fseek(file, -1, SEEK_CUR);
-            }
-            // If current character is not '\n', keep reading until finding a newline
-            while ((c = fgetc(file)) != EOF && c != '\n');
-
-        lineind++;
-        // Read next character to check if it's '#'
-        } while ((c = fgetc(file)) != '#');
-
-        // Move file pointer one back to stay in same line
-        // Calling function needs it this way
-        fseek(file, -1, SEEK_CUR);
-
-        // Create a dataframe from the list of vectors
-        Rcpp::DataFrame df(tmp);
-
-        // Assign attribute names to the data.frame
-        df.attr("names") = myvec;
+        // Return data frame
         return df;
 
     } else { //no: 
         // Move file pointer back
         fseek(file, -18, SEEK_CUR);
 
-        DataFrame df = DataFrame::create(Named("V1") = "");         // simple assign
+        // Create empty df
+        DataFrame df = DataFrame::create(Named("V1") = "");
 
         // Return empty string
         return df;
