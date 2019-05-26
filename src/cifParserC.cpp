@@ -59,7 +59,9 @@ List cifParserC(std::string strings="")
 
             // Check if it's "_database_2" section and parse it
             c = fgetc(file);
-            tmpsec_df = database_2(file, c);
+            char title3[maxchar] = "loop_\n_database_2.\0";
+            tmpsec_df = parse_loop(file, c, 18, title3);
+            //tmpsec_df = database_2(file, c);
             if (tmpsec_df.size() > 1)
             {
                 sec3 = tmpsec_df;
@@ -68,7 +70,8 @@ List cifParserC(std::string strings="")
             // Check if it's "_pdbx_database_status" section and parse it
             // Check if it's "_audit_author" section and parse it
             c = fgetc(file);
-            tmpsec_df = audit_author(file, c);
+            char title5[maxchar] = "loop_\n_audit_author.\0";
+            tmpsec_df = parse_loop(file, c, 20, title5);
             if (tmpsec_df.size() > 1)
             {
                 sec5 = tmpsec_df;
