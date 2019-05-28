@@ -73,128 +73,6 @@ int is_end(FILE *file, int *c)
     return 0;
 }
 
-// Helper function to find and return the entry section of the mmCIF
-Rcpp::StringVector entry(FILE *file, int c)
-{
-    // Read 7 characters in array 'line' to recognize section
-    char line[maxchar];
-    line[0] = c;
-    for (int i = 1; i < 7; i++)
-    {
-        line[i] = fgetc(file);
-    }
-    // Terminate array
-    line[7] = '\0';
-
-    // Check if section is the one desired
-    if (strcmp(line, "_entry.\0") == 0)
-    { //yes
-        // Skip unnecesary chars
-        fseek(file, 2, SEEK_CUR);
-
-        // Read pdbID or string
-        int i = 0;
-        while ((c = fgetc(file)) != '\n') {
-            if (c != ' ')
-            {
-                line[i] = c;
-                i++;
-            }
-        }
-        // Terminate array
-        line[i] = '\0';
-        //printf("%s", line);
-
-        // Create Rcpp string vector
-        Rcpp::StringVector myvector(1);
-        // Assign resulting char string
-        myvector[0] = line;
-        // Assign names attribute
-        myvector.attr("names") = "id";
-
-        // Move file pointer one back to stay in same line
-        // Calling function needs it this way
-        fseek(file, -1, SEEK_CUR);
-
-        // Return Rcpp string vector
-        return myvector;
-
-    } else { //no: 
-        // Move file pointer back
-        fseek(file, -7, SEEK_CUR);
-
-        // Return empty string
-        //Rcpp::StringVector myvector(1);
-        //return myvector;
-        return 1;
-    }
-}
-
-// Helper function to find and return the entry section of the mmCIF
-Rcpp::StringVector audit_conform(FILE *file, int c)
-{
-    // Read 15 characters in array 'line2' to recognize section
-    char line2[maxchar];
-    line2[0] = c;
-    for (int i = 1; i < 15; i++)
-    {
-        line2[i] = fgetc(file);
-    }
-    // Terminate array
-    line2[15] = '\0';
-    //printf("%s", line2);
-
-    // Check if section is the one desired
-    if (strcmp(line2, "_audit_conform.\0") == 0)
-    { //yes
-        // Create Rcpp string vector
-        Rcpp::StringVector myvector2(3);
-
-        // Move file pointer back
-        fseek(file, -15, SEEK_CUR);
-
-        int i = 0;
-        while (i < 3) {
-            // Skip unnecesary chars
-            fseek(file, 28, SEEK_CUR);
-
-            // Read pdbID or string
-            int j = 0;
-            while ((c = fgetc(file)) != '\n') {
-                if (c != ' ')
-                {
-                    line2[j] = c;
-                    j++;
-                }
-            }
-            // Terminate array
-            line2[j] = '\0';
-
-            // Assign resulting char string
-            myvector2[i] = line2;
-
-            i++;
-        }
-
-        // Assign names attribute
-        myvector2.attr("names") = CharacterVector::create("dict_name", "dict_version", "dict_location");
-
-        // Move file pointer one back to stay in same line
-        // Calling function needs it this way
-        fseek(file, -1, SEEK_CUR);
-
-        // Return Rcpp string vector
-        return myvector2;
-
-    } else { //no: 
-        // Move file pointer back
-        fseek(file, -15, SEEK_CUR);
-
-        // Return empty string
-        return 1;
-    }
-}
-
 // Helper function to read the sections starting with _loop
 Rcpp::StringVector core_nonloop(FILE *file, int skip)
 {
@@ -285,6 +163,8 @@ Rcpp::StringVector core_nonloop(FILE *file, int skip)
         // Resize Rcpp vector to be able to add a new string
         // Add new string into the Rcpp vector of strings
         mycontent.push_back(line2);
+        // If current character is not '\n', keep reading until finding a newline
+        while ((c = fgetc(file)) != EOF && c != '\n');
 
     // The loop will finish when the first character of the line is not '_'
     } while ((c = fgetc(file)) == '_');
@@ -295,6 +175,7 @@ Rcpp::StringVector core_nonloop(FILE *file, int skip)
 
     // Assign attribute names to the data.frame
     mycontent.attr("names") = mynames;
+
     return mycontent;
 }
 

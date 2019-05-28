@@ -46,24 +46,32 @@ List cifParserC(std::string strings="")
         if (newsection) 
         {
             // Check if it's "_entry" section and parse it
-            c = fgetc(file);
-            char title1[] = "_entry.\0";
-            //tmpsec = entry(file, c);
-            tmpsec = parse_nonloop(file, c, title1);
-            if (tmpsec[0] != "") 
+            if (sec1.length() == 0) 
             {
-                sec1 = tmpsec;
-                goto parse_new;
+                c = fgetc(file);
+                char title1[] = "_entry.\0";
+                //tmpsec = entry(file, c);
+                tmpsec = parse_nonloop(file, c, title1);
+                if (tmpsec[0] != "") 
+                {
+                    sec1 = tmpsec;
+                    goto parse_new;
+                }
             }
             //Rcpp::Rcout << tmpsec[0];// << '\n';
 
             // Check if it's "_audit_conform" section and parse it
-            c = fgetc(file);
-            tmpsec = audit_conform(file, c);
-            if (tmpsec[0] != "") 
+            if (sec2.length() == 0) 
             {
-                sec2 = tmpsec;
-                goto parse_new;
+                c = fgetc(file);
+                char title2[] = "_audit_conform.\0";
+                //tmpsec = audit_conform(file, c);
+                tmpsec = parse_nonloop(file, c, title2);
+                if (tmpsec[0] != "") 
+                {
+                    sec2 = tmpsec;
+                    goto parse_new;
+                }
             }
 
             // Check if it's "_database_2" section and parse it
