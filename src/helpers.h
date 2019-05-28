@@ -196,6 +196,150 @@ Rcpp::StringVector audit_conform(FILE *file, int c)
 }
 
 // Helper function to read the sections starting with _loop
+Rcpp::StringVector core_nonloop(FILE *file, int skip)
+{
+    // Create Rcpp string vector with unknown length
+    Rcpp::StringVector mynames;
+    Rcpp::StringVector mycontent;
+
+    // Create necessary variables to contain data
+    char line2[maxchar];
+    char c;
+
+    // As long as the first character of the line is '_' do:
+    do {
+        // Skip desired characters
+        fseek(file, skip, SEEK_CUR);
+
+        // Parse name
+        // Read characters until a space is found
+        int i = 0;
+        while ((c = fgetc(file)) != ' ') {
+            line2[i] = c;
+            i++;
+        }
+        // Terminate array
+        if (line2[i-1] == ' ')
+        {
+            line2[i-1] = '\0';
+        } else {
+            line2[i] = '\0';
+        }
+
+        // Resize Rcpp vector to be able to add a new string
+        // Add new string into the Rcpp vector of strings
+        mynames.push_back(line2);
+
+        // Skip space characters
+        // If current character is ' ', keep reading until finding something else
+        while ((c = fgetc(file)) == ' ');
+
+        // Parse content
+        // Read characters until the end of line is found
+        i = 0;
+        char end;
+
+        // If it's a new line, skip character
+        if (c == '\n')
+        {
+            c = fgetc(file);
+        }
+
+        // Check if it is a ' or a ", or a ;, or something different.
+        // Then, define the character to detect end character
+        if (c == '"')
+        { // If first character was ", end = "
+            // Read next character
+            c = fgetc(file);
+            end = '"';
+        } else if (c == ';') { // Else if first character was ;, end = ';'
+            // Read next character
+            c = fgetc(file);
+            end = ';';
+        } else if (c == '\'') { // Else if first character was ', end = '
+            // Read next character
+            c = fgetc(file);
+            end = '\'';
+        } else { // Else, just define end = " "
+            end = ' ';
+        }
+
+        // Keep reading and saving characters until a character matches the variable end
+        do {
+            // Ignore newlines
+            if (c != '\n')
+            {
+                line2[i] = c;
+                i++;
+            }
+            c = fgetc(file);
+        } while (c != end);
+        // Terminate array
+        if (line2[i-1] == ' ')
+        {
+            line2[i-1] = '\0';
+        } else {
+            line2[i] = '\0';
+        }
+
+        // Resize Rcpp vector to be able to add a new string
+        // Add new string into the Rcpp vector of strings
+        mycontent.push_back(line2);
+
+    // The loop will finish when the first character of the line is not '_'
+    } while ((c = fgetc(file)) == '_');
+
+    // If current character is not '\n', keep reading until finding a newline
+    while ((c = fgetc(file)) != EOF && c != '\n');
+
+    // Move file pointer one back to stay in same line
+    // Calling function needs it this way
+    fseek(file, -1, SEEK_CUR);
+
+    // Assign attribute names to the data.frame
+    mycontent.attr("names") = mynames;
+    return mycontent;
+}
+
+// Helper function to parse non_loop sections of the mmCIF
+Rcpp::StringVector parse_nonloop(FILE *file, int c, char title[maxchar])
+{
+    // Measure title length
+    int len = strlen(title);
+
+    // Read 15 characters in array 'line2' to recognize section
+    char line2[maxchar];
+    line2[0] = c;
+    for (int i = 1; i < len; i++)
+    {
+        line2[i] = fgetc(file);
+    }
+    // Terminate array
+    line2[len] = '\0';
+
+    // Check if section is the one desired
+    if (strcmp(line2, title) == 0)
+    { //yes
+        printf("%s\n", line2);
+        // Move file pointer back
+        fseek(file, -len, SEEK_CUR);
+
+        // Parse _loop section
+        Rcpp::StringVector myvector = core_nonloop(file, len);
+
+        // Return data frame
+        return myvector;
+
+    } else { //no: 
+        // Move file pointer back
+        fseek(file, -len, SEEK_CUR);
+
+        // Return empty string
+        return 1;
+    }
+}
+
+// Helper function to read the sections starting with _loop
 Rcpp::DataFrame core_loop(FILE *file, int skip)
 {
     // Create Rcpp string vector with unknown length

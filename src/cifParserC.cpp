@@ -47,7 +47,9 @@ List cifParserC(std::string strings="")
         {
             // Check if it's "_entry" section and parse it
             c = fgetc(file);
-            tmpsec = entry(file, c);
+            char title1[] = "_entry.\0";
+            //tmpsec = entry(file, c);
+            tmpsec = parse_nonloop(file, c, title1);
             if (tmpsec[0] != "") 
             {
                 sec1 = tmpsec;
@@ -66,7 +68,7 @@ List cifParserC(std::string strings="")
 
             // Check if it's "_database_2" section and parse it
             c = fgetc(file);
-            char title3[maxchar] = "loop_\n_database_2.\0";
+            char title3[] = "loop_\n_database_2.\0";
             tmpsec_df = parse_loop(file, c, 18, title3);
             //tmpsec_df = database_2(file, c);
             if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
@@ -78,7 +80,7 @@ List cifParserC(std::string strings="")
             // Check if it's "_pdbx_database_status" section and parse it
             // Check if it's "_audit_author" section and parse it
             c = fgetc(file);
-            char title5[maxchar] = "loop_\n_audit_author.\0";
+            char title5[] = "loop_\n_audit_author.\0";
             tmpsec_df = parse_loop(file, c, 20, title5);
             if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
             {
@@ -89,7 +91,7 @@ List cifParserC(std::string strings="")
             // Check if it's "_entity" section and parse it
             // Check if it's "_chem_comp" section and parse it
             c = fgetc(file);
-            char title7[maxchar] = "loop_\n_chem_comp.\0";
+            char title7[] = "loop_\n_chem_comp.\0";
             tmpsec_df = parse_loop(file, c, 17, title7);
             if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
             {
@@ -102,7 +104,7 @@ List cifParserC(std::string strings="")
             // Check if it's "_struct_keywords" section and parse it
             // Check if it's "_struct_asym" section and parse it
             c = fgetc(file);
-            char title11[maxchar] = "loop_\n_struct_asym.\0";
+            char title11[] = "loop_\n_struct_asym.\0";
             tmpsec_df = parse_loop(file, c, 19, title11);
             if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
             {
@@ -113,7 +115,7 @@ List cifParserC(std::string strings="")
             // Check if it's "_atom_sites" section and parse it
             // Check if it's "_atom_type" section and parse it
             c = fgetc(file);
-            char title13[maxchar] = "loop_\n_atom_type.\0";
+            char title13[] = "loop_\n_atom_type.\0";
             tmpsec_df = parse_loop(file, c, 17, title13);
             if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
             {
@@ -123,7 +125,7 @@ List cifParserC(std::string strings="")
 
             // Check if it's "_atom_site" section and parse it
             c = fgetc(file);
-            char title14[maxchar] = "loop_\n_atom_site.\0";
+            char title14[] = "loop_\n_atom_site.\0";
             tmpsec_df = parse_loop(file, c, 17, title14);
             if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
             {
