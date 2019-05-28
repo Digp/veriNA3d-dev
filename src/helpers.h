@@ -82,7 +82,8 @@ Rcpp::StringVector core_nonloop(FILE *file, int skip)
 
     // Create necessary variables to contain data
     char line2[maxchar];
-    char c;
+    char c = fgetc(file);
+    skip = skip - 1;
 
     // As long as the first character of the line is '_' do:
     do {

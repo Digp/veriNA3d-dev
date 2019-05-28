@@ -84,7 +84,6 @@ List cifParserC(std::string strings="")
                 c = fgetc(file);
                 char title3[] = "loop_\n_database_2.\0";
                 tmpsec_df = parse_loop(file, c, title3);
-                //tmpsec_df = database_2(file, c);
                 if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
                 {
                     sec3 = tmpsec_df;
@@ -93,59 +92,146 @@ List cifParserC(std::string strings="")
             }
 
             // Check if it's "_pdbx_database_status" section and parse it
-            // Check if it's "_audit_author" section and parse it
-            c = fgetc(file);
-            char title5[] = "loop_\n_audit_author.\0";
-            tmpsec_df = parse_loop(file, c, title5);
-            if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+            if (sec4.length() == 0) 
             {
-                sec5 = tmpsec_df;
-                goto parse_new;
+                c = fgetc(file);
+                char title4[] = "_pdbx_database_status.\0";
+                tmpsec = parse_nonloop(file, c, title4);
+                if (tmpsec[0] != "")
+                {
+                    sec4 = tmpsec;
+                    goto parse_new;
+                }
+            }
+
+            // Check if it's "_audit_author" section and parse it
+            if (sec5.length() == 0) 
+            {
+                c = fgetc(file);
+                char title5[] = "loop_\n_audit_author.\0";
+                tmpsec_df = parse_loop(file, c, title5);
+                if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+                {
+                    sec5 = tmpsec_df;
+                    goto parse_new;
+                }
             }
 
             // Check if it's "_entity" section and parse it
-            // Check if it's "_chem_comp" section and parse it
-            c = fgetc(file);
-            char title7[] = "loop_\n_chem_comp.\0";
-            tmpsec_df = parse_loop(file, c, title7);
-            if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+            if (sec6.length() == 0) 
             {
-                sec7 = tmpsec_df;
-                goto parse_new;
+                c = fgetc(file);
+                char title6[] = "_entity.\0";
+                tmpsec = parse_nonloop(file, c, title6);
+                if (tmpsec[0] != "")
+                {
+                    sec6 = tmpsec;
+                    goto parse_new;
+                }
+            }
+
+            // Check if it's "_chem_comp" section and parse it
+            if (sec7.length() == 0) 
+            {
+                c = fgetc(file);
+                char title7[] = "loop_\n_chem_comp.\0";
+                tmpsec_df = parse_loop(file, c, title7);
+                if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+                {
+                    sec7 = tmpsec_df;
+                    goto parse_new;
+                }
             }
 
             // Check if it's "_exptl" section and parse it
-            // Check if it's "_struct" section and parse it
-            // Check if it's "_struct_keywords" section and parse it
-            // Check if it's "_struct_asym" section and parse it
-            c = fgetc(file);
-            char title11[] = "loop_\n_struct_asym.\0";
-            tmpsec_df = parse_loop(file, c, title11);
-            if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+            if (sec8.length() == 0) 
             {
-                sec11 = tmpsec_df;
-                goto parse_new;
+                c = fgetc(file);
+                char title8[] = "_exptl.\0";
+                tmpsec = parse_nonloop(file, c, title8);
+                if (tmpsec[0] != "")
+                {
+                    sec8 = tmpsec;
+                    goto parse_new;
+                }
+            }
+
+            // Check if it's "_struct" section and parse it
+            if (sec9.length() == 0) 
+            {
+                c = fgetc(file);
+                char title9[] = "_struct.\0";
+                tmpsec = parse_nonloop(file, c, title9);
+                if (tmpsec[0] != "")
+                {
+                    sec9 = tmpsec;
+                    goto parse_new;
+                }
+            }
+
+            // Check if it's "_struct_keywords" section and parse it
+            if (sec10.length() == 0) 
+            {
+                c = fgetc(file);
+                char title10[] = "_struct_keywords.\0";
+                tmpsec = parse_nonloop(file, c, title10);
+                if (tmpsec[0] != "")
+                {
+                    sec10 = tmpsec;
+                    goto parse_new;
+                }
+            }
+
+            // Check if it's "_struct_asym" section and parse it
+            if (sec11.length() == 0) 
+            {
+                c = fgetc(file);
+                char title11[] = "loop_\n_struct_asym.\0";
+                tmpsec_df = parse_loop(file, c, title11);
+                if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+                {
+                    sec11 = tmpsec_df;
+                    goto parse_new;
+                }
             }
 
             // Check if it's "_atom_sites" section and parse it
-            // Check if it's "_atom_type" section and parse it
-            c = fgetc(file);
-            char title13[] = "loop_\n_atom_type.\0";
-            tmpsec_df = parse_loop(file, c, title13);
-            if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+            if (sec12.length() == 0) 
             {
-                sec13 = tmpsec_df;
-                goto parse_new;
+                c = fgetc(file);
+                char title12[] = "_atom_sites.\0";
+                tmpsec = parse_nonloop(file, c, title12);
+                if (tmpsec[0] != "")
+                {
+                    sec12 = tmpsec;
+                    goto parse_new;
+                }
+            }
+
+            // Check if it's "_atom_type" section and parse it
+            if (sec13.length() == 0) 
+            {
+                c = fgetc(file);
+                char title13[] = "loop_\n_atom_type.\0";
+                tmpsec_df = parse_loop(file, c, title13);
+                if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+                {
+                    sec13 = tmpsec_df;
+                    goto parse_new;
+                }
             }
 
             // Check if it's "_atom_site" section and parse it
-            c = fgetc(file);
-            char title14[] = "loop_\n_atom_site.\0";
-            tmpsec_df = parse_loop(file, c, title14);
-            if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+            if (sec14.length() == 0) 
             {
-                sec14 = tmpsec_df;
-                goto parse_new;
+                c = fgetc(file);
+                char title14[] = "loop_\n_atom_site.\0";
+                tmpsec_df = parse_loop(file, c, title14);
+                if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+                {
+                    sec14 = tmpsec_df;
+                    goto parse_new;
+                }
             }
 
         }
