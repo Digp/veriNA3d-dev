@@ -26,9 +26,15 @@ List cifParserC(std::string strings="")
     Rcpp::StringVector sec1;
     Rcpp::StringVector sec2;
     Rcpp::DataFrame sec3;
+    Rcpp::StringVector sec4;
     Rcpp::DataFrame sec5;
+    Rcpp::StringVector sec6;
     Rcpp::DataFrame sec7;
+    Rcpp::StringVector sec8;
+    Rcpp::StringVector sec9;
+    Rcpp::StringVector sec10;
     Rcpp::DataFrame sec11;
+    Rcpp::StringVector sec12;
     Rcpp::DataFrame sec13;
     Rcpp::DataFrame sec14;
 
@@ -50,7 +56,6 @@ List cifParserC(std::string strings="")
             {
                 c = fgetc(file);
                 char title1[] = "_entry.\0";
-                //tmpsec = entry(file, c);
                 tmpsec = parse_nonloop(file, c, title1);
                 if (tmpsec[0] != "") 
                 {
@@ -65,7 +70,6 @@ List cifParserC(std::string strings="")
             {
                 c = fgetc(file);
                 char title2[] = "_audit_conform.\0";
-                //tmpsec = audit_conform(file, c);
                 tmpsec = parse_nonloop(file, c, title2);
                 if (tmpsec[0] != "") 
                 {
@@ -75,14 +79,17 @@ List cifParserC(std::string strings="")
             }
 
             // Check if it's "_database_2" section and parse it
-            c = fgetc(file);
-            char title3[] = "loop_\n_database_2.\0";
-            tmpsec_df = parse_loop(file, c, title3);
-            //tmpsec_df = database_2(file, c);
-            if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+            if (sec3.length() == 0) 
             {
-                sec3 = tmpsec_df;
-                goto parse_new;
+                c = fgetc(file);
+                char title3[] = "loop_\n_database_2.\0";
+                tmpsec_df = parse_loop(file, c, title3);
+                //tmpsec_df = database_2(file, c);
+                if (tmpsec_df.size() > 1 || tmpsec_df.nrows() > 1)
+                {
+                    sec3 = tmpsec_df;
+                    goto parse_new;
+                }
             }
 
             // Check if it's "_pdbx_database_status" section and parse it
@@ -155,6 +162,9 @@ List cifParserC(std::string strings="")
 
     // Return output
     return List::create(_["entry"] = sec1, _["audit_conform"] = sec2, _["database_2"] = sec3,
-                        _["audit_author"] = sec5, _["chem_comp"] = sec7,
-                        _["struct_asym"] = sec11, _["atom_type"] = sec13, _["atom_site"] = sec14);
+                        _["pdbx_database_status"] = sec4, _["audit_author"] = sec5, 
+                        _["entity"] = sec6, _["chem_comp"] = sec7, _["exptl"] = sec8,
+                        _["struct"] = sec9, _["struct_keywords"] = sec10,
+                        _["struct_asym"] = sec11, _["atom_sites"] = sec12,
+                        _["atom_type"] = sec13, _["atom_site"] = sec14);
 }
