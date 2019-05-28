@@ -39,9 +39,7 @@ List cifParserC(std::string strings="")
     Rcpp::DataFrame sec14;
 
     int c;
-    //int c = fgetc(file);
     int newsection;
-    //int newsection = newsec(file);
     do {
         // After newline, check if a new section starts
         parse_new:

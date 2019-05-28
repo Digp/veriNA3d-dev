@@ -102,38 +102,80 @@ setMethod("cifParser",
         ## Save extension, in case its a file
         ext <- substr(pdbID, nchar(pdbID) - 3, nchar(pdbID))
 
-        if (file.exists(pdbID) && (ext == ".cif" || ext == "f.gz")) { # Read
-            pdb <- readLines(pdbID)
-
-        } else if (nchar(pdbID) == 4) { # Otherwise download by pdb ID
-            destfile <- cifDownload(pdbID=pdbID, verbose=verbose)
-            pdb <- readLines(destfile)
-
-        } else { # Otherwise it is just an error
-            stop("Please, provide a valid pdbID or file")
+        ## For old versions of R, use C code
+        if (!(R.Version()$major >= 3 && as.numeric(R.Version()$minor) >= 5) && 
+            file.exists(pdbID) && ext == ".cif") {
+            tryC <- TRUE
+        } else {
+            tryC <- FALSE
         }
+
+        if (tryC) {
+            ## Use C code
+            cif <- cifParserC(pdbID)
+            cif[[3]] <- cif[[3]][!apply(cif[[3]] == "", 1, all), ]
+            cif[[3]][] <- lapply(cif[[3]], as.character)
+            cif[[5]] <- cif[[5]][!apply(cif[[5]] == "", 1, all), ]
+            cif[[5]]$name <- as.character(cif[[5]]$name)
+            cif[[5]]$pdbx_ordinal <- as.integer(cif[[5]]$pdbx_ordinal)
+            cif[[7]] <- cif[[7]][!apply(cif[[7]] == "", 1, all), ]
+            cif[[7]][] <- lapply(cif[[7]], as.character)
+            cif[[7]]$formula_weight <- as.numeric(cif[[7]]$formula_weight)
+            cif[[11]] <- cif[[11]][!apply(cif[[11]] == "", 1, all), ]
+            cif[[11]][] <- lapply(cif[[11]], as.character)
+            cif[[11]]$entity_id <- as.integer(cif[[11]]$entity_id)
+            cif[[13]] <- cif[[13]][!apply(cif[[13]] == "", 1, all), ]
+            cif[[13]][] <- lapply(cif[[13]], as.character)
+            cif[[14]] <- cif[[14]][!apply(cif[[14]] == "", 1, all), ]
+            cif[[14]][] <- lapply(cif[[14]], as.character)
+            cif[[14]]$id <- as.integer(cif[[14]]$id)
+            cif[[14]]$label_entity_id <- 
+                as.integer(cif[[14]]$label_entity_id)
+            suppressWarnings(cif[[14]]$label_seq_id <- 
+                as.integer(cif[[14]]$label_seq_id))
+            cif[[14]]$auth_seq_id <- as.integer(cif[[14]]$auth_seq_id)
+            cif[[14]]$pdbx_PDB_model_num <- 
+                as.integer(cif[[14]]$pdbx_PDB_model_num)
+            cif[[14]]$Cartn_x <- as.numeric(cif[[14]]$Cartn_x)
+            cif[[14]]$Cartn_y <- as.numeric(cif[[14]]$Cartn_y)
+            cif[[14]]$Cartn_z <- as.numeric(cif[[14]]$Cartn_z)
+            cif[[14]]$occupancy <- as.numeric(cif[[14]]$occupancy)
+            cif[[14]]$B_iso_or_equiv <- 
+                as.numeric(cif[[14]]$B_iso_or_equiv)
+        } else {
+            ## Use R code
+            if (file.exists(pdbID) && (ext == ".cif" || ext == "f.gz")) { # Read
+                pdb <- readLines(pdbID)
+
+            } else if (nchar(pdbID) == 4) { # Otherwise download by pdb ID
+                destfile <- cifDownload(pdbID=pdbID, verbose=verbose)
+                pdb <- readLines(destfile)
+
+            } else { # Otherwise it is just an error
+                stop("Please, provide a valid pdbID or file")
+            }
     
-        ## Parse lines block -------------------------------------------------
-        ## Find #, they indicate the beggining/end of each section
-        hash_inds <- grep("^#", pdb, perl=T)
-        loop_inds <- which(pdb == "loop_")
+            ## Find #, they indicate the beggining/end of each section
+            hash_inds <- grep("^#", pdb, perl=T)
+            loop_inds <- which(pdb == "loop_")
 
-        ## Define a list of indices for sections of interest
-        sections <- lapply(cifAttr,
-                            function(x) {
-                                x  <- paste("^_", x, "\\.", sep="")
-                                st <- grep(x, pdb, perl=TRUE)[1] - 1
-                                if (st %in% loop_inds) {
-                                    st = st - 1
-                                }
-                                return(which(hash_inds == st))
-                            })
+            ## Define a list of indices for sections of interest
+            sections <- lapply(cifAttr,
+                                function(x) {
+                                    x  <- paste("^_", x, "\\.", sep="")
+                                    st <- grep(x, pdb, perl=TRUE)[1] - 1
+                                    if (st %in% loop_inds) {
+                                        st = st - 1
+                                    }
+                                    return(which(hash_inds == st))
+                                })
 
-        ## Parse the CIF sections of interest
-        cif <- lapply(sections,
-                        FUN=.cifParser,
-                        pdb=pdb, hash_inds=hash_inds)
-        names(cif) <- cifAttr
+            ## Parse the CIF sections of interest
+            cif <- lapply(sections,
+                            FUN=.cifParser,
+                            pdb=pdb, hash_inds=hash_inds)
+            names(cif) <- cifAttr
+        }
 
         ## Create CIF S4 object and return output ----------------------------
         out <- CIF( entry                = cif$entry,
