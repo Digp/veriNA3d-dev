@@ -73,7 +73,7 @@ int is_end(FILE *file, int *c)
     return 0;
 }
 
-// Helper function to read the sections starting with _loop
+// Helper function to read the sections not starting with _loop
 Rcpp::StringVector core_nonloop(FILE *file, int skip)
 {
     // Create Rcpp string vector with unknown length
