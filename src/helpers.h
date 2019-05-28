@@ -289,9 +289,6 @@ Rcpp::StringVector core_nonloop(FILE *file, int skip)
     // The loop will finish when the first character of the line is not '_'
     } while ((c = fgetc(file)) == '_');
 
-    // If current character is not '\n', keep reading until finding a newline
-    while ((c = fgetc(file)) != EOF && c != '\n');
-
     // Move file pointer one back to stay in same line
     // Calling function needs it this way
     fseek(file, -1, SEEK_CUR);
@@ -320,7 +317,7 @@ Rcpp::StringVector parse_nonloop(FILE *file, int c, char title[maxchar])
     // Check if section is the one desired
     if (strcmp(line2, title) == 0)
     { //yes
-        printf("%s\n", line2);
+        //printf("%s\n", line2);
         // Move file pointer back
         fseek(file, -len, SEEK_CUR);
 
@@ -488,8 +485,11 @@ Rcpp::DataFrame core_loop(FILE *file, int skip)
 }
 
 // Helper function to parse _loop sections of the mmCIF
-Rcpp::DataFrame parse_loop(FILE *file, int c, int len, char title[maxchar])
+Rcpp::DataFrame parse_loop(FILE *file, int c, char title[maxchar])
 {
+    // Measure title length
+    int len = strlen(title);
+
     // Read 15 characters in array 'line2' to recognize section
     char line2[maxchar];
     line2[0] = c;
@@ -503,7 +503,7 @@ Rcpp::DataFrame parse_loop(FILE *file, int c, int len, char title[maxchar])
     // Check if section is the one desired
     if (strcmp(line2, title) == 0)
     { //yes
-        printf("%s\n", line2);
+        //printf("%s\n", line2);
         // Move file pointer back
         len = len - 7;
         fseek(file, -len, SEEK_CUR);
