@@ -22,8 +22,6 @@ importFrom(circlize, circos.par, circos.initialize,
 #exportPattern("^[[:alpha:]]+")
 exportClasses(CIF)
 export(
-    cifParserC,
-
     applyToPDB,
 
     checkNuc,
