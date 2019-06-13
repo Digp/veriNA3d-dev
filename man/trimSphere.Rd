@@ -7,7 +7,7 @@ surrounding area.}
 \usage{
 trimSphere(cif, model = NULL, ntindex = NULL, chain = NULL,
   sel = NULL, cutoff = 8, cutres = FALSE, file = NULL,
-  verbose = TRUE, alt = "uniq", ...)
+  verbose = TRUE, alt = "uniq", rename = TRUE, ...)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively
@@ -40,6 +40,8 @@ fucntions just returns the pdb object.}
 \item{verbose}{A logical to print details of the process.}
 
 \item{alt}{Value of alternative records to keep in output object.}
+
+\item{rename}{A logical to rename the chains of the oucput pdb.}
 
 \item{...}{Arguments to be passed to internal functions.}
 }
