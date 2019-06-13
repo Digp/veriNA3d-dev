@@ -1,4 +1,7 @@
+useDynLib(veriNA3d, .registration=TRUE)
 import(bio3d)
+import(Rcpp)
+importFrom(Rcpp, evalCpp)
 import(parallel)
 importFrom("graphics", "abline", "axis", "barplot", "contour",
             "legend", "par", "plot", "points", "text", "title")

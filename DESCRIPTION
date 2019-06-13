@@ -13,10 +13,11 @@ Description:
  as we know, no similar software has been previously distributed, thus it aims
  to fill a gap in the data mining pipelines of PDB structural data analyses.
 License: GPL-3
-Depends: R (>= 3.5)
+Depends: R (>= 3.4)
 Imports: methods, graphics, grDevices, stats, utils,
          bio3d, circlize, parallel, jsonlite, 
-         plot3D, MASS, RColorBrewer, RANN
+         plot3D, MASS, RColorBrewer, RANN, Rcpp
+LinkingTo: Rcpp
 Packaged: 2017-03-14 18:02:52 UTC; dgallego
 LazyData: true
 RoxygenNote: 6.1.1
