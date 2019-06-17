@@ -269,7 +269,7 @@ setGeneric("rVector",
 #'     cif <- cifParser("2d18")
 #'     model1 <- selectModel(cif=cif, model=1)
 #'     model3 <- selectModel(cif=cif, model=3)
-#'     eRMSD <- eRMSD(cif1=model1, cif2=model3)
+#'     eRMSD(cif1=model1, cif2=model3)
 #'
 #' @author Diego Gallego
 #' @references
@@ -285,6 +285,38 @@ setGeneric("eRMSD",
                         pdb1=NULL, pdb2=NULL,
                         rvectors1=NULL, rvectors2=NULL)
             standardGeneric("eRMSD"))
+
+##############################################################################
+
+#' Compute the RMSD between two structures
+#'
+#' Compute the RMSD between two structures
+#' @rdname RMSD
+#'
+#' @param cif1 A CIF or pdb object as otained from 
+#'     [cifParser()], [cifAsPDB()] or read.cif/read.pdb
+#'     (from bio3d package).
+#' @param cif2 A CIF or pdb object as otained from 
+#'     [cifParser()], [cifAsPDB()] or read.cif/read.pdb
+#'     (from bio3d package).
+#' @param sel1 A sel object as obtained from atom.select (from bio3d package).
+#' @param sel2 A sel object as obtained from atom.select (from bio3d package).
+#' @param ... Arguments to be passed to atom.select if desired (only used in
+#'     case that sel1 and sel2 are NULL.
+#' @return A numeric with the RMSD between the two structures.
+#'
+#' @examples
+#'     cif <- cifParser("2d18")
+#'     model1 <- selectModel(cif=cif, model=1)
+#'     model3 <- selectModel(cif=cif, model=3)
+#'     RMSD(cif1=model1, cif2=model3)
+#'
+#' @author Diego Gallego
+setGeneric("RMSD",
+            function(cif1, cif2, sel1=NULL, sel2=NULL, ...)
+            standardGeneric("RMSD"))
+
+##############################################################################
 
 ##############################################################################
 ## Internal functions

@@ -48,7 +48,7 @@ RMSD (Bottaro et al. 2014), reproducing BaRNAba software (Bottaro et al.
     cif <- cifParser("2d18")
     model1 <- selectModel(cif=cif, model=1)
     model3 <- selectModel(cif=cif, model=3)
-    eRMSD <- eRMSD(cif1=model1, cif2=model3)
+    eRMSD(cif1=model1, cif2=model3)
 
 }
 \references{
