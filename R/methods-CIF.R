@@ -212,9 +212,15 @@ setMethod("cifParser",
 #'
 #' @param pdbID A 4 character string that matches a structure in the Protein 
 #'     Data Bank.
-#' @param path The path to save the downloaded file. If NULL, a temporal 
-#'     directory is used. Note that the function will not overwrite existing
-#'     files in the directory.
+#' @param path The path to save the downloaded file. In basic use of the
+#'     function, the "default" path is a temporal directory, which is removed
+#'     after the R session is terminated. 
+#'     Some users might prefer to save permanently the files in a local path.
+#'     This advanced use of the function can be adquired creating (manually) a 
+#'     local hidden directory called ".veriNA3d_mmCIF_files" with 
+#'     `dir.create("~/.veriNA3d_mmCIF_files")`. This function will 
+#'     automatically recognize the new "default" path and use it from there on.
+#'     Note that the function will never overwrite existing files.
 #' @param destfile File name to save the downloaded structure. If NULL, the 
 #'     file name is constructed based on the PDB ID and extension.
 #' @param extension A string with the desired file extension.
@@ -231,15 +237,19 @@ setMethod("cifParser",
 #'
 #' @rdname cifDownload
 cifDownload <- 
-function(pdbID, path=NULL, destfile=NULL, extension=".cif.gz", URL=NULL, 
+function(pdbID, path="default", destfile=NULL, extension=".cif.gz", URL=NULL, 
             verbose=FALSE) {
 
     ## Make sure the input is lower case
     pdbID <- tolower(pdbID)
 
     ## If path is not provided, use temp directory
-    if (is.null(path)) {
-        path <- tempdir()
+    if (path == "default") {
+        if (dir.exists("~/.veriNA3d_mmCIF_files")) {
+            path <- "~/.veriNA3d_mmCIF_files/"
+        } else {
+            path <- tempdir()
+        }
     }
 
     ## If file name is not provided, and filename
