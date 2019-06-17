@@ -123,7 +123,7 @@ worth noting that this difference does **not** affect the compatibility
 between the two packages (see below for details).
 
 Since different mmCIF files usually have different sections of data 
-(in addition to the coordinates), we carried out an analisis that checked 
+(in addition to the coordinates), we carried out an analysis that checked 
 which ones are always present in all mmCIF files (this included all mmCIF 
 files in the Protein Data Bank in March 2018), and reached a list of 14
 items:
@@ -255,8 +255,8 @@ Around this technology, the package includes the following set of functions:
 * queryTechnique: Experimental Technique
 * queryStatus: Released/Obsolete and related status information
 
-The list of functions is **intendedly limited** in comparison with the dozens
-of *enpoints* of the REST API. Integrating them all would innecessarily
+The list of functions is **intentionally limited** in comparison with the 
+dozens of *endpoints* of the REST API. Integrating them all would needlessly
 increase the total amount of functions of the package. Moreover, the API
 might offer more and more *endpoints* with the time, and trying to keep them
 all would make the manteinance of this package more difficult. To allow the 
@@ -348,7 +348,7 @@ eRMSD
 # Generate substructures
 
 In many cases you might be interested on a particular region of a structure
-(e.g. a peptide from a complex, or a ligand and it's binding site). For a 
+(e.g. a peptide from a complex, or a ligand and its binding site). For a 
 given structure, `trimSphere` can generate a smaller pdb object and save it 
 to a PDB file if desired. The region of interest can be selected by using 
 the chain identifier and the residue index, or with the `atom.select` function
@@ -537,7 +537,7 @@ When you have your desired list of PDB IDs, the function `pipeNucData` and
 dataset.
 
 ```{r pipeNucData(pdblist, chainlist, cores)}
-## After the download is finished, this dataset is analised in less than 2 min
+## After the download is finished, this dataset is analysed in less than 2 min
 ## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
 ntinfo <- pipeNucData(pdbID=nrlist$pdb, 
                         model=nrlist$model,
@@ -568,7 +568,7 @@ follows:
 
 
 ```{r pipeProtNucData(pdblist, chainlist, cores)}
-## After the download is finished, this dataset is analised in less than 1 min
+## After the download is finished, this dataset is analysed in less than 1 min
 ## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
 aantinfo <- pipeProtNucData(pdbID=nrlist$pdb, 
                             model=nrlist$model,

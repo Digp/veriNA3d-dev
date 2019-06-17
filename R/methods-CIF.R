@@ -537,3 +537,51 @@ setMethod("eRMSD",
 
 ## End of section for epsilon RMSD methods
 ##############################################################################
+
+##############################################################################
+
+#' @rdname RMSD
+setMethod("RMSD",
+    signature(cif1="CIF", cif2="CIF"),
+    definition=function(cif1=NULL, cif2=NULL, sel1=NULL, sel2=NULL, ...) {
+
+        pdb1 <- cifAsPDB(cif1)
+        pdb2 <- cifAsPDB(cif2)
+
+        if (is.null(sel1)) {
+            sel1 <- atom.select(pdb1, ...)
+        }
+        if (is.null(sel2)) {
+            sel2 <- atom.select(pdb2, ...)
+        }
+
+        fit <- fit.xyz(pdb1$xyz, pdb2$xyz,
+                        fixed.inds=sel1$xyz, mobile.inds=sel2$xyz)
+
+        return(rmsd(pdb1$xyz[,sel1$xyz],fit[,sel2$xyz]))
+
+    })
+
+#' @rdname RMSD
+setMethod("RMSD",
+    definition=function(cif1=NULL, cif2=NULL, sel1=NULL, sel2=NULL, ...) {
+
+        pdb1 <- cif1
+        pdb2 <- cif2
+
+        if (is.null(sel1)) {
+            sel1 <- atom.select(pdb1, ...)
+        }
+        if (is.null(sel2)) {
+            sel2 <- atom.select(pdb2, ...)
+        }
+
+        fit <- fit.xyz(pdb1$xyz, pdb2$xyz,
+                        fixed.inds=sel1$xyz, mobile.inds=sel2$xyz)
+
+        return(rmsd(pdb1$xyz[,sel1$xyz],fit[,sel2$xyz]))
+
+    })
+
+## End of section for RMSD methods
+##############################################################################
