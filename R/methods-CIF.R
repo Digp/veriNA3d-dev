@@ -212,9 +212,11 @@ setMethod("cifParser",
 #'
 #' @param pdbID A 4 character string that matches a structure in the Protein 
 #'     Data Bank.
-#' @param destfile File name to save the downloaded structure. If NULL, a 
-#'     temporal directory is used and  the file name is constructed based on
-#'     the PDB ID and extension.
+#' @param path The path to save the downloaded file. If NULL, a temporal 
+#'     directory is used. Note that the function will not overwrite existing
+#'     files in the directory.
+#' @param destfile File name to save the downloaded structure. If NULL, the 
+#'     file name is constructed based on the PDB ID and extension.
 #' @param extension A string with the desired file extension.
 #' @param URL A string with the URL of use. If NULL, the RCSB is used as
 #'     default.
@@ -229,14 +231,20 @@ setMethod("cifParser",
 #'
 #' @rdname cifDownload
 cifDownload <- 
-function(pdbID, destfile=NULL, extension=".cif.gz", URL=NULL, verbose=FALSE) {
+function(pdbID, path=NULL, destfile=NULL, extension=".cif.gz", URL=NULL, 
+            verbose=FALSE) {
+
     ## Make sure the input is lower case
     pdbID <- tolower(pdbID)
 
-    ## If file name is not provided, use temp directory and filename
+    ## If path is not provided, use temp directory
+    if (is.null(path)) {
+        path <- tempdir()
+    }
+
+    ## If file name is not provided, and filename
     if (is.null(destfile)) {
-        tmpdir <- tempdir()
-        destfile <- paste(tmpdir, "/", pdbID, extension, sep="")
+        destfile <- paste(path, "/", pdbID, extension, sep="")
     }
 
     ## If file is already there but has size 0, remove it and download again
