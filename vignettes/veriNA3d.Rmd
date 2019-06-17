@@ -173,7 +173,7 @@ head(coords)
 ## Bidirectional compatibility with bio3d
 
 Using the `cifParser` will often be the first step to analyse a structure. 
-However, if the analisys requires any of the bio3d functions, then a 
+However, if the analysis requires any of the bio3d functions, then a 
 conversion should be done with the `cifAsPDB` function.
 
 ```{r cifAsPDB(cif)}
