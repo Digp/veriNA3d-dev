@@ -1,11 +1,11 @@
 #' Get Alternative Representants
 #'
-#' This function is closely related with getLeontisList(). From its 
+#' This function is closely related with getRNAList(). From its 
 #' output, the family members of each equivalence class are checked for
 #' desired features. The first member that matches all the desired features
 #' is returned.
 #'
-#' @param rnalist The output of getLeontisList.
+#' @param rnalist The output of getRNAList.
 #' @param technique One or more techniques of interest (For correct use, see 
 #'  example below). For the list of techniques, see "veriNA3d:::.allowedtechs".
 #' @param resol A positive real number to specify a desired resolution.
@@ -20,7 +20,7 @@
 #'  the selected Representants according with the specified conditions. 
 #'
 #' @examples 
-#'     #rnalist <- getLeontisList(release=3.2, threshold="1.5A")
+#'     #rnalist <- getRNAList(release=3.2, threshold="1.5A")
 #'     #alternative <- getAltRepres(rnalist=rnalist, 
 #'     #                            type="nakedRNA")
 #'

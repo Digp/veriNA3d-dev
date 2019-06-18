@@ -186,6 +186,39 @@ bio3d functions). In addition, all veriNA3d functions are prepared to accept
 as input either the CIF or pdb objects. Therefore, the compatibility between
 the two packages is bidirectional.
 
+# Downloaded files
+
+The `cifParser` and other functions download the mmCIF files when they are
+not provided by the user. The core code that performs this operation is
+`cifDownload`. 
+
+`cifDownload` uses a temporal directory to save files, which can be found 
+running `tempdir`. These files are saved accross the same R session, so no
+file will be downloaded twice, but removed after the session is terminated.
+
+In some cases, such as intensive use of the package or limited Internet 
+connection, the user might want to keep the files accross different R sessions.
+This functionality can be achieved with a simple process.
+
+By default, `cifDownload` tries to find a directory called
+"~/.veriNA3d_mmCIF_files/". Only when it does not find it, it will use a 
+temporary directory. If you want to keep files across R sessions, just
+create this new folder in your home directory and veriNA3d will start using it
+to save all the downloaded mmCIF files. Note that the only way to recover the
+space in your drive is to remove those files *manually*. 
+
+Creating this directory can be easily done running the following command in
+R session.
+
+```{Create permanent directory}
+dir.create("~/.veriNA3d_mmCIF_files/")
+```
+
+On the other hand, if you prefer to save your files in a specific directory
+of your choice, you can create a symbolic link called .veriNA3d_mmCIF_files
+pointing to your desired location, and it will also work. Instructions for this
+particular task are not included, since they are system specific.
+
 \newpage
 # Getting data from Application Programming Interfaces (API)
 
@@ -596,7 +629,6 @@ aantinfo <- pipeProtNucData(pdbID=nrlist$pdb,
                             progressbar=FALSE, cores=2)
 str(aantinfo)
 ```
-
 
 \newpage
 # References

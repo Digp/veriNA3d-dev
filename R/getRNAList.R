@@ -18,7 +18,7 @@
 #'     and "C" is the Chain to be used.
 #'
 #' @examples 
-#'     data <- getLeontisList(release=3.2, threshold="1.5A")
+#'     data <- getRNAList(release=3.2, threshold="1.5A")
 #'
 #' @author Diego Gallego
 #' @references 
@@ -28,7 +28,7 @@
 #'     In RNA 3D Structure Analysis and Prediction, edited by N. Leontis and
 #'     E. Westhof, 27:281–98. Springer Berlin Heidelberg
 #'
-getLeontisList <- 
+getRNAList <- 
 function(release="current", threshold="all", as.df=FALSE) {
 
     ## Check argument threshold is correct -----------------------------------
