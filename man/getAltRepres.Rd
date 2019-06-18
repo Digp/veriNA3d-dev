@@ -8,7 +8,7 @@ getAltRepres(rnalist, technique = NULL, resol = NULL, type = NULL,
   length = 3, progressbar = TRUE, verbose = FALSE, as.df = FALSE)
 }
 \arguments{
-\item{rnalist}{The output of getLeontisList.}
+\item{rnalist}{The output of getRNAList.}
 
 \item{technique}{One or more techniques of interest (For correct use, see
 example below). For the list of techniques, see "veriNA3d:::.allowedtechs".}
@@ -31,13 +31,13 @@ A data.frame with info about all the "Equivalence Classes" and
 the selected Representants according with the specified conditions.
 }
 \description{
-This function is closely related with getLeontisList(). From its
+This function is closely related with getRNAList(). From its
 output, the family members of each equivalence class are checked for
 desired features. The first member that matches all the desired features
 is returned.
 }
 \examples{
-    #rnalist <- getLeontisList(release=3.2, threshold="1.5A")
+    #rnalist <- getRNAList(release=3.2, threshold="1.5A")
     #alternative <- getAltRepres(rnalist=rnalist, 
     #                            type="nakedRNA")
 

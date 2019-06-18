@@ -57,7 +57,7 @@ export(
     findHDR,
 
     getAltRepres,
-    getLeontisList,
+    getRNAList,
 
     hasHetAtm,
 

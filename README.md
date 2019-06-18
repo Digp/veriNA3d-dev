@@ -46,11 +46,11 @@ Instructions for Unix systems
 
 ### Dataset level
 
-`getLeontisList`: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012).
+`getRNAList`: Get list of representative/non-redundant RNA structures organized in Equivalence Classes (source: Leontis & Zirbel, 2012).
 
 `getAltRepres`: Apply filters (e.g. just protein-RNA structures) to select other representants from the members of each class.
 
-`represAsDataFrame`: From the output of getLeontisList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class.
+`represAsDataFrame`: From the output of getRNAList or getAltRepres, generate a data.frame in which each row corresponds to a RNA chain, rather than an Equivalence Class.
 
 `pipeNucData`: From a list of RNA structures/chains computes and returns structural data at the level of the nucleotide.
 

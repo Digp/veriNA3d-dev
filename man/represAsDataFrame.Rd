@@ -8,14 +8,14 @@ represAsDataFrame(nrlist)
 }
 \arguments{
 \item{nrlist}{The output of
-\code{\link[=getLeontisList]{getLeontisList()}} or
+\code{\link[=getRNAList]{getRNAList()}} or
 \code{\link[=getAltRepres]{getAltRepres()}}.}
 }
 \value{
 A data frame with the data of the representative structures.
 }
 \description{
-Takes the output of getLeontisList or getAltRepres, which
+Takes the output of getRNAList or getAltRepres, which
 represent molecules with the format "XXXX|M|C+XXXX|M|C" (XXXX: PDB ID;
 M: Model; C: Chain) and returns a data.frame with a more friendly
 structure:
@@ -29,7 +29,7 @@ Columns 2 to 4 can be the direct input of
 \code{\link[=pipeNucData]{pipeNucData()}}.
 }
 \examples{
- data <- getLeontisList(release=3.2, threshold="1.5A")
+ data <- getRNAList(release=3.2, threshold="1.5A")
  reps <- represAsDataFrame(nrlist=data)
 
 }

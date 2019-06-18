@@ -463,10 +463,10 @@ setMethod("rVector",
     definition=function(cif, outformat="rvector", simple_out=TRUE) {
         pdb <- cifAsPDB(cif)
         out <- tryCatch({
-                    .rVector(pdb=pdb, outformat=outformat, 
+                    .rVector(pdb1=pdb, outformat=outformat, 
                                 simple_out=simple_out, elety="C4'")
                 }, error=function(e) {
-                    .rVector(pdb=pdb, outformat=outformat, 
+                    .rVector(pdb1=pdb, outformat=outformat, 
                                 simple_out=simple_out, elety="C4")
                 })
         return(out)
@@ -478,10 +478,10 @@ setMethod("rVector",
     definition=function(cif, outformat="rvector", simple_out=TRUE) {
         pdb <- cifAsPDB(cif)
         out <- tryCatch({
-                    .rVector(pdb=pdb, outformat=outformat, 
+                    .rVector(pdb1=pdb, outformat=outformat, 
                                 simple_out=simple_out, elety="C4'")
                 }, error=function(e) {
-                    .rVector(pdb=pdb, outformat=outformat, 
+                    .rVector(pdb1=pdb, outformat=outformat, 
                                 simple_out=simple_out, elety="C4")
                 })
         return(out)
@@ -491,10 +491,10 @@ setMethod("rVector",
 setMethod("rVector",
     definition=function(pdb, outformat="rvector", simple_out=TRUE) {
         out <- tryCatch({
-                    .rVector(pdb=pdb, outformat=outformat, 
+                    .rVector(pdb1=pdb, outformat=outformat, 
                                 simple_out=simple_out, elety="C4'")
                 }, error=function(e) {
-                    .rVector(pdb=pdb, outformat=outformat, 
+                    .rVector(pdb1=pdb, outformat=outformat, 
                                 simple_out=simple_out, elety="C4")
                 })
         return(out)

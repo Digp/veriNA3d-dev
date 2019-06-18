@@ -4,16 +4,25 @@
 \alias{cifDownload}
 \title{Download Protein Data Bank structures}
 \usage{
-cifDownload(pdbID, destfile = NULL, extension = ".cif.gz",
-  URL = NULL, verbose = FALSE)
+cifDownload(pdbID, path = "default", destfile = NULL,
+  extension = ".cif.gz", URL = NULL, verbose = FALSE)
 }
 \arguments{
 \item{pdbID}{A 4 character string that matches a structure in the Protein
 Data Bank.}
 
-\item{destfile}{File name to save the downloaded structure. If NULL, a
-temporal directory is used and  the file name is constructed based on
-the PDB ID and extension.}
+\item{path}{The path to save the downloaded file. In basic use of the
+function, the "default" path is a temporal directory, which is removed
+after the R session is terminated.
+Some users might prefer to save permanently the files in a local path.
+This advanced use of the function can be adquired creating (manually) a
+local hidden directory called ".veriNA3d_mmCIF_files" with
+\code{dir.create("~/.veriNA3d_mmCIF_files")}. This function will
+automatically recognize the new "default" path and use it from there on.
+Note that the function will never overwrite existing files.}
+
+\item{destfile}{File name to save the downloaded structure. If NULL, the
+file name is constructed based on the PDB ID and extension.}
 
 \item{extension}{A string with the desired file extension.}
 

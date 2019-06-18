@@ -520,15 +520,15 @@ purposes has ever been freely distributed before.
 ## Non-redundant lists of RNA
 
 VeriNA3d integrates
-the function `getLeontisList`, which returns the desired non-redundant list
-of RNA structures, as found in their 
-[website](http://rna.bgsu.edu/rna3dhub/nrlist/) [@Leontis2012]. 
+the function `getRNAList`, which returns the desired non-redundant list
+of RNA structures, as found in [@Leontis2012]
+[website](http://rna.bgsu.edu/rna3dhub/nrlist/). 
 Here it is shown an example of how to make a non-redundant dataset of 
 protein-RNA complexes with resolutions better than 2 Angstroms.
 
-```{r getLeontisList(release, threshold)}
+```{r getRNAList(release, threshold)}
 ## Get non-redundant list from Leontis website
-rnalist <- getLeontisList(release="3.47", threshold="2.0A")
+rnalist <- getRNAList(release="3.47", threshold="2.0A")
 head(rnalist)
 ```
 
