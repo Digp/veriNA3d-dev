@@ -29,7 +29,7 @@
 
 getAltRepres <-
 function(rnalist, technique=NULL, resol=NULL, type=NULL, length=3, 
-            progressbar=TRUE, verbose=FALSE, as.df=FALSE) {
+            progressbar=TRUE, verbose=FALSE, as.df=FALSE, na.rm=TRUE) {
     ## Make sure the inputs make sense ---------------------------------------
     if (is.null(c(technique, resol, type))) {
         stop("Which features should the alternative representants have?")
@@ -87,6 +87,12 @@ function(rnalist, technique=NULL, resol=NULL, type=NULL, length=3,
                                                     obsolete=obsolete)))
     if (progressbar)
         cat("\n")
+
+    if (na.rm) {
+        if (any(is.na(rnalist$Representative))) {
+            rnalist <- rnalist[which(!is.na(rnalist$Representative)), ]
+        }
+    }
 
     if (as.df) {
         return(represAsDataFrame(rnalist[, 2:1]))
