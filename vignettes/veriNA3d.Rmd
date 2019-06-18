@@ -372,8 +372,16 @@ protL8 <- trimSphere(cif, chain=chain, cutoff=0)
 protL8
 
 ## The same command with the argument file would save it directly:
-protL8 <- trimSphere(cif, chain=chain, cutoff=0, file="output.pdb")
+trimSphere(cif, chain=chain, cutoff=0, file="output.pdb")
 ```
+
+The output.pdb file can then be visualized using your favourite external
+molecular viewer. The following picture was taken using VMD software
+[@Humphrey1996].
+
+\begin{center}
+\includegraphics[width=6in]{6ek0_L9.png}
+\end{center}
 
 ### Example 2
 
@@ -391,14 +399,22 @@ pdb <- cifAsPDB(cif)
 queryLigands("6ek0", onlyligands=T)
 
 ## Get the atomic index for a desired ligand
-HMTligand_inds <- which(pdb$atom$resid == "HMT")
+HMTligand_inds <- pdb$atom$eleno[which(pdb$atom$resid == "HMT")]
 
 ## Use bio3d function to select the ligand using its atom indices
 sel <- atom.select(pdb, eleno=HMTligand_inds)
 
 ## Get substructure and sorroundings at 10 Angstroms
 HTMligand <- trimSphere(pdb, sel=sel, cutoff=5)
+
+## And generate file to visualize it
+trimSphere(pdb, sel=sel, file="output2.pdb", cutoff=5)
 ```
+
+\begin{center}
+\includegraphics[width=6in]{6ek0_HMT.png}
+\end{center}
+
 
 ### Example 3
 
@@ -423,6 +439,10 @@ sel <- atom.select(pdb, eleno=eleno)
 ## Get substructure
 trimSphere(pdb, sel=sel, file="interacting_site.pdb", verbose=FALSE)
 ```
+
+\begin{center}
+\includegraphics[width=6in]{1nyb_interacting_site.png}
+\end{center}
 
 \newpage
 # Calculate phosphate pair-wise distances

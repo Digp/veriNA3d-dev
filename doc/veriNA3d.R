@@ -77,7 +77,7 @@ protL8 <- trimSphere(cif, chain=chain, cutoff=0)
 protL8
 
 ## The same command with the argument file would save it directly:
-protL8 <- trimSphere(cif, chain=chain, cutoff=0, file="output.pdb")
+trimSphere(cif, chain=chain, cutoff=0, file="output.pdb")
 
 ## ----"trimsphere(structure, selection)"------------------------------------
 ## Load bio3d library
@@ -90,13 +90,16 @@ pdb <- cifAsPDB(cif)
 queryLigands("6ek0", onlyligands=T)
 
 ## Get the atomic index for a desired ligand
-HMTligand_inds <- which(pdb$atom$resid == "HMT")
+HMTligand_inds <- pdb$atom$eleno[which(pdb$atom$resid == "HMT")]
 
 ## Use bio3d function to select the ligand using its atom indices
 sel <- atom.select(pdb, eleno=HMTligand_inds)
 
 ## Get substructure and sorroundings at 10 Angstroms
 HTMligand <- trimSphere(pdb, sel=sel, cutoff=5)
+
+## And generate file to visualize it
+trimSphere(pdb, sel=sel, file="output2.pdb", cutoff=5)
 
 ## ----"trimsphere(structure, selection2)"-----------------------------------
 ## Parse another pdb for this example
@@ -154,7 +157,7 @@ head(nrlist)
 head(nrlist[nrlist$Mg == TRUE, ])
 
 ## ----pipeNucData(pdblist, chainlist, cores)--------------------------------
-## After the download is finished, this dataset is analised in less than 2 min
+## After the download is finished, this dataset is analysed in less than 2 min
 ## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
 ntinfo <- pipeNucData(pdbID=nrlist$pdb, 
                         model=nrlist$model,
@@ -170,7 +173,7 @@ str(ntinfo)
 #                          path="/your/path/to/the/dataset/", extension=".cif.gz")
 
 ## ----pipeProtNucData(pdblist, chainlist, cores)----------------------------
-## After the download is finished, this dataset is analised in less than 1 min
+## After the download is finished, this dataset is analysed in less than 1 min
 ## (single core, intel i5 2.3Ghz). Set progressbar=TRUE to see the progress.
 aantinfo <- pipeProtNucData(pdbID=nrlist$pdb, 
                             model=nrlist$model,
