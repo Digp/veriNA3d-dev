@@ -14,7 +14,8 @@
 #' @param length To be passed to {classifyRNA}.
 #' @param progressbar A logical to print in screen a progress bar.
 #' @param verbose A logical to print details of the process.
-#' @param as.df A logical to return the output as a data.frame
+#' @param as.df A logical to return the output as a data.frame.
+#' @param na.rm A logical to clean missing values out of the output.
 #'
 #' @return A data.frame with info about all the "Equivalence Classes" and
 #'  the selected Representants according with the specified conditions. 

@@ -5,7 +5,8 @@
 \title{Get Alternative Representants}
 \usage{
 getAltRepres(rnalist, technique = NULL, resol = NULL, type = NULL,
-  length = 3, progressbar = TRUE, verbose = FALSE, as.df = FALSE)
+  length = 3, progressbar = TRUE, verbose = FALSE, as.df = FALSE,
+  na.rm = TRUE)
 }
 \arguments{
 \item{rnalist}{The output of getRNAList.}
@@ -24,7 +25,9 @@ the {classifyRNA} function.}
 
 \item{verbose}{A logical to print details of the process.}
 
-\item{as.df}{A logical to return the output as a data.frame}
+\item{as.df}{A logical to return the output as a data.frame.}
+
+\item{na.rm}{A logical to clean missing values out of the output.}
 }
 \value{
 A data.frame with info about all the "Equivalence Classes" and
