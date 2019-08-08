@@ -1,7 +1,7 @@
 Package: veriNA3d
 Type: Package
 Title: Biological Structure Analysis 
-Version: 0.99.0
+Version: 1.0.0
 Date: 2018-12-12
 Author: Diego Gallego
 Maintainer: Diego Gallego <diego.gallego@irbbarcelona.org>
