@@ -422,8 +422,8 @@ setMethod("selectModel",
                 pdb$model == model) {
 
             if(verbose) 
-                print(paste("The input is already the desired model, thus output",
-                        " = input", sep=""))
+                print(paste("The input is already the desired model, thus ",
+                        "output = input", sep=""))
             return(pdb)
         }
 

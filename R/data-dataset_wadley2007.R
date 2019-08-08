@@ -9,8 +9,8 @@
 #'
 #' @format An object of class data.frame
 #' \describe{
-#'   \item{pdb:}{PDB ID.}
-#'   \item{chain:}{Chain}
+#'     \item{pdb:}{PDB ID.}
+#'     \item{chain:}{Chain}
 #' }
 #'
 #' @return data.frame with list of PDB IDs.
