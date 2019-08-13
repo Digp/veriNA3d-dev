@@ -100,7 +100,9 @@ function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
                         SIMPLIFY=FALSE)
 
     ## Print new line after progress bar -------------------------------------
-    cat("\n")
+    if (progressbar) {
+        cat("\n")
+    }
 
     ## Prepare output format -------------------------------------------------
     ntinfo <- ntinfo[which(lapply(ntinfo, length)>0)]

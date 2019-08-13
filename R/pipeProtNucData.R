@@ -119,7 +119,9 @@ function(pdbID, model=NULL, chain=NULL, ntinfo=NULL,
                                     SIMPLIFY=FALSE)
 
     ## Print new line after progress bar -------------------------------------
-    cat("\n")
+    if (progressbar) {
+        cat("\n")
+    }
 
     ## Return output for every chain and model as given by input -------------
     interactionsdata <- interactionsdata[
