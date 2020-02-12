@@ -39,7 +39,7 @@
 queryAPI <-
 function(ID, info=NULL, API="default", string1=NULL, string2=NULL,
             reuse=TRUE, envir=parent.frame(n=2), verbose=FALSE,
-            noerrors=FALSE) {
+            noerrors=FALSE, https=FALSE) {
 
     ## Check that the input ID is not over 4 character string ----------------
     if (nchar(ID) > 4) {
@@ -68,6 +68,11 @@ function(ID, info=NULL, API="default", string1=NULL, string2=NULL,
         webroot <- "http://web.mmb.pcb.ub.es/MMBApi/web/pdb/"
     } else if (API == "ebi") {
         webroot <- "http://www.ebi.ac.uk/pdbe/api/"
+    }
+
+    ## Let the user decide if to use secure conection
+    if (https) {
+        webroot <- gsub("http", "https", webroot)
     }
 
     ## Generate string with the website name
