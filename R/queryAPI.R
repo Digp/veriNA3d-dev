@@ -17,6 +17,7 @@
 #' @param envir Environment to save&retrieve the data if reuse is TRUE.
 #' @param verbose A logical. TRUE to print details of the process.
 #' @param noerrors A logical. TRUE to suppress errors.
+#' @param https A logical. TRUE to use https instead of http.
 #'
 #' @return A vector or data.frame with the desired data.
 #'
