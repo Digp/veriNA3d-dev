@@ -4,9 +4,18 @@
 \alias{pipeProtNucData}
 \title{Obtain nucleotide-protein interactions from a data set of structures}
 \usage{
-pipeProtNucData(pdbID, model = NULL, chain = NULL, ntinfo = NULL,
-  path = NULL, extension = NULL, cores = 1, progressbar = TRUE,
-  cutoff = 15, ...)
+pipeProtNucData(
+  pdbID,
+  model = NULL,
+  chain = NULL,
+  ntinfo = NULL,
+  path = NULL,
+  extension = NULL,
+  cores = 1,
+  progressbar = TRUE,
+  cutoff = 15,
+  ...
+)
 }
 \arguments{
 \item{pdbID}{A list/vector containing the desired PDB IDs or a list of pdb

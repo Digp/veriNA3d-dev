@@ -4,8 +4,14 @@
 \alias{applyToPDB}
 \title{Applies a function over a list of PDB ID entries.}
 \usage{
-applyToPDB(listpdb = NULL, FUNCTION, as.df = TRUE, cores = 1,
-  progressbar = TRUE, ...)
+applyToPDB(
+  listpdb = NULL,
+  FUNCTION,
+  as.df = TRUE,
+  cores = 1,
+  progressbar = TRUE,
+  ...
+)
 }
 \arguments{
 \item{listpdb}{A list/vector containing the PDB IDs of interest. If NULL,

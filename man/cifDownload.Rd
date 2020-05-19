@@ -4,8 +4,14 @@
 \alias{cifDownload}
 \title{Download Protein Data Bank structures}
 \usage{
-cifDownload(pdbID, path = "default", destfile = NULL,
-  extension = ".cif.gz", URL = NULL, verbose = FALSE)
+cifDownload(
+  pdbID,
+  path = "default",
+  destfile = NULL,
+  extension = ".cif.gz",
+  URL = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{pdbID}{A 4 character string that matches a structure in the Protein

@@ -3,7 +3,6 @@
 \docType{package}
 \name{veriNA3d}
 \alias{veriNA3d}
-\alias{veriNA3d-package}
 \title{veriNA3d: Structural bioinformatics package for data mining of the PDB.}
 \description{
 VeriNA3d is an R package for the analysis of Nucleic Acid structural data.

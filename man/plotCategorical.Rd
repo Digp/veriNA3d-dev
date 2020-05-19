@@ -4,9 +4,20 @@
 \alias{plotCategorical}
 \title{Barplot wrapper}
 \usage{
-plotCategorical(ntinfo, field, ntID = NULL, na.rm = FALSE,
-  main = NULL, cex = 0.5, file = NULL, width = 15, height = 15,
-  bg = "white", units = "cm", res = 200)
+plotCategorical(
+  ntinfo,
+  field,
+  ntID = NULL,
+  na.rm = FALSE,
+  main = NULL,
+  cex = 0.5,
+  file = NULL,
+  width = 15,
+  height = 15,
+  bg = "white",
+  units = "cm",
+  res = 200
+)
 }
 \arguments{
 \item{ntinfo}{A data.frame with the input data. It should contain the

@@ -4,9 +4,17 @@
 \alias{getAltRepres}
 \title{Get Alternative Representants}
 \usage{
-getAltRepres(rnalist, technique = NULL, resol = NULL, type = NULL,
-  length = 3, progressbar = TRUE, verbose = FALSE, as.df = FALSE,
-  na.rm = TRUE)
+getAltRepres(
+  rnalist,
+  technique = NULL,
+  resol = NULL,
+  type = NULL,
+  length = 3,
+  progressbar = TRUE,
+  verbose = FALSE,
+  as.df = FALSE,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{rnalist}{The output of getRNAList.}

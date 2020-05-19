@@ -4,9 +4,17 @@
 \alias{pipeNucData}
 \title{Obtain nucleotide details from a data set of RNA structures}
 \usage{
-pipeNucData(pdbID, model = NULL, chain = NULL, range = c(3, 1e+05),
-  path = NULL, extension = NULL, cores = 1, progressbar = TRUE,
-  ...)
+pipeNucData(
+  pdbID,
+  model = NULL,
+  chain = NULL,
+  range = c(3, 1e+05),
+  path = ".veriNA3d_mmCIF_files",
+  extension = ".cif.gz",
+  cores = 1,
+  progressbar = TRUE,
+  ...
+)
 }
 \arguments{
 \item{pdbID}{A list/vector containing the desired PDB IDs or a list of pdb

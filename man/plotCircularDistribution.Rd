@@ -4,8 +4,12 @@
 \alias{plotCircularDistribution}
 \title{Plot a scatter&frequency circular plot for angular data}
 \usage{
-plotCircularDistribution(data, clockwise = FALSE, start.degree = 0,
-  main = NULL)
+plotCircularDistribution(
+  data,
+  clockwise = FALSE,
+  start.degree = 0,
+  main = NULL
+)
 }
 \arguments{
 \item{data}{A numeric vector with the data to plot.}

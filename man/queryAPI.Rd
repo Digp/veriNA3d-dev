@@ -4,9 +4,18 @@
 \alias{queryAPI}
 \title{Launch queries to the MMB or EBI APIs}
 \usage{
-queryAPI(ID, info = NULL, API = "default", string1 = NULL,
-  string2 = NULL, reuse = TRUE, envir = parent.frame(n = 2),
-  verbose = FALSE, noerrors = FALSE)
+queryAPI(
+  ID,
+  info = NULL,
+  API = "default",
+  string1 = NULL,
+  string2 = NULL,
+  reuse = TRUE,
+  envir = parent.frame(n = 2),
+  verbose = FALSE,
+  noerrors = FALSE,
+  https = FALSE
+)
 }
 \arguments{
 \item{ID}{A 4 character string that matches a structure in the Protein
@@ -29,6 +38,8 @@ user access and avoids unnecessary work in the servers).}
 \item{verbose}{A logical. TRUE to print details of the process.}
 
 \item{noerrors}{A logical. TRUE to suppress errors.}
+
+\item{https}{A logical. TRUE to use https instead of http.}
 }
 \value{
 A vector or data.frame with the desired data.

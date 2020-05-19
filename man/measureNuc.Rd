@@ -4,10 +4,20 @@
 \alias{measureNuc}
 \title{Obtain desired nucleotide measurements}
 \usage{
-measureNuc(pdb, model = 1, chain = "all", v_shifted = TRUE,
-  b_shifted = TRUE, distances = "default", angles = "default",
-  torsionals = "default", pucker = TRUE, Dp = TRUE, refatm = "C4'",
-  force = FALSE)
+measureNuc(
+  pdb,
+  model = 1,
+  chain = "all",
+  v_shifted = TRUE,
+  b_shifted = TRUE,
+  distances = "default",
+  angles = "default",
+  torsionals = "default",
+  pucker = TRUE,
+  Dp = TRUE,
+  refatm = "C4'",
+  force = FALSE
+)
 }
 \arguments{
 \item{pdb}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb

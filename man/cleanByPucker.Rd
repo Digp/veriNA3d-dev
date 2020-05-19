@@ -4,8 +4,14 @@
 \alias{cleanByPucker}
 \title{Subset nucleotide data according with puckering}
 \usage{
-cleanByPucker(ntinfo, surenorth = FALSE, suresouth = FALSE,
-  pucker = "C3'endo", range = NULL, verbose = TRUE)
+cleanByPucker(
+  ntinfo,
+  surenorth = FALSE,
+  suresouth = FALSE,
+  pucker = "C3'endo",
+  range = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{ntinfo}{A data.frame. The output of

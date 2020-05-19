@@ -5,9 +5,20 @@
 \title{Trim a pdb/cif object to obtain a nucleotide/s of interest and the
 surrounding area.}
 \usage{
-trimSphere(cif, model = NULL, ntindex = NULL, chain = NULL,
-  sel = NULL, cutoff = 8, cutres = FALSE, file = NULL,
-  verbose = TRUE, alt = "uniq", rename = TRUE, ...)
+trimSphere(
+  cif,
+  model = NULL,
+  ntindex = NULL,
+  chain = NULL,
+  sel = NULL,
+  cutoff = 8,
+  cutres = FALSE,
+  file = NULL,
+  verbose = TRUE,
+  alt = "uniq",
+  rename = TRUE,
+  ...
+)
 }
 \arguments{
 \item{cif}{A cif/pdb object obtained from cifParser/read.pdb respectively

@@ -4,8 +4,12 @@
 \alias{dssr}
 \title{Dissecting the Spatial Structure of RNA with DSSR}
 \usage{
-dssr(pdb, exefile = "x3dna-dssr", dssrargs = c("--nmr", "--torsion360",
-  "--more"), verbose = FALSE)
+dssr(
+  pdb,
+  exefile = "x3dna-dssr",
+  dssrargs = c("--nmr", "--torsion360", "--more"),
+  verbose = FALSE
+)
 }
 \arguments{
 \item{pdb}{It can be:

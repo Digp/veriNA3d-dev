@@ -4,8 +4,14 @@
 \alias{checkNuc}
 \title{Check nucleotides}
 \usage{
-checkNuc(pdb, model = 1, chain = "all", id = NULL, refatm = "C4'",
-  force = FALSE)
+checkNuc(
+  pdb,
+  model = 1,
+  chain = "all",
+  id = NULL,
+  refatm = "C4'",
+  force = FALSE
+)
 }
 \arguments{
 \item{pdb}{A pdb object as obtained from cifAsPDB or read.cif/read.pdb

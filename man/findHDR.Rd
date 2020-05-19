@@ -4,8 +4,16 @@
 \alias{findHDR}
 \title{Find 2D High Density Regions and return list of nucleotides}
 \usage{
-findHDR(ntID = NULL, ntinfo, x = "eta", y = "theta", SD_DENS = 1,
-  bandwidths = c(40, 40), dens = NULL, lims = c(0, 360, 0, 360))
+findHDR(
+  ntID = NULL,
+  ntinfo,
+  x = "eta",
+  y = "theta",
+  SD_DENS = 1,
+  bandwidths = c(40, 40),
+  dens = NULL,
+  lims = c(0, 360, 0, 360)
+)
 }
 \arguments{
 \item{ntID}{an object of class integer with the desired nucleotides of

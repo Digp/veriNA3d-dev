@@ -5,16 +5,44 @@
 \alias{plot3Ddens}
 \title{Make 2D data plot or 3D view of the density}
 \usage{
-plot2D(ntinfo, ntID = NULL, dens = NULL, bandwidths = NULL,
-  x = "eta", y = "theta", drawcontour = TRUE,
-  sd_over_mean_contours = c(1, 2, 4), etatheta = FALSE,
-  points = NULL, colpoints = "red", file = NULL, width = 15,
-  height = 15, bg = "white", units = "cm", res = 200)
+plot2D(
+  ntinfo,
+  ntID = NULL,
+  dens = NULL,
+  bandwidths = NULL,
+  x = "eta",
+  y = "theta",
+  drawcontour = TRUE,
+  sd_over_mean_contours = c(1, 2, 4),
+  etatheta = FALSE,
+  points = NULL,
+  colpoints = "red",
+  file = NULL,
+  width = 15,
+  height = 15,
+  bg = "white",
+  units = "cm",
+  res = 200
+)
 
-plot3Ddens(ntinfo, ntID = NULL, dens = NULL, bandwidths = NULL,
-  x = "eta", y = "theta", defaultview = NULL, thetaplot, phiplot,
-  cleanerview = FALSE, file = NULL, width = 15, height = 15,
-  bg = "white", units = "cm", res = 600)
+plot3Ddens(
+  ntinfo,
+  ntID = NULL,
+  dens = NULL,
+  bandwidths = NULL,
+  x = "eta",
+  y = "theta",
+  defaultview = NULL,
+  thetaplot,
+  phiplot,
+  cleanerview = FALSE,
+  file = NULL,
+  width = 15,
+  height = 15,
+  bg = "white",
+  units = "cm",
+  res = 600
+)
 }
 \arguments{
 \item{ntinfo}{A data.frame with the input data. It should contain the
