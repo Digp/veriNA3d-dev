@@ -40,7 +40,8 @@
 #'
 pipeNucData <-
 function(pdbID, model=NULL, chain=NULL, range=c(3, 100000),
-            path=NULL, extension=NULL, cores=1, progressbar=TRUE, ...) {
+            path=".veriNA3d_mmCIF_files", extension=".cif.gz", cores=1, 
+            progressbar=TRUE, ...) {
 
     ## Make sure the input pdbID is a list -----------------------------------
     if (.isCIF(pdbID))
