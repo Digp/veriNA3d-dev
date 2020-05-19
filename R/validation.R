@@ -49,9 +49,6 @@ validation <- function(pdbID, ntinfo=NULL){
     chain <- ntinfo$chain
     total <- paste(resno, chain, sep=".")
     
-    
-    
-    
     if (length(auth_id) != 0){
       for(i in index){
         auth_id[i] <- paste(auth_id[i], insert_id[i], sep="^")
