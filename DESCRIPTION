@@ -16,8 +16,7 @@ License: GPL-3
 Depends: R (>= 3.4)
 Imports: methods, graphics, grDevices, stats, utils,
          bio3d, circlize, parallel, jsonlite, 
-         plot3D, MASS, RColorBrewer, RANN, Rcpp
-LinkingTo: Rcpp
+         plot3D, MASS, RColorBrewer, RANN
 Packaged: 2017-03-14 18:02:52 UTC; dgallego
 LazyData: true
 RoxygenNote: 6.1.1
