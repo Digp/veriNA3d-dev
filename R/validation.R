@@ -6,6 +6,10 @@
 #' angles, chirals and rsrz
 #'
 #' @param pdbID A string containing the desired PDB ID
+#' @param ntinfo Optional. A data.frame obtained from 
+#'     [pipeNucData()].
+#' @param model A string/integer with the model of interest.
+#' @param force A logical to avoid returning errors.
 #'
 #' @return A data.frame with TRUE/FALSE data for the different validation 
 #' parameters for each nucleotide, reported  with unique identifier.
@@ -16,186 +20,127 @@
 #'
 #' @author Eric Matamoros & Diego Gallego
 
-validation <- function(pdbID, ntinfo=NULL){
+validation <- function(pdbID, ntinfo=NULL, model="all", force=FALSE) {
 
-    if (is.null(ntinfo)) {
-        ntinfo <- veriNA3d:::.extract_ntinfo(pdbID=pdbID)
-    }
-    id_dssr <- getID(pdbID, ntinfo=ntinfo)
-    seq <- id_dssr$seq
-    id_dssr <- id_dssr$id_dssr
-  
-    #--------------------------------------------------------------------------
-    #Check for validation data of suite_outliers and pucker_outliers
-    IDsummary <- queryAPI(ID = pdbID, API  = "ebi",
-                          string1 = "validation/RNA_pucker_suite_outliers/entry/", string2 = "")
-    
-    #Create a resno.chain structure of the suite_outliers
-    auth_id <- IDsummary[[1]]$suite_outliers$author_residue_number
-    insert_id <- IDsummary[[1]]$suite_outliers$author_insertion_code
-    
-    
-    #Extrct insert indexes from the vector
-    index <- which(grepl("[QWERTYUIOPASDFGHJKLZXCVBNM123456789987654321]", insert_id, perl=T))
-    
-    #Format structure of resno^insert.chain_id for total structure
-    resno <- ntinfo$resno
-    index2 <- which(grepl("[QWERTYUIOPASDFGHJKLZXCVBNM123456789987654321]", ntinfo$insert, perl=T))
-    
-    for(i in index2){
-      resno[i] <- paste(resno[i], ntinfo$insert[i], sep="^")
-    }
-    
-    chain <- ntinfo$chain
-    total <- paste(resno, chain, sep=".")
-    
-    if (length(auth_id) != 0){
-      for(i in index){
-        auth_id[i] <- paste(auth_id[i], insert_id[i], sep="^")
-      }
-      
-      chain_id <- IDsummary[[1]]$suite_outliers$chain_id
-      
-      #Format structure of resno^insert.chain_id
-      total_id <- paste(auth_id, chain_id, sep=".")
-      
-      #Create a resno.chain structure of the total data from the pdb
-      #Format structure of resno^insert.chain_id for total structure
-      resno <- ntinfo$resno
-      index2 <- which(grepl("[QWERTYUIOPASDFGHJKLZXCVBNM123456789987654321]", ntinfo$insert, perl=T))
-      
-      for(i in index2){
-        resno[i] <- paste(resno[i], ntinfo$insert[i], sep="^")
-      }
-      
-      chain <- ntinfo$chain
-      total <- paste(resno, chain, sep=".")
-      
-      #check the suite_outliers presence in the total ntd data
-      suite_outlier <- total %in% total_id
-      
-      
-      #Paste into the original data frame
-      table2 <- as.data.frame(cbind(seq, id_dssr, suite_outlier))
-    }else{
-      table2 <- as.data.frame(cbind(seq, id_dssr))
-      table2$suite_outlier <- FALSE
-    }
-    #-----------------------------------------------------------
-    
-    #Create a resno.chain structure of the pucker_outliers
-    puck_auth_id <- IDsummary[[1]]$pucker_outliers$author_residue_number
-    puck_insert_id <- IDsummary[[1]]$pucker_outliers$author_insertion_code
-    
-    #Format structure of resno^insert.chain_id
-    
-    index2 <- which(grepl("[QWERTYUIOPASDFGHJKLZXCVBNM123456789987654321]", puck_insert_id, perl=T))
-    
-    if(length(puck_auth_id) != 0){
-      for(i in index2){
-        puck_auth_id[i] <- paste(puck_auth_id[i], puck_insert_id[i], sep="^")
-      }
-      
-      
-      puck_chain_id <- IDsummary[[1]]$pucker_outliers$chain_id
-      puck_total_id <- paste(puck_auth_id, puck_chain_id, sep=".")
-      
-      #check the pucker_outliers presence in the total ntd data
-      pucker_outlier <- total %in% puck_total_id
-      
-      
-      #Paste into the existing data frame
-      table3 <- as.data.frame(cbind(table2, pucker_outlier))
-    }else{
-      table3 <- table2
-      table3$pucker_outlier <- FALSE
-    }
-    #----------------------------------------------------------------------------------------
-    
-    #Check for validation data of geometrical outliers
-    IDsummary_geom <- queryAPI(ID = pdbID, API  = "ebi",
-                               string1 = "validation/protein-RNA-DNA-geometry-outlier-residues/entry/", string2 = "")
-    
     #Check for the entities that belong to RNA
     ent_query <- queryEntities(pdbID)
-    ala <- c("polyribonucleotide", "polydeoxyribonucleotide")
+    ala <- c("polyribonucleotide", "polydeoxyribonucleotide", 
+                "polydeoxyribonucleotide/polyribonucleotide hybrid")
     check_rib <- which(ent_query$molecule_type %in% ala)
-    
-    table3$clashes <- FALSE
-    table3$bond_lengths <- FALSE
-    table3$bond_angles <- FALSE
-    table3$chirals <- FALSE
-    table3$planes <- FALSE
-    
-    if (length(check_rib) != 0) {
-      if(length(IDsummary_geom[[1]]$molecules) != 0){
-        #Code to extract columns with the given values FALSE
-        for (i in 1:length(check_rib)){
-          # pick entity data
-          entid <- check_rib[i]
-          ent <- IDsummary_geom[[1]]$molecules[IDsummary_geom[[1]]$molecules$entity_id == entid, "chains"]
-          
-          # loop over chains in the given entity
-          if (length(ent) != 0){
-            for (row_ch in 1:nrow(ent[[1]])) {
-              # pick data of given chain
-              ent_ch <- ent[[1]][row_ch, ]
-              # save chain
-              chain <- ent_ch$chain_id
-              for (m in (names(ent_ch$models[[1]]$outlier_types))){
-                table3[, m] <- FALSE
-              }
-            }
-          }
+
+    if (length(check_rib) == 0) {
+        if (force) {
+            return(NULL)
+        } else {
+            stop(paste("Are you sure ", pdbID, " has a nucleic acid?", sep=""))
         }
-      }
     }
+
+    ## Make sure to have a reference data.frame to work with
+    if (is.null(ntinfo)) {
+        ntinfo <- veriNA3d:::.extract_ntinfo(pdbID=pdbID, model=model)
+    }
+    table3 <- getID(pdbID, ntinfo=ntinfo)
+    seq <- table3$seq
+    id_dssr <- table3$id_dssr
+    ## Modified id_dssr
+    resid <- ntinfo$resid
+    ntinfo$resid <- "nan"
+    id_dssr_mod <- getID(ntinfo=ntinfo)$id_dssr
+  
+    #--------------------------------------------------------------------------
+    ## Check for validation data of suite_outliers and pucker_outliers
+    IDsummary <- queryAPI(ID=pdbID, API="ebi", string1=
+                            "validation/RNA_pucker_suite_outliers/entry/", 
+                            string2="")
     
-    #Exctract the different types of outliers
-    if (length(check_rib) != 0) {
-      if(length(IDsummary_geom[[1]]$molecules) != 0){
+    ## suite_outliers
+    suite_out <- IDsummary[[1]]$suite_outliers
+    if (nrow(suite_out) == 0 || is.null(suite_out) || length(suite_out) == 0) {
+        table3$suite_outlier <- NA
+    } else {
+        suite_out$resid <- "nan"
+        names(suite_out) <- gsub("author_residue_number", "resno", names(suite_out))
+        names(suite_out) <- gsub("chain_id", "chain", names(suite_out))
+        names(suite_out) <- gsub("model_id", "model", names(suite_out))
+        names(suite_out) <- gsub("author_insertion_code", "insert", names(suite_out))
+        suite_out$insert[suite_out$insert == ""] <- "?"
+        id_suite <- getID(ntinfo=suite_out)$id_dssr
+    
+        table3$suite_outlier <- id_dssr_mod %in% id
+    }
+    ## pucker_outliers
+    pucker_out <- IDsummary[[1]]$pucker_outliers
+    if (nrow(pucker_out) == 0 || is.null(pucker_out) || length(pucker_out) == 0) {
+        table3$pucker_outlier <- NA
+    } else {
+        pucker_out$resid <- "nan"
+        names(pucker_out) <- gsub("author_residue_number", "resno", names(pucker_out))
+        names(pucker_out) <- gsub("chain_id", "chain", names(pucker_out))
+        names(pucker_out) <- gsub("model_id", "model", names(pucker_out))
+        names(pucker_out) <- gsub("author_insertion_code", "insert", names(pucker_out))
+        pucker_out$insert[pucker_out$insert == ""] <- "?"
+        id_suite <- getID(ntinfo=pucker_out)$id_dssr
+    
+        table3$pucker_outlier <- id_dssr_mod %in% id
+    }
+
+    #--------------------------------------------------------------------------
+    #Check for validation data of geometrical outliers
+    String1 <- "validation/protein-RNA-DNA-geometry-outlier-residues/entry/"
+    IDsummary_geom <- queryAPI(ID=pdbID, API="ebi",
+                               string1=String1, string2 = "")
+    
+    ## Initiate columns
+    table3$clashes <- NA
+    table3$bond_lengths <- NA
+    table3$bond_angles <- NA
+    table3$chirals <- NA
+    table3$planes <- NA
+
+    outlier_types <- names(IDsummary_geom[[1]]$molecules$chains[[1]]$models[[1]]$outlier_types)
+
+    if (!(is.null(outlier_types) | length(outlier_types) == 0)) {
+        ## Fill with FALSE the columns that will actually have data
+        for (m in outlier_types) {
+            table3[, m] <- FALSE
+        }
+
+        #Exctract the different types of outliers
         for (i in 1:length(check_rib)){
-          # pick entity data
-          entid <- check_rib[i]
-          ent <- IDsummary_geom[[1]]$molecules[IDsummary_geom[[1]]$molecules$entity_id == entid, "chains"]
-          #Code for highlighting the planes into the existing data 
-          for (i in 1:length(check_rib)){
             # pick entity data
             entid <- check_rib[i]
             ent <- IDsummary_geom[[1]]$molecules[IDsummary_geom[[1]]$molecules$entity_id == entid, "chains"]
-            
             # loop over chains in the given entity
             if(length(ent) != 0){
-              for (row_ch in 1:nrow(ent[[1]])) {
-                # pick data of given chain
-                ent_ch <- ent[[1]][row_ch, ]
-                # save chain
-                chain <- ent_ch$chain_id
-                for (m in (names(ent_ch$models[[1]]$outlier_types))){
-                  # save data about clashes ... or whatever
-                  te <- ent_ch$models[[1]]$outlier_types[, m]
-                  #Create a resno.chain structure of the pucker_outliers
-                  te_auth_id <- te[[1]]$author_residue_number
-                  
-                  #Extract the insert and add it into the resno
-                  te_insert_id <- te[[1]]$author_insertion_code
-                  index3 <- which(grepl("[QWERTYUIOPASDFGHJKLZXCVBNM123456789987654321]", te_insert_id, perl=T))
-                  for(i in index3){
-                    te_auth_id[i] <- paste(te_auth_id[i], te_insert_id[i], sep="^")
-                  }
-                  
-                  te_total_id <- paste(te_auth_id, chain, sep=".")
-                  
-                  #check the pucker_outliers presence in the total ntd data
-                  table3[, m][which(total %in% te_total_id)] <- TRUE
+                for (row_ch in 1:nrow(ent[[1]])) {
+                    # pick data of given chain
+                    ent_ch <- ent[[1]][row_ch, ]
+                    # save chain
+                    chain <- ent_ch$chain_id
+                    for (m in outlier_types){
+                        # save data about clashes ... or whatever
+                        te <- ent_ch$models[[1]]$outlier_types[, m]
+                        #Create a resno.chain structure of the pucker_outlie
+                        te_auth_id <- te[[1]]$author_residue_number
+                        
+                        #Extract the insert and add it into the resno
+                        te_insert_id <- te[[1]]$author_insertion_code
+                        index3 <- which(grepl(pattern, te_insert_id, perl=T))
+                        for(j in index3){
+                          te_auth_id[j] <- paste(te_auth_id[j], te_insert_id[j], sep="^")
+                        }
+                        
+                        te_total_id <- paste(te_auth_id, chain, sep=".")
+                        
+                        #check the pucker_outliers presence in the total ntd data
+                        table3[, m][which(total %in% te_total_id)] <- TRUE
+                    }
                 }
-              }
             }
-          }
         }
-      }
     }
-    #------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
     
     #Check for validation data of rsrz
     IDsummary_rsrz <- queryAPI(ID = pdbID, API  = "ebi",
@@ -246,7 +191,7 @@ validation <- function(pdbID, ntinfo=NULL){
         }
         
         #Extrct insert indexes from the vector
-        index7 <- which(grepl("[QWERTYUIOPASDFGHJKLZXCVBNM123456789987654321]", map_insert, perl=T))
+        index7 <- which(grepl(pattern, map_insert, perl=T))
         
         #Determine length of the whole nucleotide list and crete a list
         l <- length(as.list(droplevels(map_ntd[3,])))
@@ -401,7 +346,7 @@ getID <- function(pdbID=NULL, ntinfo=NULL){
         return(ntinfo)
     }
 
-    ntinfo <- lapply(pdbID, function(x) {return(checkNuc(cifAsPDB(x)))})
+    ntinfo <- lapply(pdbID, function(x) {return(checkNuc(cifAsPDB(x), ...=...))})
     ntinfo <- do.call(rbind, ntinfo)
     ntinfo$ntID <- seq(1, nrow(ntinfo), 1)
 
