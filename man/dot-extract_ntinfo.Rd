@@ -9,6 +9,8 @@
 \arguments{
 \item{pdbID}{A list/vector containing the desired PDB IDs or a list of pdb
 objects as provided by "read.pdb", "read.cif", "cifParser" ...}
+
+\item{...}{Arguments to be passed to the checkNuc function}
 }
 \value{
 A data.frame with data about every nucleotide in the input set.
