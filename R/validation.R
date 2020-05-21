@@ -43,49 +43,39 @@ validation <- function(pdbID, ntinfo=NULL, model="all", force=FALSE) {
     table3 <- getID(pdbID, ntinfo=ntinfo)
     seq <- table3$seq
     id_dssr <- table3$id_dssr
+    total <- paste(ntinfo$resno, ntinfo$chain, sep=".")
     ## Modified id_dssr
     resid <- ntinfo$resid
     ntinfo$resid <- "nan"
     id_dssr_mod <- getID(ntinfo=ntinfo)$id_dssr
   
-    #--------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
     ## Check for validation data of suite_outliers and pucker_outliers
     IDsummary <- queryAPI(ID=pdbID, API="ebi", string1=
                             "validation/RNA_pucker_suite_outliers/entry/", 
                             string2="")
-    
     ## suite_outliers
     suite_out <- IDsummary[[1]]$suite_outliers
     if (nrow(suite_out) == 0 || is.null(suite_out) || length(suite_out) == 0) {
         table3$suite_outlier <- NA
     } else {
-        suite_out$resid <- "nan"
-        names(suite_out) <- gsub("author_residue_number", "resno", names(suite_out))
-        names(suite_out) <- gsub("chain_id", "chain", names(suite_out))
-        names(suite_out) <- gsub("model_id", "model", names(suite_out))
-        names(suite_out) <- gsub("author_insertion_code", "insert", names(suite_out))
-        suite_out$insert[suite_out$insert == ""] <- "?"
+        suite_out <- .manage_it(suite_out)
         id_suite <- getID(ntinfo=suite_out)$id_dssr
     
-        table3$suite_outlier <- id_dssr_mod %in% id
+        table3$suite_outlier <- id_dssr_mod %in% id_suite
     }
     ## pucker_outliers
     pucker_out <- IDsummary[[1]]$pucker_outliers
     if (nrow(pucker_out) == 0 || is.null(pucker_out) || length(pucker_out) == 0) {
         table3$pucker_outlier <- NA
     } else {
-        pucker_out$resid <- "nan"
-        names(pucker_out) <- gsub("author_residue_number", "resno", names(pucker_out))
-        names(pucker_out) <- gsub("chain_id", "chain", names(pucker_out))
-        names(pucker_out) <- gsub("model_id", "model", names(pucker_out))
-        names(pucker_out) <- gsub("author_insertion_code", "insert", names(pucker_out))
-        pucker_out$insert[pucker_out$insert == ""] <- "?"
-        id_suite <- getID(ntinfo=pucker_out)$id_dssr
+        pucker_out <- .manage_it(pucker_out)
+        id_puc <- getID(ntinfo=pucker_out)$id_dssr
     
-        table3$pucker_outlier <- id_dssr_mod %in% id
+        table3$pucker_outlier <- id_dssr_mod %in% id_puc
     }
 
-    #--------------------------------------------------------------------------
+    #-------------------------------------------------------------------------
     #Check for validation data of geometrical outliers
     String1 <- "validation/protein-RNA-DNA-geometry-outlier-residues/entry/"
     IDsummary_geom <- queryAPI(ID=pdbID, API="ebi",
@@ -107,6 +97,7 @@ validation <- function(pdbID, ntinfo=NULL, model="all", force=FALSE) {
         }
 
         #Exctract the different types of outliers
+        ## Loop over entities
         for (i in 1:length(check_rib)){
             # pick entity data
             entid <- check_rib[i]
@@ -119,22 +110,16 @@ validation <- function(pdbID, ntinfo=NULL, model="all", force=FALSE) {
                     # save chain
                     chain <- ent_ch$chain_id
                     for (m in outlier_types){
-                        # save data about clashes ... or whatever
+                        ## Append data of different models (for NMR)
                         te <- ent_ch$models[[1]]$outlier_types[, m]
-                        #Create a resno.chain structure of the pucker_outlie
-                        te_auth_id <- te[[1]]$author_residue_number
-                        
-                        #Extract the insert and add it into the resno
-                        te_insert_id <- te[[1]]$author_insertion_code
-                        index3 <- which(grepl(pattern, te_insert_id, perl=T))
-                        for(j in index3){
-                          te_auth_id[j] <- paste(te_auth_id[j], te_insert_id[j], sep="^")
-                        }
-                        
-                        te_total_id <- paste(te_auth_id, chain, sep=".")
-                        
-                        #check the pucker_outliers presence in the total ntd data
-                        table3[, m][which(total %in% te_total_id)] <- TRUE
+                        te <- lapply(1:length(te), function(x) {return(cbind(model=x, te[[x]]))})
+                        te <- do.call(rbind, te)
+                        te$chain <- chain
+                        te <- .manage_it(te)
+                        id_local <- getID(ntinfo=te)$id_dssr
+
+                        # save data about clashes ... or whatever
+                        table3[, m][which(id_dssr_mod %in% id_local)] <- TRUE
                     }
                 }
             }
@@ -158,96 +143,95 @@ validation <- function(pdbID, ntinfo=NULL, model="all", force=FALSE) {
     if (is.na(look[1]) == TRUE){
       #print("no rsrz") #nothing, means that there is no rsrz value in there
     }else{
-      #Segmentate strings and get the chain_id, residue and resno
-      maps <- list()
-      
-      for (i in rsrz_out){
-        maps[i] <- list(strsplit(as.character(i), "\\|")[[1]][c(3,4, 5, 8)])
-      }
-      
-      map2 <- as.data.frame(maps)
-      
-      
-      #Creation of a data frame with the single nucleotides, remove any AA fragment
-      c <- c("A", "C", "G", "U")
-      
-      m <- list()
-      #l[2,90] %in% c
-      
-      for(i in 1:length(map2)){
-        m[i] <- as.character(map2[2, i]) 
-      }
-      
-      # Creation of map_ntd (contains units) ans value_ntd(contains values) only for the nucleotides. Remove all proteic residues
-      map_ntd <- map2[which(m %in% c)]
-      value_ntd <- rsrz$value[which(m %in% c)]
-      
-      #Extract the column that contains the insert values for each nucleotide
-      map_insert <- list()
-      
-      if(length(map_ntd) != 0){
-        for(i in 1:length(map_ntd)){
-          map_insert[i] <- as.character(droplevels(map_ntd[4, i ]))
+        #Segmentate strings and get the chain_id, residue and resno
+        maps <- list()
+        for (i in rsrz_out){
+            maps[i] <- list(strsplit(as.character(i), "\\|")[[1]][c(3,4, 5, 8)])
         }
         
-        #Extrct insert indexes from the vector
-        index7 <- which(grepl(pattern, map_insert, perl=T))
+        map2 <- as.data.frame(maps)
         
-        #Determine length of the whole nucleotide list and crete a list
-        l <- length(as.list(droplevels(map_ntd[3,])))
-        l <- list(1:l)
-        l <- as.list(l[[1]])
-        index7 <- as.list(index7)
         
-        #Determine with TRUE the index which are not in l and with FALSE the ones which are in both lists
-        `%notin%` <- Negate(`%in%`)
-        clar <- l %notin% index7
+        #Creation of a data frame with the single nucleotides, remove any AA fragment
+        c <- c("A", "C", "G", "U")
         
-        map_ntd_insert <- list()
+        m <- list()
+        #l[2,90] %in% c
         
-        #Run through the index and copy the insert when needed
-        for (i in 1:length(l)){
-          if(clar[i] == TRUE){
-            map_ntd_insert[i] <- as.character(droplevels(map_ntd[3, i]))
-          }else{
-            map_ntd_insert[i] <- paste(as.character(droplevels(map_ntd[3, i])), as.character(droplevels(map_ntd[4, i])), sep="^")
-          }
+        for(i in 1:length(map2)){
+            m[i] <- as.character(map2[2, i]) 
         }
         
-        # Create an empty list and operate over map_ntd to pase the index of the chain_id with the index of the resno
-        chain_resno <- list()
+        # Creation of map_ntd (contains units) ans value_ntd(contains values) only for the nucleotides. Remove all proteic residues
+        map_ntd <- map2[which(m %in% c)]
+        value_ntd <- rsrz$value[which(m %in% c)]
         
-        #Create the resno.chain identifier for the rsrz
-        for (i in 1:length(l)){
-          chain_resno[i] <- paste(as.character(map_ntd_insert[i]), as.character(droplevels(map_ntd[1, i])), sep = ".")
+        #Extract the column that contains the insert values for each nucleotide
+        map_insert <- list()
+        
+        if(length(map_ntd) != 0){
+            for(i in 1:length(map_ntd)){
+                map_insert[i] <- as.character(droplevels(map_ntd[4, i ]))
+            }
+            
+            #Extrct insert indexes from the vector
+            index7 <- which(grepl("[QWERTYUIOPASDFGHJKLZXCVBNM123456789987654321]", map_insert, perl=T))
+            
+            #Determine length of the whole nucleotide list and crete a list
+            l <- length(as.list(droplevels(map_ntd[3,])))
+            l <- list(1:l)
+            l <- as.list(l[[1]])
+            index7 <- as.list(index7)
+            
+            #Determine with TRUE the index which are not in l and with FALSE the ones which are in both lists
+            `%notin%` <- Negate(`%in%`)
+            clar <- l %notin% index7
+            
+            map_ntd_insert <- list()
+            
+            #Run through the index and copy the insert when needed
+            for (i in 1:length(l)){
+                if(clar[i] == TRUE){
+                    map_ntd_insert[i] <- as.character(droplevels(map_ntd[3, i]))
+                }else{
+                    map_ntd_insert[i] <- paste(as.character(droplevels(map_ntd[3, i])), as.character(droplevels(map_ntd[4, i])), sep="^")
+                }
+            }
+            
+            # Create an empty list and operate over map_ntd to pase the index of the chain_id with the index of the resno
+            chain_resno <- list()
+            
+            #Create the resno.chain identifier for the rsrz
+            for (i in 1:length(l)){
+                chain_resno[i] <- paste(as.character(map_ntd_insert[i]), as.character(droplevels(map_ntd[1, i])), sep = ".")
+            }
+            
+            table3$rsrz <- FALSE
+            
+            #Creation of the column and set values to TRUE when there is an rsrz
+            chain_resno <- as.character(chain_resno)
+            table3$rsrz[which(total %in% chain_resno)] <- TRUE
+            
+            #----------------------------------------------------
+            
+            #Now we are going to create another row with the value of rsrz
+            li <- list()
+            table3$value_rsrz <- FALSE
+            
+            #Create a list that appends the reno and the value_ntd (which is the value of the rsrz)
+            for (i in 1:length(chain_resno)){
+                li[[i]] <- append(chain_resno[i], value_ntd[i])
+            }
+            
+            #Change those chain_resno which are set to FALSE to their correct value. Leave the others as FALSE
+            for(i in 1:length(li)){
+                #check[[i]] <- which(total %in% li[[i]][1])
+                table3$value_rsrz[which(total %in% li[[i]][1])] <- li[[i]][2]
+        
+            }
         }
-        
-        table3$rsrz <- FALSE
-        
-        #Creation of the column and set values to TRUE when there is an rsrz
-        chain_resno <- as.character(chain_resno)
-        table3$rsrz[which(total %in% chain_resno)] <- TRUE
-        
-        #----------------------------------------------------
-        
-        #Now we are going to create another row with the value of rsrz
-        li <- list()
-        table3$value_rsrz <- FALSE
-        
-        #Create a list that appends the reno and the value_ntd (which is the value of the rsrz)
-        for (i in 1:length(chain_resno)){
-          li[[i]] <- append(chain_resno[i], value_ntd[i])
-        }
-        
-        #Change those chain_resno which are set to FALSE to their correct value. Leave the others as FALSE
-        for(i in 1:length(li)){
-          #check[[i]] <- which(total %in% li[[i]][1])
-          table3$value_rsrz[which(total %in% li[[i]][1])] <- li[[i]][2]
-      
-        }
-      }
-      return(table3)
-      #----------------------------------------------------------------------------
+        return(table3)
+        #---------------------------------------------------------------------
     }
     return(table3)
 }
@@ -351,4 +335,14 @@ getID <- function(pdbID=NULL, ntinfo=NULL){
     ntinfo$ntID <- seq(1, nrow(ntinfo), 1)
 
     return(ntinfo)
+}
+
+.manage_it <- function(df) {
+    df$resid <- "nan"
+    names(df) <- gsub("author_residue_number", "resno", names(df))
+    names(df) <- gsub("chain_id", "chain", names(df))
+    names(df) <- gsub("model_id", "model", names(df))
+    names(df) <- gsub("author_insertion_code", "insert", names(df))
+    df$insert[df$insert == ""] <- "?"
+    return(df)
 }

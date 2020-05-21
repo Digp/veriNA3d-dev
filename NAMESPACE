@@ -54,6 +54,7 @@ export(
     findHDR,
 
     getAltRepres,
+    getID,
     getRNAList,
 
     hasHetAtm,
@@ -99,5 +100,7 @@ export(
     selectModel,
 
     trimByID,
-    trimSphere
+    trimSphere,
+
+    validation
 )
