@@ -38,7 +38,7 @@ validation <- function(pdbID, ntinfo=NULL, model="all", force=FALSE) {
 
     ## Make sure to have a reference data.frame to work with
     if (is.null(ntinfo)) {
-        ntinfo <- veriNA3d:::.extract_ntinfo(pdbID=pdbID, model=model)
+        ntinfo <- .extract_ntinfo(pdbID=pdbID, model=model)
     }
     table3 <- getID(pdbID, ntinfo=ntinfo)
     seq <- table3$seq
@@ -294,6 +294,7 @@ getID <- function(pdbID=NULL, ntinfo=NULL){
 #'
 #' @param pdbID A list/vector containing the desired PDB IDs or a list of pdb
 #'     objects as provided by "read.pdb", "read.cif", "cifParser" ...
+#' @param ... Arguments to be passed to the checkNuc function
 #'
 #' @return A data.frame with data about every nucleotide in the input set.
 #'
