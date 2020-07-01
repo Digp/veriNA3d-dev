@@ -281,6 +281,8 @@ colnames(.angles) <- c("atomA", "atomB", "atomC", "labels")
                     "H2'",      "C2'",   "O2'",      "HO2'",        "kappa",
                     "pre_C4'",  "P",     "C4'",      "post_P",      "eta",
                     "P",        "C4'",   "post_P",   "post_C4'",    "theta",
+                    "pre_C1'",  "P",     "C1'",      "post_P",      "eta_prime",
+                    "P",        "C1'",   "post_P",   "post_C1'",    "theta_prime",
                     "O4'",      "C1'",   "N_base",   "C_base",      "chi"
                     ), ncol=5, byrow=TRUE),
                 stringsAsFactors=FALSE)
