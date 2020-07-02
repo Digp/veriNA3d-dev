@@ -99,7 +99,9 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
 
     ## Make sure the pdb object has the necessary format ---------------------
     pdb <- .perfect_input_format(pdb)
-
+    if (any(grepl("eta_com", torsionals$labels))) {
+        pdb <- .adddummy(pdb, refatm=refatm)
+    }
     ## Find all combinations of models and chains to be computed -------------
     combinations <- expand.grid(model, chain, stringsAsFactors=FALSE)
     names(combinations) <- c("model", "chain")
@@ -283,6 +285,8 @@ colnames(.angles) <- c("atomA", "atomB", "atomC", "labels")
                     "P",        "C4'",   "post_P",   "post_C4'",    "theta",
                     "pre_C1'",  "P",     "C1'",      "post_P",      "eta_prime",
                     "P",        "C1'",   "post_P",   "post_C1'",    "theta_prime",
+                    "pre_com", "P",     "com",     "post_P",      "eta_com",
+                    "P",        "com",  "post_P",   "post_com",   "theta_com",
                     "O4'",      "C1'",   "N_base",   "C_base",      "chi"
                     ), ncol=5, byrow=TRUE),
                 stringsAsFactors=FALSE)
@@ -912,3 +916,36 @@ data.frame(
     min=c(256.688, 142.805, 26.089, 65.463, 177.408, 260.382, 
             171.739, 146.844, 187.143), stringsAsFactors=FALSE, 
             row.names="angle")
+
+.adddummy <- function(pdb, refatm) {
+    pdb$atom$id <- getID(ntinfo=pdb$atom)$id_dssr
+    inds <- which(pdb$atom$elety == refatm)
+    atom <- pdb$atom
+    for (i in inds) {
+        id <- pdb$atom$id[i]
+        atominds <-  which(pdb$atom$id == id & 
+                            pdb$atom$elety %in% c("N1", "C2", "N3", "C4", "C5",
+                                                     "C6", "N7", "C8", "N9"))
+        if (length(atominds) != 0) {
+            row <- pdb$atom[i, ]
+            row$elety <- "com"
+            row$elesy <- "D"
+            if ("atom_id" %in% names(pdb)) {
+                row$atom_id <- "com"
+            }
+            row$x <- round(mean(pdb$atom$x[atominds]), 3)
+            row$y <- round(mean(pdb$atom$y[atominds]), 3)
+            row$z <- round(mean(pdb$atom$z[atominds]), 3)
+            resinds <- which(atom$id == id)
+            latest <- resinds[length(resinds)]
+            atom <- rbind(atom[1:latest,], row, atom[(latest + 1):nrow(atom),])
+        } else {
+            next()
+        }
+    }
+    atom$eleno <- 1:nrow(atom)
+
+    pdb$atom <- atom
+    pdb$xyz <- as.xyz(matrix(as.numeric(c(t(atom[,c("x","y","z")]))), nrow=1))
+    return(pdb)
+}
