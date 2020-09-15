@@ -99,7 +99,7 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
 
     ## Make sure the pdb object has the necessary format ---------------------
     pdb <- .perfect_input_format(pdb)
-    if (any(grepl("eta_com", torsionals$labels))) {
+    if (any(grepl("eta_prime2", torsionals$labels))) {
         pdb <- .adddummy(pdb, refatm=refatm)
     }
     ## Find all combinations of models and chains to be computed -------------
@@ -285,8 +285,8 @@ colnames(.angles) <- c("atomA", "atomB", "atomC", "labels")
                     "P",        "C4'",   "post_P",   "post_C4'",    "theta",
                     "pre_C1'",  "P",     "C1'",      "post_P",      "eta_prime",
                     "P",        "C1'",   "post_P",   "post_C1'",    "theta_prime",
-                    "pre_com", "P",     "com",     "post_P",      "eta_com",
-                    "P",        "com",  "post_P",   "post_com",   "theta_com",
+                    "pre_borg", "P",     "borg",     "post_P",      "eta_prime2",
+                    "P",        "borg",  "post_P",   "post_borg",   "theta_prime2",
                     "O4'",      "C1'",   "N_base",   "C_base",      "chi"
                     ), ncol=5, byrow=TRUE),
                 stringsAsFactors=FALSE)
@@ -921,21 +921,65 @@ data.frame(
     pdb$atom$id <- getID(ntinfo=pdb$atom)$id_dssr
     inds <- which(pdb$atom$elety == refatm)
     atom <- pdb$atom
+
+    data(references)
+    #Abase <- read.pdb("../A_ref.pdb")
+    #Cbase <- read.pdb("../C_ref.pdb")
+    #Gbase <- read.pdb("../G_ref.pdb")
+    #Tbase <- read.pdb("../T_ref.pdb")
+    #Ubase <- read.pdb("../U_ref.pdb")
+    #Asel2 <- atom.select(Abase, elety=c("N1", "C2", "N3", "C4", "C5", "C6", "N7", "C8", "N9"))
+    #Csel2 <- atom.select(Cbase, elety=c("N1", "C2", "N3", "C4", "C5", "C6"))
+    #Gsel2 <- atom.select(Gbase, elety=c("N1", "C2", "N3", "C4", "C5", "C6", "N7", "C8", "N9"))
+    #Tsel2 <- atom.select(Tbase, elety=c("N1", "C2", "N3", "C4", "C5", "C6", "C5M"))
+    #Usel2 <- atom.select(Ubase, elety=c("N1", "C2", "N3", "C4", "C5", "C6"))
+    #save(Abase, Cbase, Gbase, Tbase, Ubase, Asel2, Csel2, Gsel2, Tsel2, Usel2, file="data/references.rda")
+
     for (i in inds) {
         id <- pdb$atom$id[i]
         atominds <-  which(pdb$atom$id == id & 
-                            pdb$atom$elety %in% c("N1", "C2", "N3", "C4", "C5",
+                            pdb$atom$elety %in% c("N1", "C2", "N3", "C4", "C5", "C5M",
                                                      "C6", "N7", "C8", "N9"))
         if (length(atominds) != 0) {
+            sel1 <- atom.select(pdb, eleno=pdb$atom$eleno[atominds])
+            if (pdb$atom[atominds, "resid"][1] %in% c("A", "DA")) {
+                base <- Abase
+                sel2 <- Asel2
+            } else if (pdb$atom[atominds, "resid"][1] %in% c("C", "DC")) {
+                base <- Cbase
+                sel2 <- Csel2
+            } else if (pdb$atom[atominds, "resid"][1] %in% c("G", "DG")) {
+                base <- Gbase
+                sel2 <- Gsel2
+            } else if (pdb$atom[atominds, "resid"][1] %in% c("T", "DT")) {
+                base <- Tbase
+                sel2 <- Tsel2
+            } else if (pdb$atom[atominds, "resid"][1] %in% c("U", "DU")) {
+                base <- Ubase
+                sel2 <- Usel2
+            } else if (all(c("N7", "C8", "N9") %in% pdb$atom$elety[sel1$atom])) {
+                base <- Gbase
+                sel2 <- Gsel2
+            } else if ("C5M" %in% pdb$atom$elety[sel1$atom]) {
+                base <- Tbase
+                sel2 <- Tsel2
+            } else {
+                base <- Ubase
+                sel2 <- Usel2
+            }
+            xyz <- fit.xyz(pdb$xyz, base$xyz, fixed.inds=sel1$xyz, mobile.inds=sel2$xyz)
+
             row <- pdb$atom[i, ]
-            row$elety <- "com"
+            row$elety <- "borg"
             row$elesy <- "D"
             if ("atom_id" %in% names(pdb)) {
-                row$atom_id <- "com"
+                row$atom_id <- "borg"
             }
-            row$x <- round(mean(pdb$atom$x[atominds]), 3)
-            row$y <- round(mean(pdb$atom$y[atominds]), 3)
-            row$z <- round(mean(pdb$atom$z[atominds]), 3)
+            #row$x <- round(mean(pdb$atom$x[atominds]), 3)
+            #row$y <- round(mean(pdb$atom$y[atominds]), 3)
+            #row$z <- round(mean(pdb$atom$z[atominds]), 3)
+            row[, c("x", "y", "z")] <- xyz[(length(xyz)-2):length(xyz)]
+
             resinds <- which(atom$id == id)
             latest <- resinds[length(resinds)]
             atom <- rbind(atom[1:latest,], row, atom[(latest + 1):nrow(atom),])
