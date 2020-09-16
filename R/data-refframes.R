@@ -4,8 +4,8 @@
 #'
 #' @docType data
 #'
-#' @usage data(references)
+#' @usage data("refframes")
 #'
 #' @return Multiple objects with pdb format
 #'
-"references"
+"refframes"

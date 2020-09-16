@@ -922,52 +922,105 @@ data.frame(
     inds <- which(pdb$atom$elety == refatm)
     atom <- pdb$atom
 
-    data(references)
+    data("refframes")
     #Abase <- read.pdb("../A_ref.pdb")
     #Cbase <- read.pdb("../C_ref.pdb")
     #Gbase <- read.pdb("../G_ref.pdb")
     #Tbase <- read.pdb("../T_ref.pdb")
     #Ubase <- read.pdb("../U_ref.pdb")
-    #Asel2 <- atom.select(Abase, elety=c("N1", "C2", "N3", "C4", "C5", "C6", "N7", "C8", "N9"))
-    #Csel2 <- atom.select(Cbase, elety=c("N1", "C2", "N3", "C4", "C5", "C6"))
-    #Gsel2 <- atom.select(Gbase, elety=c("N1", "C2", "N3", "C4", "C5", "C6", "N7", "C8", "N9"))
-    #Tsel2 <- atom.select(Tbase, elety=c("N1", "C2", "N3", "C4", "C5", "C6", "C5M"))
-    #Usel2 <- atom.select(Ubase, elety=c("N1", "C2", "N3", "C4", "C5", "C6"))
-    #save(Abase, Cbase, Gbase, Tbase, Ubase, Asel2, Csel2, Gsel2, Tsel2, Usel2, file="data/references.rda")
-
+    #sos <- read.pdb("../sos.pdb")
+    #Asel2 <- atom.select(Abase, 
+    #elety=c("C1'", "N1", "C2", "N3", "C4", "C5", "C6", "N7", "C8", "N9"))
+    #Csel2 <- atom.select(Cbase, 
+    #elety=c("C1'", "N1", "C2", "N3", "C4", "C5", "C6"))
+    #Gsel2 <- atom.select(Gbase, 
+    #elety=c("C1'", "N1", "C2", "N3", "C4", "C5", "C6", "N7", "C8", "N9"))
+    #Tsel2 <- atom.select(Tbase, 
+    #elety=c("C1'", "N1", "C2", "N3", "C4", "C5", "C6", "C5M"))
+    #Usel2 <- atom.select(Ubase, 
+    #elety=c("C1'", "N1", "C2", "N3", "C4", "C5", "C6"))
+    #ssel2 <- atom.select(sos, elety=c("C1'", "N"))
+    #refframes <- list(Abase=Abase, Cbase=Cbase, Gbase=Gbase, Tbase=Tbase, 
+    #                  Ubase=Ubase, sos=sos, Asel2=Asel2, Csel2=Csel2, 
+    #                  Gsel2=Gsel2, Tsel2=Tsel2, Usel2=Usel2, ssel2=ssel2)
+    #save(refframes, file="data/refframes.rda")
+    vec <- c("C1'", "N1", "C2", "N3", "C4", "C5", 
+              "C5M", "C6", "N7", "C8", "N9")
     for (i in inds) {
         id <- pdb$atom$id[i]
+        #print(id)
         atominds <-  which(pdb$atom$id == id & 
-                            pdb$atom$elety %in% c("N1", "C2", "N3", "C4", "C5", "C5M",
-                                                     "C6", "N7", "C8", "N9"))
+                            pdb$atom$elety %in% vec) 
         if (length(atominds) != 0) {
-            sel1 <- atom.select(pdb, eleno=pdb$atom$eleno[atominds])
+            ele <- pdb$atom$eleno[atominds]
+            sel1 <- atom.select(pdb, eleno=ele)
+            sel1$xyz <- matrix(sel1$xyz, ncol=3, byrow=T)
             if (pdb$atom[atominds, "resid"][1] %in% c("A", "DA")) {
-                base <- Abase
-                sel2 <- Asel2
+                base <- refframes$Abase
+                sel2 <- refframes$Asel2
             } else if (pdb$atom[atominds, "resid"][1] %in% c("C", "DC")) {
-                base <- Cbase
-                sel2 <- Csel2
+                base <- refframes$Cbase
+                sel2 <- refframes$Csel2
             } else if (pdb$atom[atominds, "resid"][1] %in% c("G", "DG")) {
-                base <- Gbase
-                sel2 <- Gsel2
+                base <- refframes$Gbase
+                sel2 <- refframes$Gsel2
             } else if (pdb$atom[atominds, "resid"][1] %in% c("T", "DT")) {
-                base <- Tbase
-                sel2 <- Tsel2
+                base <- refframes$Tbase
+                sel2 <- refframes$Tsel2
             } else if (pdb$atom[atominds, "resid"][1] %in% c("U", "DU")) {
-                base <- Ubase
-                sel2 <- Usel2
+                base <- refframes$Ubase
+                sel2 <- refframes$Usel2
             } else if (all(c("N7", "C8", "N9") %in% pdb$atom$elety[sel1$atom])) {
-                base <- Gbase
-                sel2 <- Gsel2
-            } else if ("C5M" %in% pdb$atom$elety[sel1$atom]) {
-                base <- Tbase
-                sel2 <- Tsel2
+                if ("N6" %in% atom$elety[which(atom$id == id)]) {
+                    base <- refframes$Abase
+                    sel2 <- refframes$Asel2
+                } else {
+                    base <- refframes$Gbase
+                    sel2 <- refframes$Gsel2
+                }
             } else {
-                base <- Ubase
-                sel2 <- Usel2
+                if (all(c("O4", "C5M") %in% atom$elety[which(atom$id == id)])) {
+                    base <- refframes$Tbase
+                    sel2 <- refframes$Tsel2
+                } else if ("O4" %in% atom$elety[which(atom$id == id)]) {
+                    base <- refframes$Ubase
+                    sel2 <- refframes$Usel2
+                } else {
+                    base <- refframes$Cbase
+                    sel2 <- refframes$Csel2
+                }
             }
+            bas <- base$atom$elety[base$atom$elety %in% vec]
+            mor <- order(match(pdb$atom$elety[sel1$atom], bas))
+            sel1$atom <- sel1$atom[mor]
+            sel1$xyz <- c(t(sel1$xyz[mor, ]))
+
             xyz <- fit.xyz(pdb$xyz, base$xyz, fixed.inds=sel1$xyz, mobile.inds=sel2$xyz)
+
+            a <- matrix(pdb$xyz[sel1$xyz], ncol=3, byrow=T)
+            b <- matrix(xyz[sel2$xyz], ncol=3, byrow=T)
+            #sqrt(rowSums((a - b)^2))
+            if (sum((a - b)^2) > 0.1) {
+                next()
+                #refele <- pdb$atom$eleno[pdb$atom$eleno %in% ele & 
+                #                          pdb$atom$elety == "C1'"]
+                #ele2 <- pdb$atom$eleno[pdb$atom$eleno %in% ele & 
+                #                      pdb$atom$elety != "C1'"]
+                #closest <- unlist(measureElenoDist(pdb, refeleno=refele, 
+                #                            eleno=ele2, n=1)["elety_B"])
+                #elety <- c("C1'", closest)
+                #atominds <-  which(pdb$atom$id == id &
+                #                    pdb$atom$elety %in% elety)
+                #sel1 <- atom.select(pdb, eleno=pdb$atom$eleno[atominds])
+                #sel1$xyz <- matrix(sel1$xyz, ncol=3, byrow=T)
+                #base <- refframes$sos
+                #sel2 <- refframes$ssel2
+                #bas <- c("C1'", closest)
+                #mor <- order(match(pdb$atom$elety[sel1$atom], bas))
+                #sel1$atom <- sel1$atom[mor]
+                #sel1$xyz <- c(t(sel1$xyz[mor, ]))
+                #xyz <- fit.xyz(pdb$xyz, base$xyz, fixed.inds=sel1$xyz, mobile.inds=sel2$xyz)
+            }
 
             row <- pdb$atom[i, ]
             row$elety <- "borg"
