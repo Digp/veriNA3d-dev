@@ -99,9 +99,6 @@ function(pdb, model=1, chain="all", v_shifted=TRUE, b_shifted=TRUE,
 
     ## Make sure the pdb object has the necessary format ---------------------
     pdb <- .perfect_input_format(pdb)
-    if (any(grepl("eta_prime2", torsionals$labels))) {
-        pdb <- .adddummy(pdb, refatm=refatm)
-    }
     ## Find all combinations of models and chains to be computed -------------
     combinations <- expand.grid(model, chain, stringsAsFactors=FALSE)
     names(combinations) <- c("model", "chain")
@@ -305,6 +302,9 @@ function(pdb, model, chain, v_shifted=TRUE, b_shifted=TRUE,
     if (select) {
         ## Selection of Model of interest ------------------------------------
         pdb <- selectModel(pdb=pdb, model=model, verbose=FALSE)
+        if (any(grepl("eta_prime2", torsionals$labels))) {
+            pdb <- .adddummy(pdb, refatm=refatm)
+        }
 
         ## Selection of Chain of interest ------------------------------------
         selection <- atom.select(pdb, chain=chain)
@@ -917,7 +917,8 @@ data.frame(
             171.739, 146.844, 187.143), stringsAsFactors=FALSE, 
             row.names="angle")
 
-.adddummy <- function(pdb, refatm) {
+.adddummy <- function(pdb, refatm="C4'", cores=1) {
+    #pdb <- selectModel(pdb=pdb, model=1)
     pdb$atom$id <- getID(ntinfo=pdb$atom)$id_dssr
     inds <- which(pdb$atom$elety == refatm)
     atom <- pdb$atom
@@ -945,13 +946,18 @@ data.frame(
     #                  Gsel2=Gsel2, Tsel2=Tsel2, Usel2=Usel2, ssel2=ssel2)
     #save(refframes, file="data/refframes.rda")
     vec <- c("C1'", "N1", "C2", "N3", "C4", "C5", 
-              "C5M", "C6", "N7", "C8", "N9")
-    for (i in inds) {
+              "C6", "N7", "C8", "N9")
+    #atom2 <- list()
+    #counter <- 1
+    #for (i in inds) {
+    atom2 <- .xlapply(inds, mc.cores=cores, mc.preschedule=TRUE,
+                    function(i, atom, vec) {
         id <- pdb$atom$id[i]
         #print(id)
         atominds <-  which(pdb$atom$id == id & 
-                            pdb$atom$elety %in% vec) 
-        if (length(atominds) != 0) {
+                            pdb$atom$elety %in% vec)
+        resinds <- which(atom$id == id)
+        if (length(atominds) > 1) {
             ele <- pdb$atom$eleno[atominds]
             sel1 <- atom.select(pdb, eleno=ele)
             sel1$xyz <- matrix(sel1$xyz, ncol=3, byrow=T)
@@ -991,35 +997,34 @@ data.frame(
                 }
             }
             bas <- base$atom$elety[base$atom$elety %in% vec]
+            if (!all(bas %in% pdb$atom$elety[atominds])) {
+                keep <- which(bas %in% pdb$atom$elety[atominds])
+                bas <- bas[keep]
+                sel2 <- atom.select(base, elety=pdb$atom$elety[atominds])
+            }
+
             mor <- order(match(pdb$atom$elety[sel1$atom], bas))
             sel1$atom <- sel1$atom[mor]
             sel1$xyz <- c(t(sel1$xyz[mor, ]))
 
+            if (length(sel1$atom) != length(sel2$atom)) {
+                #atom2[[counter]] <- atom[resinds,]
+                #counter <- counter + 1
+                #next()
+                return(atom[resinds,])
+            }
+
             xyz <- fit.xyz(pdb$xyz, base$xyz, fixed.inds=sel1$xyz, mobile.inds=sel2$xyz)
 
             a <- matrix(pdb$xyz[sel1$xyz], ncol=3, byrow=T)
+            #c <- matrix(base$xyz[sel2$xyz], ncol=3, byrow=T)
             b <- matrix(xyz[sel2$xyz], ncol=3, byrow=T)
             #sqrt(rowSums((a - b)^2))
             if (sum((a - b)^2) > 0.1) {
-                next()
-                #refele <- pdb$atom$eleno[pdb$atom$eleno %in% ele & 
-                #                          pdb$atom$elety == "C1'"]
-                #ele2 <- pdb$atom$eleno[pdb$atom$eleno %in% ele & 
-                #                      pdb$atom$elety != "C1'"]
-                #closest <- unlist(measureElenoDist(pdb, refeleno=refele, 
-                #                            eleno=ele2, n=1)["elety_B"])
-                #elety <- c("C1'", closest)
-                #atominds <-  which(pdb$atom$id == id &
-                #                    pdb$atom$elety %in% elety)
-                #sel1 <- atom.select(pdb, eleno=pdb$atom$eleno[atominds])
-                #sel1$xyz <- matrix(sel1$xyz, ncol=3, byrow=T)
-                #base <- refframes$sos
-                #sel2 <- refframes$ssel2
-                #bas <- c("C1'", closest)
-                #mor <- order(match(pdb$atom$elety[sel1$atom], bas))
-                #sel1$atom <- sel1$atom[mor]
-                #sel1$xyz <- c(t(sel1$xyz[mor, ]))
-                #xyz <- fit.xyz(pdb$xyz, base$xyz, fixed.inds=sel1$xyz, mobile.inds=sel2$xyz)
+                #atom2[[counter]] <- atom[resinds,]
+                #counter <- counter + 1
+                #next()
+                return(atom[resinds,])
             }
 
             row <- pdb$atom[i, ]
@@ -1033,13 +1038,24 @@ data.frame(
             #row$z <- round(mean(pdb$atom$z[atominds]), 3)
             row[, c("x", "y", "z")] <- xyz[(length(xyz)-2):length(xyz)]
 
-            resinds <- which(atom$id == id)
-            latest <- resinds[length(resinds)]
-            atom <- rbind(atom[1:latest,], row, atom[(latest + 1):nrow(atom),])
+            #latest <- resinds[length(resinds)]
+            #atom <- rbind(atom[1:latest,], row, atom[(latest + 1):nrow(atom),])
+            return(rbind(atom[resinds,], row))
+            #atom2[[counter]] <- atom[resinds,]
+            #atom2[[counter + 1]] <- row
+            #counter <- counter + 2
         } else {
-            next()
+            #atom2[[counter]] <- atom[resinds,]
+            #counter <- counter + 1
+            #next()
+            return(atom[resinds,])
         }
+    }, atom=atom, vec=vec)
+    if (length(atom2) == 0) {
+        #cat("No borg points added!\n")
+        return(pdb)
     }
+    atom <- do.call(rbind, atom2)
     atom$eleno <- 1:nrow(atom)
 
     pdb$atom <- atom
