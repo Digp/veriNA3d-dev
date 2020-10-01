@@ -158,6 +158,9 @@ function(ntinfo, field, ntID=NULL, na.rm=FALSE,
 #' @param units The unit to measure height and width (passed to the png() 
 #'     function).
 #' @param res Resolution (passed to the png() function).
+#' @param xlab String for X axis label
+#' @param ylab String for Y axis label
+#' @param zlab String for Z axis label
 #'
 #' @return A plot in screen, which can be directly saved  to a ".png" file.
 #'     * {plot2D} A scatter plot.
@@ -182,7 +185,7 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
             sd_over_mean_contours=c(1, 2, 4), etatheta=FALSE,
             points=NULL, colpoints="red", 
             file=NULL, width=15, height=15,
-            bg="white", units="cm", res=200) {
+            bg="white", units="cm", res=200, xlab="default", ylab="default") {
 
     ## Check input -----------------------------------------------------------
     ntID <- .giveMeValidntIDs(ntinfo, ntID)
@@ -218,16 +221,24 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
     }
 
     if (etatheta) {
+        if (xlab == "default") {
+            xlab <- expression(paste(eta, " (degrees)", sep=""))
+        }
+        if (ylab == "default") {
+            ylab <- expression(paste(theta, " (degrees)", sep=""))
+        }
         plot(x, y,
-                xlim=c(0, 360), ylim=c(0, 360),
-                xlab=expression(paste(eta, " (degrees)", sep="")),
-                ylab=expression(paste(theta, " (degrees)", sep="")),
+                xlim=c(0, 360), ylim=c(0, 360), xlab=xlab, ylab=ylab,
                 pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
     } else {
+        if (xlab == "default") {
+            xlab <- paste(x, " (degrees)", sep="")
+        }
+        if (ylab == "default") {
+            ylab <- paste(y, " (degrees)", sep="")
+        }
         plot(x, y,
-                xlim=c(0, 360), ylim=c(0, 360),
-                xlab=paste(x, " (degrees)", sep=""),
-                ylab=paste(y, " (degrees)", sep=""),
+                xlim=c(0, 360), ylim=c(0, 360), xlab=xlab, ylab=ylab,
                 pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
     }
 
@@ -286,7 +297,8 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
             defaultview=NULL, 
             thetaplot, phiplot, cleanerview=FALSE,
             file=NULL, width=15, height=15,
-            bg="white", units="cm", res=600) {
+            bg="white", units="cm", res=600, 
+            xlab="default", ylab="default", zlab="default") {
 
     ## Check input -----------------------------------------------------------
     ntID <- .giveMeValidntIDs(ntinfo, ntID)
@@ -363,14 +375,21 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
         png(file, width=width, height=height, bg=bg, units=units, res=res)
     }
 
+    if (xlab == "default") {
+        xlab <- x
+    }
+    if (ylab == "default") {
+        ylab <- y
+    }
+    if (zlab == "default") {
+        zlab <- ""
+    }
     par(mfrow=c(1, 1), mar=c(3, 3, 1.0, 3), cex=0.7, lty=1, las=1)
     persp3D(x=etaseq,
             y=thetaseq,
             z=newdensZ,
             border=NA, theta=thetaplot, phi=phiplot,
-            xlab=x,
-            ylab=y,
-            zlab="", lighting=TRUE)
+            xlab=xlab, ylab=ylab, zlab=zlab, lighting=TRUE)
 
     if (!is.null(file)) {
         dev.off()

@@ -22,7 +22,9 @@ plot2D(
   height = 15,
   bg = "white",
   units = "cm",
-  res = 200
+  res = 200,
+  xlab = "default",
+  ylab = "default"
 )
 
 plot3Ddens(
@@ -41,7 +43,10 @@ plot3Ddens(
   height = 15,
   bg = "white",
   units = "cm",
-  res = 600
+  res = 600,
+  xlab = "default",
+  ylab = "default",
+  zlab = "default"
 )
 }
 \arguments{
@@ -89,6 +94,10 @@ function).}
 
 \item{res}{Resolution (passed to the png() function).}
 
+\item{xlab}{String for X axis label}
+
+\item{ylab}{String for Y axis label}
+
 \item{defaultview}{A string to set different default options. Chose
 between '2Dupview', 'leftview' and 'rightview'.}
 
@@ -100,6 +109,8 @@ perspective.}
 
 \item{cleanerview}{A logical to remove the lower density region to get a
 cleaner plot.}
+
+\item{zlab}{String for Z axis label}
 }
 \value{
 A plot in screen, which can be directly saved  to a ".png" file.
