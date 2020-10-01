@@ -195,6 +195,8 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
     }
 
     ## Save x and y values ---------------------------------------------------
+    X <- x
+    Y <- y
     inds <- which(complete.cases(ntinfo[, c(x, y)]))
     useful <- ntinfo[inds, "ntID"]
     ntID <- ntID[ntID %in% useful]
@@ -232,10 +234,10 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
                 pch=19, cex=0.3, col="gray70", xaxt="n", yaxt="n")
     } else {
         if (xlab == "default") {
-            xlab <- paste(x, " (degrees)", sep="")
+            xlab <- paste(X, " (degrees)", sep="")
         }
         if (ylab == "default") {
-            ylab <- paste(y, " (degrees)", sep="")
+            ylab <- paste(Y, " (degrees)", sep="")
         }
         plot(x, y,
                 xlim=c(0, 360), ylim=c(0, 360), xlab=xlab, ylab=ylab,
