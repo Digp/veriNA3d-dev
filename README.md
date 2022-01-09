@@ -26,7 +26,7 @@ Instructions for Unix systems
 
     wget mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d-dev/repository/archive.zip?ref=master -O veriNA3d_0.99.0.zip
     unzip veriNA3d_0.99.0.zip
-    mv veriNA3d-master* veriNA3d_0.99.0
+    mv veriNA3d-dev-master* veriNA3d_0.99.0
 
 3- Build and install it:
     In the same directory run:
