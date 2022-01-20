@@ -44,17 +44,19 @@ trimByID <-
 function(cif=NULL, ntID, ntinfo, prev=2, post=2,
             verbose=TRUE, file=NULL, justbackbone=FALSE, ...) {
 
-    row.names(ntinfo) <- ntinfo$ntID
+    id <- ntinfo$ntID == ntID
+    #row.names(ntinfo) <- ntinfo$ntID
     if (is.null(cif)) 
-        cif <- ntinfo[as.character(ntID), "pdbID"]
+        cif <- ntinfo[id, "pdbID"]
+        #cif <- ntinfo[as.character(ntID), "pdbID"]
 
     desired <- .select_ntID_neighbours(ntID=ntID, ntinfo=ntinfo,
                                         prev=prev, post=post, 
                                         verbose=verbose)
 
-    ntindex <- ntinfo[as.character(desired), "ntindex"]
-    chain <- ntinfo[as.character(ntID), "chain"]
-    model <- ntinfo[as.character(ntID), "model"]
+    ntindex <- ntinfo[ntinfo$ntID %in% desired, "ntindex"]
+    chain   <- ntinfo[id, "chain"]
+    model   <- ntinfo[id, "model"]
 
     pdb <- trimSphere(cif=cif, ntindex=ntindex, model=model,
                         chain=chain, verbose=verbose, ...=...)
@@ -147,7 +149,7 @@ function(ntID, ntinfo, prev=2, post=2,
         if (verbose) {
             print(paste("The nucleotide ", ntID,
                         " (ntID) doesn't have as many neighbours at",
-                        " 3' as specified", sep=""))
+                        " 5' as specified", sep=""))
         }
         while (chain_pos-prev <= 0) {
             out.1 <- append(out.1, NA)
@@ -160,7 +162,7 @@ function(ntID, ntinfo, prev=2, post=2,
         if (verbose)
             print(paste("The nucleotide ", ntID,
                         " (ntID) doesn't have as many neighbours at",
-                        " 5' as specified", sep=""))
+                        " 3' as specified", sep=""))
         while (chain_pos + post > length_chain) {
             out.2 <- append(NA, out.2)
             post <- post-1
