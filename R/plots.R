@@ -259,8 +259,8 @@ function(ntinfo, ntID=NULL, dens=NULL, bandwidths=NULL,
     ## If necessary, add points in a different color -------------------------
     if (!is.null(points)) {
         points <- points[points %in% useful]
-        points(ntinfo[ntinfo$ntID %in% points, x],
-                ntinfo[ntinfo$ntID %in% points, y],
+        points(ntinfo[ntinfo$ntID %in% points, X],
+                ntinfo[ntinfo$ntID %in% points, Y],
                 col=colpoints, pch=19, cex=0.3)
     }
 
