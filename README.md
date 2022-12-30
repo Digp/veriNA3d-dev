@@ -3,7 +3,7 @@
 Paper: https://academic.oup.com/bioinformatics/article/35/24/5334/5529936
 Citation details below.
 
-This is the new repository where I will make updates on the veriNA3d R package (development version), if necessary.
+This is the new repository where I will make updates on the veriNA3d R package (**development** version), if necessary.
 It can still be found at the original site: http://mmb.irbbarcelona.org/gitlab/dgallego/veriNA3d-dev, but the mainteinance there is discontinued.
 
 ## Description
