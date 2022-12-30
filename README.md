@@ -28,7 +28,7 @@ Instructions for Unix systems
 
     install.packages(c("bio3d", "circlize", "jsonlite", "plot3D", "MASS", "RColorBrewer", "RANN", "knitr", "rmarkdown", "devtools"))
 
-2- Download veriNA3d and uncompress
+2- Download or clone veriNA3d
 
 3- Build and install it:
 &nbsp;
