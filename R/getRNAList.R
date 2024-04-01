@@ -89,17 +89,18 @@ function(release="current", threshold="all", as.df=FALSE) {
 
 ## Manage format of data for a given entry (equivalence class)
 .see_equivalence_class <- function(x, text, indices, release, threshold) {
+    #print(x)
     splited_terms <- strsplit(text[indices[x]], split="/")[[1]]
 
     ## Obtain the name of the equivalence class ------------------------------
     ind1 <- grep(pattern=paste("NR_", threshold, "_", sep=""), splited_terms)
     if (length(ind1)!=1) {
-    stop("!")
+        stop("!")
     }
     eq_class <- strsplit(splited_terms[ind1], split="\"")[[1]][1]
 
     ## Obtain the representant of the equivalence class ----------------------
-    ind2 <- grep(pattern="strong class=\"pdb\"", splited_terms)
+    ind2 <- grep(pattern="a class=\"pdb\"", splited_terms)
     if (length(ind2)!=1) {
         stop("!")
     }
