@@ -269,8 +269,19 @@ function(data, totalfields) {
 .cifAsPDB <-
 function(cif, model=NULL, chain=NULL, alt=c("A"), verbose=FALSE) {
 
+    ## Get coordinates
+    atom_site <- cifAtom_site(cif)
+
+    ## Verify expected columns exist
+    for (col in .colNames[,2]) {
+        if (!col %in% names(atom_site)) {
+            # If the columns don't exist, assign NA
+            atom_site[[col]] <- NA
+        }
+    }
+
     ## Take coordinates with columns ordered as pdb objects (bio3d S3)
-    atom <- cifAtom_site(cif)[, .colNames[, 2]]
+    atom <- atom_site[, .colNames[,2], drop = FALSE]
     names(atom) <- .colNames[, 1]
 
     ## In case there are Sodium ions ("NA"), replace them by "Na" string 
