@@ -1,3 +1,6 @@
+**** version 1.0.4 - 08 Feb 2025
++ Update cifAsPDB function to process cif files from AF3 software
+
 **** version 1.0.3 - 16 Sep 2020
 + Added eta''-theta'' definitions in measureNuc/pipeNucData outputs
 + Added xlab, ylab, zlab arguments to ploting functions
